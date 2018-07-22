@@ -1,5 +1,5 @@
 <template>
-  <vue-draggable-resizable  :parent="false" :z="z0" :x="x0" :y="y0" :h="h0" :w="w0" :isActive="false" :isResizable="false" style="border: 0px solid white" :drag-handle="'.drag00'">
+  <vue-draggable-resizable  :parent="false" :z="z" :x="x" :y="y" :h="h" :w="w" :isActive="false" :isResizable="false" style="border: 0px solid white" :drag-handle="'.drag00'">
     <div class="drag00 elevation-20"
       style="padding: 0px; margin: 0px;  border: 0px solid;height:20px;font-size:12px;background:#4FC3F7"
       v-on:click.self="w_zindex"
@@ -8,17 +8,27 @@
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
       <slot name="action" />
+     </div>
 
-      <slot></slot>
+     <div class="drag00 elevation-20"
+      style="padding: 0px; margin: 0px;  border: 0px solid;height:20px;font-size:12px;background:#4FC3F7"
+      v-on:click.self="w_zindex"
+      >
+      <slot name="action-menu" />
+     </div>
+       <div class="elevation-20 " style="height:90%;overflow-y:scroll; background:white" >
+         {{ w_zindex }}
 
-  </div>
+
+       <slot></slot>
+       </div>
+
   </vue-draggable-resizable>
 
 </template>
 
 <script>
-  import  g  from '@/funkce/global.js'
-
+import { mapState } from 'vuex'
 export default {
 
 
@@ -31,31 +41,30 @@ export default {
             type: String,
             required: false
         },
-          id0: {
+          id: {
             type: String,
             required: false
         },
-          z0: {
-            type: String,
+          z: {
+            type: Number,
             required: false
         },
-          x0: {
-            type: String,
+          x: {
+            type: Number,
             required: false
         },
-          y0: {
-            type: String,
+          y: {
+            type: Number,
             required: false
         },
-          h0: {
-            type: String,
+          h: {
+            type: Number,
             required: false
         },
-          w0: {
-            type: String,
+          w: {
+            type: Number,
             required: false
         },
-
     },
   data: ()  => {
     return {
@@ -68,18 +77,23 @@ export default {
     }
   },
   created () {
-    g.z_count()
-    g.w_create('a')
-
-
+    this.$store.dispatch('setWin', [this.w, this.y])
+    this.$store.dispatch('setTxt', 15)
+  },
+  computed:  {
+      ...mapState([
+      'isUserLoggedIn'
+    ])
   },
   methods: {
-    w_zindex() {
-       g.z_count()
-       g.w_zindex(this.id0)
+    w_zindex: function(){
+      console.log('Click na tlacitko')
+    }
+
+
+
     }
   }
-}
 </script>
 
 <style scoped>

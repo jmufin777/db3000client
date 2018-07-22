@@ -1,12 +1,4 @@
 <template>
-<v-navigation-drawer
-      v-model="drawer"
-      fixed
-      app
-      clipped
-      light
-
-    >
      <v-list   dense class="pa-8 ma-8 elevation-20" style="opacity:1" >
       <span  v-for="(ym0, k ) in xmenu2" :key="k" v-model="xmenu2"   >
       <v-list-group   v-if="ym0[9]=='Group'"  value="1"    :prepend-icon="ym0[1]" class="">
@@ -122,7 +114,7 @@
       <v-list-tile-content ><v-list-tile-title   ><span v-for="y220 in 0" :key="y220">&nbsp;</span>{{ ym0[0] }} : {{ k }}</v-list-tile-title></v-list-tile-content>
       <v-list-tile-action v-if="ym0[8]=='right' || ym0[8]=='' "><v-icon style="height:10px">{{ym0[1]}}</v-icon></v-list-tile-action>
       </v-list-tile>
-      <v-divider></v-divider>
+      <v-spacer></v-spacer>
       </span>
       <v-list-tile @click="logout">
      <v-list-tile-action>
@@ -134,59 +126,50 @@
    </v-list-tile>
 
     </v-list>
-    </v-navigation-drawer>
-
 </template>
 
 <script>
+/* eslint-disable */
 import _ from 'lodash'
 import _f from '@/funkce/Desktop_switch.js'
 import { eventBus } from '@/main.js'
 import {mapState} from 'vuex'
 
 export default {
-    props: {
-        xmenu: {
-           type: Array,
-           required: true
-        },
-        xgroup: {
-            type: String,
-            required: true
-        }
-    },
-   data: () => {
-       return {
-          drawer: true,
-          props: {
-          source: String
-        },
-           xmenu2: [],
-           server: null
-       }
-   },
-   created () {
-       eventBus.$on('Menuf', ( pole ) => {
-           // alert('Emil prisel ???'+ pole )
-              this.xmenu2=[]
-           pole.forEach((ele ) => {
-              this.xmenu2.push(ele)
-           })
-       })
-   },
-   methods: {
-    menu_switch: function(par) {
-   //       alert(par)
-          eventBus.$emit('menu_switch', par);
-    },
-
-    logout () {
-
-      eventBus.$emit('logout');
+  props: {
+      xmenu: {
+         type: Array,
+         required: true
+      },
+      xgroup: {
+          type: String,
+          required: true
+      }
+  },
+  data: () => {
+    return {
+      xmenu2: [],
+      server: null
     }
-   }
-
-
+  },
+  created () {
+    eventBus.$on('Menuf', (pole) => {
+    // alert('Emil prisel ???'+ pole )
+      this.xmenu2 = []
+      pole.forEach((ele) => {
+        this.xmenu2.push(ele)
+      })
+    })
+  },
+  methods: {
+    menu_switch: function (par) {
+    //  alert(par)
+      eventBus.$emit('menu_switch', par)
+    },
+    logout () {
+      eventBus.$emit('logout')
+    }
+  }
 }
 </script>
 <style scoped>

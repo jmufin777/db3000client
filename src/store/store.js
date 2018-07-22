@@ -12,7 +12,9 @@ export default new Vuex.Store({
   state: {
     token: null,
     user: null,
-    isUserLoggedIn: false
+    isUserLoggedIn: false,
+    WinDows: [],
+    txt: null
   },
   mutations: {
     setToken (state, token) {
@@ -21,6 +23,12 @@ export default new Vuex.Store({
     },
     setUser (state, user) {
       state.user = user
+    },
+    TXT (state, textik) {
+      state.txt = textik
+    },
+    SETWIN ( state, newWin) {
+       state.WinDows.push(newWin)
     }
   },
   actions: {
@@ -29,6 +37,18 @@ export default new Vuex.Store({
     },
     setUser ({commit}, user) {
       commit('setUser', user)
+    },
+    setTxt ({commit}, textik) {
+      commit('TXT',textik)
+    },
+    setWin ({commit}, newWin) {
+      console.log('Actions- setWin -Dispatch', newWin)
+      commit('SETWIN',newWin)
+    }
+  },
+  getters: {
+    infoTxt: state => {
+      return state.txt
     }
   }
 })

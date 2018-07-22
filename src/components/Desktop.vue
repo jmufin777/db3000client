@@ -1,6 +1,15 @@
 <template >
   <v-app id="inspire">
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      app
+      clipped
+      light
+      stateless
+    >
      <menu-nav :xmenu="xMenuFinal" :xgroup="people1001"></menu-nav>
+    </v-navigation-drawer>
       <v-toolbar app fixed clipped-left >
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title class="pa-0 ma-0">
@@ -58,10 +67,52 @@
  @resizestop
  @dragging
  @dragstop -->
+ <win-dow title="ahoj" :id="'w_001'" :x="20"
+  :w="800"
+  :y="0"
+  :z="100"
+  >
+    <button
+        slot="action"
+        v-if="$store.state.isUserLoggedIn"
+        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
+        light
+        small
+        absolute
+        right
+        middle
+        fab
+        ripple
+        @click="onDragAll"
+      >
+      <v-icon>close</v-icon>
+    </button>
+    <button
+        slot="action-menu"
+        v-if="$store.state.isUserLoggedIn"
+        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
+        light
+        small
+        absolute
+        right
+        middle
+        fab
+        ripple
+        @click="onDragAll"
+      >
+      <v-icon>close</v-icon>
+    </button>
 
 
- <vue-draggable-resizable  :z="zIndexs.z3" :x="200" :y="-20" :h="500" :w="500"  :drag-handle="'.drag3'" >
-   <div class="drag3 elevation-20" style="padding: 0px; margin: 0px;  border: 0px solid;height:20px;font-size:12px;background:#4FC3F7 "  v-on:click.self="zIndexs.z3=100 ; zIndexs.z1=1;zIndexs.z2=1"  >Moduly Volby
+
+
+</win-dow>
+
+ <vue-draggable-resizable  :z="zIndexs.z3" :x="700" :y="20" :h="500" :w="300"  :drag-handle="'.drag3'" >
+   <div class="drag3 elevation-20" style="padding: 0px; margin: 0px;  border: 0px solid;height:40px;font-size:12px;background:#4FC3F7 "
+    v-on:click.self="zIndexs.z3=100 ; zIndexs.z1=1;zIndexs.z2=1"  >
+    Moduly Volby
+    >
 
       <button
         v-if="$store.state.isUserLoggedIn"
@@ -76,6 +127,20 @@
         @click="onDragAll"
       >
       <v-icon style="height:10px;width:14px">close</v-icon>
+     </button>
+     <button
+        v-if="$store.state.isUserLoggedIn"
+        class="red accent-12 elevation-10 " style="position: absolute;height:18px"
+        light
+        small
+        absolute
+        left
+        middle
+        fab
+        ripple
+        @click="onDragAll"
+      >
+      Tlacitko
      </button>
 
   </div>
@@ -101,36 +166,20 @@
       <div class="drag3 elevation-20" style="position:absolute;padding:0px;margin:0px;bottom:0px;height:0px;  border-bottom: 8px solid"
      >.</div>
      </div>
-
-
  </vue-draggable-resizable>
 
-<win-dow title="ahoj" :id0="'w_001'">
-    <button
-        slot="action"
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 _right" style="position: absolute;height:18px"
-        light
-        small
-        absolute
-        right
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-      <v-icon>add</v-icon>
-    </button>
 
-
-
-</win-dow>
-
-<vue-draggable-resizable :parent="false" :z="zIndexs.z2" :x="900" :y="0" :h="500" :w="200" :isActive="false" :isResizable="false" style="border: 1px solid white" :drag-handle="'.drag'" v-on:click.self="onDragAll">
+<vue-draggable-resizable :parent="false"
+:z="zIndexs.z2"
+:x="1000"
+:y="20"
+:h="500"
+:w="200"
+:isActive="false" :isResizable="false" style="border: 1px solid white" :drag-handle="'.drag'" v-on:click.self="onDragAll">
   <div class="drag elevation-20"
       style="padding: 0px; margin: 0px;  border: 0px solid;height:20px;font-size:12px;background:#4FC3F7"
       v-on:click.self="zIndexs.z2=100 ; zIndexs.z1=1;zIndexs.z3=1"
-      >Menu nahled
+      >{{ StartRight }}Menu nahled
 
       <button
         v-if="$store.state.isUserLoggedIn"
@@ -150,23 +199,17 @@
       <div class="elevation-20 " style="height:90%;overflow-y:scroll; background:white" >
       <div class="drag elevation-20" style="position:absolute;padding:0px;margin:0px;bottom:0px;height:0px;  border-bottom: 8px solid"
      >.</div>
-
-
-
-     </div>
+    </div>
     </vue-draggable-resizable>
-    </v-flex>
-
-    <vue-draggable-resizable  :parent="false" :z="zIndexs.z1" :x="100" :y="0" :h="500" :w="500" :isActive="false" :isResizable="false" style="border: 0px solid white" :drag-handle="'.drag0'">
 
 
-   </div>
-   </vue-draggable-resizable>
-
-    <v-flex md6  >
-     <vue-draggable-resizable v-if="show_w1" :parent="false" :z="zIndexs.z1" :x="100" :y="0" :h="500" :w="500" :isActive="false" :isResizable="false" style="border: 0px solid white" :drag-handle="'.drag0'">
+  <vue-draggable-resizable v-if="show_w1" :parent="false"
+     :z="zIndexs.z1" :x="0" :y="20" :h="500" :w="700"
+     :isActive="false" :isResizable="false" style="border: 0px solid white" :drag-handle="'.drag0'">
      <div class="drag0 elevation-20"  style="padding: 0px; margin: 0px;  border: 0px solid white
-     ;height:40px;font-size:12px;opacity:1;width:100%;background:#4FC3F7"  v-on:click.self="zIndexs.z2=1 ;zIndexs.z3=1 ; zIndexs.z1=100">Menu schema
+     ;height:40px;font-size:12px;opacity:1;width:100%;background:#4FC3F7"
+          v-on:click.self="zIndexs.z2=1 ;zIndexs.z3=1 ; zIndexs.z1=100">
+          Menu schema  {{StartRight}}
       <button
         class="red accent-12 elevation-10 _right" style="position: absolute;height:18px"
         light
@@ -348,13 +391,16 @@
 
     </div>
     </vue-draggable-resizable>
-    </v-flex>
+
     </v-layout>
   </v-container>
   </v-content>
   <v-footer app fixed>
       <span>&copy; db3000 2018</span>
+     [ {{ StartRight }} ]
+
   </v-footer>
+
   </v-app>
 
 </template>
@@ -541,7 +587,10 @@ export default {
     ...mapState([
       'isUserLoggedIn'
     ])
+
   },
+
+
   watch: {
     xMenuEmptyx: function() {
         this.xMenuEmpty.push(this.Add())
@@ -568,9 +617,8 @@ export default {
   data: () => {
     return {
       drawer: true,
-      props: {
-        source: String
-      },
+      StartRight: 300,
+
       zIndexs: {
         z1: 1,
         z2: 2,
@@ -627,17 +675,27 @@ export default {
         ['Uzivatele', 'wc', 'menu_switch', 'set-users', 'true','','','','','Item',[]],
         ['Moduly', 'view_module', 'menu_switch', 'moduly', 'true','','','','','Item',[]],
 
-      ]
+      ],
+
     }
   },
 
+
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.handleResize)
+  },
   methods: {
     range: _.range,
+
+    handleResize(event) {
+      this.StartRight = window.innerWidth
+    },
 
     Status: function () {
       alert('status')
     },
     MenuF: function () {
+      // alert('emil')
       eventBus.$emit('Menuf', this.xMenu )
     },
     MenuFinal() {
@@ -647,6 +705,7 @@ export default {
       })
       alert('Prirazeno')
     },
+
     onActivated: function (a) {
       alert(a)
     },
@@ -656,7 +715,6 @@ export default {
       // this.top = newRect.top;
       // this.left = newRect.left;
       alert(newRect)
-
     },
     AddDefault: function () {
       var aEmpty = Array(11)
@@ -808,6 +866,7 @@ export default {
     }
     this.AddDefault()
     this.MenuF()
+    window.addEventListener('resize', this.handleResize)
 
   },
   created () {
@@ -819,6 +878,7 @@ export default {
        this.logout()
        // alert("jsme tu")
     })
+    this.StartRight=window.innerWidth - 50
 
 
   }
