@@ -40,7 +40,7 @@
            </tr >
          </table>
          <div>
-           {{ info }} {{ active }} old z : {{ old_z }} z: {{ z }}  z1: {{ z1 }}
+           {{ info }} {{ active }} old z : {{ old_z }} z: {{ z }}  z1: {{ z1 }} zMax : {{ zMax }}
          </div>
 
 
@@ -115,12 +115,14 @@ export default {
   computed: {
      ...mapGetters([
        'getWinList',
+       'getWin'
      ]),
 
     ...mapState([
       'isUserLoggedIn',
       'WinDows',
-      'active'
+      'active',
+      'zMax'
     ])
   },
 
@@ -130,6 +132,9 @@ export default {
     },
     onResize: function (x1, y1, w1, h1) {
       this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: h1 , w: w1 ,z: this.z, z1: this.z1 } )
+      this.z1 = this.zMax
+
+
       // this.x = x
       // this.y = y
       // this.w = width
@@ -140,7 +145,8 @@ export default {
 
       this.info= this.id + "Drag "+ x1 +" " +y1
       this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: this.h , w: this.w ,z: this.z, z1: this.z1 } )
-      this.z1 = 1000
+      this.z1 = this.zMax
+
 
       // this.x = x1
       // this.y = y1
@@ -149,18 +155,24 @@ export default {
         this.info= this.id + "Activated"
         this.old_z  = this.z
         this.$store.dispatch('setWin', {id: this.id, x: this.x, y: this.y, h: this.h , w: this.w ,z: this.z, z1: this.z1 } )
-        this.z1 = 1000
+        this.z1 = this.zMax
+
+
+
 
 
     },
     onResizestop: function(x1, y1, w1, h1) {
         this.info= this.id + "resizeStop"
           this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: h1 , w: w1 ,z: this.z, z1: this.z1 } )
+          this.z1 = this.zMax
     },
     onDragstop: function(x1, y1) {
         this.info= this.id + "dragStop"
         this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1, h: this.h , w: this.w ,z: this.z, z1: this.z1 } )
-        alert(this.WinDows[this.active].id)
+        this.z1 = this.zMax
+
+
 
 
     }

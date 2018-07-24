@@ -16,6 +16,7 @@ export default new Vuex.Store({
     isUserLoggedIn: false,
     WinDows: [],
     active: null,
+    zMax: 999,
     txt: null
   },
   mutations: {
@@ -30,7 +31,8 @@ export default new Vuex.Store({
       state.txt = textik
     },
     SETWIN (state, newWin) {
-      // state.WinDows = []
+       // state.WinDows = []
+
       var nasel = state.WinDows.findIndex( (el) => {
         return el.id === newWin.id
       })
@@ -48,9 +50,11 @@ export default new Vuex.Store({
       }
       state.WinDows.forEach((el, ind) => {
         if (ind==nasel) {
-          state.WinDows[ind].z = 111
+          state.zMax = state.zMax+1
+          state.WinDows[ind].z1 = state.zMax
+
         } else {
-          state.WinDows[ind].z = 1
+          state.WinDows[ind].z1 = 999
         }
       })
 
@@ -87,6 +91,7 @@ export default new Vuex.Store({
     getWinList: state => {
       return state.WinDows
     }
+
 
   }
 })
