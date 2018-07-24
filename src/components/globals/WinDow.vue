@@ -1,5 +1,5 @@
 <template>
-  <vue-draggable-resizable  :parent="false" :z="z1 || z" :x="x" :y="y" :h="h" :w="w"
+  <vue-draggable-resizable  :parent="parent" :z="z1 || z" :x="x" :y="y" :h="h" :w="w"
   :isActive="false" :isResizable="false"
   style="border: 0px solid white"
   :drag-handle="'.drag00'"
@@ -9,6 +9,7 @@
   v-on:resizing="onResize"
   v-on:resizestop="onResizestop"
   v-on:activated="onActivated"
+  :maximize="true"
   >
     <div class="drag00 elevation-20" :id="id"
       style="padding: 0px; margin: 0px;  border: 0px solid;font-size:14px
@@ -93,7 +94,8 @@ export default {
         z: {
         type: Number,
         required: false
-      }
+      },
+      parent:false
 
     },
   data: ()  => {

@@ -146,6 +146,53 @@
 
 
 
+    <win-dow title="Barevnost 3" :id="'w_003'"
+  :x="20"
+  :w="500"
+  :y="0"
+  :z="10"
+  :parent="true"
+
+
+  >
+    <button
+        slot="action"
+        v-if="$store.state.isUserLoggedIn"
+        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
+        light
+        small
+        absolute
+        right
+        middle
+        fab
+        ripple
+        @click="onDragAll"
+      >
+      <v-icon>close</v-icon>
+    </button>
+    <button
+        slot="action-menu"
+        v-if="$store.state.isUserLoggedIn"
+        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
+        light
+        small
+        absolute
+        right
+        middle
+        fab
+        ripple
+        @click="onDragAll"
+      >
+      <v-icon>close</v-icon>
+    </button>
+
+
+
+
+</win-dow>
+
+
+
 
 </win-dow>
 
