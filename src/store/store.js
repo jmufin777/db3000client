@@ -5,7 +5,6 @@ import _ from 'lodash'
 
 Vue.use(Vuex)
 
-
 export default new Vuex.Store({
   strict: true,
   plugins: [
@@ -16,6 +15,7 @@ export default new Vuex.Store({
     user: null,
     isUserLoggedIn: false,
     WinDows: [],
+    active: null,
     txt: null
   },
   mutations: {
@@ -35,13 +35,25 @@ export default new Vuex.Store({
         return el.id === newWin.id
       })
 
+
       // console.log("Nasel : ", nasel )
       if (nasel>=0) {
+        // newWin.z = newWin.z +7
         state.WinDows[nasel] =  newWin
+        state.active = nasel
       } else {
         state.WinDows.push(newWin)
+        state.active = state.WinDows.length
         //
       }
+      state.WinDows.forEach((el, ind) => {
+        if (ind==nasel) {
+          state.WinDows[ind].z = 111
+        } else {
+          state.WinDows[ind].z = 1
+        }
+      })
+
     },
     DROPWIN (state, oldWin) {
       state.WinDows=state.WinDows.filter(function (el){
@@ -60,7 +72,8 @@ export default new Vuex.Store({
       commit('TXT',textik)
     },
     setWin ({commit}, newWin) {
-      console.log('Actions- setWin -Dispatch', newWin)
+      // console.log('Actions- setWin -Dispatch', newWin)
+
       commit('SETWIN',newWin)
     },
     dropWin({commit}, oldWind ) {

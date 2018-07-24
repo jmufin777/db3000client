@@ -1,27 +1,49 @@
 <template>
-  <vue-draggable-resizable  :parent="false" :z="z" :x="x" :y="y" :h="h" :w="w" :isActive="false" :isResizable="false"
-  style="border: 0px solid white" :drag-handle="'.drag00'"
+  <vue-draggable-resizable  :parent="false" :z="z1 || z" :x="x" :y="y" :h="h" :w="w"
+  :isActive="false" :isResizable="false"
+  style="border: 0px solid white"
+  :drag-handle="'.drag00'"
+  :drag-cancel="'.drag01'"
   v-on:dragging="onDrag"
+  v-on:dragstop="onDragstop"
   v-on:resizing="onResize"
-
+  v-on:resizestop="onResizestop"
+  v-on:activated="onActivated"
   >
     <div class="drag00 elevation-20" :id="id"
-      style="padding: 0px; margin: 0px;  border: 0px solid;height:20px;font-size:12px;background:#4FC3F7"
+      style="padding: 0px; margin: 0px;  border: 0px solid;font-size:14px
+      ;font-family: Arial;background:#4FC3F7"
       v-on:click.self="w_zindex"
       >{{title}}
       <slot name="action-left" />
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
+
       <slot name="action" />
-     </div>
-     <div class="drag00 elevation-20"
-      style="padding: 0px; margin: 0px;  border: 0px solid;height:20px;font-size:12px;background:#4FC3F7"
-      v-on:click.self="w_zindex"
-      >
-      <slot name="action-menu" />
-     </div>
-       <div class="elevation-20 " style="height:90%;overflow-y:scroll; background:white" >
-         {{ getWinList }}
+    </div>
+
+       <div class="elevation-20 drag01" style="height:90%;overflow-y:scroll; background:white" >
+
+         <table border=5 >
+           <thead>
+           <tr>
+             <td v-for="(w2,i2) in WinDows[0]" :key="i2" class="pa-2 ma-1">
+               {{ i2 }}
+             </td>
+           </tr>
+
+           </thead>
+           <tr v-for="(w1, i ) in WinDows" :key="i" >
+             <td v-for="(w2,i2) in w1" :key="i2" class="px-5  ma-1">
+               {{w2}}
+             </td>
+           </tr >
+         </table>
+         <div>
+           {{ info }} {{ active }} old z : {{ old_z }} z: {{ z }}  z1: {{ z1 }}
+         </div>
+
+
 
        <slot></slot>
        </div>
@@ -52,11 +74,7 @@ export default {
             type: String,
             required: false
         },
-          z: {
-            type: Number,
-            required: false
-        },
-          x: {
+         x: {
             type: Number,
             required: false
         },
@@ -71,27 +89,38 @@ export default {
           w: {
             type: Number,
             required: false
-        }
+        },
+        z: {
+        type: Number,
+        required: false
+      }
 
     },
   data: ()  => {
     return {
-
+      z1: 0,
+      old_z: 0,
+      info: 'nic'
     }
   },
-  created () {
+  mounted () {
+    // if (this.h == null) this.h = 501
+     //if (this.y == null) this.y = 33
+
      // this.$store.dispatch('dropWin', this.id )
-     this.$store.dispatch('setWin', {id: this.id, x: this.x, y: this.y,h: this.h, w: this.w,z: this.z } )
+     this.$store.dispatch('setWin', {id: this.id, x: this.x, y: this.y, h: this.h, w: this.w ,z: this.z, z1: this.z1 } )
      // this.$store.dispatch('setTxt', 15)
    },
-  //computed:  {
-  //    ...mapState([
-    //  'isUserLoggedIn',
-//    ])
-  //},
+
   computed: {
-    ...mapGetters([
-      'getWinList',
+     ...mapGetters([
+       'getWinList',
+     ]),
+
+    ...mapState([
+      'isUserLoggedIn',
+      'WinDows',
+      'active'
     ])
   },
 
@@ -100,19 +129,41 @@ export default {
       console.log('Click na tlacitko')
     },
     onResize: function (x1, y1, w1, h1) {
-      this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: h1 , w: w1 ,z: this.z } )
+      this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: h1 , w: w1 ,z: this.z, z1: this.z1 } )
       // this.x = x
       // this.y = y
       // this.w = width
       // this.ht = height
     },
     onDrag: function (x1, y1) {
-       this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h:this. h , w: this.w ,z: this.z } )
+
+
+      this.info= this.id + "Drag "+ x1 +" " +y1
+      this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: this.h , w: this.w ,z: this.z, z1: this.z1 } )
+      this.z1 = 1000
+
       // this.x = x1
       // this.y = y1
+    },
+    onActivated: function() {
+        this.info= this.id + "Activated"
+        this.old_z  = this.z
+        this.$store.dispatch('setWin', {id: this.id, x: this.x, y: this.y, h: this.h , w: this.w ,z: this.z, z1: this.z1 } )
+        this.z1 = 1000
+
+
+    },
+    onResizestop: function(x1, y1, w1, h1) {
+        this.info= this.id + "resizeStop"
+          this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: h1 , w: w1 ,z: this.z, z1: this.z1 } )
+    },
+    onDragstop: function(x1, y1) {
+        this.info= this.id + "dragStop"
+        this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1, h: this.h , w: this.w ,z: this.z, z1: this.z1 } )
+        alert(this.WinDows[this.active].id)
+
+
     }
-
-
 
     }
   }

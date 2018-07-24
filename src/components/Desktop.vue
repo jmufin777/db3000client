@@ -67,10 +67,51 @@
  @resizestop
  @dragging
  @dragstop -->
- <win-dow title="ahoj" :id="'w_001'" :x="20"
+ <win-dow title="Barevnost 1" :id="'w_001'"
+  :x="20"
+  :w="700"
+  :y="0"
+  :z="90"
+  >
+
+    <button
+        slot="action"
+        v-if="$store.state.isUserLoggedIn"
+        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
+        light
+        small
+        absolute
+        right
+        middle
+        fab
+        ripple
+        @click="onDragAll"
+      >
+      <v-icon>close</v-icon>
+    </button>
+    <button
+        slot="action-menu"
+        v-if="$store.state.isUserLoggedIn"
+        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
+        light
+        small
+        absolute
+        right
+        middle
+        fab
+        ripple
+        @click="onDragAll"
+      >
+      <v-icon>close</v-icon>
+    </button>
+</win-dow>
+
+<win-dow title="Barevnost 2" :id="'w_002'"
+  :x="40"
   :w="800"
   :y="0"
   :z="100"
+
   >
     <button
         slot="action"
