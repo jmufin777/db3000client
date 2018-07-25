@@ -1,6 +1,6 @@
 <template >
   <v-app id="inspire">
-    <v-navigation-drawer v-if="false"
+    <v-navigation-drawer
       v-model="drawer"
       fixed
       app
@@ -207,8 +207,8 @@
       >
       Ulozit
      </button>
-
-  <menu-schema :xMenuy="xMenuCopy"></menu-schema>
+  {{ xMenuCopy }}
+  <menu-schema :xMenu="xMenuCopy"></menu-schema>
 
 </win-dow>
 
@@ -305,7 +305,7 @@
     </div>
     </vue-draggable-resizable>
 
-  <vue-draggable-resizable v-if="false && show_w1" :parent="false"
+  <vue-draggable-resizable v-if="show_w1" :parent="false"
      :z="zIndexs.z1" :x="0" :y="20" :h="500" :w="700"
      :isActive="false" :isResizable="false" style="border: 0px solid white" :drag-handle="'.drag0'">
      <div class="drag0 elevation-20"  style="padding: 0px; margin: 0px;  border: 0px solid white
@@ -335,7 +335,7 @@
       <div class="drag0 elevation-20" style="position:absolute;padding:0px;margin:0px;bottom:0px;height:0px;  border-bottom: 8px solid"
      >.</div>
 
-         <ul v-if="false">
+         <ul>
 
             <draggable v-model="xMenu"  :options="{group: 'people' }" @start="drag=true" @end="drag=false" :move="chooseItem" style="padding-right:20px;padding-top:10px">
 
@@ -843,7 +843,7 @@ export default {
     }
 
     this.xMenuCopy = this.xMenu
-    // alert(this.xMenu)
+    alert(this.xMenu)
 
     this.AddDefault()
     this.MenuF()

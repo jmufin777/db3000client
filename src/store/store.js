@@ -17,7 +17,8 @@ export default new Vuex.Store({
     WinDows: [],
     active: null,
     zMax: 999,
-    txt: null
+    txt: null,
+    xMenuz: []
   },
   mutations: {
     setToken (state, token) {
@@ -29,6 +30,9 @@ export default new Vuex.Store({
     },
     TXT (state, textik) {
       state.txt = textik
+    },
+    SETMENU (state, xMenuz  ){
+       state.xMenuz = xMenuz
     },
     SETWIN (state, newWin) {
        // state.WinDows = []
@@ -48,6 +52,8 @@ export default new Vuex.Store({
         state.active = state.WinDows.length
         //
       }
+
+
       state.WinDows.forEach((el, ind) => {
         if (ind==nasel) {
           state.zMax = state.zMax+1
@@ -82,8 +88,12 @@ export default new Vuex.Store({
     },
     dropWin({commit}, oldWind ) {
       commit('DROPWIN', oldWind)
+    },
+    setMenu({commit}, xMenuy1) {
+      commit('SETMENU',xMenuy1)
     }
   },
+
   getters: {
     infoTxt: state => {
       return state.txt
