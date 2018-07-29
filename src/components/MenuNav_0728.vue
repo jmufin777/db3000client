@@ -36,6 +36,7 @@
                     <v-list-tile slot="activator">
                     <v-list-tile-title class="font-weight-black">{{ ym4[0] }}</v-list-tile-title>
                     </v-list-tile><!-- Sem dalsi //-->
+
                           <span class="span_hide" v-for="(ym5, k5 ) in ym4[10]" :key="k5"  v-model="ym4[10]"    >
 
                           <v-list-group v-if="ym5[9]=='Group'"  value="true"  sub-group   :prepend-icon="ym5[1]" class="">

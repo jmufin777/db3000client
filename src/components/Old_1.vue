@@ -1,5 +1,6 @@
 <template>
 <div>
+  <router-link :to="{name: 'desktop', params: { ktery: 'old-1' } }">old_1</router-link>
   <el-table
     :data="tableData4"
     height="700"
@@ -8,7 +9,7 @@
 
     <el-table-column v-for="(pol, i ) in Object.keys(tableData4[1])" :key="i"
       :prop="pol"
-      :label="pol + ' a '+ i "
+      :label="pol"
       width="200"
        >
       <template slot-scope="scope">

@@ -80,6 +80,9 @@ export default {
       deep: true
     }
   },
+  beforeDestroy (){
+      // alert('destory')
+  },
   methods: {
     async my_data () {
       this.loading = true

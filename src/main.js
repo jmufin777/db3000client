@@ -30,7 +30,7 @@ import Ram1 from '@/components/globals/Ram1'
 import VueJsonPretty from 'vue-json-pretty'
 Vue.component('panel', Panel)
 Vue.component('win-dow', WinDow)
-Vue.component('ram1', Ram1)
+// Vue.component('ram1', Ram1)
 Vue.component('vue-json-pretty', VueJsonPretty)
 
 

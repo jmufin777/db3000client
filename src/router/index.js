@@ -5,9 +5,12 @@ import Login from '@/components/Login'
 import Desktop from '@/components/Desktop'
 import Testy from '@/components/_Testy/testy'
 import TestMenu from '@/components/_Testy/TestMenu.vue'
+import List2Barevnost from '@/components/List2Barevnost'
 
-import SetBarevnost from '@/components/ListUsers.vue'
+import ListUsers from '@/components/ListUsers.vue'
 import Old1 from '@/components/Old_1.vue'
+import MenuSchema from '@/components/MenuSchema.vue'
+import MenuAdminIndex from '@/components/MenuAdminIndex.vue'
 
 Vue.use(Router)
 
@@ -18,9 +21,25 @@ export default new Router({
       redirect: 'login'
     },
     {
-      path: '/desktop',
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/desktop/:ktery',
       name: 'desktop',
       component: Desktop
+    },
+    {
+      path: '/old/1',
+      name: 'old-1',
+      force: true,
+      component: Old1
+    },
+    {
+      path: '/menu-schema',
+      name: 'menu-schema',
+      component: MenuSchema
     },
     {
       path: '/testy',
@@ -33,26 +52,16 @@ export default new Router({
       component: TestMenu
     },
     {
-      path: '/login',
-      name: 'login',
-      component: Login
+      path: '/list2-barevnost',
+      name: 'list2-barevnost',
+      component: List2Barevnost
     },
     {
-      path: '/set/barevnost',
-      name: 'set-barevnost',
-      component: SetBarevnost
-    },
-
-    {
-      path: '/set/users',
-      name: 'set-users',
-      component: SetBarevnost
-    },
-    {
-      path: '/old/1',
-      name: 'old-1',
-      component: Old1
+      path: '/set/list-users',
+      name: 'list-users',
+      component: ListUsers
     }
+
 
   ]
 })

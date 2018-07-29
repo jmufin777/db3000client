@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import _ from 'lodash'
+// https://vuex.vuejs.org/guide/structure.html
+// https://vuex.vuejs.org/guide/plugins.html
 
 Vue.use(Vuex)
 
@@ -18,7 +20,8 @@ export default new Vuex.Store({
     active: null,
     zMax: 999,
     txt: null,
-    xMenuz: []
+    xMenuz: [],
+    xMenuMain: []
   },
   mutations: {
     setToken (state, token) {
@@ -31,9 +34,13 @@ export default new Vuex.Store({
     TXT (state, textik) {
       state.txt = textik
     },
-    SETMENU (state, xMenuz  ){
+    SETMENU (state, xMenuz  ) {
        state.xMenuz = xMenuz
     },
+    SETMENUMAIN (state, xMenuMain  ) {
+      state.xMenuMain = xMenuMain
+      //state.xMenuMain = JSON.parse(JSON.stringify(xMenuMain))
+   },
     SETWIN (state, newWin) {
        // state.WinDows = []
 
@@ -52,8 +59,6 @@ export default new Vuex.Store({
         state.active = state.WinDows.length
         //
       }
-
-
       state.WinDows.forEach((el, ind) => {
         if (ind==nasel) {
           state.zMax = state.zMax+1
@@ -67,8 +72,11 @@ export default new Vuex.Store({
     },
     DROPWIN (state, oldWin) {
       state.WinDows=state.WinDows.filter(function (el){
-        return el.id !== oldWin
+         return el.id !== oldWin
       })
+    },
+    DROPALLWIN (state) {
+      state.WinDows = []
     }
   },
   actions: {
@@ -83,14 +91,20 @@ export default new Vuex.Store({
     },
     setWin ({commit}, newWin) {
       // console.log('Actions- setWin -Dispatch', newWin)
-
       commit('SETWIN',newWin)
     },
     dropWin({commit}, oldWind ) {
       commit('DROPWIN', oldWind)
     },
+    dropAllWin({commit} ) {
+      commit('DROPALLWIN' )
+    },
+
     setMenu({commit}, xMenuy1) {
       commit('SETMENU',xMenuy1)
+    },
+    setMenuMain({commit}, xMenuMain) {
+      commit('SETMENUMAIN',xMenuMain)
     }
   },
 

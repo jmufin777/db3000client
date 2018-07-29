@@ -1,6 +1,6 @@
 <template >
   <v-app id="inspire">
-    <v-navigation-drawer v-if="false"
+    <v-navigation-drawer v-if="true"
       v-model="drawer"
       fixed
       app
@@ -19,18 +19,52 @@
           </v-card-text>
         </v-card>
       </v-toolbar-title>
-       <v-spacer></v-spacer>
-  <el-radio-group v-model="radio2">
-  <el-radio-button :label="1">A</el-radio-button>
-  <el-radio-button :label="2">B</el-radio-button>
-  <el-radio-button :label="3">C</el-radio-button>
-  <el-radio-button :label="4">D</el-radio-button>
-  <el-radio-button :label="5">E</el-radio-button>
-  <el-radio-button :label="6">F</el-radio-button>
-</el-radio-group>
-<v-spacer></v-spacer>
+  <v-spacer></v-spacer>
+
+
+
+    <!-- <el-checkbox label="Kontejner" v-model="contain" border size="mini" ></el-checkbox>
+    <el-checkbox label="MujObal" v-model="mujdiv" border size="mini" ></el-checkbox> -->
+     <!-- <el-checkbox label="WinPar" v-model="winpar" border size="mini" ></el-checkbox> -->
+     <el-checkbox label="Demo2" v-model="demo2" border size="mini" ></el-checkbox>
+     <el-checkbox label="Demo" v-model="demo" border size="mini" ></el-checkbox>
+
+
+    <v-spacer></v-spacer>
+   <el-radio-group v-model="radio2" size="mini">
+    <el-radio-button :label="1">Okna</el-radio-button>
+    <el-radio-button :label="10">Karty</el-radio-button>
+    <el-radio-button :label="20">Plocha</el-radio-button>
+  </el-radio-group>
+  <el-radio-group v-if="radio2===20 " v-model="radio3" size="mini">
+     <el-radio-button v-for="(compD,i) in compa" :key="'c'+i"
+        :label="compD[0].modul"
+      >{{compD[0].title}}</el-radio-button>
+  </el-radio-group>
+
+<el-dropdown @command="winFocus">
+    <el-badge :value="openWins.length" class="item ">
+      <el-button size="small" class="el-icon-upload2"></el-button>
+    </el-badge>
+
+  <el-dropdown-menu slot="dropdown">
+
+     <el-dropdown-item  command="FindAllWin">Ukazat vse</el-dropdown-item>
+     <el-dropdown-item v-for="(openWin, iO) in openWins" :key="iO" :command="openWin">{{'Okno:'+openWin.name}}</el-dropdown-item>
+     <el-dropdown-item  command="CloseAllWin">Zavrit vse</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown>
+
+  <!-- <v-btn @click="closeTest">CloseAll</v-btn> -->
+
 <v-spacer></v-spacer>
 
+
+
+<router-link :to="{name: 'desktop', params: { ktery: 'old-1' } }" >old_1</router-link>
+Test2:
+<router-link :to="{name: 'desktop', params: {ktery: 'menu-schema'}}">MenuSchema</router-link>
+<v-spacer></v-spacer>
       <v-btn
         v-if="$store.state.isUserLoggedIn"
         class="yellow accent-12 elevation-10"
@@ -45,13 +79,17 @@
       >
      <v-icon>directions_run</v-icon>
       </v-btn>
-
     </v-toolbar>
-    <v-content>
-   <v-container grid-list-md >
-   <v-layout row wrap>
 
+    <v-content v-if="cont" style="padding-top: 10px">
+
+   <v-container grid-list-md >
+    <v-layout v-if="lay" row wrap>
+   <div style="position:absolute;top:0px;left:0px;height:100%;width:99%;background-color:#E1F5FE;opacity:1">
+
+      <p v-for="(r, i ) in $route.path" :key="'zzz' + i">{{r.name}}</p>
 <!-- :sticks="['tm','bm','ml','mr']
+  {{compa}} [{{ openWins.join(',') }}]
 :isActive="true"
 :isDraggable="false"
 :isResizable="false"
@@ -67,54 +105,18 @@
  @resizestop
  @dragging
  @dragstop -->
- <win-dow title="Barevnost 1" :id="'w_001'"
+
+ <win-dow  v-if="radio2==2" title="Barevnost 1" :id="'w_001'"
   :x="20"
   :w="700"
   :y="0"
   :z="90"
   :h="351"
-  >
-
-    <button
-        slot="action"
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
-        light
-        small
-        absolute
-        right
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-      <v-icon>close</v-icon>
-    </button>
-    <button
-        slot="action-menu"
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
-        light
-        small
-        absolute
-        right
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-      <v-icon>close</v-icon>
-    </button>
-</win-dow>
-
-<win-dow title="Barevnost 2" :id="'w_002'"
-  :x="40"
-  :w="800"
-  :y="0"
-  :z="100"
-  :h="452"
+  :parent="false"
+  :demo="true"
 
   >
+
     <button
         slot="action"
         v-if="$store.state.isUserLoggedIn"
@@ -130,45 +132,7 @@
       >
       <v-icon>close</v-icon>
     </button>
-    <button
-        slot="action-menu"
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
-        light
-        small
-        absolute
-        right
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-      <v-icon>close</v-icon>
-    </button>
-</win-dow>
-    <win-dow title="Barevnost 3" :id="'w_003'"
-      :x="20"
-      :w="500"
-      :y="0"
-      :z="10"
-      :h="253"
-      :parent="false"
-    >
-    <button
-        slot="action"
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
-        light
-        small
-        absolute
-        right
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-     <v-icon>close</v-icon>
-    </button>
+
     <button
         slot="action-menu"
         v-if="$store.state.isUserLoggedIn"
@@ -186,39 +150,15 @@
     </button>
 </win-dow>
 
-<win-dow title="Menu Schema" id="wMenuSchema"
-      :x="1000"
+ <win-dow  v-if="demo" title="Moduly Volby" id="wMenuSchema"
+      :x="100"
       :y="20"
       :h="500"
       :w="200"
       :parent="false"
 >
-      <button
-        slot="action"
-        class="green accent-12 elevation-10 _left" style="position: absolute;height:18px"
-        light
-        small
-        absolute
-        left
-        middle
-        fab
-        ripple
-        @click="MenuF"
-      >
-      Ulozit
-     </button>
-
-  <menu-schema :xMenuy="xMenuCopy"></menu-schema>
-
-</win-dow>
-
- <vue-draggable-resizable  :z="zIndexs.z3" :x="700" :y="20" :h="500" :w="300"  :drag-handle="'.drag3'" >
-   <div class="drag3 elevation-20" style="padding: 0px; margin: 0px;  border: 0px solid;height:40px;font-size:12px;background:#4FC3F7 "
-    v-on:click.self="zIndexs.z3=100 ; zIndexs.z1=1;zIndexs.z2=1"  >
-    Moduly Volby
-    >
-
-      <button
+     <button
+       slot="action"
         v-if="$store.state.isUserLoggedIn"
         class="red accent-12 elevation-10 _right" style="position: absolute;height:18px"
         light
@@ -232,7 +172,9 @@
       >
       <v-icon style="height:10px;width:14px">close</v-icon>
      </button>
+
      <button
+        slot="action"
         v-if="$store.state.isUserLoggedIn"
         class="red accent-12 elevation-10 " style="position: absolute;height:18px"
         light
@@ -247,242 +189,96 @@
       Tlacitko
      </button>
 
-  </div>
-
      <div class="elevation-20 " style="height:90%;overflow-y:scroll; background:white" >
       <v-layout row wrap md>
-      <v-flex md4 sx1>
+      <v-flex md6 sx4 lg3>
 
     <draggable v-model="menu_set_3"  :options="{group:{ name:'people',  pull:'clone' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
     <v-card v-for="(element,i) in menu_set_3" :key="i" class="people pa-2 ma-2 "  :id="'b' + i" color="blue" >
-        <v-card-text>{{element[0]}}</v-card-text>
+        <v-card-text>{{element[0]}}
+        </v-card-text>
     </v-card>
     </draggable>
-
+    </v-flex>
+      <v-flex md6 sx4 lg3>
     <draggable v-model="menu_set_2"  :options="{group:{ name:'people',  pull:'clone'  }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
     <v-card v-for="(element,i) in menu_set_2" :key="i" class="people pa-2 ma-2" :id="'a' + i" color="teal" >
         <v-card-text>{{element[0]}}</v-card-text>
     </v-card>
     </draggable>
-   </v-flex>
-    </v-layout>
+      </v-flex>
 
+    </v-layout>
+    </div>
       <div class="drag3 elevation-20" style="position:absolute;padding:0px;margin:0px;bottom:0px;height:0px;  border-bottom: 8px solid"
      >.</div>
-     </div>
- </vue-draggable-resizable>
+</win-dow>
+<win-dow v-if="radio2===1" v-for="(comp,i) in compa" :key="'c'+i"
+    :id="comp[0].modul "
+    :title="comp[0].title"
+    :x="200+(20 * i)"
+    :w="700"
+    :y="10 * i "
+    :z="90"
+    :h="351"
+    :parent="true"
+    :maximize="false"
+    :demo="demo2"
+ >
+<el-button slot="c1" type="warning" icon='el-icon-upload2'  size="mini" class="elevation-20"
+  @click="moveModuleToWin(comp[0].modul,1)"
+ ></el-button>
+ <el-button slot="c1" type="error" icon="el-icon-close"  size="mini" class="elevation-20"
+  @click="closeModule(comp[0].modul)" ></el-button>
+    <keep-alive>
+    <component v-bind:is="comp[0].modul" ></component>
+    </keep-alive>
+</win-dow>
 
-<vue-draggable-resizable :parent="false" v-show="false"
-:z="zIndexs.z2"
-:x="1000"
-:y="20"
-:h="500"
-:w="200"
-:isActive="false" :isResizable="false" style="border: 1px solid white" :drag-handle="'.drag'" v-on:click.self="onDragAll">
-  <div class="drag elevation-20"
-      style="padding: 0px; margin: 0px;  border: 0px solid;height:20px;font-size:12px;background:#4FC3F7"
-      v-on:click.self="zIndexs.z2=100 ; zIndexs.z1=1;zIndexs.z3=1"
-      >{{ StartRight }}Menu nahled
+  <el-row v-if=" radio2==10" :gutter=0 >
+    <draggable v-model="compa"  :options="{group:{ name:'app_move' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
+      <el-col v-for="(comp_app, iapp) in compa" :key="iapp" :span="24/ compa.length">
+       <el-card shadow="hover">
+      <el-tooltip  placement="bottom" effect="light" >
+      <div slot="content">Vytvori nezavislou kopii v samostatne okne</div>
+      <el-button   v-if="radio3>'' && radio2==10" type="error" icon="el-icon-upload2"  size="mini" class="elevation-20"
+      @click="moveModuleToWin(comp_app[0].modul,1)"
+      ></el-button>
+      </el-tooltip>
+      <el-tooltip  placement="bottom" effect="light">
+      <div slot="content">Ukonci praci s touto obrazovkou</div>
+     <el-button v-if="radio3>'' && radio2==10 " type="error" icon="el-icon-close"  size="mini" class="elevation-20"
+      @click="closeModule(comp_app[0].modul)" >
+  </el-button>
+   </el-tooltip>
+    <keep-alive>
+       <component v-bind:is="comp_app[0].modul" ></component>
+    </keep-alive>
+  </el-card>
+  </el-col>
+  </draggable>
+ </el-row>
 
-      <button
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 _right" style="position: absolute;height:18px"
-        light
-        small
-        absolute
-        right
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-      <v-icon style="height:10px;width:14px">close</v-icon>
-     </button>
-  </div>
-      <div class="elevation-20 " style="height:90%;overflow-y:scroll; background:white" >
-      <div class="drag elevation-20" style="position:absolute;padding:0px;margin:0px;bottom:0px;height:0px;  border-bottom: 8px solid"
-     >.</div>
-    </div>
-    </vue-draggable-resizable>
-
-  <vue-draggable-resizable v-if="false && show_w1" :parent="false"
-     :z="zIndexs.z1" :x="0" :y="20" :h="500" :w="700"
-     :isActive="false" :isResizable="false" style="border: 0px solid white" :drag-handle="'.drag0'">
-     <div class="drag0 elevation-20"  style="padding: 0px; margin: 0px;  border: 0px solid white
-     ;height:40px;font-size:12px;opacity:1;width:100%;background:#4FC3F7"
-          v-on:click.self="zIndexs.z2=1 ;zIndexs.z3=1 ; zIndexs.z1=100">
-          Menu schema  {{StartRight}}
-      <button
-        class="red accent-12 elevation-10 _right" style="position: absolute;height:18px"
-        light
-        small
-        absolute
-        right
-        bottom
-        fab
-        ripple
-        @click="show_w1=!show_w1"
-      >
-      <v-icon style="height:10px;width:14px">close</v-icon>
-     </button>
-
-
-
-  </div>
-
-      <div class="elevation-20"  style="height:90%;overflow-y:scroll; background:#ffffff" >
-
-      <div class="drag0 elevation-20" style="position:absolute;padding:0px;margin:0px;bottom:0px;height:0px;  border-bottom: 8px solid"
-     >.</div>
-
-         <ul v-if="false">
-
-            <draggable v-model="xMenu"  :options="{group: 'people' }" @start="drag=true" @end="drag=false" :move="chooseItem" style="padding-right:20px;padding-top:10px">
-
-            <li v-for="(xm0, i0) in xMenu" :key="'x'+i0"  >
-                <span v-if="xm0[10].length == 0 &&  xm0[9]=='Group' " style='display:none'>  {{ xm0[10] = [] }}{{ xm0[10]=[AddEmptyItem()]}}</span>
-
-              <div v-if="xm0[10].length>0 || xm0[9]=='Group'" class="g0">
+   <el-row v-if="radio2==20" :gutter=0 >
+     <!-- plocha  -->
+      <el-col  :span="23">
+       <el-button   v-if="radio3>'' && radio2==20" type="error" icon="el-icon-upload2"  size="mini" class="elevation-20"
+      @click="moveModuleToWin(radio3,1)"
+      > {{ radio3 }}</el-button>
+     <el-button v-if="radio3>'' && radio2==20 " type="error" icon="el-icon-close"  size="mini" class="elevation-20"
+      @click="closeModule(radio3)" >
+  </el-button>
+   <keep-alive >
+       <component v-bind:is="radio3" ></component>
+    </keep-alive>
+  </el-col>
+ </el-row>
 
 
-                <v-icon>{{ xm0[1] }}</v-icon>
-                <v-btn v-if="xm0[10].length == 0"
-                class="orange accent-12 elevation-10"
-                light
-                small
-                absolute
-                bottom
+</div>
+</v-layout>
+</v-container>
 
-                fab
-                ripple
-                @click="xm0[10]=[AddEmptyItem()]"
-                 ><v-icon>add</v-icon></v-btn>
-
-                <ul class="elevation-18">
-                <draggable v-model="xm0[10]"  :options="{group: 'people'}" @start="drag=true" @end="drag=false" :move="chooseItem" >
-
-                <li v-for="(xm1, i1) in xm0[10]" :key="'x'+i1"  >
-                  <span v-if="xm1[10].length == 0 &&  xm1[9]=='Group' " style='display:none'>  {{ xm1[10] = [] }}{{ xm1[10]=[AddEmptyItem()]}}</span>
-                  <div v-if="xm1[10].length>0" class="g1 elevation-18">
-                    1 g - {{i1+1}} >> {{ xm1[10].length==0 }}
-                    i - {{xm1[0]}} <v-icon>{{ xm1[1] }}</v-icon>
-                  <ul class="elevation-15">
-                  <draggable v-model="xm1[10]"  :options="{group: 'people'}" @start="drag=true" @end="drag=false" :move="chooseItem" >
-                  <li v-for="(xm2, i2) in xm1[10]" :key="'x'+i2"  >
-                    <span v-if="xm2[10].length == 0 &&  xm2[9]=='Group' " style='display:none'>  {{ xm2[10] = [] }}{{ xm2[10]=[AddEmptyItem()]}}</span>
-                    <div v-if="xm2[10].length>0" class="g2 elevation-15">
-                      2 g - {{i2+1}} >>>
-                      i - {{xm2[0]}} <v-icon>{{ xm2[1] }}</v-icon>
-                      <ul class="elevation-12">
-                      <draggable v-model="xm2[10]"  :options="{group: 'people'}" @start="drag=true" @end="drag=false" :move="chooseItem" >
-                      <li v-for="(xm3, i3) in xm2[10]" :key="'x'+i3"  >
-                        <span v-if="xm3[10].length == 0 &&  xm3[9]=='Group' " style='display:none'>  {{ xm3[10] = [] }}{{ xm3[10]=[AddEmptyItem()]}}</span>
-                        <div v-if="xm3[10].length>0" class="g3 elevation-12">
-                          3 g - {{i3+1}} >>>>
-                          i - {{xm3[0]}} <v-icon>{{ xm3[1] }}</v-icon>
-                          <ul class="elevation-9">
-                          <draggable v-model="xm3[10]"  :options="{group: 'people'}" @start="drag=true" @end="drag=false" :move="chooseItem" >
-                          <li v-for="(xm4, i4) in xm3[10]" :key="'x'+i4"  >
-                            <span v-if="xm4[10].length == 0 &&  xm4[9]=='Group' " style='display:none'>  {{ xm4[10] = [] }}{{ xm4[10]=[AddEmptyItem()]}}</span>
-                            <div v-if="xm4[10].length>0" class="g4 elevation-9">
-                              4 g - {{i4+1}} >>>>>>
-                              i - {{xm4[0]}} <v-icon>{{ xm4[1] }}</v-icon>
-
-                              <ul class="elevation-6">
-                              <draggable v-model="xm4[10]"  :options="{group: 'people'}" @start="drag=true" @end="drag=false" :move="chooseItem" >
-                              <li v-for="(xm5, i5) in xm4[10]" :key="'x'+i5"  >
-                                <span v-if="xm5[10].length == 0 &&  xm5[9]=='Group' " style='display:none'>  {{ xm5[10] = [] }}{{ xm5[10]=[AddEmptyItem()]}}</span>
-                                <div v-if="xm5[10].length>0" class="g5 elevation-6">
-                                  5 g - {{i5+1}} >>>
-                                  i - {{xm5[0]}} <v-icon>{{ xm5[1] }}</v-icon>
-                                    <ul class="elevation-3">
-                                    <draggable v-model="xm5[10]"  :options="{group: 'people'}" @start="drag=true" @end="drag=false" :move="chooseItem" >
-                                    <li v-for="(xm6, i6) in xm5[10]" :key="'x'+i6"  >
-                                      <span v-if="xm6[10].length == 0 &&  xm6[9]=='Group' " style='display:none'>  {{ xm6[10] = [] }}{{ xm6[10]=[AddEmptyItem()]}}</span>
-                                      <div v-if="xm6[10].length>0" class="g6 elevation-3">
-                                        6 g - {{i6+1}} >>> last
-                                        i - {{xm6[0]}} <v-icon>{{ xm6[1] }}</v-icon>
-                                          <ul class="elevation-0">
-                                          <draggable v-model="xm6[10]"  :options="{group: 'people'}" @start="drag=true" @end="drag=false" :move="chooseItem" >
-                                          <li v-for="(xm7, i7) in xm6[10]" :key="'x'+i7"  >
-                                            <span v-if="xm7[10].length == 0 &&  xm7[9]=='Group' " style='display:none'>  {{ xm7[10] = [] }}{{ xm7[10]=[AddEmptyItem()]}}</span>
-                                            <div v-if="xm7[10].length>0" class="g7 elevation-0" >
-                                              7 g - {{i7+1}} >>> last
-                                              i - {{xm7[0]}} <v-icon>{{ xm7[1] }}</v-icon>
-                                            </div>
-                                            <div v-else class="i7 elevation-0">
-                                              7 i - {{i7+1}}
-                                              i - {{xm7[0]}} <v-icon>{{ xm7[1] }}</v-icon>
-                                            </div>
-                                          </li>
-                                          </draggable>
-                                          </ul>
-                                      </div>
-                                      <div v-else class="i6 elevation-3">
-                                        6 i - {{i6+1}}
-                                        i - {{xm6[0]}} <v-icon>{{ xm6[1] }}</v-icon>
-                                      </div>
-                                    </li>
-                                    </draggable>
-                                    </ul>
-                                </div>
-                                <div v-else class="i5 elevation-5">
-                                  5 i - {{i5+1}}
-                                  i - {{xm5[0]}} <v-icon>{{ xm5[1] }}</v-icon>
-                                </div>
-                              </li>
-                              </draggable>
-                              </ul>
-                            </div>
-                            <div v-else class="i4 elevation-8">
-                              4 i - {{i4+1}}
-                              i - {{xm4[0]}} <v-icon>{{ xm4[1] }}</v-icon>
-                            </div>
-                          </li>
-                          </draggable>
-                          </ul>
-                        </div>
-                        <div v-else class="i3 elevation-11">
-                          3 i - {{i3+1}}
-                          i - {{xm3[0]}} <v-icon>{{ xm3[1] }}</v-icon>
-                        </div>
-                      </li>
-                      </draggable>
-                      </ul>
-
-                    </div>
-                    <div v-else class="i2 elevation-14">
-                      2 i - {{i2+1}}
-                      i - {{xm2[0]}} <v-icon>{{ xm2[1] }}</v-icon>
-                    </div>
-                  </li>
-                  </draggable>
-                  </ul>
-
-                  </div>
-                  <div v-else class="i1 elevation-17">
-                    1 i - {{i1+1}}
-                    i - {{xm1[0]}} <v-icon>{{ xm1[1] }}</v-icon>
-                  </div>
-                </li>
-                </draggable>
-                </ul>
-
-              </div>
-              <div v-else class="i0 elevation-20">
-                i - {{i0+1}}
-                i - {{xm0[0]}} <v-icon>{{ xm0[1] }}</v-icon>
-
-              </div>
-            </li>
-            </draggable>
-         </ul>
-
-    </div>
-    </vue-draggable-resizable>
-
-    </v-layout>
-  </v-container>
   </v-content>
   <v-footer app fixed>
       <span>&copy; db3000 2018</span>
@@ -514,7 +310,10 @@ import formFX from './_Testy/formFX'
 import TestMenu from './_Testy/TestMenu'
 
 import MenuNav from './MenuNav'
+
 import MenuSchema from './MenuSchema'
+import MenuAdminIndex from './MenuAdminIndex'
+
 import List2Barevnost from './List2Barevnost'
 import ListUsers from './ListUsers'
 
@@ -524,7 +323,7 @@ import draggable from 'vuedraggable'
 import vuedraggableresizable from 'vue-draggable-resizable'
 
 
-//Vue.component('vue-drag-resize', VueDragResize)
+
 
 
 // import {ServerTable, ClientTable, Event} from 'vue-tables-2'
@@ -539,40 +338,66 @@ export default {
 //  props: ['server'],
   components: {
     'menu-nav': MenuNav,
+
+    'menu-admin': MenuAdminIndex,
     'menu-schema': MenuSchema,
+
     'form-helper': hw,
     'testy': testy,
     'test-menu': TestMenu,
-    'set-color': List2Barevnost,
-    'set-users': ListUsers,
+    'list2-barevnost': List2Barevnost,
+    'list-users': ListUsers,
     'set-width': SetWidth,
     'set-material': SetMaterial,
     'form-fx': formFX,
-
-
     'old-1': old1,
     'draggable': draggable,
     'vue-draggable-resizable': vuedraggableresizable
-
   },
 
   computed: {
+
     xMenuEmpty2: function(){
       if (this.xMenuEmpty.length==0){
         this.xMenuEmpty.push(this.Add())
       }
     },
     ...mapState([
-      'isUserLoggedIn'
-    ])
+      'isUserLoggedIn',
+      'xMenuMain'
 
+    ]),
   },
 
-
   watch: {
+
+    radio2: function() {
+      if (this.radio2==1){
+    //    this.compa = this.compaDesk
+      }
+    },
     xMenuEmptyx: function() {
         this.xMenuEmpty.push(this.Add())
+    },
+    '$route' (desktop) {
 
+     const  atmp=this.xMenu.join('~').split(',')
+     const idx = atmp.findIndex(function(el){
+
+       return el == desktop.params.ktery
+     })
+      if (idx > 0 ){
+        alert(atmp[idx]+' '+atmp[idx-3]+' '+atmp[idx+2])
+      }
+
+         this.compa.push([{modul: atmp[idx], title: atmp[idx - 3], where: atmp[idx+2]}])
+         this.$router.push({
+          name: 'desktop',
+          path: '/desktop/'
+
+          })
+
+      //   alert(this.compa)
     },
     xMenu: function() {
       var lCountGroups = false
@@ -594,38 +419,37 @@ export default {
   data: () => {
     return {
       drawer: true,
-      StartRight: 300,
+      // Zobrazeni - checkboc
+      checkDesk: [],
+      cont: true,
+      lay: true,
+      demo: false,
+      demo2: false,
+      winpar: true,
 
+      // Zobrazeni - checkboc
 
-      zIndexs: {
-        z1: 1,
-        z2: 2,
-        z3: 3
-      },
-      dialog: true,
-      show_w1 :true,
-      show_w2 :true,
-      show_w3 :true,
-      n: 21,
-      width: 200,
-      height: 100,
-      left: 100,
-      top: 100,
-      isOpen: true,
 
       select: 'Modul',
-      comp_list: ['form-helper', 'testy', 'test-menu', 'set-color', 'set-users', 'set-width', 'set-material', 'form-fx', 'old-1'],
+      comp_list: ['form-helper', 'testy', 'test-menu', 'list2-barevnost', 'list-users', 'set-width', 'set-material', 'form-fx', 'old-1'],
       activeName: 'first', // tabs pro el
       isCollapse: true,
 
-      radio2: 6,
+      radio2: 10,
+      radio3: '',
+      openWins: [],
 
       informace: '',
       component: '',
       compa: [],
+
+      compaWin: [],
+      compaDesk: [],
+
       aMenu: [],
       xMenu:[],
-      xMenuFinal: [['Muj přehled', 'trending_up', 'menu_switch', 'set-my-overview', 'true','','','','right','Item',[] ]],
+      // xMenuFinal: [['Muj přehled', 'trending_up', 'menu_switch', 'set-my-overview', 'true','','','','right','Item',[] ]],
+      xMenuFinal: [],
       xMenuEmpty: [],
       xMenuCopy: [],
       people1001: "aaaaa",
@@ -633,24 +457,24 @@ export default {
       menu_solo_2: [['Kalkulace', 'iso', 'menu_switch', 'set-calc', 'true','','','','right','Item',[]] ],
       menu_solo_3: [['Zakazky', 'shopping_cart', 'menu_switch', 'set-zakazky', 'true','','','','right','Item',[]] ],
 
-      menu_solo_4: [{
-        Nadpis: 'Muj přehled',
-        Icona: 'trending_up',
-        Akce: 'set-my-overview'
-      }],
+      // menu_solo_4: [{
+      //   Nadpis: 'Muj přehled',
+      //   Icona: 'trending_up',
+      //   Akce: 'set-my-overview'
+      // }],
       menu_set_1: [
         ['Prehledy', 'sort', 'menu_switch', 'prehled', 'true','','','','right','Item',[]],
-        ['Stara DB', 'accessible', 'menu_switch', 'old-1', 'true', 'window','','','','Item',[]]
+        ['Stara DB', 'accessible', 'menu_switch', 'old-1', 'true', 'xxxxxxx','','','','Item',[]]
         // ['FX', 'accessible', 'menu_switch', 'form-fx', 'true']
       ],
       menu_set_2: [
-        ['Barevnost', 'format_color_fill', 'menu_switch', 'set-color', 'true','','','','','Item',[]],
+        ['Barevnost', 'format_color_fill', 'menu_switch', 'list2-barevnost', 'true','','','','','Item',[]],
         ['Sirky', 'code', 'menu_switch', 'set-width', 'true','','','','','Item',[]],
         ['Materiály', 'texture', 'menu_switch', 'set-material', 'true','','','','','Item',[]],
         ['Stroje', 'texture', 'menu_switch', 'set-material', 'true','','','','','Item',[]]
       ],
       menu_set_3: [
-        ['Uzivatele', 'wc', 'menu_switch', 'set-users', 'true','','','','','Item',[]],
+        ['Uzivatele', 'wc', 'menu_switch', 'list-users', 'true','','','','','Item',[]],
         ['Moduly', 'view_module', 'menu_switch', 'moduly', 'true','','','','','Item',[]],
 
       ],
@@ -659,12 +483,67 @@ export default {
   },
 
 
+
   beforeDestroy: function () {
     window.removeEventListener('resize', this.handleResize)
   },
   methods: {
     range: _.range,
+    closeAllWin: function () {
+      const res = confirm('Zavrit vsechna externi okna aplikace?')
+      if (res === false ) {
 
+        return false
+      }
+
+      this.openWins.forEach( function (el) {
+        setTimeout(function(){
+           el.focus()
+           setTimeout(function(){
+           el.close()
+
+          },500)
+
+        },500)
+        //el.focus()
+      } )
+      return true
+    },
+
+    findAllWin: function () {
+      const aCopyWins=this.openWins
+      this.openWins.forEach( function (el,idx) {
+          if (el.name > '' ) {
+            el.focus()
+          } else {
+            aCopyWins.splice(idx,1)
+          }
+      })
+       this.openWins = aCopyWins
+    },
+    winFocus: function (winObj) {
+      if (winObj === "CloseAllWin") {
+        if (this.closeAllWin()){
+            this.openWins = []
+        }
+      }
+      if (winObj === "FindAllWin") {
+        this.findAllWin()
+      }
+
+      this.openWins.forEach( function (el) {
+        //el.close()
+        if (winObj.name==el.name){
+          el.focus()
+        }
+      } )
+
+    },
+
+
+    Alert: function(par) {
+      alert(par)
+    },
     handleResize(event) {
       this.StartRight = window.innerWidth
     },
@@ -674,7 +553,15 @@ export default {
     },
     MenuF: function () {
       // alert('emil')
-      eventBus.$emit('Menuf', this.xMenu )
+    //    if ( ! store._modulesNamespaceMap['plugins/sub/']) {
+    //        store.registerModule(['plugins', 'sub'], {
+    //     namespaced: true
+    //   })
+    // }
+      if (!this.$store.state.xMenuMain) {
+        this.$store.dispatch('setMenuMain',  this.xMenu )
+        eventBus.$emit('Menuf', this.xMenu )
+      }
     },
     MenuFinal() {
       this.xMenuFinal=Array()
@@ -707,7 +594,7 @@ export default {
       aEmpty[9] = 'Group'
       aEmpty[10]=[]
       aEmpty[10].push(['Muj přehled', 'trending_up', 'menu_switch', 'set-my-overview', 'true', '', '', '', 'right', 'Item', []])
-      aEmpty[10].push(['Stara DB', 'accessible', 'menu_switch', 'old-1', 'true', 'window','','','','Item',[]])
+      aEmpty[10].push(['Stara DB', 'accessible', 'menu_switch', 'old-1', 'true', 'windowxx','','','','Item',[]])
       this.xMenu.push( aEmpty)
       var aEmpty  = Array(11)
       var aEmpty2 = Array(11)
@@ -719,6 +606,8 @@ export default {
       aEmpty[8] = 'left'
       aEmpty[9] = 'Group'
       aEmpty[10]=[]
+      aEmpty2 = ['Menu Schema', 'texture', 'menu_switch', 'menu-schema', 'true','','','','','Item',[]]
+      aEmpty[10].push(aEmpty2)
       aEmpty2=['Materiály', 'texture', '', '', 'true','','','','','Group',[]]
       aEmpty2[10].push(['Potisknutelnost', 'texture', 'menu_switch', 'material-potisknutelnost', 'true','','','','','Item',[]])
       aEmpty2[10].push(['Rozmery', 'texture', 'menu_switch', 'material-rozmery', 'true','','','','','Item',[]])
@@ -796,26 +685,88 @@ export default {
         if (par[5] === 'window') {
           let route = this.$router.resolve({ name: par[3] })
           // let route = this.$router.resolve('/link/to/page'); // This also works.
-          window.open(route.href, 'Old_1', 'width=800')
+          this.openWins.push(window.open(route.href, par[3],  'width=400,height=400'))
           return
         }
       }
-      // return
-      this.compa.push(par[3])
-      this.compa = _.uniqBy(this.compa)
+      const ind = this.compa.findIndex(function(el){
+        return el[0].modul == par[3]
+      })
+     // alert(ind)
 
-      this.informace = this.compa
-      switch (par) {
-        case 'set_calc':
-          break
-        case 'set_color':
-          // this.component= 'set_color'
-          break
-        default:
-          this.component = par
-          break
+      if (ind < 0) {
+        this.compa.push([{modul: par[3], title: par[0], where: par[5]}])
+        this.radio3= par[3]
+        this.compa = _.uniqBy(this.compa)
       }
     },
+    closeModule: function (ktery) {
+
+      const ind = this.compa.findIndex(function(el){
+        return el[0].modul == ktery
+      })
+      if (ind >= 0) {
+        this.compa.splice(ind,1)
+        this.radio3=''
+      }
+    },
+    moveModuleToWin: function (ktery, presun) {
+      //const  atmp=this.xMenu.join('~').split(',')
+      const  atmp=this.$store.state.xMenuMain.join('~').split(',')
+
+      const idx = atmp.findIndex(function(el){
+        return el == ktery
+     })
+     //alert(this.$store.state.xMenuMain)
+
+      const ind = this.compa.findIndex(function(el){
+        return el[0].modul == ktery
+      })
+      const indD = this.compaDesk.findIndex(function(el){
+        return el[0].modul == ktery
+      })
+      //alert(idx + '/' + ind + '/' + presun + '/'+ ktery +'/'+atmp)
+      if (idx >= 0 && ind >= 0 && presun == 1) {
+        this.compaWin.push(this.compa[ind])
+        let route = this.$router.resolve({ name: atmp[idx] })
+        var  zzznewWin = window.open(route.href, atmp[idx],  'width=400,height=400')
+        zzznewWin.name = ktery
+        zzznewWin.title = ktery
+        const n = this.openWins.findIndex(function(el){
+          return el.name === ktery
+        })
+        // alert(n+ '/' + ktery)
+        if ( n == -1 ) {
+          this.openWins.push(zzznewWin)
+        }
+        const nLen = this.compaWin.length
+      }
+      if (idx >= 0 && ind >= 0 && presun == 2) {
+        this.compaDesk=this.compa
+        this.radio2 = ktery
+        this.compa=[]
+      }
+    },
+    moveModuleToDesk: function (ktery, presun) {
+      const  atmp=this.xMenu.join('~').split(',')
+      const idx = atmp.findIndex(function(el){
+        return el == ktery
+     })
+      const ind = this.compa.findIndex(function(el){
+        return el[0].modul == ktery
+      })
+      if (idx >= 0 && ind >= 0) {
+        this.compaWin.push(this.compa[ind])
+        let route = this.$router.resolve({ name: atmp[idx] })
+        window.open(route.href, atmp[idx],  'width=400,height=400')
+        const nLen = this.compaWin.length
+
+        this.compa.splice(ind,1)
+
+
+      }
+    },
+
     handleOpen (key, keyPath) {
       console.log(key, keyPath)
     },
@@ -847,6 +798,8 @@ export default {
 
     this.AddDefault()
     this.MenuF()
+
+
     window.addEventListener('resize', this.handleResize)
 
   },
@@ -857,6 +810,15 @@ export default {
     })
     eventBus.$on('logout', () => {
        this.logout()
+       // alert("jsme tu")
+    })
+    eventBus.$on('appCheck', () => {
+       // this.compa.push('appCheck')
+       alert('Jsem Zde - evenBus appCheck')
+       // alert("jsme tu")
+    })
+    eventBus.$on('Alert', (server) => {
+       this.Alert(server)
        // alert("jsme tu")
     })
     this.StartRight=window.innerWidth - 50
