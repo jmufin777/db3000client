@@ -1,6 +1,6 @@
 <template>
 
-    <div >
+    <div style="height:400px">
     <el-row  :gutter="0">
     <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:20px">
         Modulos
@@ -53,7 +53,7 @@
         {{error}}
     </el-col>
     <el-col :span=24 class="green">
-        DataRes {{ tableData }} / {{ isUserLoggedIn }} /{{  user }}
+        DataRes {{ tableData }} / {{ isUserLoggedIn }} /{{  user }} / {{ info}}
     </el-col>
     </el-row>
     </div>
@@ -102,25 +102,17 @@ export default {
     ])
   },
 
-  async created () {
+  async mounted () {
+    this.initModule(this.menu_set_2)
     if (this.isUserLoggedIn) {
       try {
-        this.tableData = (await ListModulesService.all(this.user))
-      } catch (error) {
-        this.error = error.response.status
-      }
-      if (this.error == 433) {
-          this.initModule(this.menu_set_2)
-          this.initModule(this.menu_set_3)
 
-      }
-    } else {
-      this.tableData.push(['Prihlaseni error'])
-    }
-  },
+          this.info = (await ListModulesService.init(this.user,this.menu_set_2))
+          this.info = (await ListModulesService.init(this.user,this.menu_set_3))
 
-  async mounted () {
-    if (this.isUserLoggedIn) {
+      } catch (e) {
+        this.error="aaaaa"
+      }
       try {
         this.tableData = (await ListModulesService.all(this.user))
       } catch (error) {
