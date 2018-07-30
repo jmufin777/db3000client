@@ -9,7 +9,9 @@ import List2Barevnost from '@/components/List2Barevnost'
 
 import ListUsers from '@/components/ListUsers.vue'
 import Old1 from '@/components/Old_1.vue'
+
 import MenuSchema from '@/components/MenuSchema.vue'
+import ListModules from '@/components/ListModules.vue'
 import MenuAdminIndex from '@/components/MenuAdminIndex.vue'
 
 Vue.use(Router)
@@ -42,6 +44,11 @@ export default new Router({
       component: MenuSchema
     },
     {
+      path: '/menu-admin',
+      name: 'menu-admin',
+      component: MenuAdminIndex
+    },
+    {
       path: '/testy',
       name: 'testy',
       component: Testy
@@ -55,6 +62,11 @@ export default new Router({
       path: '/list2-barevnost',
       name: 'list2-barevnost',
       component: List2Barevnost
+    },
+    {
+      path: '/list-modules',
+      name: 'list-modules',
+      component: ListModules
     },
     {
       path: '/set/list-users',

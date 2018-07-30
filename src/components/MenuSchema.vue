@@ -1,5 +1,6 @@
 <template>
-<v-flex sx12 md12>
+<el-row :gutter="0">
+  <el-col :span=24>
   <el-tooltip content="Ulozi lokalne zmeny a prekresli hlavni menu" placement="bottom" effect="light">
     <el-button  @click="SaveMenu" type="success" icon="el-icon-check"  size="mini" class="elevation-1">Uloz</el-button>
   </el-tooltip>
@@ -13,13 +14,13 @@
     </el-tooltip>
     <el-tooltip  placement="bottom" effect="light">
     <div slot="content">Ukonci a znovu nacte  aplikaci</div>
-    <el-button  @click="$router.go()" type="success" icon="el-icon-success"  size="mini" class="elevation-1">Hotovo</el-button>
+    <el-button  @click="$router.go()" type="success" icon="el-icon-success"  size="mini" class="elevation-1">OK</el-button>
     </el-tooltip>
     <el-tooltip  placement="bottom" effect="light">
     <div slot="content">{{StoreInfo}}</div>
-    <el-button  @click="StoreInfo0" type="success" icon="el-icon-success"  size="mini" class="elevation-1">Info</el-button>
+    <el-button  @click="StoreInfo0" type="success" icon="el-icon-info"  size="mini" class="elevation-1"></el-button>
     </el-tooltip>
-    <el-button  @click="jarda" type="success" icon="el-icon-success"  size="mini" class="elevation-1">Jarda</el-button>
+    <!-- <el-button  @click="jarda" type="success" icon="el-icon-success"  size="mini" class="elevation-1">Jarda</el-button> -->
 
    <ul v-show="true">
             <draggable v-model="xMenuy1"  :options="{group: 'people' }" @start="drag=true" @end="drag=false" :move="chooseItem" style="padding-right:20px;padding-top:10px">
@@ -157,7 +158,8 @@
             </li>
             </draggable>
          </ul>
-   </v-flex>
+      </el-col>
+   </el-row>
 </template>
 
 <script>

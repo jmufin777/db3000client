@@ -21,8 +21,6 @@
       </v-toolbar-title>
   <v-spacer></v-spacer>
 
-
-
     <!-- <el-checkbox label="Kontejner" v-model="contain" border size="mini" ></el-checkbox>
     <el-checkbox label="MujObal" v-model="mujdiv" border size="mini" ></el-checkbox> -->
      <!-- <el-checkbox label="WinPar" v-model="winpar" border size="mini" ></el-checkbox> -->
@@ -34,13 +32,27 @@
    <el-radio-group v-model="radio2" size="mini">
     <el-radio-button :label="1">Okna</el-radio-button>
     <el-radio-button :label="10">Karty</el-radio-button>
+
     <el-radio-button :label="20">Plocha</el-radio-button>
   </el-radio-group>
-  <el-radio-group v-if="radio2===20 " v-model="radio3" size="mini">
+  <el-input-number size="mini" :max="24" :min="-1" v-model="myFlex"></el-input-number>
+
+  <!-- <el-radio-group v-if="radio2===20 " v-model="radio3" size="mini">
      <el-radio-button v-for="(compD,i) in compa" :key="'c'+i"
         :label="compD[0].modul"
       >{{compD[0].title}}</el-radio-button>
-  </el-radio-group>
+  </el-radio-group> -->
+
+<el-dropdown @command="radio3_a">
+    <el-badge :value="compa.length" class="item ">
+      <el-button size="small" class="el-icon-upload2">{{radio3}}</el-button>
+    </el-badge>
+  <el-dropdown-menu slot="dropdown" style="z-index:2000000">
+     <el-dropdown-item v-for="(compaE, iE) in compa " :key="iE" :command="compaE[0].modul">{{ compaE[0].title }}</el-dropdown-item>
+      <el-dropdown-item  command="CloseAllWin">Zavrit vse</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown>
+<v-spacer></v-spacer>
 
 <el-dropdown @command="winFocus">
     <el-badge :value="openWins.length" class="item ">
@@ -50,7 +62,7 @@
   <el-dropdown-menu slot="dropdown">
 
      <el-dropdown-item  command="FindAllWin">Ukazat vse</el-dropdown-item>
-     <el-dropdown-item v-for="(openWin, iO) in openWins" :key="iO" :command="openWin">{{'Okno:'+openWin.name}}</el-dropdown-item>
+     <el-dropdown-item v-for="(openWin, iO) in openWins" :key="iO" :command="openWin">{{openWin.name}}</el-dropdown-item>
      <el-dropdown-item  command="CloseAllWin">Zavrit vse</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>
@@ -60,10 +72,11 @@
 <v-spacer></v-spacer>
 
 
-
 <router-link :to="{name: 'desktop', params: { ktery: 'old-1' } }" >old_1</router-link>
 Test2:
 <router-link :to="{name: 'desktop', params: {ktery: 'menu-schema'}}">MenuSchema</router-link>
+Moduly:
+<router-link :to="{name: 'desktop', params: {ktery: 'list-modules'}}">Moduly</router-link>
 <v-spacer></v-spacer>
       <v-btn
         v-if="$store.state.isUserLoggedIn"
@@ -106,113 +119,9 @@ Test2:
  @dragging
  @dragstop -->
 
- <win-dow  v-if="radio2==2" title="Barevnost 1" :id="'w_001'"
-  :x="20"
-  :w="700"
-  :y="0"
-  :z="90"
-  :h="351"
-  :parent="false"
-  :demo="true"
 
-  >
+<menu-admin v-if="demo"></menu-admin>
 
-    <button
-        slot="action"
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
-        light
-        small
-        absolute
-        right
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-      <v-icon>close</v-icon>
-    </button>
-
-    <button
-        slot="action-menu"
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 _right" style="position: absolute;top:0px;height:18px"
-        light
-        small
-        absolute
-        right
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-      <v-icon>close</v-icon>
-    </button>
-</win-dow>
-
- <win-dow  v-if="demo" title="Moduly Volby" id="wMenuSchema"
-      :x="100"
-      :y="20"
-      :h="500"
-      :w="200"
-      :parent="false"
->
-     <button
-       slot="action"
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 _right" style="position: absolute;height:18px"
-        light
-        small
-        absolute
-        right
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-      <v-icon style="height:10px;width:14px">close</v-icon>
-     </button>
-
-     <button
-        slot="action"
-        v-if="$store.state.isUserLoggedIn"
-        class="red accent-12 elevation-10 " style="position: absolute;height:18px"
-        light
-        small
-        absolute
-        left
-        middle
-        fab
-        ripple
-        @click="onDragAll"
-      >
-      Tlacitko
-     </button>
-
-     <div class="elevation-20 " style="height:90%;overflow-y:scroll; background:white" >
-      <v-layout row wrap md>
-      <v-flex md6 sx4 lg3>
-
-    <draggable v-model="menu_set_3"  :options="{group:{ name:'people',  pull:'clone' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
-    <v-card v-for="(element,i) in menu_set_3" :key="i" class="people pa-2 ma-2 "  :id="'b' + i" color="blue" >
-        <v-card-text>{{element[0]}}
-        </v-card-text>
-    </v-card>
-    </draggable>
-    </v-flex>
-      <v-flex md6 sx4 lg3>
-    <draggable v-model="menu_set_2"  :options="{group:{ name:'people',  pull:'clone'  }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
-    <v-card v-for="(element,i) in menu_set_2" :key="i" class="people pa-2 ma-2" :id="'a' + i" color="teal" >
-        <v-card-text>{{element[0]}}</v-card-text>
-    </v-card>
-    </draggable>
-      </v-flex>
-
-    </v-layout>
-    </div>
-      <div class="drag3 elevation-20" style="position:absolute;padding:0px;margin:0px;bottom:0px;height:0px;  border-bottom: 8px solid"
-     >.</div>
-</win-dow>
 <win-dow v-if="radio2===1" v-for="(comp,i) in compa" :key="'c'+i"
     :id="comp[0].modul "
     :title="comp[0].title"
@@ -237,7 +146,7 @@ Test2:
 
   <el-row v-if=" radio2==10" :gutter=0 >
     <draggable v-model="compa"  :options="{group:{ name:'app_move' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
-      <el-col v-for="(comp_app, iapp) in compa" :key="iapp" :span="24/ compa.length">
+      <el-col v-for="(comp_app, iapp) in compa" :key="iapp" :span="myFlex || 24/ compa.length">
        <el-card shadow="hover">
       <el-tooltip  placement="bottom" effect="light" >
       <div slot="content">Vytvori nezavislou kopii v samostatne okne</div>
@@ -314,11 +223,14 @@ import MenuNav from './MenuNav'
 import MenuSchema from './MenuSchema'
 import MenuAdminIndex from './MenuAdminIndex'
 
-import List2Barevnost from './List2Barevnost'
-import ListUsers from './ListUsers'
 
+import ListUsers from './ListUsers'
+import ListModules from '@/components/ListModules.vue'
+
+import List2Barevnost from './List2Barevnost'
 import SetWidth from './SetWidth'
 import SetMaterial from './SetMaterial'
+
 import draggable from 'vuedraggable'
 import vuedraggableresizable from 'vue-draggable-resizable'
 
@@ -342,11 +254,14 @@ export default {
     'menu-admin': MenuAdminIndex,
     'menu-schema': MenuSchema,
 
+
     'form-helper': hw,
     'testy': testy,
     'test-menu': TestMenu,
     'list2-barevnost': List2Barevnost,
     'list-users': ListUsers,
+    'list-modules': ListModules,
+
     'set-width': SetWidth,
     'set-material': SetMaterial,
     'form-fx': formFX,
@@ -387,10 +302,16 @@ export default {
        return el == desktop.params.ktery
      })
       if (idx > 0 ){
-        alert(atmp[idx]+' '+atmp[idx-3]+' '+atmp[idx+2])
+        alert('ktery '+atmp[idx]+' '+atmp[idx-3]+' '+atmp[idx+2])
+      } else {
+        alert('Modul ' + desktop.params.ktery + ' neni dostupny v menu ')
+        return
       }
 
+
+
          this.compa.push([{modul: atmp[idx], title: atmp[idx - 3], where: atmp[idx+2]}])
+
          this.$router.push({
           name: 'desktop',
           path: '/desktop/'
@@ -423,7 +344,7 @@ export default {
       checkDesk: [],
       cont: true,
       lay: true,
-      demo: false,
+      demo: true,
       demo2: false,
       winpar: true,
 
@@ -434,7 +355,7 @@ export default {
       comp_list: ['form-helper', 'testy', 'test-menu', 'list2-barevnost', 'list-users', 'set-width', 'set-material', 'form-fx', 'old-1'],
       activeName: 'first', // tabs pro el
       isCollapse: true,
-
+      myFlex: -1,
       radio2: 10,
       radio3: '',
       openWins: [],
@@ -489,6 +410,12 @@ export default {
   },
   methods: {
     range: _.range,
+    radio3_a: function (a) {
+      if (a === "CloseAllWin" && confirm('Ukoncit vsechny aplikace ?')) {
+        this.compa= []
+      }
+      this.radio3 = a
+    },
     closeAllWin: function () {
       const res = confirm('Zavrit vsechna externi okna aplikace?')
       if (res === false ) {
