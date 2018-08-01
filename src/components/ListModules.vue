@@ -101,7 +101,7 @@
   <el-form-item label="Nazev" size="mini">
    <el-input  v-model="form.Nazev" size="mini" resize autosize></el-input>
   </el-form-item>
-  <el-form-item label="Ikona" size="mini">
+    <el-form-item label="Ikona" size="mini">
    <el-input v-model="form.Ikona" size="mini" resize ></el-input>
    </el-form-item>
    <el-form-item label="Spustec" size="mini" style="width:2000">
@@ -122,10 +122,17 @@
    <el-form-item label="N3" size="mini">
    <el-input v-model="form.Volna3" size="mini" resize ></el-input>
    </el-form-item>
+
    <el-form-item label="Typ" size="mini">
 
-   <el-select v-model="value" placeholder="Select" size="mini">
-    <el-option   v-for="(Typ, i) in (form.Typ)" :key="i" :label="Typ"   :value="i"></el-option>
+   <el-select v-model="form.value2" placeholder="Select" size="mini">
+    <el-option
+    v-for="typ in form.Typ"
+    :key="typ.value"
+    :label="typ.label"
+    :value="typ.value">
+    {{ typ.value }}
+    </el-option>
   </el-select>
   </el-form-item>
 
@@ -133,6 +140,7 @@
     <el-button type="primary" @click="onSubmit">Create</el-button>
     <el-button @click="centerDialogVisible=false">Cancel</el-button>
   </el-form-item>
+
 
 </el-form>
   </span>
@@ -162,6 +170,28 @@ export default {
   },
   data: () => {
     return {
+
+       options2: [{
+          value: 'Option1',
+          label: 'Option1'
+        }, {
+          value: 'Option2',
+          label: 'Option2',
+          disabled: true
+        }, {
+          value: 'Option3',
+          label: 'Option3'
+        }, {
+          value: 'Option4',
+          label: 'Option4'
+        }, {
+          value: 'Option5',
+          label: 'Option5'
+        }],
+        value2: '',
+
+
+
       Modulex: 'xxxx',
       centerDialogVisible: false,
       info: '',
@@ -177,7 +207,17 @@ export default {
         Volna1: '',
         Volna2: '',
         Volna3: '',
-        Typ: ['tetsik','Item','Group'],
+        Typ: [
+          {
+          value: 'Item',
+          label: 'Item'
+        }, {
+          value: 'Group',
+          label: 'Group',
+          disabled: false
+        }],
+
+        value2: 'Group',
         Pole: [],
         items: ['Barevnost', 'format_color_fill', 'menu_switch', 'list2-barevnost', 'true','','','','','Item',[]]
       },
@@ -292,7 +332,7 @@ async  mounted () {
       this.form.Volna1 = item[6]
       this.form.Volna2 = item[7]
       this.form.Volna3 = item[8]
-      this.form.Typ = item[9]
+      this.form.value2 = item[9]
       this.form.Pole = [10]
 
         //['Uzivatele', 'wc', 'menu_switch', 'list-users', 'true','','','','','Item',[]],
