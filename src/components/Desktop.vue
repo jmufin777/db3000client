@@ -25,7 +25,7 @@
     <el-checkbox label="MujObal" v-model="mujdiv" border size="mini" ></el-checkbox> -->
      <!-- <el-checkbox label="WinPar" v-model="winpar" border size="mini" ></el-checkbox> -->
      <el-checkbox label="Demo2" v-model="demo2" border size="mini" ></el-checkbox>
-     <el-checkbox label="Demo" v-model="demo" border size="mini" ></el-checkbox>
+     <el-checkbox label="MenuAdmin" v-model="demo" border size="mini" ></el-checkbox>
 
 
     <v-spacer></v-spacer>
@@ -122,6 +122,9 @@ Moduly:
 
 <menu-admin v-if="demo"></menu-admin>
 
+
+
+
 <win-dow v-if="radio2===1" v-for="(comp,i) in compa" :key="'c'+i"
     :id="comp[0].modul "
     :title="comp[0].title"
@@ -216,6 +219,10 @@ import hw from './Blank.vue'
 import testy from './_Testy/testy'
 import formFX from './_Testy/formFX'
 
+import DevDoc from './dev/DevDoc'
+import DevPP from './dev/DevPP'
+import DevPPKalc from './dev/DevPPKalc'
+
 import TestMenu from './_Testy/TestMenu'
 
 import MenuNav from './MenuNav'
@@ -226,6 +233,7 @@ import MenuAdminIndex from './MenuAdminIndex'
 
 import ListUsers from './ListUsers'
 import ListModules from '@/components/ListModules.vue'
+import ListGroups from '@/components/ListGroups.vue'
 
 import List2Barevnost from './List2Barevnost'
 import SetWidth from './SetWidth'
@@ -254,6 +262,11 @@ export default {
     'menu-admin': MenuAdminIndex,
     'menu-schema': MenuSchema,
 
+    'dev-doc': DevDoc,
+    'dev-pp': DevPP,
+    'dev-pp-kalc': DevPPKalc,
+
+
 
     'form-helper': hw,
     'testy': testy,
@@ -261,6 +274,7 @@ export default {
     'list2-barevnost': List2Barevnost,
     'list-users': ListUsers,
     'list-modules': ListModules,
+    'list-groups': ListGroups,
 
     'set-width': SetWidth,
     'set-material': SetMaterial,
@@ -344,7 +358,7 @@ export default {
       checkDesk: [],
       cont: true,
       lay: true,
-      demo: true,
+      demo: false,
       demo2: false,
       winpar: true,
 

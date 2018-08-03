@@ -7,6 +7,11 @@ import Testy from '@/components/_Testy/testy'
 import TestMenu from '@/components/_Testy/TestMenu.vue'
 import List2Barevnost from '@/components/List2Barevnost'
 
+import DevDoc from '@/components/dev/DevDoc.vue'
+import DevPP from '@/components/dev/DevPP.vue'
+import DevPPKalc from '@/components/dev/DevPPKalc.vue'
+
+
 import ListUsers from '@/components/ListUsers.vue'
 import Old1 from '@/components/Old_1.vue'
 
@@ -69,10 +74,26 @@ export default new Router({
       component: ListModules
     },
     {
+      path: '/dev-pp',
+      name: 'dev-pp',
+      component: DevPP
+    },
+    {
+      path: '/dev-pp-kalc',
+      name: 'dev-pp-kalc',
+      component: DevPPKalc
+    },
+    {
+      path: '/dev-doc',
+      name: 'dev-doc',
+      component: DevDoc
+    },
+    {
       path: '/set/list-users',
       name: 'list-users',
       component: ListUsers
     }
+
 
 
   ]

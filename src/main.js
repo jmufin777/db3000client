@@ -13,18 +13,25 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css' //
 import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
 import 'vuetify/dist/vuetify.min.css'
 
+import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-loade
+
 // import DlgDraggable from 'vue-element-dialog-draggable'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-
 import draggable from 'vuedraggable'
 import vuedraggableresizable from 'vue-draggable-resizable'
- Vue.component('draggable', draggable)
- Vue.component('vue-draggable-resizable',vuedraggableresizable )
+Vue.component('draggable', draggable)
+Vue.component('vue-draggable-resizable',vuedraggableresizable )
+
+import VueFriendlyIframe from 'vue-friendly-iframe';
+Vue.component('vue-friendly-iframe', VueFriendlyIframe);
+
+import VueFrame from 'vue-frame'
 
 import Panel from '@/components/globals/Panel'
+
 import WinDow from '@/components/globals/WinDow'
 import Ram1 from '@/components/globals/Ram1'
 import VueJsonPretty from 'vue-json-pretty'
@@ -32,9 +39,7 @@ Vue.component('panel', Panel)
 Vue.component('win-dow', WinDow)
 // Vue.component('ram1', Ram1)
 Vue.component('vue-json-pretty', VueJsonPretty)
-
-
-
+// main.js
 Vue.config.productionTip = false
 
 Vue.use(vuetify, {
@@ -44,7 +49,8 @@ Vue.use(ElementUI)
 
 sync(store, router)
 
-import g from '@/funkce/global.js'
+// import g from '@/funkce/global.js'
+
 export const eventBus = new Vue()
 
 /* eslint-disable no-new */
@@ -54,6 +60,8 @@ new Vue({
   store,
   components: {
     App,
+    VueFrame
+
   },
   template: '<App/>'
 })

@@ -10,15 +10,15 @@
     <el-col :span="2" :offset="5" >
       <el-tooltip content="Vlozi novy modul do databaze" placement="top" effect="light">
       <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
-        @click="newModule()"
+        @click="newModule(-1)"
     ></el-button>
       </el-tooltip>
     </el-col>
 
     <el-col :span="2" :offset="2" >
-      <el-tooltip content="Ulozi modulyv zobrazenem poradi" placement="top" effect="light">
+      <el-tooltip content="Ulozi moduly v zobrazenem poradi" placement="top" effect="light">
     <el-button  type="success" icon='el-icon-success'  size="mini" class="elevation-0"
-        @click="setModules()"
+        @click="setModules(1)"
     ></el-button>
       </el-tooltip>
     </el-col>
@@ -28,18 +28,42 @@
         @click="showData()"
     ></el-button>
     </el-col>
+    <!-- <win-dow :title="'prubeh'" :id="'progrs'" :h="200" :w="200" :x="10" :y="100" :parent="false" v-if="IsWaiting"> -->
+      <div style="position:absolute;top:100px;left:-100px">
+      <v-progress-circular v-if="IsWaiting"
+      :rotate="360"
+      :size="100"
+      :width="15"
+      :value="nWait"
+      color="teal"
+
+    >
+      {{ nWait }}
+    </v-progress-circular>
+    </div>
+
+    <!-- </win-dow> -->
    </el-row>
 
     <el-row :gutter="0" style="margin-top:12px">
      <draggable v-model="tableShow"  :options="{group:{ name:'people',  pull:'clone' }}"
      @start="drag=true" @end="drag=false" :move="chooseItem" >
-    <el-col :span="24" v-for="(item,idb) in tableShow" :key="idb" class="people pa-0   blue"  :id="'b' + idb"
+    <el-col v-if="item[9]=='Item' ||  true" :span="24" v-for="(item,idb) in tableShow" :key="idb" v-bind:class="{green: item[9]=='Group'}" class="people pa-0   blue"  :id="'b' + idb"
       style="margin-top :1px" @click="centerDialogVisible= true"
       >
-        <el-col :span=3 ><v-icon  @dblclick="editModule(item)" small left >{{item[1]}}</v-icon></el-col>
+        <el-col :span=3
+            @click="editModule(item,idb)"><v-icon  @dblclick="editModule(item,idb)" small left >{{item[1]>''?item[1]:'code'}}</v-icon></el-col>
+        <el-col :span=12 :push="1" style="text-align:left">{{item[0]}}</el-col>
+   </el-col>
+   <el-col :span=24 >Skupiny </el-col>
+   <el-col v-if="item[9]=='Group' && false " :span="24" v-for="(item,idb) in tableShow" :key="idb" v-bind:class="{red: item[9]=='Group'}" class="people pa-0  brown"  :id="'b' + idb"
+      style="margin-top :1px" @click="centerDialogVisible= true"
+      >
+        <el-col :span=3 ><v-icon  @dblclick="editModule(item,idb)" small left >{{item[1]}}</v-icon></el-col>
         <el-col :span=12 :push="1" style="text-align:left">{{item[0]}}</el-col>
    </el-col>
     </draggable>
+
 
     <draggable v-if="tableData.length==0 " v-model="menu_set_3"  :options="{group:{ name:'people',  pull:'clone' }}"
      @start="drag=true" @end="drag=false" :move="chooseItem" >
@@ -71,7 +95,7 @@
     <el-col :span=24 v-for="(element,i) in menu_trash" :key="i" class="people pa-0 teal" :id="'a' + i"
     style="margin-top :1px"
       >
-        <el-col :span=3><v-icon small left >{{element[1]}}</v-icon></el-col>
+        <el-col :span=3><v-icon small left @click="Alert" >{{element[1]}}</v-icon></el-col>
         <el-col :span=12 :push="1" style="text-align:left">{{element[0]}}</el-col>
     </el-col>
 
@@ -94,51 +118,107 @@
   :close-on-click-modal="false"
   center>
 
-    <span slot="title" size="mini">aaaaa</span>
+    <span slot="title" size="mini" class="blue">
+      <el-card>
+        <el-col :span="4"><v-icon v-if="form.Ikona >''" color="red">{{form.Ikona}}</v-icon></el-col>
+        <el-col :span="8">
+        Definice  {{ form.Nazev >'' ? 'modulu ' + form.Nazev : 'noveho modulu' }}
+        </el-col>
+      </el-card>
+      </span>
     <span>
-<el-form ref="form" :model="form" label-width="50px">
+<el-form ref="form" :model="form" label-width="0px">
+  <el-row :gutter="0">
+   <el-col :span="7">
+<v-text-field
+            label="Nazev"
+            hint="Nazev  modulu v menu"
+            class="caption"
+            v-model="form.Nazev"
+            autofocus
+     ></v-text-field>
 
-  <el-form-item label="Nazev" size="mini">
-   <el-input  v-model="form.Nazev" size="mini" resize autosize></el-input>
-  </el-form-item>
-    <el-form-item label="Ikona" size="mini">
-   <el-input v-model="form.Ikona" size="mini" resize ></el-input>
-   </el-form-item>
-   <el-form-item label="Spustec" size="mini" style="width:2000">
-   <el-input v-model="form.Trigger" size="mini" resize ></el-input>
-   </el-form-item>
-   <el-form-item label="Modul" size="mini">
-   <el-input v-model="form.Modul" size="mini" resize ></el-input>
-   </el-form-item>
-   <el-form-item label="Okno?" size="mini">
-   <el-input v-model="form.WindowShow" size="mini" resize ></el-input>
-   </el-form-item>
-   <el-form-item label="N1" size="mini">
-   <el-input v-model="form.Volna1" size="mini" resize ></el-input>
-   </el-form-item>
-   <el-form-item label="N2" size="mini">
-   <el-input v-model="form.Volna2" size="mini" resize ></el-input>
-   </el-form-item>
-   <el-form-item label="N3" size="mini">
-   <el-input v-model="form.Volna3" size="mini" resize ></el-input>
-   </el-form-item>
+  </el-col>
+<el-col :span="7" :offset="1">
+  <v-text-field
+            label="Ikona"
+            hint="Ikona modulu"
+            class="caption"
+            v-model="form.Ikona"
+     ></v-text-field>
+</el-col>
+<el-col :span="7" :offset="1">
+   <v-text-field
+            label="Modul"
+            hint="Modul v aplikaci"
+            class="caption"
+            v-model="form.Modul"
+     ></v-text-field>
+</el-col>
+ </el-row>
+ <el-row :gutter="0">
+ <el-col :span="7">
+   <v-text-field
+            label="Spoustec"
+            hint="Trigger"
+            class="caption"
+            v-model="form.Trigger"
+     ></v-text-field>
+</el-col>
+<el-col :span="7" :offset="1">
+ <v-select
+          :items="form.win_tems"
+          label="Kde ?"
+          hint="Kde se modul spusti?"
+          class="caption"
+          dense
+          background-color="white"
+          :value="form.WindowShow"
+          v-model="form.WindowShow"
+          solo
+          z-index="2000000"
+        ></v-select>
+</el-col>
+<el-col :span="7" :offset="1">
+ <v-select
+          :items="form.type_items"
+          label="Typ"
+          hint="Typ=Skupina, polozka ?"
+          class="caption"
+          dense
+          background-color="white"
+          :value="form.Typ"
+          v-model="form.Typ"
+          solo
+          z-index="2000000"
+        ></v-select>
+</el-col>
+ </el-row>
 
-   <el-form-item label="Typ" size="mini">
 
-   <el-select v-model="form.value2" placeholder="Select" size="mini">
-    <el-option
-    v-for="typ in form.Typ"
-    :key="typ.value"
-    :label="typ.label"
-    :value="typ.value">
-    {{ typ.value }}
-    </el-option>
-  </el-select>
-  </el-form-item>
 
   <el-form-item>
-    <el-button type="primary" @click="onSubmit">Create</el-button>
-    <el-button @click="centerDialogVisible=false">Cancel</el-button>
+   <el-col :span="7" :offset="0">
+ <v-select
+          :items="form.poz_tems"
+          label="Pozice"
+          hint="Ikona pozice"
+          class="caption"
+          dense
+          background-color="white"
+          :value="form.IkonaPozice"
+          v-model="form.IkonaPozice"
+          solo
+          z-index="2000000"
+        ></v-select>
+</el-col>
+<el-col :span="12" :offset="1">
+    <el-button v-if="IsNewModule" type="primary" @click="onSubmit" size="mini">Vytvorit</el-button>
+    <el-button v-if="!IsNewModule" type="primary" @click="onSubmit"  size="mini">Upravit</el-button>
+    <el-button v-if="!IsNewModule" type="primary" @click="onSubmitCopy"  size="mini">Kopie</el-button>
+
+    <el-button @click="centerDialogVisible=false"  size="mini">Cancel</el-button>
+</el-col>
   </el-form-item>
 
 
@@ -146,12 +226,7 @@
   </span>
 
 </el-dialog>
-
-
-
-    </div>
-
-
+ </div>
 
 </template>
 
@@ -159,68 +234,69 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 
-
 import ListModulesService from '@/services/ListModulesService'
-import { setTimeout } from 'timers';
+import { setTimeout, clearInterval } from 'timers';
 
 
 export default {
   components:{
+
     // 'menu-schema': MenuSchema,
   },
   data: () => {
     return {
-
-       options2: [{
-          value: 'Option1',
-          label: 'Option1'
-        }, {
-          value: 'Option2',
-          label: 'Option2',
-          disabled: true
-        }, {
-          value: 'Option3',
-          label: 'Option3'
-        }, {
-          value: 'Option4',
-          label: 'Option4'
-        }, {
-          value: 'Option5',
-          label: 'Option5'
-        }],
-        value2: '',
-
-
-
       Modulex: 'xxxx',
+
       centerDialogVisible: false,
       info: '',
       error: '',
       tableData: [],
       tableShow: [] ,
+      editItem: [] ,
+
+      IsNewModule: false,
+      IsWaiting: false,
+      nI: {} ,
+      nWait: 0,
       form: {
         Nazev: '',
         Ikona: 'code',
         Trigger: 'menu_switch',
         Modul: '',
-        WindowShow: true,
+        WindowShow: 'plocha',
         Volna1: '',
         Volna2: '',
-        Volna3: '',
-        Typ: [
-          {
-          value: 'Item',
-          label: 'Item'
-        }, {
-          value: 'Group',
-          label: 'Group',
-          disabled: false
-        }],
+        IkonaPozice: 'right',
+        Typ: 'Item',
 
-        value2: 'Group',
+
+        type_items: ['Item', 'Group'],
+        win_tems: ['plocha', 'window'],
+        poz_tems: ['left', 'right'],
+        idx: -1,
+
         Pole: [],
         items: ['Barevnost', 'format_color_fill', 'menu_switch', 'list2-barevnost', 'true','','','','','Item',[]]
       },
+
+      compList: [
+        'menu-nav'
+        ,'menu-admin'
+        ,'menu-schema'
+        ,'dev-doc'
+        ,'dev-pp'
+        ,'dev-pp-kalc'
+        ,'form-helper'
+        ,'testy'
+        ,'test-menu'
+        ,'list2-barevnost'
+        ,'list-users'
+        ,'list-modules'
+        ,'set-width'
+        ,'set-material'
+        ,'form-fx'
+        ,'old-1'
+      ],
       menu_set_2: [
         ['Barevnost', 'format_color_fill', 'menu_switch', 'list2-barevnost', 'true','','','','','Item',[]],
         ['Sirky', 'code', 'menu_switch', 'set-width', 'true','','','','','Item',[]],
@@ -252,15 +328,29 @@ export default {
         this.tableShow.push(element.items)
       });
 
-
       console.log('Zmena dat' + this.tableShow + this.menu_set_2)
-    }
+    },
+
+    menu_trash: function() {
+        this.menu_trash.forEach(el1 => {
+          this.tableShow.forEach((el2,i) => {
+            if (el1 == el2 ) {
+               this.tableShow.splice(i,1)
+               // alert('smazu' + i)
+            }
+          })
+        })
+    },
+    xMenuMain: function() {
+
+       // alert('aahoj')
+      }
   },
+
 async  mounted () {
    if (this.isUserLoggedIn) {
       try {
-        //initModule(this.menu_set_2)
-         ListModulesService.all(this.user)
+         ListModulesService.all(this.user, 'All')
          .then( res => {
             if (res.data.info == 0) {
               alert('data nejsou '+ JSON.stringify( res.data.info ))
@@ -274,38 +364,109 @@ async  mounted () {
               this.tableData = res.data.data
             }
          })
-
       } catch (e) {
         this.error = e
       }
    }
   },
   methods: {
+     onSubmitCopy () {
+       this.IsNewModule = true
+       this.onSubmit()
+     },
      onSubmit() {
-        console.log('submit!');
+       const newItem = [
+
+      this.form.Nazev
+      ,this.form.Ikona
+      ,this.form.Trigger
+      ,this.form.Modul
+      ,this.form.Volna0
+      ,this.form.WindowShow
+      ,''
+      ,''
+      ,this.form.IkonaPozice
+      ,this.form.Typ
+      ,[]
+       ]
+
+
+        if (newItem[9]=='Group'){
+           var aEmpty2 = Array(11)
+              aEmpty2[0] = 'Aplikace'
+              aEmpty2[1] = 'home'
+              aEmpty2[3] = 'Spoustec'
+              aEmpty2[8] = 'right'
+              aEmpty2[9] = 'Item'
+              aEmpty2[10] = []
+              newItem[10] = [aEmpty2]
+              // this.$store.state.xMenuMain.push(newItem)
+         }
+       if (this.IsNewModule){
+
+         this.editItem.push(newItem)
+
+         //this.setModules(-1)
+         this.centerDialogVisible = false
+         this.tableShow.push(newItem)
+       } else {
+
+
+         this.centerDialogVisible = false
+         this.tableShow[this.form.idx] = newItem
+
+       }
+
+
+        console.log('submit!', this.form);
       },
     chooseItem(evt) {
       //alert(evt.draggedContext.type)
 
       return true
     },
-    setModules () {
-      ListModulesService.init(this.user,this.tableShow)
-      .then(res => {
+    Alert() {
+      alert('ikona')
+    },
+    setModules (del) {
+      this.IsWaiting=true
+      this.nWait=1
 
-        alert('Moduly byly uspesne vlozeny'+ res.data.info)
+
+
+      this.nI = setInterval(() => {
+        if (this.nWait > 200) {
+          return (this.nWait = 0)
+        }
+        this.nWait += 15
+      }, 100)
+
+      ListModulesService.init(this.user,(del)?this.tableShow: this.editItem , del)
+      .then(res => {
+              ListModulesService.all(this.user,'All')
+               .then (res => {
+                 this.tableShow = []
+                 this.tableData = res.data.data
+                 this.nWait = 100
+                 this.IsWaiting=false
+               })
+
+
+
       })
       .catch((e) => {
-        alert('Moduly se nejak pojebly')
+        alert('Moduly se nejak pojebly'+ e)
       })
+
     },
     getData1() {
-        ListModulesService.init(this.user,this.menu_set_2)
+        ListModulesService.init(this.user,this.menu_set_2, false)
       .then(res => {
-          ListModulesService.init(this.user,this.menu_set_3)
+          ListModulesService.init(this.user,this.menu_set_3, false)
              .then(res => {
-                ListModulesService.all(this.user)
+                ListModulesService.all(this.user,'All')
                .then (res => {
+
                  this.tableData = res.data.data
                })
 
@@ -322,28 +483,53 @@ async  mounted () {
 
       //   alert(this.tableData[0].items[0])
     },
-    editModule (item) {
+    editModule (item, index) {
       this.centerDialogVisible=true
-      this.form.Nazev = item[0]
-      this.form.Ikona = item[1]
-      this.form.Trigger = item[3]
-      this.form.Modul = item[4]
-      this.form.Window = item[5]
-      this.form.Volna1 = item[6]
-      this.form.Volna2 = item[7]
-      this.form.Volna3 = item[8]
-      this.form.value2 = item[9]
-      this.form.Pole = [10]
+      if (item[5] =='' || item[5] == null ) item[5] = 'plocha'
+
+      this.IsNewModule=false
+      this.form.Nazev   = item[0]
+      this.form.Ikona   = item[1]
+      this.form.Trigger = item[2]
+      this.form.Modul   = item[3]
+      this.form.Volna0  = item[4]
+      this.form.WindowShow  = item[5] == ''? 'plocha': item[5]
+      this.form.Volna1  = item[6]
+      this.form.Volna2  = item[7]
+      this.form.IkonaPozice  = item[8]
+      this.form.Typ     = item[9]
+      this.form.Pole    = [10]
+      this.form.idx     = index
+
+
+
+
+
+
 
         //['Uzivatele', 'wc', 'menu_switch', 'list-users', 'true','','','','','Item',[]],
-      alert(item)
+      // alert(item)
 
     },
-    async newModule () {
+    newModule () {
+
+      this.IsNewModule=true
       this.centerDialogVisible = !this.centerDialogVisible
+      this.form.Nazev       =  'Test'
+      this.form.Ikona       =  ''
+      this.form.Trigger     =  'menu_switch'
+      this.form.Modul       =  'testy'
+      this.form.Volna0      =  ''
+      this.form.WindowShow  = 'plocha'
+      this.form.Volna1      =  ''
+      this.form.Volna2      =  ''
+      this.form.IkonaPozice      =  'right'
+      this.form.Typ         =  'Item'
+      this.form.Pole        =  ''
+      this.form.idx         =  ''
       try {
       this.loading = true
-      //this.tableData = (await ListModulesService.init(this.user,this.menu_set_2))
+
       } catch ( error ){
         this.error = error.response.status
         console.log( error  )
@@ -358,5 +544,7 @@ async  mounted () {
 
 }
 </script>
-<style scoped>
+<style lang="stylus" scoped>
+ .v-progress-circular
+    margin: 1rem
 </style>

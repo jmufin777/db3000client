@@ -24,6 +24,18 @@
     <!-- <el-button  @click="jarda" type="success" icon="el-icon-success"  size="mini" class="elevation-1">Jarda</el-button> -->
    <div >
    <ul v-show="true" >
+             <v-btn
+                class="orange accent-12 elevation-10"
+                light
+                small
+                absolute
+                bottom
+                fab
+                ripple
+                @click="xMenuy1.push(AddEmptyItemG())"
+                style="display:none"
+                ><v-icon small left>add</v-icon></v-btn>
+
             <draggable v-model="xMenuy1"  :options="{group: 'people' }" @start="drag=true" @end="drag=false" :move="chooseItem" style="padding-right:20px;padding-top:10px">
             <li v-for="(xMy0, i0) in xMenuy1" :key="'x'+i0" >
                 <span v-if="xMy0[10].length == 0 &&  xMy0[9]=='Group' " style='display:none'>  {{ xMy0[10] = [] }}{{ xMy0[10]=[AddEmptyItem()]}}</span>
@@ -88,7 +100,7 @@
 
                                               7.&nbsp;<v-icon small left>{{ xMy7[1] }}</v-icon>&nbsp;&nbsp;&nbsp;{{xMy7[0]}}
                                             </div>
-                                            <div v-else class="i7 elevation-0">
+                                            <div v-else-if="i7 == 0  ||  xMy7.length<=1 || xMy7[0]!=='Aplikace'" class="i7 elevation-0">
                                               7 i - {{i7+1}}
                                               i - {{xMy7[0]}} <v-icon small left>{{ xMy7[1] }}</v-icon>
                                             </div>
@@ -96,7 +108,7 @@
                                           </draggable>
                                           </ul>
                                       </div>
-                                      <div v-else class="i6 elevation-3">
+                                      <div v-else-if="i6 == 0  ||  xMy6.length<=1 || xMy6[0]!=='Aplikace'" class="i6 elevation-3">
                                         6 i - {{i6+1}}
                                         i - {{xMy6[0]}} <v-icon small left>{{ xMy6[1] }}</v-icon>
                                       </div>
@@ -104,7 +116,7 @@
                                     </draggable>
                                     </ul>
                                 </div>
-                                <div v-else class="i5 elevation-5">
+                                <div v-else-if="i5 == 0 ||   xMy5.length<=1 || xMy5[0]!=='Aplikace'" class="i5 elevation-5">
                                   5 i - {{i5+1}}
                                   i - {{xMy5[0]}} <v-icon small left>{{ xMy5[1] }}</v-icon>
                                 </div>
@@ -112,7 +124,7 @@
                               </draggable>
                               </ul>
                             </div>
-                            <div v-else class="i4 elevation-8" >
+                            <div v-else-if="i4 == 0 ||   xMy4.length<=1 || xMy4[0]!=='Aplikace'" class="i4 elevation-8" >
                               4 i - {{i4+1}}
                               {{i4}} - {{xMy4[0]}} <v-icon small left>{{ xMy4[1] }}</v-icon>
                             </div>
@@ -120,7 +132,7 @@
                           </draggable>
                           </ul>
                         </div>
-                        <div v-else class="i3 elevation-11">
+                        <div v-else-if="i3 == 0 ||  xMy3.length<=1 || xMy3[0]!=='Aplikace'" class="i3 elevation-11">
                           3 i - {{i3+1}}
                           i - {{xMy3[0]}} <v-icon small left>{{ xMy3[1] }}</v-icon>
                         </div>
@@ -129,7 +141,7 @@
                       </ul>
 
                     </div>
-                    <div v-else class="i2 elevation-14">
+                    <div v-else-if="i2 == 0 ||  xMy2[0]!=='Aplikace'" class="i2 elevation-14">
                       2 i - {{i2+1}}
                       i - {{xMy2[0]}} <v-icon small left>{{ xMy2[1] }}</v-icon>
                     </div>
@@ -138,7 +150,7 @@
                   </ul>
 
                   </div>
-                  <div v-else class="i1 elevation-17">
+                  <div v-else-if="i1 == 0 || xMy1[0]!=='Aplikace'" class="i1 elevation-17">
                     1 i - {{i1+1}}
                     i - {{xMy1[0]}} <v-icon small left>{{ xMy1[1] }}</v-icon>
                   </div>
@@ -147,7 +159,7 @@
                 </ul>
 
               </div>
-              <div v-else class="i0 elevation-20">
+              <div v-else-if=" true || xMy0[0]!=='Aplikace'" class="i0 elevation-20">
                 i - {{i0+1}}
                 i - {{xMy0[0]}} <v-icon small left>{{ xMy0[1] }}</v-icon>
 
@@ -233,7 +245,18 @@ export default {
       aEmpty2[9] = 'Item'
       aEmpty2[10] = []
       return aEmpty2;
+    },
+    AddEmptyItemG: function () {
+      var aEmpty2 = Array(11)
+      aEmpty2[0] = 'Groupina'
+      aEmpty2[1] = 'home'
+      aEmpty2[3] = 'Spoustec'
+      aEmpty2[8] = 'right'
+      aEmpty2[9] = 'Group'
+      aEmpty2[10] = [this.AddEmptyItem()]
+      return aEmpty2;
     }
+
 
   }
 }

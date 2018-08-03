@@ -55,63 +55,63 @@
                               <v-list-tile-title class="font-weight-black">{{ ym7[0] }}</v-list-tile-title>
                               </v-list-tile><!-- Sem dalsi //-->
                               </v-list-group>
-                              <v-list-tile v-if="ym7[9]=='Item'" @click="menu_switch(ym7)" class="">
-                              <v-list-tile-action v-if="ym7[8]=='left'"><v-icon style="height:10px">{{ym6[1]}}</v-icon></v-list-tile-action>
+                              <v-list-tile v-if="ym7[9]=='Item'  && ym7[0]!=='Aplikace'" @click="menu_switch(ym7)" class="">
+                              <v-list-tile-action v-if="ym7[8]=='left'"><v-icon small style="height:10px">{{ym6[1]}}</v-icon></v-list-tile-action>
                               <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 70" :key="y22">&nbsp;</span>{{ ym7[0] }}</v-list-tile-title></v-list-tile-content>
                               <v-list-tile-action v-if="ym7[8]=='right' ||  ym7[8]== ''"><v-icon style="height:10px">{{ym7[1]}}</v-icon></v-list-tile-action>
                               </v-list-tile>
                               </span>
 
                             </v-list-group>
-                            <v-list-tile v-if="ym6[9]=='Item'" @click="menu_switch(ym6)" class="">
-                            <v-list-tile-action v-if="ym6[8]=='left'"><v-icon style="height:10px">{{ym6[1]}}</v-icon></v-list-tile-action>
+                            <v-list-tile v-if="ym6[9]=='Item'  && ym6[0]!=='Aplikace'" @click="menu_switch(ym6)" class="">
+                            <v-list-tile-action v-if="ym6[8]=='left'"><v-icon  small style="height:10px">{{ym6[1]}}</v-icon></v-list-tile-action>
                             <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 60" :key="y22">&nbsp;</span>{{ ym6[0] }}</v-list-tile-title></v-list-tile-content>
                             <v-list-tile-action v-if="ym6[8]=='right' ||  ym6[8]== ''"><v-icon style="height:10px">{{ym6[1]}}</v-icon></v-list-tile-action>
                             </v-list-tile>
                             </span>
 
                           </v-list-group>
-                          <v-list-tile v-if="ym5[9]=='Item'" @click="menu_switch(ym5)" class="">
-                          <v-list-tile-action v-if="ym5[8]=='left'"><v-icon style="height:10px">{{ym5[1]}}</v-icon></v-list-tile-action>
+                          <v-list-tile v-if="ym5[9]=='Item'  && ym5[0]!=='Aplikace'" @click="menu_switch(ym5)" class="">
+                          <v-list-tile-action v-if="ym5[8]=='left'"><v-icon  small  style="height:10px">{{ym5[1]}}</v-icon></v-list-tile-action>
                           <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 50" :key="y22">&nbsp;</span>{{ ym5[0] }}</v-list-tile-title></v-list-tile-content>
                           <v-list-tile-action v-if="ym5[8]=='right' ||  ym5[8]== ''"><v-icon style="height:10px">{{ym5[1]}}</v-icon></v-list-tile-action>
                           </v-list-tile>
                           </span>
 
                     </v-list-group>
-                    <v-list-tile v-if="ym4[9]=='Item'" @click="menu_switch(ym4)" class="">
-                    <v-list-tile-action v-if="ym4[8]=='left'"><v-icon style="height:10px">{{ym4[1]}}</v-icon></v-list-tile-action>
+                    <v-list-tile v-if="ym4[9]=='Item'  && ym4[0]!=='Aplikace'" @click="menu_switch(ym4)" class="">
+                    <v-list-tile-action v-if="ym4[8]=='left'"><v-icon  small  style="height:10px">{{ym4[1]}}</v-icon></v-list-tile-action>
                     <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 40" :key="y22">&nbsp;</span>{{ ym4[0] }}</v-list-tile-title></v-list-tile-content>
                     <v-list-tile-action v-if="ym4[8]=='right' ||  ym4[8]== ''"><v-icon style="height:10px">{{ym4[1]}}</v-icon></v-list-tile-action>
                     </v-list-tile>
                     </span>
 
               </v-list-group>
-              <v-list-tile v-if="ym3[9]=='Item'" @click="menu_switch(ym2)" class="">
-              <v-list-tile-action v-if="ym3[8]=='left'"><v-icon style="height:10px">{{ym3[1]}}</v-icon></v-list-tile-action>
+              <v-list-tile v-if="ym3[9]=='Item'  && ym3[0]!=='Aplikace'" @click="menu_switch(ym2)" class="">
+              <v-list-tile-action v-if="ym3[8]=='left'"><v-icon  small  style="height:10px">{{ym3[1]}}</v-icon></v-list-tile-action>
               <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 30" :key="y22">&nbsp;</span>{{ ym3[0] }}</v-list-tile-title></v-list-tile-content>
               <v-list-tile-action v-if="ym3[8]=='right' ||  ym3[8]== ''"><v-icon style="height:10px">{{ym3[1]}}</v-icon></v-list-tile-action>
               </v-list-tile>
               </span>
 
             </v-list-group>
-            <v-list-tile v-if="ym2[9]=='Item'" @click="menu_switch(ym2)" class="">
-            <v-list-tile-action v-if="ym2[8]=='left'"><v-icon style="height:10px">{{ym2[1]}}</v-icon></v-list-tile-action>
+            <v-list-tile v-if="ym2[9]=='Item'  && ym2[0]!=='Aplikace'" @click="menu_switch(ym2)" class="">
+            <v-list-tile-action v-if="ym2[8]=='left'"><v-icon  small  style="height:10px">{{ym2[1]}}</v-icon></v-list-tile-action>
             <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 20" :key="y22">&nbsp;</span>{{ ym2[0] }}</v-list-tile-title></v-list-tile-content>
             <v-list-tile-action v-if="ym2[8]=='right' ||  ym2[8]== ''"><v-icon style="height:10px">{{ym2[1]}}</v-icon></v-list-tile-action>
             </v-list-tile>
             </span>
         </v-list-group>
-        <v-list-tile v-if="ym1[9]=='Item'" @click="menu_switch(ym1)" class="">
-        <v-list-tile-action v-if="ym1[8]=='left'"><v-icon style="height:10px">{{ym1[1]}}</v-icon></v-list-tile-action>
+        <v-list-tile v-if="ym1[9]=='Item' && ym1[0]!=='Aplikace'" @click="menu_switch(ym1)" class="">
+        <v-list-tile-action v-if="ym1[8]=='left'"><v-icon  small  style="height:10px">{{ym1[1]}}</v-icon></v-list-tile-action>
         <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 10" :key="y22">&nbsp;</span>{{ ym1[0] }}</v-list-tile-title></v-list-tile-content>
         <v-list-tile-action v-if="ym1[8]=='right' ||  ym1[8]== ''"><v-icon style="height:10px">{{ym1[1]}}</v-icon></v-list-tile-action>
         </v-list-tile>
         </span>
 
       </v-list-group>
-      <v-list-tile  v-if="ym0[9]=='Item'" @click="menu_switch(ym0)" class="">
-      <v-list-tile-action v-if="ym0[8]=='left'"><v-icon style="height:10px">{{ym0[1]}}</v-icon></v-list-tile-action>
+      <v-list-tile  v-if="ym0[9]=='Item' && ym0[0]!=='Aplikace'" @click="menu_switch(ym0)" class="">
+      <v-list-tile-action v-if="ym0[8]=='left'"><v-icon  small  style="height:10px">{{ym0[1]}}</v-icon></v-list-tile-action>
       <v-list-tile-content ><v-list-tile-title   ><span v-for="y220 in 0" :key="y220">&nbsp;</span>{{ ym0[0] }}</v-list-tile-title></v-list-tile-content>
       <v-list-tile-action v-if="ym0[8]=='right' || ym0[8]=='' "><v-icon style="height:10px">{{ym0[1]}}</v-icon></v-list-tile-action>
       </v-list-tile>
