@@ -60,7 +60,8 @@ new Vue({
   store,
   components: {
     App,
-    VueFrame
+    VueFrame,
+    VueFriendlyIframe
 
   },
   template: '<App/>'

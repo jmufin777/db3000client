@@ -2,8 +2,8 @@
 <div>
   <el-table
     :data="tableData4"
-    height="400"
-     style="width: 100% "
+    height="700"
+     style="width: 100%;height:60% "
      size="mini"
      border
       >
