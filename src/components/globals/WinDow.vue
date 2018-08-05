@@ -8,7 +8,7 @@
     :w="w1>=0?w1:w"
 
   :isActive="false" :isResizable="false"
-  style="border: 0px solid white"
+  style="border: 0px solid white;background:white"
   :drag-handle="'.drag00'"
   :drag-cancel="'.drag01'"
   v-on:dragging="onDrag"
@@ -21,7 +21,7 @@
 
     <div class="drag00 elevation-20" :id="id"
       style="padding: 0px; margin: 0px;  border: 0px solid;font-size:14px
-      ;font-family: Arial;background:#4FC3F7"
+      ;font-family: Arial;background:#4FC3F7;"
       v-on:click.self="w_zindex"
       >
 

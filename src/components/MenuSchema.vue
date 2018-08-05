@@ -1,10 +1,8 @@
 <template>
-
+<div id="m003" style="overflow:scroll" v-bind:class="{Makam: IsWaiting}">
 <el-row :gutter="0" >
   <el-col :span=24>
-  <el-tooltip content="Ulozi lokalne zmeny a prekresli hlavni menu" placement="bottom" effect="light">
-    <el-button  @click="SaveMenu" type="success" icon="el-icon-check"  size="mini" class="elevation-1">Uloz</el-button>
-  </el-tooltip>
+
   <el-tooltip  placement="bottom" effect="light">
     <div slot="content">Originalni podoba a menu <br> Vhodne pokud se neco pokazi nebo ztrati</div>
     <el-button  @click="ResetMenu" type="primary"  icon="el-icon-back"  size="mini" class="teal elevation-1">Reset Menu</el-button>
@@ -21,8 +19,13 @@
     <div slot="content">{{StoreInfo}}</div>
     <el-button  @click="StoreInfo0" type="success" icon="el-icon-info"  size="mini" class="elevation-1"></el-button>
     </el-tooltip>
+    <el-tooltip content="Ulozi lokalne zmeny a prekresli hlavni menu, vyvola dialog pro nazev a ulozeni" placement="bottom" effect="light">
+    <el-button  @click="SaveMenu" type="success" icon="el-icon-circle-plus-outline"  size="mini" class="elevation-1">Nove</el-button>
+   </el-tooltip>
     <!-- <el-button  @click="jarda" type="success" icon="el-icon-success"  size="mini" class="elevation-1">Jarda</el-button> -->
-   <div >
+
+   <div id="m004" style="overflow:scroll">
+    <el-row :gutter="0" ><el-col :span="18">
    <ul v-show="true" >
              <v-btn
                 class="orange accent-12 elevation-10"
@@ -167,15 +170,111 @@
             </li>
             </draggable>
          </ul>
-         </div>
+          </el-col>
+          <el-col :span="5">
+           <hr>   <hr>   <hr>   <hr>   <hr>
+          <draggable v-if="tableShow.length>0 " v-model="tableShow"  :options="{group:{ name:'peopleGroup',  pull:'clone'  }}"
+          @start="drag=true" @end="drag=false" :move="chooseItem" >
+
+          <el-col :span=24 v-for="(element,iii) in tableShow" :key="iii" class="people pa-0 teal elevation-20" :id="'a' + iii"
+            style="margin-top :1px;text-align:left"
+          >
+          <!-- <el-tooltip  placement="bottom" effect="light">
+            <div slot="content">{{ element.popis}}</div> -->
+             <button :disabled="IsWaiting" style="width:50%;text-align:left" @click="setMenu(element.id)">{{ element.nazev}}</button>
+            <!-- </el-tooltip> -->
+             <button :disabled="IsWaiting" v-if="SelectedId == element.id" style="width:20%" class="info"  @click="EditMenu(element.id)" ><i class="el-icon-edit"></i></icon></button>
+             <button :disabled="IsWaiting" v-if="SelectedId == element.id" style="width:20%" class="warning" @click="onSubmitDelete" ><i class="el-icon-delete"></i></button>
+
+          </el-col>
+          </draggable>
+
+          </el-col>
+          </el-row>
+          </div>
+
       </el-col>
    </el-row>
+<!-- Dialog -->
+   <el-dialog
+  title=""
+  :visible.sync="centerDialogVisible"
+  width="30%"
+  size="mini"
+  :close-on-press-escape="true"
+  :close-on-click-modal="false"
+  center>
 
+    <span slot="title" size="mini" class="blue">
+      <el-card>
+        <el-col :span="4"><v-icon v-if="form.Ikona >''" color="red">{{form.Ikona}}</v-icon></el-col>
+        <el-col :span="8">
+         Menu {{IsNewMenu?'Nove  ': 'Uprava menu ' + form.Nazev }}
+        </el-col>
+      </el-card>
+      </span>
+    <span>
+<v-form ref="form" :model="form" label-width="0px">
+  <el-row :gutter="0">
+   <el-col :span="20">
+
+<v-text-field
+            label="Nazev"
+            hint="Nazev  modulu v menu"
+            class="caption"
+            v-model="form.Nazev"
+            :rules="NazevRules"
+            autofocus
+     ></v-text-field>
+    <v-textarea
+            solo
+            label="Popis"
+            hint="Vas popis pro lepsi orinetaci"
+            class="caption"
+            v-model="form.Popis"
+            required
+            autofocus
+     ></v-textarea>
+  </el-col>
+
+  <el-col :span="3">
+    <el-col :span="24" :offset="1">
+
+    <el-button v-if="!IsNewMenu" type="primary" @click="onSubmitEdit" size="mini" style="width:100%" >{{ IsNewMenu? 'Vytvorit':'Ulozit'}}</el-button>
+    <el-button v-if="IsNewMenu"  type="primary" @click="onSubmit" size="mini" style="width:100%" >{{ IsNewMenu? 'Vytvorit':'Ulozit'}}</el-button>
+    </el-col>
+    <el-col :span="24" :offset="1">
+    <el-button @click="centerDialogVisible=false"  size="mini" style="width:100%">Cancel</el-button>
+    </el-col>
+  </el-col>
+  </el-col>
+  </el-row>
+</v-form>
+    </span>
+</el-dialog>
+<win-dow  :id="'progrs'" :h="200" :w="200" :x="10" :y="100" :parent="true" v-if="IsWaiting">
+
+      <v-progress-circular v-if="IsWaiting"
+      :rotate="360"
+      :size="100"
+      :width="15"
+      :value="nWait"
+      color="teal"
+    >
+      {{ nWait }}
+    </v-progress-circular>
+    <p>
+    Cekejte prosim
+    </p>
+
+    </win-dow>
+</div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { eventBus } from '@/main.js'
+import ListMenuSchemaService from '@/services/ListMenuSchemaService'
 export default {
   props:  {
     xMenuy: {
@@ -185,9 +284,41 @@ export default {
   },
   data: () => {
       return {
+      nI: {} ,
+      nWait: 0,
+
+        IsNewMenu: false,
+        IsWaiting: false,
+        centerDialogVisible: false,
+        tableData: [],
+        tableShow: [],
+        SelectedId: 0,
+
+        form : {
+          Nazev: '',
+          Popis: '',
+          id: 0
+        },
+        NazevRules: [
+        v => !!v || 'Jmeno je vyzadovano',
+        // v => v.length <= 10 || 'Name must be less than 10 characters'
+        ],
+
          xMenuy1: [],
          StoreInfo: ''
         }
+  },
+  watch: {
+    tableData:  function(item) {
+      this.tableData.forEach(element => {
+        this.tableShow.push(element)
+      });
+
+      console.log('Zmena dat' + this.tableShow + this.menu_set_2)
+    },
+    SelectedId: function(id) {
+      eventBus.$emit('UsedInMenu', id )
+    }
   },
     mounted () {
       if (!this.isUserLoggedIn) {
@@ -196,6 +327,19 @@ export default {
       })
       }
        this.xMenuy1 = JSON.parse(JSON.stringify(this.$store.state.xMenuMain))
+       try {
+         ListMenuSchemaService.all(this.user, 'Col')
+         .then( res => {
+            if (res.data.info == 0) {
+              alert('data nejsou '+ JSON.stringify( res.data.info ))
+            } else {
+              // alert('data Jsou '+ JSON.stringify( res.data.info ))
+              this.tableData = res.data.data
+            }
+         })
+      } catch (e) {
+        this.error = e
+      }
    },
    computed: {
       ...mapState([
@@ -205,15 +349,126 @@ export default {
      ])
    },
   methods: {
+    onSubmit() {
+
+      console.log(this.form)
+      ListMenuSchemaService.init(this.user,this.xMenuy1, this.form.Nazev, this.form.Popis)
+      .then (res => {
+        ListMenuSchemaService.all(this.user,'Col')
+               .then (res => {
+                 this.tableShow = []
+                 this.tableData = res.data.data
+                 this.nWait = 100
+                 this.IsWaiting=false
+               })
+      })
+      .catch((e) => {
+        alert('Uprava menu se  nejak pojebla'+ e)
+      })
+
+
+
+    },
+    onSubmitCopy() {
+
+    },
+
+    onSubmitDelete () {
+      this.IsWaiting = true
+            this.nWait=1
+      this.nI = setInterval(() => {
+        if (this.nWait > 200) {
+          return (this.nWait = 0)
+        }
+        this.nWait += 15
+      }, 100)
+      ListMenuSchemaService.delete(this.user,this.SelectedId)
+      .then( res=> {
+          this.tableShow = []
+          this.tableData = res.data.data
+
+      })
+      .then(res => {
+        this.IsWaiting = false
+      })
+
+    },
+
+    async onSubmitEdit () {
+    //  this.IsWaiting = true
+      //      this.nWait=1
+      this.nI = setInterval(() => {
+        if (this.nWait > 200) {
+          return (this.nWait = 0)
+        }
+        this.nWait += 15
+      }, 100)
+      this.form.id = this.SelectedId
+      await ListMenuSchemaService.update(this.user, this.form, this.xMenuy1 )
+      .then( res=> {
+          this.tableShow = []
+          this.tableData = res.data.data
+
+      })
+      .then(res => {
+        this.IsWaiting = false
+        this.centerDialogVisible = false
+      })
+
+    },
+    async setMenu(id) {
+      this.SelectedId= id
+      this.IsWaiting = true
+
+
+      try {
+         await ListMenuSchemaService.all(this.user, id)
+         .then( res => {
+            if (res.data.info == 0) {
+              alert('data nejsou '+ JSON.stringify( res.data.info ))
+            } else {
+              // alert('data Jsou '+ JSON.stringify( res.data.info ))
+              this.IsWaiting = false
+              this.form.id = res.data.data[0].id
+              this.form.Nazev = res.data.data[0].nazev
+              this.form.Popis = res.data.data[0].popis
+              this.xMenuy1 = JSON.parse(JSON.stringify(res.data.data[0].items))
+
+              this.$store.dispatch('setMenuMain',this.xMenuy1)
+              this.$store.commit('SETMENUMAIN',this.xMenuy1)
+              this.xMenuy1 = JSON.parse(JSON.stringify(this.$store.state.xMenuMain))
+
+              // this.$store.dispatch('setMenuMain',this.xMenuy1)
+              //this.$store.commit('SETMENUMAIN',this.xMenuy1)
+
+              //this.tableData = res.data.data
+            }
+         })
+      } catch (e) {
+        this.error = e
+      }
+
+
+    },
+
+
     jarda: function(xpar){
       var aneco = []
       eventBus.$emit('Alert', 'Schema' )
       return xpar
     },
+
+    async EditMenu (id) {
+
+      this.IsNewMenu = false
+      this.centerDialogVisible = true
+    },
     SaveMenu() {
       this.$store.dispatch('setMenuMain',this.xMenuy1)
       this.$store.commit('SETMENUMAIN',this.xMenuy1)
       this.xMenuy1 = JSON.parse(JSON.stringify(this.$store.state.xMenuMain))
+      this.centerDialogVisible = true
+      this.IsNewMenu = true
 
     },
     StoreInfo0: function ()  {
@@ -255,10 +510,27 @@ export default {
       aEmpty2[9] = 'Group'
       aEmpty2[10] = [this.AddEmptyItem()]
       return aEmpty2;
+
+
+
+
     }
 
 
+  },
+  created () {
+    setTimeout(function() {
+     document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+    },100)
+    window.addEventListener('resize', (function() {
+     document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+    })
+  )
+
   }
+
+
+
 }
 </script>
 <style scoped>

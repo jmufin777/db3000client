@@ -21,6 +21,10 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+.Makam {
+   opacity: 0.5;
+
+ }
 </style>
 <style lang="stylus">
   $color-pack = false

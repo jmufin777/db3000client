@@ -1,9 +1,9 @@
 <template>
-<div>
+<div id="m005" style="overflow:scroll">
   <el-table
     :data="tableData4"
     height="700"
-     style="width: 100%;height:60% "
+     style="width: 100%;height:100% "
      size="mini"
      border
       >
@@ -105,6 +105,15 @@ export default {
       'isUserLoggedIn',
       'user'
     ])
+  },
+  created () {
+   setTimeout(function() {
+    document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
+  },100)
+  window.addEventListener('resize', (function() {
+   document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
+  })
+  )
   }
 }
 </script>

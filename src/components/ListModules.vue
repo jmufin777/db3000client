@@ -1,13 +1,14 @@
 <template>
+    <div id="m001" style="overflow:scroll" >
 
-    <div style="height:400px" slot="activator">
-    <el-row  :gutter="0">
-    <el-col :span="7" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
+
+    <el-row  :gutter="0" >
+    <el-col :span="8" :offset="0" style="margin-top:5px;padding-left:3px" class="blue">
         Moduly
     </el-col>
 
 
-    <el-col :span="2" :offset="5" >
+    <el-col :span="2" :offset="4" >
       <el-tooltip content="Vlozi novy modul do databaze" placement="top" effect="light">
       <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
         @click="newModule(-1)"
@@ -15,60 +16,50 @@
       </el-tooltip>
     </el-col>
 
-    <el-col :span="2" :offset="2" >
+    <el-col :span="2" :offset="4" >
       <el-tooltip content="Ulozi moduly v zobrazenem poradi" placement="top" effect="light">
-    <el-button  type="success" icon='el-icon-success'  size="mini" class="elevation-0"
+    <el-button  :disabled="IsWaiting" type="success" icon='el-icon-success'  size="mini" class="elevation-0"
         @click="setModules(1)"
     ></el-button>
       </el-tooltip>
     </el-col>
-
-    <el-col :span="2" :offset="2" >
-      <el-button  type="warning" icon='el-icon-minus'  size="mini" class="elevation-10"
-        @click="showData()"
-    ></el-button>
     </el-col>
-    <!-- <win-dow :title="'prubeh'" :id="'progrs'" :h="200" :w="200" :x="10" :y="100" :parent="false" v-if="IsWaiting"> -->
-      <div style="position:absolute;top:100px;left:-100px">
+    <win-dow  :id="'progrs'" :h="200" :w="200" :x="10" :y="100" :parent="true" v-if="IsWaiting">
+
       <v-progress-circular v-if="IsWaiting"
       :rotate="360"
       :size="100"
       :width="15"
       :value="nWait"
       color="teal"
-
     >
       {{ nWait }}
     </v-progress-circular>
-    </div>
+    <p>
+    Cekejte prosim
+    </p>
 
-    <!-- </win-dow> -->
+    </win-dow>
    </el-row>
-
+    <div style="max-height:80%;overflow:scroll" v-bind:class="{Makam: IsWaiting}">
     <el-row :gutter="0" style="margin-top:12px">
      <draggable v-model="tableShow"  :options="{group:{ name:'people',  pull:'clone' }}"
      @start="drag=true" @end="drag=false" :move="chooseItem" >
-    <el-col v-if="item[9]=='Item' ||  true" :span="24" v-for="(item,idb) in tableShow" :key="idb" v-bind:class="{green: item[9]=='Group'}" class="people pa-0   blue"  :id="'b' + idb"
+    <el-col v-if="item[9]=='Item' ||  true" :span="24" v-for="(item,idb) in tableShow" :key="idb" v-bind:class="{green: item[9]=='Group'}" class="people pa-0   blue ruka"  :id="'b' + idb"
       style="margin-top :1px" @click="centerDialogVisible= true"
       >
         <el-col :span=3
             @click="editModule(item,idb)"><v-icon  @dblclick="editModule(item,idb)" small left >{{item[1]>''?item[1]:'code'}}</v-icon></el-col>
         <el-col :span=12 :push="1" style="text-align:left">{{item[0]}}</el-col>
    </el-col>
-   <el-col :span=24 >Skupiny </el-col>
-   <el-col v-if="item[9]=='Group' && false " :span="24" v-for="(item,idb) in tableShow" :key="idb" v-bind:class="{red: item[9]=='Group'}" class="people pa-0  brown"  :id="'b' + idb"
-      style="margin-top :1px" @click="centerDialogVisible= true"
-      >
-        <el-col :span=3 ><v-icon  @dblclick="editModule(item,idb)" small left >{{item[1]}}</v-icon></el-col>
-        <el-col :span=12 :push="1" style="text-align:left">{{item[0]}}</el-col>
-   </el-col>
+
     </draggable>
 
 
     <draggable v-if="tableData.length==0 " v-model="menu_set_3"  :options="{group:{ name:'people',  pull:'clone' }}"
      @start="drag=true" @end="drag=false" :move="chooseItem" >
 
-    <el-col :span="24" v-for="(element,i) in menu_set_3" :key="i" class="people pa-0   blue"  :id="'b' + i"
+    <el-col :span="24" v-for="(element,i) in menu_set_3" :key="i" class="people pa-0   blue ruka"  :id="'b' + i"
       style="margin-top :1px"
       >
         <el-col :span=3 ><v-icon small left >{{element[1]}}</v-icon></el-col>
@@ -88,11 +79,16 @@
       <el-col :span=12 :push="1" style="text-align:left">{{element[0]}}</el-col>
     </el-col>
     </draggable>
+    </el-row>
+    </div>
+    <hr>
+    <div style="max-height:19%;overflow:scroll">
+    <el-row :gutter="0">
 
-    <el-col :span=24 >Kos</el-col>
+    <el-col style="position:absolute;bottom:2px" :span=24 >Kos</el-col>
     <draggable v-model="menu_trash"  :options="{group:{ name:'people'  }}"
      @start="drag=true" @end="drag=false" :move="chooseItem" >
-    <el-col :span=24 v-for="(element,i) in menu_trash" :key="i" class="people pa-0 teal" :id="'a' + i"
+    <el-col :span=24 v-for="(element,i) in menu_trash" :key="i" class="people pa-0 grey" :id="'a' + i"
     style="margin-top :1px"
       >
         <el-col :span=3><v-icon small left @click="Alert" >{{element[1]}}</v-icon></el-col>
@@ -100,14 +96,20 @@
     </el-col>
 
     </draggable>
+
         <el-col :span=24 class="red">
         {{error}}
     </el-col>
+    </el-row>
+
+    </div>
+
     <el-col :span=24 class="green">
+        Help: {{ tableHelp.data }}
         Show {{ tableShow }}
         DataRes {{ tableData }} / {{ isUserLoggedIn }} /{{  user }} / [ {{ info }} ]
     </el-col>
-    </el-row>
+
 
    <el-dialog
   title=""
@@ -195,8 +197,6 @@
 </el-col>
  </el-row>
 
-
-
   <el-form-item>
    <el-col :span="7" :offset="0">
  <v-select
@@ -226,6 +226,7 @@
   </span>
 
 </el-dialog>
+
  </div>
 
 </template>
@@ -246,12 +247,13 @@ export default {
   data: () => {
     return {
       Modulex: 'xxxx',
-
+      H: window.innerHeight,
       centerDialogVisible: false,
       info: '',
       error: '',
       tableData: [],
       tableShow: [] ,
+      tableHelp: [], //napr.pouzite moduly - seznam
       editItem: [] ,
 
       IsNewModule: false,
@@ -321,7 +323,9 @@ export default {
       'isUserLoggedIn',
       'xMenuMain'
     ])
+
   },
+
   watch: {
     tableData:  function(item) {
       this.tableData.forEach(element => {
@@ -342,12 +346,29 @@ export default {
         })
     },
     xMenuMain: function() {
-
        // alert('aahoj')
       }
   },
 
+created () {
+  eventBus.$on('UsedInMenu', ( id ) => {
+    if (id > 0 ){
+      this.onRecieveFromMenu (id)
+    }
+  })
+
+  setTimeout(function(){
+    document.getElementById("m001").style.height=Math.round(window.innerHeight - 110)  + "px"
+  },100)
+  window.addEventListener('resize', (function() {
+   document.getElementById("m001").style.height=Math.round(window.innerHeight - 110)  + "px"
+  })
+  )
+
+},
 async  mounted () {
+
+  // return
    if (this.isUserLoggedIn) {
       try {
          ListModulesService.all(this.user, 'All')
@@ -368,8 +389,23 @@ async  mounted () {
         this.error = e
       }
    }
+
+
   },
   methods: {
+    async onRecieveFromMenu (id) {
+
+      await ListModulesService.usedInMenu (this.user, id)
+      .then (res => {
+        this.tableHelp = res.data
+
+        // this.tableHelp = res.data
+      })
+      .then (res => {
+        alert('seznam modulunacten' + this.tableHelp.length)
+      })
+
+    },
      onSubmitCopy () {
        this.IsNewModule = true
        this.onSubmit()
@@ -431,9 +467,6 @@ async  mounted () {
     setModules (del) {
       this.IsWaiting=true
       this.nWait=1
-
-
-
       this.nI = setInterval(() => {
         if (this.nWait > 200) {
           return (this.nWait = 0)
@@ -451,12 +484,11 @@ async  mounted () {
                  this.IsWaiting=false
                })
 
-
-
       })
       .catch((e) => {
         alert('Moduly se nejak pojebly'+ e)
       })
+
 
     },
     getData1() {
@@ -547,4 +579,12 @@ async  mounted () {
 <style lang="stylus" scoped>
  .v-progress-circular
     margin: 1rem
+    z-index:50000
+
+ </style>
+ <style >
+
+ .v-icon {
+    cursor: pointer
+ }
 </style>

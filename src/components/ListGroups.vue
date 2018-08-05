@@ -1,10 +1,11 @@
 <template>
-    <div style="height:400px" slot="activator">
-    <el-row  :gutter="0">
+    <div id="m002" style="overflow:scroll" >
+    <el-row v-for="i in 100" :key="i" :gutter="0">
     <el-col :span="7" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
         Skupiny
     </el-col>
     </el-row>
+
 
  </div>
 
@@ -26,7 +27,6 @@ export default {
   data: () => {
     return {
 
-
       centerDialogVisible: false,
       info: '',
       error: '',
@@ -44,7 +44,17 @@ export default {
     }
   },
 
+  created () {
+   setTimeout(function(){
 
+    document.getElementById("m002").style.height=Math.round(window.innerHeight - 110)  + "px"
+
+  },100)
+  window.addEventListener('resize', (function() {
+   document.getElementById("m002").style.height=Math.round(window.innerHeight - 110)  + "px"
+  })
+  )
+  },
   computed: {
     ...mapState([
       'user',
