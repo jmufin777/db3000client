@@ -371,7 +371,7 @@ export default {
       activeName: 'first', // tabs pro el
       isCollapse: true,
       myFlex: -1,
-      radio2: 10,
+      radio2: 20,
       radio3: '',
       openWins: [],
 
@@ -640,6 +640,8 @@ export default {
         this.compa.push([{modul: par[3], title: par[0], where: par[5]}])
         this.radio3= par[3]
         this.compa = _.uniqBy(this.compa)
+      } else {
+          this.radio3 = par[3]
       }
     },
     closeModule: function (ktery) {

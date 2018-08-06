@@ -45,7 +45,9 @@
     <el-row :gutter="0" style="margin-top:12px">
      <draggable v-model="tableShow"  :options="{group:{ name:'people',  pull:'clone' }}"
      @start="drag=true" @end="drag=false" :move="chooseItem" >
-    <el-col v-if="item[9]=='Item' ||  true" :span="24" v-for="(item,idb) in tableShow" :key="idb" v-bind:class="{green: item[9]=='Group'}" class="people pa-0   blue ruka"  :id="'b' + idb"
+    <el-col v-if="item[9]=='Item' ||  true" :span="24" v-for="(item,idb) in tableShow" :key="idb"
+      v-bind:class="{green: item[9]=='Group', used: modUsed(item[3]) }"
+      class="people pa-0   blue ruka"  :id="'b' + idb"
       style="margin-top :1px" @click="centerDialogVisible= true"
       >
         <el-col :span=3
@@ -104,7 +106,7 @@
 
     </div>
 
-    <el-col :span=24 class="green">
+    <el-col :span=24 class="green" style="display:none">
         Help: {{ tableHelp.data }}
         Show {{ tableShow }}
         DataRes {{ tableData }} / {{ isUserLoggedIn }} /{{  user }} / [ {{ info }} ]
@@ -393,16 +395,37 @@ async  mounted () {
 
   },
   methods: {
+    modUsed (item) {
+
+      var lRet = -1
+
+
+      //console.log(JSON.stringify(this.tableHelp).replace(/\\/g,'').replace(/"/g,''))
+      lRet = this.tableHelp.findIndex(el => {
+         return  (item == el )
+
+      })
+      // console.log(item, ":::::", lRet)
+      return lRet > -1
+    },
     async onRecieveFromMenu (id) {
 
       await ListModulesService.usedInMenu (this.user, id)
       .then (res => {
-        this.tableHelp = res.data
+        this.tableHelp = []
 
-        // this.tableHelp = res.data
+        res.data.data.forEach(el => {
+          if (el.modul.match(/[a-z]/i) && !el.modul.match(/null/) ) {
+
+            this.tableHelp.push(el.modul)
+          }
+        })
+
       })
       .then (res => {
-        alert('seznam modulunacten' + this.tableHelp.length)
+        // alert(this.tableHelp.join('~'))
+
+         //alert('seznam modulunacten' + JSON.stringify(this.tableHelp[0].replace('/\\/','hovnoprdelsrackatoje nase znacka')))
       })
 
     },
@@ -572,8 +595,6 @@ async  mounted () {
 
   }
 
-
-
 }
 </script>
 <style lang="stylus" scoped>
@@ -586,5 +607,9 @@ async  mounted () {
 
  .v-icon {
     cursor: pointer
+ }
+ .used {
+   color: gold;
+
  }
 </style>

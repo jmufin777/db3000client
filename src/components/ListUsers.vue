@@ -7,6 +7,7 @@
      size="mini"
      border
       >
+
     <el-table-column
       fixed
       prop="jmeno"
@@ -39,10 +40,12 @@
       label="Zmeny"
        size="mini"
       draggable
-      >
+     >
+
+
 
     <template slot-scope="scope">
-      <draggable v-model="tableData4" >
+      <draggable v-model="tableData4" :options="{group:{ name:'peopleUsers',  pull:'clone' }}">
         <el-button
          size="mini"
           @click="handleEdit(scope.$index, scope.row)">Edit</el-button>

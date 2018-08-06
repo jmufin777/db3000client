@@ -314,9 +314,10 @@ export default {
         this.tableShow.push(element)
       });
 
-      console.log('Zmena dat' + this.tableShow + this.menu_set_2)
+      // console.log('Zmena dat' + this.tableShow + this.menu_set_2)
     },
     SelectedId: function(id) {
+      // alert(id)
       eventBus.$emit('UsedInMenu', id )
     }
   },
@@ -340,6 +341,7 @@ export default {
       } catch (e) {
         this.error = e
       }
+     // eventBus.$emit('UsedInMenu', id )
    },
    computed: {
       ...mapState([
@@ -413,6 +415,8 @@ export default {
       .then(res => {
         this.IsWaiting = false
         this.centerDialogVisible = false
+
+        eventBus.$emit('UsedInMenu', id )
       })
 
     },
