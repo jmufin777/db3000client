@@ -88,7 +88,7 @@
     <el-row :gutter="0">
 
     <el-col style="position:absolute;bottom:2px" :span=24 >Kos</el-col>
-    <draggable v-model="menu_trash"  :options="{group:{ name:'people'  }}"
+    <draggable v-model="menu_trash"  :options="{group:{ name: 'people'   }}"
      @start="drag=true" @end="drag=false" :move="chooseItem" >
     <el-col :span=24 v-for="(element,i) in menu_trash" :key="i" class="people pa-0 grey" :id="'a' + i"
     style="margin-top :1px"
@@ -96,7 +96,6 @@
         <el-col :span=3><v-icon small left @click="Alert" >{{element[1]}}</v-icon></el-col>
         <el-col :span=12 :push="1" style="text-align:left">{{element[0]}}</el-col>
     </el-col>
-
     </draggable>
 
         <el-col :span=24 class="red">
@@ -256,6 +255,7 @@ export default {
       tableData: [],
       tableShow: [] ,
       tableHelp: [], //napr.pouzite moduly - seznam
+      tableSend: [],
       editItem: [] ,
 
       IsNewModule: false,
@@ -330,9 +330,17 @@ export default {
 
   watch: {
     tableData:  function(item) {
+      this.tableSend=[]
       this.tableData.forEach(element => {
         this.tableShow.push(element.items)
+        if (element.items[3] >' '){
+
+          this.tableSend.push({idefix:element.idefix, Nazev:element.items[0]})
+        }
       });
+      this.tableSend = _.uniqBy(this.tableSend )
+
+      eventBus.$emit('Modules', this.tableSend )
 
       console.log('Zmena dat' + this.tableShow + this.menu_set_2)
     },
@@ -385,6 +393,7 @@ async  mounted () {
               }
             } else {
               this.tableData = res.data.data
+              eventBus.$emit('Modules', this.tableSend )
             }
          })
       } catch (e) {

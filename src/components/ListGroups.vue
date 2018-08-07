@@ -25,10 +25,48 @@
     <hr><hr><hr><hr><hr><hr>
     <draggable v-model="tableShow"  :options="{group:{ name:'peopleUsers',  pull:'clone' }}">
     <el-row v-for="(element, i ) in tableShow" :key="i" :gutter="0">
-    <el-col :span="7" :offset="0"  class="peopleUsers teal  pa-0   ruka"   style="margin-top :1px">
-      <el-col :span="14">
+    <el-col :span="24" :offset="0"  class="peopleUsers teal  pa-0   ruka"   style="margin-top :1px">
+      <el-col :span="7" style="text-align:left">
         {{element.nazev}}
       </el-col>
+      <el-col :span="7">
+
+
+    <el-select  v-model="tableModules[element.idefix]" multiple filterable
+    no-match-text="Nenalezeno"
+    no-data-text="Cekam na data"
+    placeholder="Skupiny" size="mini"
+    @change="changeModules(element.idefix,i)"
+    >
+    <el-option
+      v-for="(Mod,iMod) in Modul"
+      :key="Mod.idefix"
+      :label="Mod.Nazev"
+      :value="Mod.idefix">
+
+    </el-option>
+  </el-select>
+
+
+      </el-col>
+   <el-col :span="5">
+     <el-select  v-model="tableMenus[element.idefix]" filterable clearable
+    no-match-text="Nenalezeno"
+    no-data-text="Cekam na data"
+    placeholder="Skupiny" size="mini"
+    @change="changeMenu(element.idefix,i)"
+    >
+    <el-option
+      v-for="Men in Menu"
+      :key="Men.idefix"
+      :label="Men.Nazev"
+      :value="Men.idefix">
+    </el-option>
+  </el-select>
+
+   </el-col>
+
+
       <el-col :span="5">
              <button :disabled="IsWaiting"  style="width:100%" class="info"  @click="EditGroup(element.id)" ><i class="el-icon-edit"></i></icon></button>
       </el-col>
@@ -36,11 +74,20 @@
              <button :disabled="IsWaiting"  style="width:100%" class="warning" @click="onSubmitDelete(element.id)" ><i class="el-icon-delete"></i></button>
       </el-col>
     </el-col>
+
+
+
+
     </el-row>
     </draggable>
     <el-row  :gutter="0">
+
     <el-col :span="17" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
+      {{ tableModules }} <hr> {{ tableMenus}}
+
+      <div v-show="true">
       Infi {{ tableShow }} data : {{tableData}}
+      </div>
      </el-col>
     </el-row>
 
@@ -57,7 +104,6 @@
 
     <span slot="title" size="mini" class="blue">
       <el-card>
-
         <el-col :span="8">
          Menu {{IsNewGroup?'Nove  ': 'Uprava skupiny ' + form.Nazev }}
         </el-col>
@@ -102,7 +148,7 @@
 </v-form>
     </span>
 </el-dialog>
-<win-dow  :id="'progrs'" :h="200" :w="200" :x="10" :y="100" :parent="true" v-if="IsWaiting">
+<win-dow  :id="'progrs'" :h="2000" :w="2000" :x="10" :y="100" :parent="true" v-if="IsWaiting">
 
       <v-progress-circular v-if="IsWaiting"
       :rotate="360"
@@ -118,11 +164,6 @@
     </p>
 
     </win-dow>
-
-
-
-
-
 
 
  </div>
@@ -143,7 +184,11 @@ export default {
     // 'menu-schema': MenuSchema,
   },
   data: () => {
+
     return {
+      Modul: [],  //Prijem dat
+      Menu: [],
+
 
       centerDialogVisible: false,
       info: '',
@@ -151,6 +196,8 @@ export default {
       tableData: [],
       tableShow: [] ,
       tableHelp:[],
+      tableModules: [],
+      tableMenus: [],
       editItem: [] ,
       SelectedId: 0,
 
@@ -168,10 +215,26 @@ export default {
        v => !!v || 'Nazev skupiny je vyzadovan',
        // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
+    //Smazat
+
+
+    //Smazat
+
+
     }
+
+
+
   },
 
   created () {
+    eventBus.$on('Modules', (list) => {
+      this.Modul = list
+    })
+    eventBus.$on('Menus', (list) => {
+      this.Menu = list
+
+    })
    setTimeout(function() {
     document.getElementById("m002").style.height=Math.round(window.innerHeight - 110)  + "px"
   },100)
@@ -189,8 +252,17 @@ export default {
   },
   watch: {
     tableData:  function(item) {
+
+
       this.tableData.forEach(element => {
+        element.Menus1  =  ""
+        element.Modules1 = []
+        console.log(element)
         this.tableShow.push(element)
+        this.tableModules[element.idefix] =[]
+        this.tableMenus[element.idefix] =''
+        //this.tableModules.push([])
+        //this.tableMenus.push('')
       });
 
       // console.log('Zmena dat' + this.tableShow + this.menu_set_2)
@@ -219,6 +291,15 @@ export default {
 
    },
    methods: {
+     changeModules(idefix, i){
+       this.tableShow[i].tableModules1= this.tableModules[idefix]
+       alert(this.tableModules[idefix]+"  " + i)
+     },
+     changeMenu(idefix, i) {
+       this.tableShow[i].tableMenus1= this.tableMenus[idefix]
+       alert(this.tableMenus[idefix])
+
+     },
      newGroup () {
 
       this.IsNewGroup=true

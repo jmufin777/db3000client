@@ -292,6 +292,7 @@ export default {
         centerDialogVisible: false,
         tableData: [],
         tableShow: [],
+        tableSend: [],
         SelectedId: 0,
 
         form : {
@@ -310,11 +311,15 @@ export default {
   },
   watch: {
     tableData:  function(item) {
+      this.tableSend=[]
+      this.tableSend.push({idefix:-1 , Nazev: 'Nevybráno'})
       this.tableData.forEach(element => {
         this.tableShow.push(element)
+        this.tableSend.push({idefix: element.idefix, Nazev: element.nazev })
       });
+      eventBus.$emit('Menus', this.tableSend )
 
-      // console.log('Zmena dat' + this.tableShow + this.menu_set_2)
+       console.log('Zmena dat' + this.tableSend)
     },
     SelectedId: function(id) {
       // alert(id)
