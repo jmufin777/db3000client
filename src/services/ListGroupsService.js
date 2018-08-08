@@ -13,5 +13,14 @@ export default {
   update (user,  form ) {
 
     return Api().put('list_groups', { form: form,  user: user})
+  },
+  updateMenus (user,  form ) {
+    return Api().put('list_groups-menus', { form: form,  user: user})
+  },
+  updateModules (user,  form ) {
+
+    return Api().put('list_groups-modules', { form: form,  user: user})
   }
+
 }
+
