@@ -1,14 +1,15 @@
 <template>
     <div id="m001" style="overflow:scroll" >
-
-
     <el-row  :gutter="0" >
-    <el-col :span="8" :offset="0" style="margin-top:5px;padding-left:3px" class="blue">
-        Moduly
-    </el-col>
-
-
-    <el-col :span="2" :offset="4" >
+      <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
+    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:1px" class="blue">
+       
+       <el-col :span="14" >
+        <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Moduly">
+       </el-input>
+       </el-col>
+    
+     <el-col :span="2" :offset="0" >
       <el-tooltip content="Vlozi novy modul do databaze" placement="top" effect="light">
       <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
         @click="newModule(-1)"
@@ -16,37 +17,24 @@
       </el-tooltip>
     </el-col>
 
-    <el-col :span="2" :offset="4" >
+    <el-col :span="2" :offset="3" >
       <el-tooltip content="Ulozi moduly v zobrazenem poradi" placement="top" effect="light">
     <el-button  :disabled="IsWaiting" type="success" icon='el-icon-success'  size="mini" class="elevation-0"
         @click="setModules(1)"
     ></el-button>
       </el-tooltip>
     </el-col>
+
     </el-col>
-    <win-dow  :id="'progrs'" :h="200" :w="200" :x="10" :y="100" :parent="true" v-if="IsWaiting">
-
-      <v-progress-circular v-if="IsWaiting"
-      :rotate="360"
-      :size="100"
-      :width="15"
-      :value="nWait"
-      color="teal"
-    >
-      {{ nWait }}
-    </v-progress-circular>
-    <p>
-    Cekejte prosim
-    </p>
-
-    </win-dow>
+      
    </el-row>
     <div style="max-height:80%;overflow:scroll" v-bind:class="{Makam: IsWaiting}">
     <el-row :gutter="0" style="margin-top:12px">
      <draggable v-model="tableShow"  :options="{group:{ name:'people',  pull:'clone' }}"
      @start="drag=true" @end="drag=false" :move="chooseItem" >
     <el-col v-if="item[9]=='Item' ||  true" :span="24" v-for="(item,idb) in tableShow" :key="idb"
-      v-bind:class="{green: item[9]=='Group', used: modUsed(item[3]) }"
+      v-bind:class="{green: item[9]=='Group', used: modUsed(item[3]) ,
+      JsemVidet: search <' ' || item[0].replace(RegExp(search,'i'),'')!==item[0], NejsemVidet:  search >' ' && item[0].replace(RegExp(search,'i'),'')==item[0]}"
       class="people pa-0   blue ruka"  :id="'b' + idb"
       style="margin-top :1px" @click="centerDialogVisible= true"
       >
@@ -106,6 +94,7 @@
     </div>
 
     <el-col :span=24 class="green" style="display:none">
+
         Help: {{ tableHelp.data }}
         Show {{ tableShow }}
         DataRes {{ tableData }} / {{ isUserLoggedIn }} /{{  user }} / [ {{ info }} ]
@@ -252,6 +241,7 @@ export default {
       centerDialogVisible: false,
       info: '',
       error: '',
+      search: '',
       tableData: [],
       tableShow: [] ,
       tableHelp: [], //napr.pouzite moduly - seznam
@@ -269,7 +259,7 @@ export default {
         Modul: '',
         WindowShow: 'plocha',
         Volna1: '',
-        Volna2: '',
+        idefix: 0,
         IkonaPozice: 'right',
         Typ: 'Item',
 
@@ -331,17 +321,16 @@ export default {
   watch: {
     tableData:  function(item) {
       this.tableSend=[]
-      this.tableData.forEach(element => {
+      this.tableShow=[]
+      this.tableData.forEach((element,i) => {
+        element.items[7] = element.idefix
         this.tableShow.push(element.items)
         if (element.items[3] >' '){
-
           this.tableSend.push({idefix:element.idefix, Nazev:element.items[0]})
         }
       });
       this.tableSend = _.uniqBy(this.tableSend )
-
       eventBus.$emit('Modules', this.tableSend )
-
       console.log('Zmena dat' + this.tableShow + this.menu_set_2)
     },
 
@@ -377,14 +366,14 @@ created () {
 
 },
 async  mounted () {
-
+this.IsWaiting=true
   // return
    if (this.isUserLoggedIn) {
       try {
          ListModulesService.all(this.user, 'All')
          .then( res => {
             if (res.data.info == 0) {
-              alert('data nejsou '+ JSON.stringify( res.data.info ))
+              alert('Data nejsou , pouziji moduly'+ JSON.stringify( res.data.info ))
               try {
               this.getData1()
 
@@ -392,14 +381,28 @@ async  mounted () {
                 this.error = e
               }
             } else {
-              this.tableData = res.data.data
+       this.IsWaiting=false           
+       this.tableData = res.data.data
+       //doplneni idefixe a odeslani nazvu
+       this.tableData.forEach((element,i) => {
+        element.items[7] = element.idefix
+        this.tableShow.push(element.items)
+        this.tableSend = []
+        if (element.items[3] >' '){
+          this.tableSend.push({idefix:element.idefix, Nazev:element.items[0]})
+        }
+       });
+      this.tableSend = _.uniqBy(this.tableSend )
               eventBus.$emit('Modules', this.tableSend )
             }
          })
+       
       } catch (e) {
         this.error = e
+        this.IsWaiting=false
       }
    }
+   
 
 
   },
@@ -418,7 +421,6 @@ async  mounted () {
       return lRet > -1
     },
     async onRecieveFromMenu (id) {
-
       await ListModulesService.usedInMenu (this.user, id)
       .then (res => {
         this.tableHelp = []
@@ -452,7 +454,7 @@ async  mounted () {
       ,this.form.Volna0
       ,this.form.WindowShow
       ,''
-      ,''
+      ,this.form.idefix
       ,this.form.IkonaPozice
       ,this.form.Typ
       ,[]
@@ -471,17 +473,17 @@ async  mounted () {
               // this.$store.state.xMenuMain.push(newItem)
          }
        if (this.IsNewModule){
-
+         newItem[7] = 0
          this.editItem.push(newItem)
+
 
          //this.setModules(-1)
          this.centerDialogVisible = false
          this.tableShow.push(newItem)
        } else {
-
-
          this.centerDialogVisible = false
          this.tableShow[this.form.idx] = newItem
+         ListModulesService.update( this.user,newItem,0,this.form.idx)
 
        }
 
@@ -511,20 +513,28 @@ async  mounted () {
               ListModulesService.all(this.user,'All')
                .then (res => {
                  this.tableShow = []
+
                  this.tableData = res.data.data
                  this.nWait = 100
                  this.IsWaiting=false
                })
+               .catch((e) => {
+                 console.log('Moduly - chyba dotazu na seznam module '+ e )
+
+               })
 
       })
       .catch((e) => {
-        alert('Moduly se nejak pojebly'+ e)
+        console.log('Moduly - chyba behem ukladani '+ JSON.stringify(e.response.data))
+        this.IsWaiting=false
+        this.nWait = 100
+
       })
 
 
     },
     getData1() {
-        ListModulesService.init(this.user,this.menu_set_2, false)
+        ListModulesService.init(this.user,this.menu_set_2, false )
       .then(res => {
           ListModulesService.init(this.user,this.menu_set_3, false)
              .then(res => {
@@ -559,7 +569,7 @@ async  mounted () {
       this.form.Volna0  = item[4]
       this.form.WindowShow  = item[5] == ''? 'plocha': item[5]
       this.form.Volna1  = item[6]
-      this.form.Volna2  = item[7]
+      this.form.idefix  = item[7]
       this.form.IkonaPozice  = item[8]
       this.form.Typ     = item[9]
       this.form.Pole    = [10]
@@ -586,7 +596,7 @@ async  mounted () {
       this.form.Volna0      =  ''
       this.form.WindowShow  = 'plocha'
       this.form.Volna1      =  ''
-      this.form.Volna2      =  ''
+      this.form.idefix      =  ''
       this.form.IkonaPozice      =  'right'
       this.form.Typ         =  'Item'
       this.form.Pole        =  ''

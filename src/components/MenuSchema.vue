@@ -1,9 +1,18 @@
 <template>
 <div id="m003" style="overflow:scroll" v-bind:class="{Makam: IsWaiting}">
+  <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
 <el-row :gutter="0" >
+
   <el-col :span=24>
+    <v-progress-linear :indeterminate="true" v-if="true || IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
+
+        <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Menu System">
+       </el-input>
+
+
 
   <el-tooltip  placement="bottom" effect="light">
+
     <div slot="content">Originalni podoba a menu <br> Vhodne pokud se neco pokazi nebo ztrati</div>
     <el-button  @click="ResetMenu" type="primary"  icon="el-icon-back"  size="mini" class="teal elevation-1">Reset Menu</el-button>
   </el-tooltip>
@@ -22,6 +31,7 @@
     <el-tooltip content="Ulozi lokalne zmeny a prekresli hlavni menu, vyvola dialog pro nazev a ulozeni" placement="bottom" effect="light">
     <el-button  @click="SaveMenu" type="success" icon="el-icon-circle-plus-outline"  size="mini" class="elevation-1">Nove</el-button>
    </el-tooltip>
+
     <!-- <el-button  @click="jarda" type="success" icon="el-icon-success"  size="mini" class="elevation-1">Jarda</el-button> -->
 
    <div id="m004" style="overflow:scroll">
@@ -103,7 +113,9 @@
 
                                               7.&nbsp;<v-icon small left>{{ xMy7[1] }}</v-icon>&nbsp;&nbsp;&nbsp;{{xMy7[0]}}
                                             </div>
-                                            <div v-else-if="i7 == 0  ||  xMy7.length<=1 || xMy7[0]!=='Aplikace'" class="i7 elevation-0">
+                                            <div v-else-if="i7 == 0  ||  xMy7.length<=1 || xMy7[0]!=='Aplikace'" class="i7 elevation-0"
+                                            v-bind:class="{JsemVidet: search <' ' || xMy7[0].replace(RegExp(search,'i'),'')!==xMy7[0], NejsemVidet:  search >' ' && xMy7[0].replace(RegExp(search,'i'),'')==xMy7[0]}"
+                                            >
                                               7 i - {{i7+1}}
                                               i - {{xMy7[0]}} <v-icon small left>{{ xMy7[1] }}</v-icon>
                                             </div>
@@ -111,7 +123,9 @@
                                           </draggable>
                                           </ul>
                                       </div>
-                                      <div v-else-if="i6 == 0  ||  xMy6.length<=1 || xMy6[0]!=='Aplikace'" class="i6 elevation-3">
+                                      <div v-else-if="i6 == 0  ||  xMy6.length<=1 || xMy6[0]!=='Aplikace'" class="i6 elevation-3"
+                                      v-bind:class="{JsemVidet: search <' ' || xMy6[0].replace(RegExp(search,'i'),'')!==xMy6[0], NejsemVidet:  search >' ' && xMy6[0].replace(RegExp(search,'i'),'')==xMy6[0]}"
+                                      >
                                         6 i - {{i6+1}}
                                         i - {{xMy6[0]}} <v-icon small left>{{ xMy6[1] }}</v-icon>
                                       </div>
@@ -119,7 +133,9 @@
                                     </draggable>
                                     </ul>
                                 </div>
-                                <div v-else-if="i5 == 0 ||   xMy5.length<=1 || xMy5[0]!=='Aplikace'" class="i5 elevation-5">
+                                <div v-else-if="i5 == 0 ||   xMy5.length<=1 || xMy5[0]!=='Aplikace'" class="i5 elevation-5"
+                                v-bind:class="{JsemVidet: search <' ' || xMy5[0].replace(RegExp(search,'i'),'')!==xMy5[0], NejsemVidet:  search >' ' && xMy5[0].replace(RegExp(search,'i'),'')==xMy5[0]}"
+                                >
                                   5 i - {{i5+1}}
                                   i - {{xMy5[0]}} <v-icon small left>{{ xMy5[1] }}</v-icon>
                                 </div>
@@ -127,7 +143,9 @@
                               </draggable>
                               </ul>
                             </div>
-                            <div v-else-if="i4 == 0 ||   xMy4.length<=1 || xMy4[0]!=='Aplikace'" class="i4 elevation-8" >
+                            <div v-else-if="i4 == 0 ||   xMy4.length<=1 || xMy4[0]!=='Aplikace'" class="i4 elevation-8"
+                            v-bind:class="{JsemVidet: search <' ' || xMy4[0].replace(RegExp(search,'i'),'')!==xMy4[0], NejsemVidet:  search >' ' && xMy4[0].replace(RegExp(search,'i'),'')==xMy4[0]}"
+                            >
                               4 i - {{i4+1}}
                               {{i4}} - {{xMy4[0]}} <v-icon small left>{{ xMy4[1] }}</v-icon>
                             </div>
@@ -135,7 +153,9 @@
                           </draggable>
                           </ul>
                         </div>
-                        <div v-else-if="i3 == 0 ||  xMy3.length<=1 || xMy3[0]!=='Aplikace'" class="i3 elevation-11">
+                        <div v-else-if="i3 == 0 ||  xMy3.length<=1 || xMy3[0]!=='Aplikace'" class="i3 elevation-11"
+                        v-bind:class="{JsemVidet: search <' ' || xMy3[0].replace(RegExp(search,'i'),'')!==xMy3[0], NejsemVidet:  search >' ' && xMy3[0].replace(RegExp(search,'i'),'')==xMy3[0]}"
+                        >
                           3 i - {{i3+1}}
                           i - {{xMy3[0]}} <v-icon small left>{{ xMy3[1] }}</v-icon>
                         </div>
@@ -144,7 +164,9 @@
                       </ul>
 
                     </div>
-                    <div v-else-if="i2 == 0 ||  xMy2[0]!=='Aplikace'" class="i2 elevation-14">
+                    <div v-else-if="i2 == 0 ||  xMy2[0]!=='Aplikace'" class="i2 elevation-14"
+                    v-bind:class="{JsemVidet: search <' ' || xMy2[0].replace(RegExp(search,'i'),'')!==xMy2[0], NejsemVidet:  search >' ' && xMy2[0].replace(RegExp(search,'i'),'')==xMy2[0]}"
+                    >
                       2 i - {{i2+1}}
                       i - {{xMy2[0]}} <v-icon small left>{{ xMy2[1] }}</v-icon>
                     </div>
@@ -153,7 +175,9 @@
                   </ul>
 
                   </div>
-                  <div v-else-if="i1 == 0 || xMy1[0]!=='Aplikace'" class="i1 elevation-17">
+                  <div v-else-if="i1 == 0 || xMy1[0]!=='Aplikace'" class="i1 elevation-17"
+                  v-bind:class="{JsemVidet: search <' ' || xMy1[0].replace(RegExp(search,'i'),'')!==xMy1[0], NejsemVidet:  search >' ' && xMy1[0].replace(RegExp(search,'i'),'')==xMy1[0]}"
+                  >
                     1 i - {{i1+1}}
                     i - {{xMy1[0]}} <v-icon small left>{{ xMy1[1] }}</v-icon>
                   </div>
@@ -162,7 +186,9 @@
                 </ul>
 
               </div>
-              <div v-else-if=" true || xMy0[0]!=='Aplikace'" class="i0 elevation-20">
+              <div v-else-if=" true || xMy0[0]!=='Aplikace'" class="i0 elevation-20"
+                v-bind:class="{JsemVidet: search <' ' || xMy0[0].replace(RegExp(search,'i'),'')!==xMy0[0], NejsemVidet:  search >' ' && xMy0[0].replace(RegExp(search,'i'),'')==xMy0[0]}"
+              >
                 i - {{i0+1}}
                 i - {{xMy0[0]}} <v-icon small left>{{ xMy0[1] }}</v-icon>
 
@@ -252,22 +278,7 @@
 </v-form>
     </span>
 </el-dialog>
-<win-dow  :id="'progrs'" :h="200" :w="200" :x="10" :y="100" :parent="true" v-if="IsWaiting">
 
-      <v-progress-circular v-if="IsWaiting"
-      :rotate="360"
-      :size="100"
-      :width="15"
-      :value="nWait"
-      color="teal"
-    >
-      {{ nWait }}
-    </v-progress-circular>
-    <p>
-    Cekejte prosim
-    </p>
-
-    </win-dow>
 </div>
 </template>
 
@@ -286,7 +297,7 @@ export default {
       return {
       nI: {} ,
       nWait: 0,
-
+        search:'',
         IsNewMenu: false,
         IsWaiting: false,
         centerDialogVisible: false,
@@ -312,6 +323,7 @@ export default {
   watch: {
     tableData:  function(item) {
       this.tableSend=[]
+      this.tableShow=[]
       this.tableSend.push({idefix:-1 , Nazev: 'Nevybráno'})
       this.tableData.forEach(element => {
         this.tableShow.push(element)
@@ -340,7 +352,13 @@ export default {
               alert('data nejsou '+ JSON.stringify( res.data.info ))
             } else {
               // alert('data Jsou '+ JSON.stringify( res.data.info ))
+              this.tableSend=[]
               this.tableData = res.data.data
+              this.tableData.forEach(element => {
+              this.tableShow.push(element)
+              this.tableSend.push({idefix: element.idefix, Nazev: element.nazev })
+              });
+              eventBus.$emit('Menus', this.tableSend )
             }
          })
       } catch (e) {

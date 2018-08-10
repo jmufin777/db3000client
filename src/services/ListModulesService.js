@@ -13,7 +13,7 @@ export default {
     return Api().post('list_modules', { data: xdata, user: user, del: del})
   }
   ,
-  update (user, xdata, del ) {
-    return Api().put('list_modules', { data: xdata, user: user, del: del})
+  update (user, xdata, del, id ) {
+    return Api().put('list_modules', { data: xdata, user: user, del: del, id: id})
   }
 }

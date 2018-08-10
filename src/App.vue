@@ -25,6 +25,18 @@ export default {
    opacity: 0.5;
 
  }
+ .JsemVidet {
+   opacity: 1;
+   visibility: visible;
+   display: block;
+
+ }
+ .NejsemVidet {
+   opacity: 0.1;
+   visibility: hidden;
+   display: none;
+
+ }
 </style>
 <style lang="stylus">
   $color-pack = false

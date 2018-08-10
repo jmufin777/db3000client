@@ -1,12 +1,15 @@
 <template>
     <div id="m002" style="overflow:scroll" >
-     <el-row  :gutter="0">
-    <el-col :span="17" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
-        Skupiny {{ info }}
+     <el-row  :gutter="10">
+    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
+      <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
+        
+      <el-col :span="18" >
+        <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Skupiny">
+       </el-input>
+      </el-col>
 
-    </el-col>
-
-    <el-col :span="2" :offset="0" >
+      <el-col :span="2" :offset="0" >
       <el-tooltip content="Vlozi novou skupinu   do databaze" placement="top" effect="light">
       <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
         @click="newGroup()"
@@ -15,50 +18,65 @@
     </el-col>
 
     <el-col :span="2" :offset="0">
+     <el-col :span="24"> 
+
       <el-tooltip content="Ulozi skupiny v zobrazenem poradi" placement="top" effect="light">
-    <el-button  :disabled="IsWaiting" type="success" icon='el-icon-success'  size="mini" class="elevation-0"
+    <el-button  :disabled="IsWaiting" type="success" icon='el-icon-success'  size="mini" class="elevation-0" style="margin-left:8px"
         @click="setGroups(1)"
     ></el-button>
     </el-tooltip>
     </el-col>
+    </el-col>
+    </el-col>
     </el-row>
-    <hr><hr><hr><hr><hr><hr>
+    
     <draggable v-model="tableShow"  :options="{group:{ name:'peopleUsers',  pull:'clone' }}">
-    <el-row v-for="(element, i ) in tableShow" :key="i" :gutter="0">
+    <el-row v-for="(element, i ) in tableShow" :key="i" :gutter="0" 
+    v-bind:class="{JsemVidet: search <' ' || element.nazev.replace(RegExp(search,'i'),'')!==element.nazev, NejsemVidet:  search >' ' && element.nazev.replace(RegExp(search,'i'),'')==element.nazev}"
+    >
     <el-col :span="24" :offset="0"  class="peopleUsers teal  pa-0   ruka"   style="margin-top :1px">
       <el-row>
         <el-col :span="10" style="text-align:left">
-        {{element.nazev}}
+          <div class="teal ma-2 " >
+          <el-tooltip  placement="top" effect="light"> 
+             <div slot="content">Popis: <hr>{{element.popis}}</div>
+            <el-badge :value="tableModules[element.idefix].length" class="item">
+              <el-button class="white ma-2 " size="mini">{{element.nazev}} </el-button>
+          </el-badge>
+          </el-tooltip>
+        </div>
+        
       </el-col>
-      <el-col :span="5">
-
-     <el-select  v-model="tableMenus[element.idefix]" filterable clearable
+      <el-col :span="2">
+        <el-col :span="20">
+             <button  :disabled="IsWaiting"  style="width:100%" class="info"  @click="EditGroup(element.idefix)" ><i class="el-icon-edit"></i></icon></button>
+      </el-col>
+      <el-col :span="20">
+             <button v-if="tableMenus[element.idefix].length==0 && tableModules [element.idefix].length==0" :disabled="IsWaiting"  style="width:100%" class="warning" @click="onSubmitDelete(element.idefix)" ><i class="el-icon-delete"></i></button>
+      </el-col>
+      </el-col>  
+      <el-col :span="10" :offset="0">
+        <div class="teal my-3 px-0 mx-0" >
+    <el-select  v-model="tableMenus[element.idefix]" filterable clearable
     no-match-text="Nenalezeno"
     no-data-text="Cekam na data"
-    placeholder="Skupiny" size="mini"
+    placeholder="Typ Menu" size="mini"
     @change="changeMenu(element.idefix,i)"
     >
     <el-option
+      
       v-for="Men in Menu"
       :key="Men.idefix"
       :label="Men.Nazev"
       :value="Men.idefix">
     </el-option>
-
   </el-select>
-
-
-   </el-col>
-
-            <el-col :span="3">
-             <button  :disabled="IsWaiting"  style="width:100%" class="info"  @click="EditGroup(element.idefix)" ><i class="el-icon-edit"></i></icon></button>
-      </el-col>
-      <el-col :span="3">
-             <button v-if="tableMenus[element.idefix].length==0 && tableModules [element.idefix].length==0" :disabled="IsWaiting"  style="width:100%" class="warning" @click="onSubmitDelete(element.idefix)" ><i class="el-icon-delete"></i></button>
-      </el-col>
+   </div>
+  </el-col>
+      
       </el-row>
        <el-row>
-      <el-col :span="24">
+      <el-col :span="22" :offset="1">
     <el-select  v-model="tableModules[element.idefix]" multiple filterable
     no-match-text="Nenalezeno"
     no-data-text="Cekam na data"
@@ -75,14 +93,7 @@
   </el-select>
    </el-col>
    </el-row>
-
-
-
     </el-col>
-
-
-
-
     </el-row>
     </draggable>
     <el-row  :gutter="0">
@@ -153,22 +164,7 @@
 </v-form>
     </span>
 </el-dialog>
-<win-dow  :id="'progrs'" :h="2000" :w="2000" :x="10" :y="100" :parent="true" v-if="IsWaiting">
 
-      <v-progress-circular v-if="IsWaiting"
-      :rotate="360"
-      :size="100"
-      :width="15"
-      :value="nWait"
-      color="teal"
-    >
-      {{ nWait }}
-    </v-progress-circular>
-    <p>
-    Cekejte prosim
-    </p>
-
-    </win-dow>
 
 
  </div>
@@ -178,8 +174,9 @@
 <script>
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
-
+import ListModulesService from '@/services/ListModulesService'
 import ListGroupsService from '@/services/ListGroupsService'
+import ListMenuSchemaService from '@/services/ListMenuSchemaService'
 import { setTimeout, clearInterval } from 'timers';
 
 
@@ -198,6 +195,7 @@ export default {
       centerDialogVisible: false,
       info: '',
       error: '',
+      search: '',
       tableData: [],
       tableShow: [] ,
       tableHelp:[],
@@ -257,39 +255,73 @@ export default {
   },
   watch: {
     tableData:  function(item) {
-
-
+      this.tableShow=[]
+      
       this.tableData.forEach(element => {
         element.Menus1  =  ""
         element.Modules1 = []
-        console.log(element)
         this.tableShow.push(element)
-        //this.tableModules[element.idefix] =[]
-        //this.tableMenus[element.idefix] =''
       });
-
-      // console.log('Zmena dat' + this.tableShow + this.menu_set_2)
     }
    } ,
-
-  mounted () {
+  async mounted () {
+    this.IsWaiting=true
       if (!this.isUserLoggedIn) {
       this.$router.push({
         name: 'login'
       })
       }
+      var i=0
+      try {
+        
+        ListMenuSchemaService.all(this.user, 'Col')
+        .then (res =>{
+           this.Menu=[]
+          res.data.data.forEach(element  => {
+        
+            this.Menu.push({idefix: element.idefix, Nazev: element.nazev })
+        
+          })
+          this.Menu = _.uniqBy(this.Menu )
+        
+
+        })
+      }catch(e) {
+        
+        console.log("Cghyba pri nacitani polozek menu", e)
+        
+
+      }
+
+      try {
+       await ListModulesService.all(this.user, 'All')
+        .then(res => {
+          this.Modul=[]
+          res.data.data.forEach(element  => {
+            if (element.items[3] >' '){
+              this.Modul.push({idefix:element.idefix, Nazev:element.items[0]})
+            }
+          })
+          this.Modul = _.uniqBy(this.Modul )
+        })
+
+      } catch(e){
+          console.log(e)
+        
+      }
+
        try {
-         ListGroupsService.all(this.user, 'All')
+         await ListGroupsService.all(this.user, 'All')
          .then( res => {
             if (res.data.info == 0 ) {
               this.info='data skupin nejsou '+ JSON.stringify( res.data.info )
             } else {
                console.log('data Jsou '+ JSON.stringify( res.data.info ))
               this.tableData = res.data.data
-           this.tableData.forEach(element => {
-        element.Menus1  =  ""
-        element.Modules1 = []
-        console.log(element)
+              this.tableData.forEach(element => {
+              element.Menus1  =  ""
+              element.Modules1 = []
+              console.log(element)
                 this.tableModules[element.idefix] =[]
                 this.tableMenus[element.idefix] =''
           });
@@ -304,29 +336,37 @@ export default {
          })
       } catch (e) {
         this.error = e
+        
       }
+      this.IsWaiting=false
 
    },
    methods: {
      async changeModules(idefix, i){
+       this.IsWaiting=true
        this.tableShow[i].tableModules1= this.tableModules[idefix]
        await ListGroupsService.updateModules(this.user,{idefix: idefix, items: this.tableModules[idefix] })
        .then (res => {
+         this.IsWaiting=false
 
        })
        .catch ((e) =>{
          alert(e)
+         this.IsWaiting=false
        })
        // alert(this.tableModules[idefix]+"  " + i)
      },
      async changeMenu(idefix, i) {
+       this.IsWaiting=true
        this.tableShow[i].tableMenus1= this.tableMenus[idefix]
        await ListGroupsService.updateMenus(this.user, {idefix: idefix, items: this.tableMenus[idefix]})
        .then (res =>{
+         this.IsWaiting=false
 
        })
        .catch((e)=>{
          alert(er)
+         this.IsWaiting=false
        })
        // alert(this.tableMenus[idefix])
 
@@ -349,17 +389,20 @@ export default {
       }
     },
     async onSubmitDelete (id) {
+      this.IsWaiting=true
       await ListGroupsService.delete(this.user,id)
       .then (res =>{
         ListGroupsService.all(this.user,'All')
         .then(res =>{
           this.tableShow =[]
           this.tableData = res.data.data
+          this.IsWaiting=false
         })
       })
     },
     async onSubmit() {
-      console.log(this.form)
+      
+      this.IsWaiting=true
       await  ListGroupsService.init(this.user, this.form, 'one' )
       .then (res => {
          ListGroupsService.all(this.user,'Col')
@@ -379,7 +422,7 @@ export default {
     async EditGroup(id) {
       this.SelectedId  = id
       this.IsNewGroup=false
-
+      this.IsWaiting=true
       await    ListGroupsService.all(this.user,id)
       .then( res => {
           console.log("[ " + JSON.stringify(this.tableModules[id])+ "]")
@@ -391,6 +434,7 @@ export default {
            this.form.tableMenus1   = res.data.data[0].tableMenus1
            this.form.tableModules1 = res.data.data[0].tableModules1
            this.centerDialogVisible = true
+           this.IsWaiting=false
            // alert(this.form.tableModules1)
       })
       .catch((e) => {
@@ -398,7 +442,7 @@ export default {
       })
     },
     async onSubmitEdit() {
-      alert(this.form.tableModules1)
+        this.IsWaiting=true
         await ListGroupsService.update(this.user,this.form)
         .then ( res => {
           this.tableShow =[]
@@ -407,6 +451,7 @@ export default {
         .then( res => {
 
           this.centerDialogVisible = false
+          this.IsWaiting=false
         })
         .catch((e) => {
           console.log('Navrat dat po editu zhavaroval ')
@@ -415,7 +460,7 @@ export default {
     },
     async setGroups (id) {
       console.log('set Groups')
-
+      this.IsWaiting=true
       await  ListGroupsService.init(this.user, this.tableShow, 'all' )
       .then (res => {
          ListGroupsService.all(this.user,'Col')
@@ -425,6 +470,7 @@ export default {
                  this.nWait = 100
                  this.IsWaiting=false
                  this.centerDialogVisible = false
+                 
                })
       })
       .catch((e) => {
