@@ -3,12 +3,12 @@
     <el-row  :gutter="0" >
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:1px" class="blue">
-       
+
        <el-col :span="14" >
         <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Moduly">
        </el-input>
        </el-col>
-    
+
      <el-col :span="2" :offset="0" >
       <el-tooltip content="Vlozi novy modul do databaze" placement="top" effect="light">
       <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
@@ -26,7 +26,7 @@
     </el-col>
 
     </el-col>
-      
+
    </el-row>
     <div style="max-height:80%;overflow:scroll" v-bind:class="{Makam: IsWaiting}">
     <el-row :gutter="0" style="margin-top:12px">
@@ -381,7 +381,7 @@ this.IsWaiting=true
                 this.error = e
               }
             } else {
-       this.IsWaiting=false           
+       this.IsWaiting=false
        this.tableData = res.data.data
        //doplneni idefixe a odeslani nazvu
        this.tableData.forEach((element,i) => {
@@ -396,13 +396,13 @@ this.IsWaiting=true
               eventBus.$emit('Modules', this.tableSend )
             }
          })
-       
+
       } catch (e) {
         this.error = e
         this.IsWaiting=false
       }
    }
-   
+
 
 
   },
@@ -444,7 +444,7 @@ this.IsWaiting=true
        this.IsNewModule = true
        this.onSubmit()
      },
-     onSubmit() {
+     async onSubmit() {
        const newItem = [
 
       this.form.Nazev
@@ -483,7 +483,25 @@ this.IsWaiting=true
        } else {
          this.centerDialogVisible = false
          this.tableShow[this.form.idx] = newItem
-         ListModulesService.update( this.user,newItem,0,this.form.idx)
+          ListModulesService.update( this.user,newItem,0,this.form.idx)
+         .then( res => {
+
+           ListModulesService.all(this.user,'All')
+               .then (res => {
+                 this.tableShow = []
+                 this.tableData = res.data.data
+                 this.nWait = 100
+                 this.IsWaiting=false
+               })
+               .catch((e) => {
+                 console.log('Moduly - chyba dotazu na seznam module '+ e )
+
+               })
+
+
+
+         })
+
 
        }
 
@@ -498,7 +516,8 @@ this.IsWaiting=true
     Alert() {
       alert('ikona')
     },
-    setModules (del) {
+
+    async setModules (del) {
       this.IsWaiting=true
       this.nWait=1
       this.nI = setInterval(() => {
@@ -508,12 +527,11 @@ this.IsWaiting=true
         this.nWait += 15
       }, 100)
 
-      ListModulesService.init(this.user,(del)?this.tableShow: this.editItem , del)
+      await ListModulesService.init(this.user,(del)?this.tableShow: this.editItem , del)
       .then(res => {
               ListModulesService.all(this.user,'All')
                .then (res => {
                  this.tableShow = []
-
                  this.tableData = res.data.data
                  this.nWait = 100
                  this.IsWaiting=false

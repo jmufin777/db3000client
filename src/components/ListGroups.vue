@@ -3,7 +3,7 @@
      <el-row  :gutter="10">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
-        
+
       <el-col :span="18" >
         <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Skupiny">
        </el-input>
@@ -18,7 +18,7 @@
     </el-col>
 
     <el-col :span="2" :offset="0">
-     <el-col :span="24"> 
+     <el-col :span="24">
 
       <el-tooltip content="Ulozi skupiny v zobrazenem poradi" placement="top" effect="light">
     <el-button  :disabled="IsWaiting" type="success" icon='el-icon-success'  size="mini" class="elevation-0" style="margin-left:8px"
@@ -29,32 +29,37 @@
     </el-col>
     </el-col>
     </el-row>
-    
+
     <draggable v-model="tableShow"  :options="{group:{ name:'peopleUsers',  pull:'clone' }}">
-    <el-row v-for="(element, i ) in tableShow" :key="i" :gutter="0" 
+    <el-row v-for="(element, i ) in tableShow" :key="i" :gutter="0"
     v-bind:class="{JsemVidet: search <' ' || element.nazev.replace(RegExp(search,'i'),'')!==element.nazev, NejsemVidet:  search >' ' && element.nazev.replace(RegExp(search,'i'),'')==element.nazev}"
     >
     <el-col :span="24" :offset="0"  class="peopleUsers teal  pa-0   ruka"   style="margin-top :1px">
       <el-row>
         <el-col :span="10" style="text-align:left">
           <div class="teal ma-2 " >
-          <el-tooltip  placement="top" effect="light"> 
+          <el-tooltip  placement="top" effect="light">
              <div slot="content">Popis: <hr>{{element.popis}}</div>
-            <el-badge :value="tableModules[element.idefix].length" class="item">
+
+            <el-badge :value="groupCount(element.idefix)" class="item green" style="background-color:black">
               <el-button class="white ma-2 " size="mini">{{element.nazev}} </el-button>
-          </el-badge>
+            </el-badge>
+
+
+
           </el-tooltip>
         </div>
-        
+
       </el-col>
       <el-col :span="2">
         <el-col :span="20">
              <button  :disabled="IsWaiting"  style="width:100%" class="info"  @click="EditGroup(element.idefix)" ><i class="el-icon-edit"></i></icon></button>
       </el-col>
       <el-col :span="20">
-             <button v-if="tableMenus[element.idefix].length==0 && tableModules [element.idefix].length==0" :disabled="IsWaiting"  style="width:100%" class="warning" @click="onSubmitDelete(element.idefix)" ><i class="el-icon-delete"></i></button>
+             <!-- <button v-if="tableMenus[element.idefix].length==0 && tableModules [element.idefix].length==0" :disabled="IsWaiting"  style="width:100%" class="warning" @click="onSubmitDelete(element.idefix)" ><i class="el-icon-delete"></i></button> -->
+             <button v-if="emptyGroup(element.idefix)" :disabled="IsWaiting"  style="width:100%" class="warning" @click="onSubmitDelete(element.idefix)" ><i class="el-icon-delete"></i></button>
       </el-col>
-      </el-col>  
+      </el-col>
       <el-col :span="10" :offset="0">
         <div class="teal my-3 px-0 mx-0" >
     <el-select  v-model="tableMenus[element.idefix]" filterable clearable
@@ -64,7 +69,7 @@
     @change="changeMenu(element.idefix,i)"
     >
     <el-option
-      
+
       v-for="Men in Menu"
       :key="Men.idefix"
       :label="Men.Nazev"
@@ -73,7 +78,7 @@
   </el-select>
    </div>
   </el-col>
-      
+
       </el-row>
        <el-row>
       <el-col :span="22" :offset="1">
@@ -177,7 +182,7 @@ import { eventBus } from '@/main.js'
 import ListModulesService from '@/services/ListModulesService'
 import ListGroupsService from '@/services/ListGroupsService'
 import ListMenuSchemaService from '@/services/ListMenuSchemaService'
-import { setTimeout, clearInterval } from 'timers';
+import { setTimeout, clearInterval } from 'timers'
 
 
 export default {
@@ -190,7 +195,6 @@ export default {
     return {
       Modul: [],  //Prijem dat
       Menu: [],
-
 
       centerDialogVisible: false,
       info: '',
@@ -219,14 +223,8 @@ export default {
        // v => v.length <= 10 || 'Name must be less than 10 characters'
       ],
     //Smazat
-
-
     //Smazat
-
-
     }
-
-
 
   },
 
@@ -256,7 +254,7 @@ export default {
   watch: {
     tableData:  function(item) {
       this.tableShow=[]
-      
+
       this.tableData.forEach(element => {
         element.Menus1  =  ""
         element.Modules1 = []
@@ -273,23 +271,23 @@ export default {
       }
       var i=0
       try {
-        
+
         ListMenuSchemaService.all(this.user, 'Col')
         .then (res =>{
            this.Menu=[]
           res.data.data.forEach(element  => {
-        
+
             this.Menu.push({idefix: element.idefix, Nazev: element.nazev })
-        
+
           })
           this.Menu = _.uniqBy(this.Menu )
-        
+
 
         })
       }catch(e) {
-        
+
         console.log("Cghyba pri nacitani polozek menu", e)
-        
+
 
       }
 
@@ -307,7 +305,7 @@ export default {
 
       } catch(e){
           console.log(e)
-        
+
       }
 
        try {
@@ -316,7 +314,7 @@ export default {
             if (res.data.info == 0 ) {
               this.info='data skupin nejsou '+ JSON.stringify( res.data.info )
             } else {
-               console.log('data Jsou '+ JSON.stringify( res.data.info ))
+              console.log('data Jsou '+ JSON.stringify( res.data.info ))
               this.tableData = res.data.data
               this.tableData.forEach(element => {
               element.Menus1  =  ""
@@ -325,7 +323,6 @@ export default {
                 this.tableModules[element.idefix] =[]
                 this.tableMenus[element.idefix] =''
           });
-
               res.data.dataMenu.forEach((el) =>{
                 this.tableMenus[el.idefix_group] = el.idefix_menu
               })
@@ -336,12 +333,37 @@ export default {
          })
       } catch (e) {
         this.error = e
-        
+
       }
       this.IsWaiting=false
 
    },
    methods: {
+     //informace
+     groupCount(idefix){
+       var nret = 0
+       try {
+         nret = this.tableModules[idefix].length
+       } catch (e) {
+         nret = -1
+       }
+       return nret
+       //(tableModules[element.idefix].length)?tableModules[element.idefix].length:0
+     },
+
+     emptyGroup(idefix){
+       var lret = true
+
+       try {
+         lret = this.tableModules[idefix].length == 0 && this.tableMenus[idefix].length == 0
+       } catch (e) {
+         lRet  = true
+       }
+       return lret
+     },
+
+
+     //informace
      async changeModules(idefix, i){
        this.IsWaiting=true
        this.tableShow[i].tableModules1= this.tableModules[idefix]
@@ -401,23 +423,21 @@ export default {
       })
     },
     async onSubmit() {
-      
       this.IsWaiting=true
-      await  ListGroupsService.init(this.user, this.form, 'one' )
+      await ListGroupsService.init(this.user, this.form, 'one' )
       .then (res => {
          ListGroupsService.all(this.user,'Col')
                .then (res => {
                  this.tableShow = []
                  this.tableData = res.data.data
-                 this.nWait = 100
                  this.IsWaiting=false
                  this.centerDialogVisible = false
-
                })
       })
       .catch((e) => {
         console.log('Uprava skupin Err: '+ e)
       })
+
     },
     async EditGroup(id) {
       this.SelectedId  = id
@@ -470,7 +490,7 @@ export default {
                  this.nWait = 100
                  this.IsWaiting=false
                  this.centerDialogVisible = false
-                 
+
                })
       })
       .catch((e) => {

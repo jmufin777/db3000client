@@ -4,6 +4,8 @@
   <vue-frame text="VueJS" url="https://vuejs.org" frame="frameDoc3" type="a"  default></vue-frame>
   <vue-frame text="Api Vue" url="https://vuejs.org/v2/api" frame="frameDoc3" type="a"></vue-frame>
   <vue-frame text="UI-EL" url="http://element-cn.eleme.io/#/en-US/component/checkbox" frame="frameDoc3"  type="a"></vue-frame>
+  <vue-frame text="Table" url=" http://element-cn.eleme.io/#/en-US/component/table" frame="frameDoc3"  type="a"></vue-frame>
+
   <vue-frame text="VueTify" url="https://vuetifyjs.com/en/components/selects" frame="frameDoc3"  type="a"></vue-frame>
   <vue-frame text="Ikony" url="https://vuetifyjs.com/en/components/icons" frame="frameDoc3"  type="a"></vue-frame>
   <vue-frame text="Mat" url="https://material.io/icons/" frame="frameDoc3"  type="a"></vue-frame>
@@ -26,8 +28,7 @@
 
 
    <br />
-
-   <iframe id="frameDoc3" name="frameDoc3" src="./" style="width:100%; height:100%" width="100%" height="100%"></iframe>
+     <iframe id="frameDoc3" name="frameDoc3" src="./" style="width:100%; height:100%" width="100%" height="100%"></iframe>
 
 </div>
 

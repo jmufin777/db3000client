@@ -222,6 +222,7 @@ import formFX from './_Testy/formFX'
 import DevDoc from './dev/DevDoc'
 import DevPP from './dev/DevPP'
 import DevPPKalc from './dev/DevPPKalc'
+import testPet from './dev/testPet'
 
 import TestMenu from './_Testy/TestMenu'
 
@@ -265,6 +266,7 @@ export default {
     'dev-doc': DevDoc,
     'dev-pp': DevPP,
     'dev-pp-kalc': DevPPKalc,
+    'test-pet': testPet,
 
 
 

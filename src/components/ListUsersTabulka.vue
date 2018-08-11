@@ -1,7 +1,7 @@
 <template>
 <div id="m005" style="overflow:scroll">
 
-    <el-row  :gutter="0">
+     <el-row  :gutter="10">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
       <el-col :span="18" >
@@ -18,6 +18,7 @@
     </el-col>
     <el-col :span="2" :offset="0">
      <el-col :span="24">
+
       <el-tooltip content="Ulozi skupiny v zobrazenem poradi" placement="top" effect="light">
     <el-button  :disabled="IsWaiting" type="success" icon='el-icon-success'  size="mini" class="elevation-0" style="margin-left:8px"
         @click="setGroups(1)"
@@ -27,38 +28,100 @@
     </el-col>
     </el-col>
     </el-row>
-    <div>
-    <el-row >
-      <el-col :span=4>
-        Jmeno
-      </el-col>
-      <el-col :span=4 :offset=1>
-        login
-      </el-col>
-       <el-col :span=4 :offset=1>
-        skupiny
-      </el-col>
-      <el-col :span=4 :offset=1>
-        menu
-      </el-col>
-    </el-row>
-    </div>
-    <div style="height:100%;overflow:scroll">
-    <el-row v-for="(element,i) in tableData " :key="i">
-      <el-col :span=4>
-        {{element.fullname}}
-      </el-col>
-      <el-col :span=4 :offset=1>
-        {{element.login}}
-      </el-col>
+  <el-table
+    :data="tableData"
+    height="700"
+     style="width: 100%;height:100% "
+     size="mini"
+     border
+     :default-sort = "{prop: 'login', order: 'descending'}"
+     :row-key="rowindex"
+      >
+      <el-table-column
+       type="index"
 
-      <el-col :span=4 :offset=1>
+      >
+
+      </el-table-column>
+
+    <el-table-column
+      fixed
+      prop="fullname"
+      label="Jmeno"
+      width="180"
+      sortable
+      >
+    </el-table-column>
+      <el-table-column
+      fixed
+      prop="idefix"
+      label="Idefix"
+      width="180"
+      sortable
+      >
+
+    </el-table-column>
+
+    </el-table-column>
+    <el-table-column
+      prop="login"
+      label="Login"
+       size="mini"
+       sortable
+      >
+    </el-table-column>
+    <el-table-column
+      prop="level"
+      label="Level"
+       size="mini"
+       sortable
+      draggable
+      >
+          <template slot-scope="scope">
+            <div>
+            aa {{ scope.$index }}
+            </div>
+          </template>
 
 
-      </el-col>
-    </el-row>
-    </div>
+    </el-table-column>
+    <el-table-column
+      fixed="right"
+      label="Operations"
+      width="120">
+      <template slot-scope="scope">
+        <el-button
+          @click.native.prevent="deleteRow(scope.$index, tableData)"
+          type="text"
+          size="small">
+          Remove
+        </el-button>
+      </template>
+    </el-table-column>
 
+    <el-table-column
+      width="200"
+      label="Zmeny"
+       size="mini"
+      draggable
+     >
+
+
+
+    <template slot-scope="scope">
+      <draggable v-model="tableData" :options="{group:{ name:'peopleUsers',  pull:'clone' }}">
+        <el-button
+         size="mini"
+          @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+        <el-button
+          type="danger"
+           size="mini"
+          @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+         </draggable>
+      </template>
+
+    </el-table-column>
+  </el-table>
   </div>
   </template>
 
@@ -91,7 +154,7 @@ export default {
       tableData: [],
       tableShow: [] ,
       tableHelp:[],
-      tableGroups: [],
+      tableModules: [],
       tableMenus: [],
       editItem: [] ,
       SelectedId: 0,
@@ -103,84 +166,17 @@ export default {
   },
   async mounted () {
 
-    if (!this.isUserLoggedIn) {
-       this.$router.push({
-       name: 'login'
+    if (this.isUserLoggedIn) {
+      await ListUsers.all(this.user,'All')
+      .then(res => {
+          this.tableData = res.data.data
+
       })
+      .catch((e) => {
+        alert('podivny')
+      })
+
     }
-      var i=0
-/*
-      try {
-        ListMenuSchemaService.all(this.user, 'Col')
-        .then (res =>{
-           this.Menu=[]
-          res.data.data.forEach(element  => {
-
-            this.Menu.push({idefix: element.idefix, Nazev: element.nazev })
-
-          })
-          this.Menu = _.uniqBy(this.Menu )
-
-
-        })
-      }catch(e) {
-        console.log("Cghyba pri nacitani polozek menu", e)
-
-      }
-*/
-/*
-      try {
-       await ListGroupsService.all(this.user, 'All')
-        .then(res => {
-          this.Group=[]
-          res.data.data.forEach(element  => {
-
-              this.Group.push({idefix:element.idefix, Nazev:element.items[0]})
-
-          })
-          // this.Group = _.uniqBy(this.Group )
-        })
-
-      } catch(e){
-         console.log('Group',e)
-
-      }
-*/
-
-      try {
-         await ListUsersService.all(this.user, 'All')
-         .then( res => {
-           alert('aaa')
-            console.log('data Jsou ')
-
-            if (res.data.info == 0 ) {
-              this.info='data uzivatelu nejsou '+ JSON.stringify( res.data.info )
-            } else {
-              console.log('data Jsou '+ JSON.stringify( res.data.info ))
-              this.tableData = res.data.data
-
-              this.tableData.forEach(element => {
-              element.Menus1  =  ""
-              element.Modules1 = []
-              console.log(element)
-                this.tableGroups[element.idefix] =[]
-                this.tableMenus[element.idefix] =''
-          });
-              res.data.dataMenu.forEach((el) =>{
-                this.tableMenus[el.idefix_group] = el.idefix_menu
-              })
-              res.data.dataGroups.forEach((el) =>{
-                this.tableGroups[el.idefix_group].push(el.idefix_group)
-              })
-            }
-         })
-      } catch (e) {
-        this.error = e
-
-      }
-      this.IsWaiting=false
-
-
   },
 
   methods: {
@@ -213,18 +209,6 @@ export default {
       'user'
     ])
   },
-  watch: {
-    tableData:  function(item) {
-      this.tableShow=[]
-
-
-      this.tableData.forEach(element => {
-        element.Menus1  =  ""
-        element.Groups1 = []
-        this.tableShow.push(element)
-      });
-    }
-   } ,
   created () {
    setTimeout(function() {
     document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"

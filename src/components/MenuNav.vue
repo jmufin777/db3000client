@@ -1,8 +1,18 @@
 <template>
-
      <v-list   dense class="pa-8 ma-8 elevation-20" style="opacity:1" >
+    <v-list-tile >
+     <v-list-tile-content>
+       <v-list-tile-title>
+         <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Hledat v menu">
+       </el-input>
+       </v-list-tile-title>
+     </v-list-tile-content>
+   </v-list-tile>
+
+
        <div style='display:none'>{{ xmenu2 = this.$store.state.xMenuMain }}</div>
       <span class="span_hide" v-for="(ym0, k ) in xmenu2" :key="k" v-model="xmenu2"   >
+
       <v-list-group   v-if="ym0[9]=='Group'"  value="1"    :prepend-icon="ym0[1]" class="">
       <v-list-tile slot="activator">
       <v-list-tile-title class="font-weight-black">
@@ -55,7 +65,9 @@
                               <v-list-tile-title class="font-weight-black">{{ ym7[0] }}</v-list-tile-title>
                               </v-list-tile><!-- Sem dalsi //-->
                               </v-list-group>
-                              <v-list-tile v-if="ym7[9]=='Item'  && ym7[0]!=='Aplikace'" @click="menu_switch(ym7)" class="">
+                              <v-list-tile v-if="ym7[9]=='Item'  && ym7[0]!=='Aplikace'" @click="menu_switch(ym7)" class=""
+                              v-bind:class="{JsemVidet: search <' ' || ym7[0].replace(RegExp(search,'i'),'')!==ym7[0], NejsemVidet:  search >' ' && ym7[0].replace(RegExp(search,'i'),'')==ym7[0]}"
+                              >
                               <v-list-tile-action v-if="ym7[8]=='left'"><v-icon small style="height:10px">{{ym6[1]}}</v-icon></v-list-tile-action>
                               <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 70" :key="y22">&nbsp;</span>{{ ym7[0] }}</v-list-tile-title></v-list-tile-content>
                               <v-list-tile-action v-if="ym7[8]=='right' ||  ym7[8]== ''"><v-icon style="height:10px">{{ym7[1]}}</v-icon></v-list-tile-action>
@@ -63,7 +75,9 @@
                               </span>
 
                             </v-list-group>
-                            <v-list-tile v-if="ym6[9]=='Item'  && ym6[0]!=='Aplikace'" @click="menu_switch(ym6)" class="">
+                            <v-list-tile v-if="ym6[9]=='Item'  && ym6[0]!=='Aplikace'" @click="menu_switch(ym6)" class=""
+                            v-bind:class="{JsemVidet: search <' ' || ym6[0].replace(RegExp(search,'i'),'')!==ym6[0], NejsemVidet:  search >' ' && ym6[0].replace(RegExp(search,'i'),'')==ym6[0]}"
+                            >
                             <v-list-tile-action v-if="ym6[8]=='left'"><v-icon  small style="height:10px">{{ym6[1]}}</v-icon></v-list-tile-action>
                             <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 60" :key="y22">&nbsp;</span>{{ ym6[0] }}</v-list-tile-title></v-list-tile-content>
                             <v-list-tile-action v-if="ym6[8]=='right' ||  ym6[8]== ''"><v-icon style="height:10px">{{ym6[1]}}</v-icon></v-list-tile-action>
@@ -71,7 +85,9 @@
                             </span>
 
                           </v-list-group>
-                          <v-list-tile v-if="ym5[9]=='Item'  && ym5[0]!=='Aplikace'" @click="menu_switch(ym5)" class="">
+                          <v-list-tile v-if="ym5[9]=='Item'  && ym5[0]!=='Aplikace'" @click="menu_switch(ym5)" class=""
+                          v-bind:class="{JsemVidet: search <' ' || ym5[0].replace(RegExp(search,'i'),'')!==ym5[0], NejsemVidet:  search >' ' && ym5[0].replace(RegExp(search,'i'),'')==ym5[0]}"
+                          >
                           <v-list-tile-action v-if="ym5[8]=='left'"><v-icon  small  style="height:10px">{{ym5[1]}}</v-icon></v-list-tile-action>
                           <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 50" :key="y22">&nbsp;</span>{{ ym5[0] }}</v-list-tile-title></v-list-tile-content>
                           <v-list-tile-action v-if="ym5[8]=='right' ||  ym5[8]== ''"><v-icon style="height:10px">{{ym5[1]}}</v-icon></v-list-tile-action>
@@ -79,7 +95,9 @@
                           </span>
 
                     </v-list-group>
-                    <v-list-tile v-if="ym4[9]=='Item'  && ym4[0]!=='Aplikace'" @click="menu_switch(ym4)" class="">
+                    <v-list-tile v-if="ym4[9]=='Item'  && ym4[0]!=='Aplikace'" @click="menu_switch(ym4)" class=""
+                    v-bind:class="{JsemVidet: search <' ' || ym4[0].replace(RegExp(search,'i'),'')!==ym4[0], NejsemVidet:  search >' ' && ym4[0].replace(RegExp(search,'i'),'')==ym4[0]}"
+                    >
                     <v-list-tile-action v-if="ym4[8]=='left'"><v-icon  small  style="height:10px">{{ym4[1]}}</v-icon></v-list-tile-action>
                     <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 40" :key="y22">&nbsp;</span>{{ ym4[0] }}</v-list-tile-title></v-list-tile-content>
                     <v-list-tile-action v-if="ym4[8]=='right' ||  ym4[8]== ''"><v-icon style="height:10px">{{ym4[1]}}</v-icon></v-list-tile-action>
@@ -87,7 +105,9 @@
                     </span>
 
               </v-list-group>
-              <v-list-tile v-if="ym3[9]=='Item'  && ym3[0]!=='Aplikace'" @click="menu_switch(ym2)" class="">
+              <v-list-tile v-if="ym3[9]=='Item'  && ym3[0]!=='Aplikace'" @click="menu_switch(ym2)" class=""
+              v-bind:class="{JsemVidet: search <' ' || ym3[0].replace(RegExp(search,'i'),'')!==ym3[0], NejsemVidet:  search >' ' && ym3[0].replace(RegExp(search,'i'),'')==ym3[0]}"
+              >
               <v-list-tile-action v-if="ym3[8]=='left'"><v-icon  small  style="height:10px">{{ym3[1]}}</v-icon></v-list-tile-action>
               <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 30" :key="y22">&nbsp;</span>{{ ym3[0] }}</v-list-tile-title></v-list-tile-content>
               <v-list-tile-action v-if="ym3[8]=='right' ||  ym3[8]== ''"><v-icon style="height:10px">{{ym3[1]}}</v-icon></v-list-tile-action>
@@ -95,14 +115,18 @@
               </span>
 
             </v-list-group>
-            <v-list-tile v-if="ym2[9]=='Item'  && ym2[0]!=='Aplikace'" @click="menu_switch(ym2)" class="">
+            <v-list-tile v-if="ym2[9]=='Item'  && ym2[0]!=='Aplikace'" @click="menu_switch(ym2)" class=""
+            v-bind:class="{JsemVidet: search <' ' || ym2[0].replace(RegExp(search,'i'),'')!==ym2[0], NejsemVidet:  search >' ' && ym2[0].replace(RegExp(search,'i'),'')==ym2[0]}"
+            >
             <v-list-tile-action v-if="ym2[8]=='left'"><v-icon  small  style="height:10px">{{ym2[1]}}</v-icon></v-list-tile-action>
             <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 20" :key="y22">&nbsp;</span>{{ ym2[0] }}</v-list-tile-title></v-list-tile-content>
             <v-list-tile-action v-if="ym2[8]=='right' ||  ym2[8]== ''"><v-icon style="height:10px">{{ym2[1]}}</v-icon></v-list-tile-action>
             </v-list-tile>
             </span>
         </v-list-group>
-        <v-list-tile v-if="ym1[9]=='Item' && ym1[0]!=='Aplikace'" @click="menu_switch(ym1)" class="">
+        <v-list-tile v-if="ym1[9]=='Item' && ym1[0]!=='Aplikace'" @click="menu_switch(ym1)" class=""
+        v-bind:class="{JsemVidet: search <' ' || ym1[0].replace(RegExp(search,'i'),'')!==ym1[0], NejsemVidet:  search >' ' && ym1[0].replace(RegExp(search,'i'),'')==ym1[0]}"
+        >
         <v-list-tile-action v-if="ym1[8]=='left'"><v-icon  small  style="height:10px">{{ym1[1]}}</v-icon></v-list-tile-action>
         <v-list-tile-content ><v-list-tile-title   ><span v-for="y22 in 10" :key="y22">&nbsp;</span>{{ ym1[0] }}</v-list-tile-title></v-list-tile-content>
         <v-list-tile-action v-if="ym1[8]=='right' ||  ym1[8]== ''"><v-icon style="height:10px">{{ym1[1]}}</v-icon></v-list-tile-action>
@@ -110,7 +134,9 @@
         </span>
 
       </v-list-group>
-      <v-list-tile  v-if="ym0[9]=='Item' && ym0[0]!=='Aplikace'" @click="menu_switch(ym0)" class="">
+      <v-list-tile  v-if="ym0[9]=='Item' && ym0[0]!=='Aplikace'" @click="menu_switch(ym0)" class=""
+                    v-bind:class="{JsemVidet: search <' ' || ym0[0].replace(RegExp(search,'i'),'')!==ym0[0], NejsemVidet:  search >' ' && ym0[0].replace(RegExp(search,'i'),'')==ym0[0]}"
+      >
       <v-list-tile-action v-if="ym0[8]=='left'"><v-icon  small  style="height:10px">{{ym0[1]}}</v-icon></v-list-tile-action>
       <v-list-tile-content ><v-list-tile-title   ><span v-for="y220 in 0" :key="y220">&nbsp;</span>{{ ym0[0] }}</v-list-tile-title></v-list-tile-content>
       <v-list-tile-action v-if="ym0[8]=='right' || ym0[8]=='' "><v-icon style="height:10px">{{ym0[1]}}</v-icon></v-list-tile-action>
@@ -158,6 +184,7 @@ export default {
   },
   data: () => {
     return {
+      search:'',
       xmenu2: [],
       server: null
     }
@@ -182,7 +209,6 @@ export default {
   },
   methods: {
     menu_switch: function (par) {
-
       eventBus.$emit('menu_switch', par)
     },
     logout () {
