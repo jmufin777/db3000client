@@ -12,52 +12,107 @@
       <el-col :span="2" :offset="0" >
       <el-tooltip content="Vlozi noveho uzivatele  do databaze" placement="top" effect="light">
       <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
-        @click="newGroup()"
+        @click="newUser()"
     ></el-button>
       </el-tooltip>
     </el-col>
     <el-col :span="2" :offset="0">
      <el-col :span="24">
-      <el-tooltip content="Ulozi skupiny v zobrazenem poradi" placement="top" effect="light">
+      <el-tooltip content="Aktualizuje seznam z databaze" placement="top" effect="light">
     <el-button  :disabled="IsWaiting" type="success" icon='el-icon-success'  size="mini" class="elevation-0" style="margin-left:8px"
-        @click="setGroups(1)"
+        @click="setUsers(1)"
     ></el-button>
     </el-tooltip>
     </el-col>
     </el-col>
     </el-col>
     </el-row>
-    <div>
-    <el-row >
-      <el-col :span=4>
-        Jmeno
-      </el-col>
-      <el-col :span=4 :offset=1>
-        login
-      </el-col>
-       <el-col :span=4 :offset=1>
-        skupiny
-      </el-col>
-      <el-col :span=4 :offset=1>
-        menu
-      </el-col>
-    </el-row>
-    </div>
+
     <div style="height:100%;overflow:scroll">
-    <el-row v-for="(element,i) in tableData " :key="i">
-      <el-col :span=4>
-        {{element.fullname}}
+    <el-row v-for="(element,i) in tableShow " :key="i" class="teal my-1 px-0 mx-0" :gutter="2"
+    v-bind:class="{  JsemVidet: groupFind(element)
+      , NejsemVidet:  !groupFind(element)
+         }"
+    >
+    <el-col :span="24" class="peopleUsers teal  pa-0   ruka"   style="margin-top :1px">
+      <el-col :span=10  style="text-align:left">
+        <!-- groupCount(element.idefix) -->
+    <div class="teal ma-2 " >
+
+        <el-tooltip  placement="top" effect="light">
+          <div slot="content">Popis: </div>
+       <el-badge :value="groupCount(element.idefix)" class="item orange lighten-5 " style="min-width:90%;left:5%">
+        <!-- <div style="border:solid 1px;height:100%" class="white"> -->
+        <div class=" ma-2 "
+        v-bind:class="{white: element.level !=3 && element.level>0, orange: element.level == 3 }"
+        size="mini">
+          {{element.fullname}} [{{ element.level }}]
+        </div>
+       </el-badge>
+        </el-tooltip>
+    </div>
       </el-col>
-      <el-col :span=4 :offset=1>
-        {{element.login}}
+    <el-col :span="2">
+            <button  :disabled="IsWaiting"  style="width:100%" class="info"   @click="EditUser(element.idefix)" ><i class="el-icon-edit"></i></button>
+
+
+     </el-col>
+      <el-col :span=10 :offset=1>
+        <div class="teal my-1 px-0 mx-0" >
+      <el-select  v-model="tableMenus[element.idefix]" clearable filterable
+        no-match-text="Nenalezeno"
+        no-data-text="Cekam na data"
+        placeholder="Menu" size="mini"
+        @change="changeMenu(element.idefix,i)"
+        class="orange lighten-5"
+
+      >
+      <el-option
+      v-for="Men in Menu"
+      :key="Men.idefix"
+      :label="Men.Nazev"
+      :value="Men.idefix"
+       >
+      <span style="float: left">{{ Men.Nazev }}</span>
+      <span style="float: right; color: green; font-size: 13px">{{ Men.idefix }}</span>
+      </el-option>
+      </el-select>
+
+
+    </div>
+
       </el-col>
 
-      <el-col :span=4 :offset=1>
+    </el-col>
+    <el-col :span="24">
 
+<!-- skupiny -->
+    <el-col :span="24" :offset="0">
+        <div class="teal my-0 px-0 mx-0" style="width:100%">
+        <el-select  v-model="tableGroups[element.idefix]" filterable clearable multiple
+        no-match-text="Nenalezeno"
+        no-data-text="Cekam na data"
+        placeholder="Skupiny Clenstvi" size="mini"
+        @change="changeGroups(element.idefix,i)"
+        style="width:90%"
+        class="orange lighten-5"
+        >
+        <el-option
+          v-for="Gr in Group"
+          :key="Gr.idefix"
+          :label="Gr.Nazev"
+          :value="Gr.idefix">
+          <span style="float: left">{{ Gr.Nazev }}</span>
+          <span style="float: right; color: green; font-size: 12px">{{ Gr.idefix }}</span>
+        </el-option>
+  </el-select>
+   </div>
+  </el-col>
+ </el-col>
 
-      </el-col>
     </el-row>
     </div>
+    <list-user-edit v-if="centerDialogVisible"></list-user-edit>
 
   </div>
   </template>
@@ -66,28 +121,31 @@
 
 // import virtualList from 'vue-virtual-scroll-list'
 // 'virtual-list': virtualList,
+import ListUserEdit from './ListUserEdit'
 
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
-import ListUsers from '@/services/ListUsersService'
+import ListUsersService from '@/services/ListUsersService'
 import ListGroupsService from '@/services/ListGroupsService'
 import ListMenuSchemaService from '@/services/ListMenuSchemaService'
 import { setTimeout, clearInterval } from 'timers';
 
+
+
 export default {
   components: {
-
-
+    'list-user-edit': ListUserEdit
 
   },
   data () {
     return {
-     Group: [],  //Prijem dat
+      Group: [],  //Prijem dat
       Menu: [],
       centerDialogVisible: false,
       info: '',
       error: '',
       search: '',
+      searchInfo:'',
       tableData: [],
       tableShow: [] ,
       tableHelp:[],
@@ -108,50 +166,107 @@ export default {
        name: 'login'
       })
     }
+    this.updateAll()
+
+      // alert(JSON.stringify(this.tableMenus)+"/"+JSON.stringify(this.Menu) +this.Menu[288])
+
+
+  },
+
+  methods: {
+  setUsers(id) {
+    this.updateAll()
+  },
+  EditUser (idefix) {
+      this.centerDialogVisible = true
+      eventBus.$emit('dlg', this.centerDialogVisible)
+
+  },
+
+  groupFind(element){
+    var lRet = false
+    if (this.search < ' ' ) {
+      return true
+    }
+
+    if (this.search > ' ' &&
+    (element.login+element.fullname).replace(RegExp(this.search,'i'),'')!==(element.login+element.fullname)
+    ) {
+      return true
+    }
+
+    /*
+    search <' ' ||  (search > ' ' &&  groupFind(element.idefix) === true ) ||
+        (
+          ((element.login+element.fullname).replace(RegExp(search,'i'),'')!==(element.login+element.fullname))
+
+        )
+        */
+    if (this.searchInfo == 'groups')  {
+    this.tableGroups[element.idefix].forEach(el =>{
+      if (el == this.search){
+       console.log('vynalz el:',element.idefix,  el)
+       lRet = true
+       return
+      }
+    })
+    }
+
+
+    if (this.searchInfo == 'menu')  {
+      // console.log('menu' + JSON.stringify(this.tableMenus[element.idefix]))
+
+      if (this.tableMenus[element.idefix] == this.search) {
+        lRet = true
+      }
+    }
+
+
+
+    return lRet
+  },
+
+  async updateAll()  {
       var i=0
-/*
+
       try {
         ListMenuSchemaService.all(this.user, 'Col')
         .then (res =>{
            this.Menu=[]
           res.data.data.forEach(element  => {
 
-            this.Menu.push({idefix: element.idefix, Nazev: element.nazev })
+            this.Menu.push({idefix: element.idefix*1, Nazev: element.nazev })
 
           })
           this.Menu = _.uniqBy(this.Menu )
 
-
         })
       }catch(e) {
-        console.log("Cghyba pri nacitani polozek menu", e)
-
+        console.log("Chyba pri nacitani polozek menu", e)
       }
-*/
-/*
       try {
        await ListGroupsService.all(this.user, 'All')
         .then(res => {
           this.Group=[]
           res.data.data.forEach(element  => {
-
-              this.Group.push({idefix:element.idefix, Nazev:element.items[0]})
+            //console.log(`ELE<ENTO: ${element.idefix} ${element.nazev}`)
+              this.Group.push({idefix:element.idefix*1, Nazev:element.nazev})
 
           })
-          // this.Group = _.uniqBy(this.Group )
+               this.Group = _.uniqBy(this.Group )
         })
 
       } catch(e){
          console.log('Group',e)
 
       }
-*/
+
 
       try {
+        console.log('data Jsou 1')
+
          await ListUsersService.all(this.user, 'All')
          .then( res => {
-           alert('aaa')
-            console.log('data Jsou ')
 
             if (res.data.info == 0 ) {
               this.info='data uzivatelu nejsou '+ JSON.stringify( res.data.info )
@@ -159,18 +274,18 @@ export default {
               console.log('data Jsou '+ JSON.stringify( res.data.info ))
               this.tableData = res.data.data
 
-              this.tableData.forEach(element => {
+          this.tableData.forEach(element => {
               element.Menus1  =  ""
-              element.Modules1 = []
+              element.Groups1 = []
               console.log(element)
                 this.tableGroups[element.idefix] =[]
                 this.tableMenus[element.idefix] =''
           });
               res.data.dataMenu.forEach((el) =>{
-                this.tableMenus[el.idefix_group] = el.idefix_menu
+                this.tableMenus[el.idefix_user] = el.idefix_menu*1
               })
               res.data.dataGroups.forEach((el) =>{
-                this.tableGroups[el.idefix_group].push(el.idefix_group)
+                this.tableGroups[el.idefix_user].push(el.idefix_group)
               })
             }
          })
@@ -180,17 +295,57 @@ export default {
       }
       this.IsWaiting=false
 
-
   },
+  groupCount(idefix){
+       var nret = 0
+       try {
+         nret = this.tableGroups[idefix].length
+       } catch (e) {
+         nret = -1
+       }
+       return nret
+       //(tableModules[element.idefix].length)?tableModules[element.idefix].length:0
+     },
+     emptyUser(idefix){
+       var lret = true
+       try {
+         lret = this.tableGroups[idefix].length == 0 && this.tableMenus[idefix].length == 0
+       } catch (e) {
+         lRet  = true
+       }
+       return lret
+     },
+     async changeGroups(idefix, i){
+       this.IsWaiting=true
 
-  methods: {
-    rowindex(nrow) {
-      console.log(nrow)
-      return ++this.indextest
-    },
-     deleteRow(index, rows) {
-        rows.splice(index, 1);
-      },
+       this.tableShow[i].tableGroups1= this.tableGroups[idefix]
+       // alert(idefix + " / " + i + "/ "+ this.tableGroups[idefix] + this.tableShow[i])
+       await ListUsersService.updateGroups(this.user,{idefix: idefix, items: this.tableGroups[idefix] })
+       .then (res => {
+         this.IsWaiting=false
+       })
+       .catch ((e) =>{
+         alert(e)
+         this.IsWaiting=false
+       })
+       // alert(this.tableModules[idefix]+"  " + i)
+     },
+     async changeMenu(idefix, i) {
+       this.IsWaiting=true
+       this.tableShow[i].tableMenus1= this.tableMenus[idefix]
+       // alert(idefix + " / " + i + "/ "+ this.tableGroups[idefix] + this.tableShow[i])
+       await ListUsersService.updateMenus(this.user, {idefix: idefix, items: this.tableMenus[idefix]})
+       .then (res =>{
+         this.IsWaiting=false
+       })
+       .catch((e)=>{
+         alert(er)
+         this.IsWaiting=false
+       })
+       // alert(this.tableMenus[idefix])
+
+     },
+
     async my_data () {
      return ;
       this.loading = true
@@ -226,6 +381,19 @@ export default {
     }
    } ,
   created () {
+    eventBus.$on('Groups', (list) => {
+
+       this.Group = list
+      // alert(JSON.stringify(this.Group))
+    })
+    eventBus.$on('Menus', (list) => {
+      this.Menu = list
+    })
+    eventBus.$on('showUsers', (list) => {
+      this.search = list.idefix
+      this.searchInfo = list.searchInfo
+
+    })
    setTimeout(function() {
     document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
   },100)

@@ -40,20 +40,21 @@
           <div class="teal ma-2 " >
           <el-tooltip  placement="top" effect="light">
              <div slot="content">Popis: <hr>{{element.popis}}</div>
-
-            <el-badge :value="groupCount(element.idefix)" class="item green" style="background-color:black">
-              <el-button class="white ma-2 " size="mini">{{element.nazev}} </el-button>
-            </el-badge>
-
-
-
+                    <el-badge :value="groupCount(element.idefix)"  class="item orange lighten-5" style="background-color:black">
+                      <div class="orange lighten-5 ma-2 " size="mini">{{element.nazev}}
+                      <button    class="yellow" size="mini" @click="showUsers(element.idefix)" ><i class="el-icon-question"></i></button>
+                       </div  >
+                    </el-badge>
           </el-tooltip>
         </div>
 
       </el-col>
+      <el-col :span="1">
+
+      </el-col>
       <el-col :span="2">
         <el-col :span="20">
-             <button  :disabled="IsWaiting"  style="width:100%" class="info"  @click="EditGroup(element.idefix)" ><i class="el-icon-edit"></i></icon></button>
+             <button  :disabled="IsWaiting"  style="width:100%" class="info"  @click="EditGroup(element.idefix)" ><i class="el-icon-edit"></i></button>
       </el-col>
       <el-col :span="20">
              <!-- <button v-if="tableMenus[element.idefix].length==0 && tableModules [element.idefix].length==0" :disabled="IsWaiting"  style="width:100%" class="warning" @click="onSubmitDelete(element.idefix)" ><i class="el-icon-delete"></i></button> -->
@@ -101,9 +102,9 @@
     </el-col>
     </el-row>
     </draggable>
-    <el-row  :gutter="0">
+    <el-row  v-if="false==true" :gutter="0">
 
-    <el-col :span="17" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
+    <el-col :span="17" :offset="0" style="margin-top:5px;padding-left:10px" class="orange lighten-5">
       {{ tableModules }} <hr> {{ tableMenus}}
 
       <div v-show="true">
@@ -196,12 +197,14 @@ export default {
       Modul: [],  //Prijem dat
       Menu: [],
 
+
       centerDialogVisible: false,
       info: '',
       error: '',
       search: '',
       tableData: [],
       tableShow: [] ,
+      tableSend: [] ,
       tableHelp:[],
       tableModules: [],
       tableMenus: [],
@@ -254,12 +257,17 @@ export default {
   watch: {
     tableData:  function(item) {
       this.tableShow=[]
+      this.tableSend=[]
 
       this.tableData.forEach(element => {
         element.Menus1  =  ""
         element.Modules1 = []
         this.tableShow.push(element)
+        this.tableSend.push({idefix: element.idefix, Nazev: element.nazev})
+
       });
+      eventBus.$emit('Groups', this.tableSend )
+
     }
    } ,
   async mounted () {
@@ -340,6 +348,11 @@ export default {
    },
    methods: {
      //informace
+     showUsers(idefix) {
+
+       eventBus.$emit('showUsers', {'idefix': idefix*1, 'searchInfo': 'groups'} )
+
+     },
      groupCount(idefix){
        var nret = 0
        try {
@@ -357,7 +370,8 @@ export default {
        try {
          lret = this.tableModules[idefix].length == 0 && this.tableMenus[idefix].length == 0
        } catch (e) {
-         lRet  = true
+         lret  = true
+         console.log('Err - empty', e)
        }
        return lret
      },
@@ -451,10 +465,11 @@ export default {
            this.form.Popis   = res.data.data[0].popis
            this.form.Id      = res.data.data[0].id
            this.form.IdeFix  = res.data.data[0].idefix
-           this.form.tableMenus1   = res.data.data[0].tableMenus1
-           this.form.tableModules1 = res.data.data[0].tableModules1
+           // this.form.tableMenus1   = res.data.data[0].tableMenus1
+           // this.form.tableModules1 = res.data.data[0].tableModules1
            this.centerDialogVisible = true
            this.IsWaiting=false
+           // alert(JSON.stringify(this.form.tableMenus1 ))
            // alert(this.form.tableModules1)
       })
       .catch((e) => {

@@ -48,6 +48,12 @@ export default {
     // this.//https://www.fxblue.com/users/1
     this.pList.push(Array("DAX","DAX","https://www.fxblue.com/fxblueview.aspx?id=dax_hankeys"))
     this.pList.push(Array("Kombajn","Kombajn","https://www.fxblue.com//fxblueview.aspx?id=kombajn"))
+    this.pList.push(Array("DAX2","Kombajn","https://www.fxblue.com//fxblueview.aspx?id=905196"))
+    this.pList.push(Array("Pokus","Pokus","https://www.fxblue.com//fxblueview.aspx?id=Kacka_1,19078954,645852,356107,limit1,20293568"))
+    // -,kombajn
+    //this.pList.push(Array("Pokus","Pokus","https://www.fxblue.com/users/Kacka_1,19078954,645852,356107,kombajn,limit1"))
+
+
   },
 
 

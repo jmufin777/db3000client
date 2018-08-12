@@ -214,6 +214,7 @@ Moduly:
 import _ from 'lodash'
 import _f from '@/funkce/Desktop_switch.js'
 import { eventBus } from '@/main.js'
+
 import { g } from '@/funkce/global.js'
 import hw from './Blank.vue'
 import testy from './_Testy/testy'
@@ -766,6 +767,9 @@ export default {
     eventBus.$on('Alert', (server) => {
        this.Alert(server)
        // alert("jsme tu")
+    })
+    eventBus.$on('myzole',(req)=>{
+
     })
     this.StartRight=window.innerWidth - 50
 

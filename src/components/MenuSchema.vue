@@ -207,10 +207,12 @@
           >
           <!-- <el-tooltip  placement="bottom" effect="light">
             <div slot="content">{{ element.popis}}</div> -->
+             <button    class="yellow" size="mini" style="width:10%" @click="showUsers(element.idefix)" ><i class="el-icon-question"></i></button>
              <button :disabled="IsWaiting" style="width:50%;text-align:left" @click="setMenu(element.id)">{{ element.nazev}}</button>
+
             <!-- </el-tooltip> -->
-             <button :disabled="IsWaiting" v-if="SelectedId == element.id" style="width:20%" class="info"  @click="EditMenu(element.id)" ><i class="el-icon-edit"></i></icon></button>
-             <button :disabled="IsWaiting" v-if="SelectedId == element.id" style="width:20%" class="warning" @click="onSubmitDelete" ><i class="el-icon-delete"></i></button>
+             <button :disabled="IsWaiting" v-if="SelectedId == element.id" style="width:15%" class="info"  @click="EditMenu(element.id)" ><i class="el-icon-edit"></i></icon></button>
+             <button :disabled="IsWaiting" v-if="SelectedId == element.id" style="width:15%" class="warning" @click="onSubmitDelete" ><i class="el-icon-delete"></i></button>
 
           </el-col>
           </draggable>
@@ -232,10 +234,19 @@
   center>
 
     <span slot="title" size="mini" class="blue">
-      <el-card>
+      <el-card v-if="Error==''" class="green">
         <el-col :span="4"><v-icon v-if="form.Ikona >''" color="red">{{form.Ikona}}</v-icon></el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-if="Error==''">
          Menu {{IsNewMenu?'Nove  ': 'Uprava menu ' + form.Nazev }}
+
+        </el-col>
+
+      </el-card>
+      <el-card v-if="Error>''" class="error">
+        <el-col :span="4"><v-icon v-if="form.Ikona >''" color="red">{{form.Ikona}}</v-icon></el-col>
+        <el-col :span="20" v-if="Error>''" class="error">
+         {{ Error }}
+
         </el-col>
       </el-card>
       </span>
@@ -265,7 +276,6 @@
 
   <el-col :span="3">
     <el-col :span="24" :offset="1">
-
     <el-button v-if="!IsNewMenu" type="primary" @click="onSubmitEdit" size="mini" style="width:100%" >{{ IsNewMenu? 'Vytvorit':'Ulozit'}}</el-button>
     <el-button v-if="IsNewMenu"  type="primary" @click="onSubmit" size="mini" style="width:100%" >{{ IsNewMenu? 'Vytvorit':'Ulozit'}}</el-button>
     </el-col>
@@ -300,6 +310,7 @@ export default {
         search:'',
         IsNewMenu: false,
         IsWaiting: false,
+        Error:'',
         centerDialogVisible: false,
         tableData: [],
         tableShow: [],
@@ -330,12 +341,11 @@ export default {
         this.tableSend.push({idefix: element.idefix, Nazev: element.nazev })
       });
       eventBus.$emit('Menus', this.tableSend )
-
        console.log('Zmena dat' + this.tableSend)
     },
     SelectedId: function(id) {
-      // alert(id)
-      eventBus.$emit('UsedInMenu', id )
+
+      eventBus.$emit('UsedInMenu', this.SelectedId )
     }
   },
     mounted () {
@@ -374,9 +384,15 @@ export default {
      ])
    },
   methods: {
+    showUsers(idefix) {
+
+       eventBus.$emit('showUsers', {'idefix': idefix*1, 'searchInfo': 'menu'} )
+
+     },
     onSubmit() {
 
       console.log(this.form)
+      this.Error=''
       ListMenuSchemaService.init(this.user,this.xMenuy1, this.form.Nazev, this.form.Popis)
       .then (res => {
         ListMenuSchemaService.all(this.user,'Col')
@@ -388,7 +404,7 @@ export default {
                })
       })
       .catch((e) => {
-        alert('Uprava menu se  nejak pojebla'+ e)
+        alert('Uprava menu - doslo k chybam : '+ e)
       })
 
 
@@ -399,6 +415,7 @@ export default {
     },
 
     onSubmitDelete () {
+      this.Error=''
       this.IsWaiting = true
             this.nWait=1
       this.nI = setInterval(() => {
@@ -420,6 +437,7 @@ export default {
     },
 
     async onSubmitEdit () {
+      this.Error=''
     //  this.IsWaiting = true
       //      this.nWait=1
       this.nI = setInterval(() => {
@@ -429,19 +447,22 @@ export default {
         this.nWait += 15
       }, 100)
       this.form.id = this.SelectedId
+      //alert('0000')
       await ListMenuSchemaService.update(this.user, this.form, this.xMenuy1 )
       .then( res=> {
           this.tableShow = []
           this.tableData = res.data.data
-
+          this.IsWaiting = false
+          this.centerDialogVisible = false
       })
       .then(res => {
-        this.IsWaiting = false
-        this.centerDialogVisible = false
-
-        eventBus.$emit('UsedInMenu', id )
+        eventBus.$emit('UsedInMenu', this.form.id )
       })
-
+      .catch ((e)=>{
+        console.log('hovono prdel sracka', JSON.stringify(e.response.data.error))
+        this.Error = JSON.stringify(e.response.data.error)
+      }
+      )
     },
     async setMenu(id) {
       this.SelectedId= id
@@ -486,7 +507,7 @@ export default {
     },
 
     async EditMenu (id) {
-
+      this.Error=''
       this.IsNewMenu = false
       this.centerDialogVisible = true
     },

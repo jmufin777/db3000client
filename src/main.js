@@ -53,6 +53,8 @@ sync(store, router)
 
 export const eventBus = new Vue()
 
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -63,7 +65,10 @@ new Vue({
     VueFrame,
     VueFriendlyIframe
 
+
+
   },
+
   template: '<App/>'
 })
 // var vm = new Vue({
