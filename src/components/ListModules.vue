@@ -2,7 +2,7 @@
     <div id="m001" style="overflow:scroll" >
     <el-row  :gutter="0" >
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
-    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:1px" class="blue">
+    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:1px" >
 
        <el-col :span="14" >
         <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Moduly">

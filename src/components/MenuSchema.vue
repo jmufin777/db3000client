@@ -1,42 +1,65 @@
 <template>
 <div id="m003" style="overflow:scroll" v-bind:class="{Makam: IsWaiting}">
-  <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
-<el-row :gutter="0" >
+  <el-row :gutter=0>
 
-  <el-col :span=24>
-    <v-progress-linear :indeterminate="true" v-if="true || IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
+  <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
+ <el-col :span=10>
+
 
         <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Menu System">
        </el-input>
-
-
-
+   </el-col>
+   <el-col :span=13>
+   <el-col :span=24 >
+   <el-row :gutter="0">
+    <el-col :span=4 >
   <el-tooltip  placement="bottom" effect="light">
 
     <div slot="content">Originalni podoba a menu <br> Vhodne pokud se neco pokazi nebo ztrati</div>
-    <el-button  @click="ResetMenu" type="primary"  icon="el-icon-back"  size="mini" class="teal elevation-1">Reset Menu</el-button>
+    <el-button  @click="ResetMenu" type="primary"  icon="el-icon-back"  size="mini" class="teal elevation-0">Reset</el-button>
   </el-tooltip>
+    </el-col>
+    <el-col :span=4 >
     <el-tooltip  placement="bottom" effect="light">
     <div slot="content">Smaze informace o ulozeni pozic oken<br>Vhodne , pokud je aplikace neprehledna</div>
-    <el-button  @click="ResetWindows" type="primary" icon="el-icon-close"  size="mini" class="teal elevation-1">Reset Oken</el-button>
+    <el-button  @click="ResetWindows" type="primary" icon="el-icon-close"  size="mini" class="teal elevation-0">Okna</el-button>
     </el-tooltip>
+    </el-col>
+    <el-col :span=4 >
     <el-tooltip  placement="bottom" effect="light">
     <div slot="content">Ukonci a znovu nacte  aplikaci</div>
-    <el-button  @click="$router.go()" type="success" icon="el-icon-success"  size="mini" class="elevation-1">OK</el-button>
+    <el-button  @click="$router.go()" type="success" icon="el-icon-success"  size="mini" class="elevation-0">OK</el-button>
     </el-tooltip>
+    </el-col>
+    <el-col :span=4 >
     <el-tooltip  placement="bottom" effect="light">
     <div slot="content">{{StoreInfo}}</div>
-    <el-button  @click="StoreInfo0" type="success" icon="el-icon-info"  size="mini" class="elevation-1"></el-button>
+    <el-button  @click="StoreInfo0" type="success" icon="el-icon-info"  size="mini" class="elevation-0"></el-button>
     </el-tooltip>
+    </el-col>
+    <el-col :span=4 >
     <el-tooltip content="Ulozi lokalne zmeny a prekresli hlavni menu, vyvola dialog pro nazev a ulozeni" placement="bottom" effect="light">
-    <el-button  @click="SaveMenu" type="success" icon="el-icon-circle-plus-outline"  size="mini" class="elevation-1">Nove</el-button>
+
+      <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
+        @click="SaveMenu"
+    ></el-button>
    </el-tooltip>
+    </el-col>
+   </el-row>
+   </el-col>
+   </el-col>
+   </el-row>
 
     <!-- <el-button  @click="jarda" type="success" icon="el-icon-success"  size="mini" class="elevation-1">Jarda</el-button> -->
 
-   <div id="m004" style="overflow:scroll">
-    <el-row :gutter="0" ><el-col :span="18">
-   <ul v-show="true" >
+   <!-- <div id="m004" style="overflow:scroll"> -->
+
+
+    <el-row :gutter="0" >
+
+      <el-col :span="18">
+
+      <ul v-show="true" >
              <v-btn
                 class="orange accent-12 elevation-10"
                 light
@@ -196,11 +219,14 @@
             </li>
             </draggable>
          </ul>
-          </el-col>
+        </el-col>
+
+
           <el-col :span="5">
-           <hr>   <hr>   <hr>   <hr>   <hr>
           <draggable v-if="tableShow.length>0 " v-model="tableShow"  :options="{group:{ name:'peopleGroup',  pull:'clone'  }}"
           @start="drag=true" @end="drag=false" :move="chooseItem" >
+
+        <div style="max-height:80%;overflow:scroll" v-bind:class="{Makam: IsWaiting}">
 
           <el-col :span=24 v-for="(element,iii) in tableShow" :key="iii" class="people pa-0 teal elevation-20" :id="'a' + iii"
             style="margin-top :1px;text-align:left"
@@ -215,14 +241,16 @@
              <button :disabled="IsWaiting" v-if="SelectedId == element.id" style="width:15%" class="warning" @click="onSubmitDelete" ><i class="el-icon-delete"></i></button>
 
           </el-col>
+          </div>
           </draggable>
 
           </el-col>
           </el-row>
-          </div>
 
-      </el-col>
-   </el-row>
+
+
+
+
 <!-- Dialog -->
    <el-dialog
   title=""
@@ -250,11 +278,11 @@
         </el-col>
       </el-card>
       </span>
-    <span>
+  <span>
+
 <v-form ref="form" :model="form" label-width="0px">
   <el-row :gutter="0">
    <el-col :span="20">
-
 <v-text-field
             label="Nazev"
             hint="Nazev  modulu v menu"
@@ -568,10 +596,10 @@ export default {
   },
   created () {
     setTimeout(function() {
-     document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+     document.getElementById("m003").style.height=Math.round(window.innerHeight - 210)  + "px"
     },100)
     window.addEventListener('resize', (function() {
-     document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+     document.getElementById("m003").style.height=Math.round(window.innerHeight - 210)  + "px"
     })
   )
 

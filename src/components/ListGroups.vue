@@ -1,12 +1,14 @@
 <template>
     <div id="m002" style="overflow:scroll" >
-     <el-row  :gutter="10">
-    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
+     <el-row  :gutter="2">
+    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
 
       <el-col :span="18" >
-        <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Skupiny">
+        <div style="width:100%">
+        <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Skupiny" >
        </el-input>
+       </div>
       </el-col>
 
       <el-col :span="2" :offset="0" >
@@ -29,15 +31,16 @@
     </el-col>
     </el-col>
     </el-row>
-
+    <div style="height:100%;overflow:scroll">
     <draggable v-model="tableShow"  :options="{group:{ name:'peopleUsers',  pull:'clone' }}">
     <el-row v-for="(element, i ) in tableShow" :key="i" :gutter="0"
     v-bind:class="{JsemVidet: search <' ' || element.nazev.replace(RegExp(search,'i'),'')!==element.nazev, NejsemVidet:  search >' ' && element.nazev.replace(RegExp(search,'i'),'')==element.nazev}"
-    >
-    <el-col :span="24" :offset="0"  class="peopleUsers teal  pa-0   ruka"   style="margin-top :1px">
+
+      >
+    <el-col :span="24" :offset="0"  class="peopleUsers   pa-0   ruka"   style="margin-top :1px">
       <el-row>
         <el-col :span="10" style="text-align:left">
-          <div class="teal ma-2 " >
+          <div class=" ma-2 " >
           <el-tooltip  placement="top" effect="light">
              <div slot="content">Popis: <hr>{{element.popis}}</div>
                     <el-badge :value="groupCount(element.idefix)"  class="item orange lighten-5" style="background-color:black">
@@ -62,7 +65,7 @@
       </el-col>
       </el-col>
       <el-col :span="10" :offset="0">
-        <div class="teal my-3 px-0 mx-0" >
+        <div class=" my-0 px-0 mx-0" >
     <el-select  v-model="tableMenus[element.idefix]" filterable clearable
     no-match-text="Nenalezeno"
     no-data-text="Cekam na data"
@@ -102,6 +105,7 @@
     </el-col>
     </el-row>
     </draggable>
+    </div>
     <el-row  v-if="false==true" :gutter="0">
 
     <el-col :span="17" :offset="0" style="margin-top:5px;padding-left:10px" class="orange lighten-5">

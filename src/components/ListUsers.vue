@@ -2,7 +2,7 @@
 <div id="m005" style="overflow:scroll">
 
     <el-row  :gutter="0">
-    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" class="blue">
+    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
       <el-col :span="18" >
         <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Uzivatele">
@@ -29,15 +29,15 @@
     </el-row>
 
     <div style="height:100%;overflow:scroll">
-    <el-row v-for="(element,i) in tableShow " :key="i" class="teal my-1 px-0 mx-0" :gutter="2"
+    <el-row v-for="(element,i) in tableShow " :key="i" class=" my-1 px-0 mx-0" :gutter="2"
     v-bind:class="{  JsemVidet: groupFind(element)
       , NejsemVidet:  !groupFind(element)
          }"
     >
-    <el-col :span="24" class="peopleUsers teal  pa-0   ruka"   style="margin-top :1px">
+    <el-col :span="24" class="peopleUsers   pa-0   ruka"   style="margin-top :1px">
       <el-col :span=10  style="text-align:left">
         <!-- groupCount(element.idefix) -->
-    <div class="teal ma-2 " >
+    <div class=" ma-2 " >
 
         <el-tooltip  placement="top" effect="light">
           <div slot="content">Popis: </div>
@@ -58,7 +58,7 @@
 
      </el-col>
       <el-col :span=10 :offset=1>
-        <div class="teal my-1 px-0 mx-0" >
+        <div class=" my-1 px-0 mx-0" >
       <el-select  v-model="tableMenus[element.idefix]" clearable filterable
         no-match-text="Nenalezeno"
         no-data-text="Cekam na data"
@@ -88,7 +88,7 @@
 
 <!-- skupiny -->
     <el-col :span="24" :offset="0">
-        <div class="teal my-0 px-0 mx-0" style="width:100%">
+        <div class=" my-0 px-0 mx-0" style="width:100%">
         <el-select  v-model="tableGroups[element.idefix]" filterable clearable multiple
         no-match-text="Nenalezeno"
         no-data-text="Cekam na data"
