@@ -1,12 +1,12 @@
 <template>
     <div id="m002" style="overflow:scroll" >
-     <el-row  :gutter="2">
-    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
+     <el-row  :gutter="0" >
+    <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:0px" >
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
 
-      <el-col :span="18" >
+      <el-col :span="19" >
         <div style="width:100%">
-        <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Skupiny" >
+        <el-input class="mx-0" prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Skupiny" >
        </el-input>
        </div>
       </el-col>
@@ -31,46 +31,51 @@
     </el-col>
     </el-col>
     </el-row>
-    <div style="height:100%;overflow:scroll">
+    <div style="height:100%;overflow:scroll" class="mt-2">
     <draggable v-model="tableShow"  :options="{group:{ name:'peopleUsers',  pull:'clone' }}">
-    <el-row v-for="(element, i ) in tableShow" :key="i" :gutter="0"
+    <el-row v-for="(element, i ) in tableShow" :key="i" :gutter="30" class="blue pa-1" style="margin-bottom:1px"
     v-bind:class="{JsemVidet: search <' ' || element.nazev.replace(RegExp(search,'i'),'')!==element.nazev, NejsemVidet:  search >' ' && element.nazev.replace(RegExp(search,'i'),'')==element.nazev}"
-
       >
-    <el-col :span="24" :offset="0"  class="peopleUsers   pa-0   ruka"   style="margin-top :1px">
+    <el-col :span="23" :offset="1"  class="peopleUsers   pa-0   ruka"   style="margin-top :1px">
       <el-row>
-        <el-col :span="10" style="text-align:left">
-          <div class=" ma-2 " >
+        <el-col :span="8" style="text-align:left" >
+          <div class=" mx-0 my-1" >
           <el-tooltip  placement="top" effect="light">
              <div slot="content">Popis: <hr>{{element.popis}}</div>
-                    <el-badge :value="groupCount(element.idefix)"  class="item orange lighten-5" style="background-color:black">
-                      <div class="orange lighten-5 ma-2 " size="mini">{{element.nazev}}
+                    <el-badge :value="groupCount(element.idefix)"  class="blue item my-0" style="background-color:white;width:95%;height:100%;border-radius:0px">
                       <button    class="yellow" size="mini" @click="showUsers(element.idefix)" ><i class="el-icon-question"></i></button>
-                       </div  >
+                      &nbsp;
+                      {{element.nazev}}
+
+
+
                     </el-badge>
           </el-tooltip>
         </div>
 
       </el-col>
-      <el-col :span="1">
-
-      </el-col>
-      <el-col :span="2">
-        <el-col :span="20">
+    <el-col :span="2" >
+      <el-col :span="24" :offset="0" >
+        <el-col :span="9" :offset="6" >
              <button  :disabled="IsWaiting"  style="width:100%" class="info"  @click="EditGroup(element.idefix)" ><i class="el-icon-edit"></i></button>
       </el-col>
-      <el-col :span="20">
+      <el-col :span="9">
              <!-- <button v-if="tableMenus[element.idefix].length==0 && tableModules [element.idefix].length==0" :disabled="IsWaiting"  style="width:100%" class="warning" @click="onSubmitDelete(element.idefix)" ><i class="el-icon-delete"></i></button> -->
              <button v-if="emptyGroup(element.idefix)" :disabled="IsWaiting"  style="width:100%" class="warning" @click="onSubmitDelete(element.idefix)" ><i class="el-icon-delete"></i></button>
       </el-col>
       </el-col>
-      <el-col :span="10" :offset="0">
-        <div class=" my-0 px-0 mx-0" >
+    </el-col>
+
+
+    <el-col :span="13" :offset="0">
+     <div class=" my-0 px-0 mx-0" >
     <el-select  v-model="tableMenus[element.idefix]" filterable clearable
     no-match-text="Nenalezeno"
     no-data-text="Cekam na data"
     placeholder="Typ Menu" size="mini"
     @change="changeMenu(element.idefix,i)"
+    style="width:84%"
+
     >
     <el-option
 
@@ -85,7 +90,7 @@
 
       </el-row>
        <el-row>
-      <el-col :span="22" :offset="1">
+      <el-col :span="22" :offset="0">
     <el-select  v-model="tableModules[element.idefix]" multiple filterable
     no-match-text="Nenalezeno"
     no-data-text="Cekam na data"
@@ -131,7 +136,7 @@
     <span slot="title" size="mini" class="blue">
       <el-card>
         <el-col :span="8">
-         Menu {{IsNewGroup?'Nove  ': 'Uprava skupiny ' + form.Nazev }}
+         Skupina {{IsNewGroup?'Nova  ': 'Uprava skupiny ' + form.Nazev }}
         </el-col>
       </el-card>
       </span>
@@ -437,6 +442,7 @@ export default {
           this.tableShow =[]
           this.tableData = res.data.data
           this.IsWaiting=false
+          eventBus.$emit('setUsers',1)
         })
       })
     },
@@ -516,17 +522,16 @@ export default {
         console.log('Uprava skupin Err: '+ e)
       })
 
-
-
-
     }
    }
 }
-
 
 </script>
 
 <style lang="stylus" scoped>
  .v-progress-circular
     margin: 1rem
+
 </style>
+
+

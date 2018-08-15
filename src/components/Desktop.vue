@@ -43,18 +43,18 @@
       >{{compD[0].title}}</el-radio-button>
   </el-radio-group> -->
 
-<el-dropdown @command="radio3_a">
+<el-dropdown v-if="this.compa.length>0" @command="radio3_a" >
     <el-badge :value="compa.length" class="item ">
       <el-button size="small" class="el-icon-upload2">{{radio3}}</el-button>
     </el-badge>
-  <el-dropdown-menu slot="dropdown" style="z-index:2000000">
+  <el-dropdown-menu v-if="this.compa.length>0" slot="dropdown" >
      <el-dropdown-item v-for="(compaE, iE) in compa " :key="iE" :command="compaE[0].modul">{{ compaE[0].title }}</el-dropdown-item>
-      <el-dropdown-item  command="CloseAllWin">Zavrit vse</el-dropdown-item>
+      <el-dropdown-item v-if="this.compa.length>0" command="CloseAllWin">Zavrit vse</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>
 <v-spacer></v-spacer>
 
-<el-dropdown @command="winFocus">
+<el-dropdown v-if="this.openWins.length>0" @command="winFocus">
     <el-badge :value="openWins.length" class="item ">
       <el-button size="small" class="el-icon-upload2"></el-button>
     </el-badge>
@@ -171,7 +171,7 @@ Moduly:
   </draggable>
  </el-row>
 
-   <el-row v-if="radio2==20" :gutter=0 >
+   <el-row   v-if="radio2==20 && this.compa.length>0" :gutter=0 >
      <!-- plocha  -->
       <el-col  :span="23">
        <el-button   v-if="radio3>'' && radio2==20" type="error" icon="el-icon-upload2"  size="mini" class="elevation-20"
@@ -788,7 +788,6 @@ export default {
         position: absolute
         top: 0
         left: 0
-
       &-enter, &-leave, &-leave-to
         opacity: 0
 </style>
@@ -803,4 +802,6 @@ export default {
 .list-complete-enter, .list-complete-leave-active {
   opacity: 0;
 }
+
+
 </style>

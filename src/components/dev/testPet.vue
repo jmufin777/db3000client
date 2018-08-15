@@ -37,7 +37,7 @@ export default {
   mounted () {
     this.pList.push(Array("Zvirectvo","Zvirectvo","https://cs.wikipedia.org/wiki/%C4%8Cesk%C3%BD_svaz_chovatel%C5%AF_drobn%C3%A9ho_zv%C3%AD%C5%99ectva"))
     this.pList.push(Array("Zvirectvo","Zvirectvo","https://heroldreznickepotreby.cz/eshop/reznicke-potreby/jatecni-pristroje-a-prislusenstvi/jatecni-pristroje/1469-jatecni-pristroj-na-kraliky-a-drobne-zvirectvo"))
-    this.pList.push(Array("GJ_P_1","GJ","https://www.fxblue.com//fxblueview.aspx?id=645852"))
+    this.pList.push(Array("GJ_P_1","GJ","https://www.fxblue.com//fxblueview.aspx?id=645853"))
     this.pList.push(Array("Real_1","R (104)","https://www.fxblue.com/fxblueview.aspx?id=356107"))
     this.pList.push(Array("XM_1","Slepidlo","https://www.fxblue.com//fxblueview.aspx?id=19078945"))
     this.pList.push(Array("XM_2","K1_4b","https://www.fxblue.com//fxblueview.aspx?id=19078954"))
@@ -48,8 +48,10 @@ export default {
     // this.//https://www.fxblue.com/users/1
     this.pList.push(Array("DAX","DAX","https://www.fxblue.com/fxblueview.aspx?id=dax_hankeys"))
     this.pList.push(Array("Kombajn","Kombajn","https://www.fxblue.com//fxblueview.aspx?id=kombajn"))
-    this.pList.push(Array("DAX2","Kombajn","https://www.fxblue.com//fxblueview.aspx?id=905196"))
+    this.pList.push(Array("DAX2","DAX PX","https://www.fxblue.com//fxblueview.aspx?id=905196"))
     this.pList.push(Array("Pokus","Pokus","https://www.fxblue.com//fxblueview.aspx?id=Kacka_1,19078954,645852,356107,limit1,20293568"))
+
+    20293568
     // -,kombajn
     //this.pList.push(Array("Pokus","Pokus","https://www.fxblue.com/users/Kacka_1,19078954,645852,356107,kombajn,limit1"))
 

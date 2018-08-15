@@ -12,32 +12,37 @@
    <el-col :span=13>
    <el-col :span=24 >
    <el-row :gutter="0">
-    <el-col :span=4 >
+    <el-col :span=6 >
+
+
   <el-tooltip  placement="bottom" effect="light">
 
-    <div slot="content">Originalni podoba a menu <br> Vhodne pokud se neco pokazi nebo ztrati</div>
-    <el-button  @click="ResetMenu" type="primary"  icon="el-icon-back"  size="mini" class="teal elevation-0">Reset</el-button>
-  </el-tooltip>
-    </el-col>
-    <el-col :span=4 >
+      <div slot="content">Originalni podoba a menu <br> Vhodne pokud se neco pokazi nebo ztrati</div>
+        <el-button  @click="ResetMenu" type="primary"  icon="el-icon-back"  size="mini" class="teal elevation-0">Reset</el-button>
+      </el-tooltip>
+      </el-col>
+
+
+    <el-col :span=6 >
     <el-tooltip  placement="bottom" effect="light">
     <div slot="content">Smaze informace o ulozeni pozic oken<br>Vhodne , pokud je aplikace neprehledna</div>
     <el-button  @click="ResetWindows" type="primary" icon="el-icon-close"  size="mini" class="teal elevation-0">Okna</el-button>
     </el-tooltip>
     </el-col>
-    <el-col :span=4 >
+    <el-col :span=5 >
     <el-tooltip  placement="bottom" effect="light">
     <div slot="content">Ukonci a znovu nacte  aplikaci</div>
     <el-button  @click="$router.go()" type="success" icon="el-icon-success"  size="mini" class="elevation-0">OK</el-button>
     </el-tooltip>
     </el-col>
-    <el-col :span=4 >
+    <el-col :span=3 >
     <el-tooltip  placement="bottom" effect="light">
     <div slot="content">{{StoreInfo}}</div>
-    <el-button  @click="StoreInfo0" type="success" icon="el-icon-info"  size="mini" class="elevation-0"></el-button>
+
+    <!-- <el-button  @click="StoreInfo0" type="success" icon="el-icon-info"  size="mini" class="elevation-0"></el-button> -->
     </el-tooltip>
     </el-col>
-    <el-col :span=4 >
+    <el-col :span=2 >
     <el-tooltip content="Ulozi lokalne zmeny a prekresli hlavni menu, vyvola dialog pro nazev a ulozeni" placement="bottom" effect="light">
 
       <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
@@ -52,13 +57,13 @@
 
     <!-- <el-button  @click="jarda" type="success" icon="el-icon-success"  size="mini" class="elevation-1">Jarda</el-button> -->
 
-   <!-- <div id="m004" style="overflow:scroll"> -->
+
 
 
     <el-row :gutter="0" >
 
       <el-col :span="18">
-
+      <div id="m0031" style="overflow:scroll">
       <ul v-show="true" >
              <v-btn
                 class="orange accent-12 elevation-10"
@@ -219,14 +224,17 @@
             </li>
             </draggable>
          </ul>
+         </div>
         </el-col>
 
 
           <el-col :span="5">
+           <div id="m0032" style="overflow:scroll;">
+
           <draggable v-if="tableShow.length>0 " v-model="tableShow"  :options="{group:{ name:'peopleGroup',  pull:'clone'  }}"
           @start="drag=true" @end="drag=false" :move="chooseItem" >
 
-        <div style="max-height:80%;overflow:scroll" v-bind:class="{Makam: IsWaiting}">
+
 
           <el-col :span=24 v-for="(element,iii) in tableShow" :key="iii" class="people pa-0 teal elevation-20" :id="'a' + iii"
             style="margin-top :1px;text-align:left"
@@ -241,11 +249,13 @@
              <button :disabled="IsWaiting" v-if="SelectedId == element.id" style="width:15%" class="warning" @click="onSubmitDelete" ><i class="el-icon-delete"></i></button>
 
           </el-col>
-          </div>
-          </draggable>
 
+          </draggable>
+          </div>
           </el-col>
+
           </el-row>
+
 
 
 
@@ -596,11 +606,18 @@ export default {
   },
   created () {
     setTimeout(function() {
-     document.getElementById("m003").style.height=Math.round(window.innerHeight - 210)  + "px"
+     document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+     document.getElementById("m0031").style.height=Math.round(window.innerHeight - 150)  + "px"
+     document.getElementById("m0032").style.height=Math.round(window.innerHeight - 150)  + "px"
     },100)
     window.addEventListener('resize', (function() {
-     document.getElementById("m003").style.height=Math.round(window.innerHeight - 210)  + "px"
+     document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+     document.getElementById("m0031").style.height=Math.round(window.innerHeight - 150)  + "px"
+     document.getElementById("m0032").style.height=Math.round(window.innerHeight - 150)  + "px"
+
     })
+
+
   )
 
   }

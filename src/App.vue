@@ -37,8 +37,33 @@ export default {
    opacity: 0.1;
    visibility: hidden;
    display: none;
+ }
+ div {
+   border-radius: 0px !important;
+ }
+ button {
+   border-radius: 0px !important;
+ }
+ text {
+   border-radius: 0px !important;
+ }
+ select lable span select {
+   border-radius: 0px !important;
+ }
+ .el-select .el-select--mini {
+    border-radius: 0px !important;
+    background-color: pink;
+ }
+ .el-select .el-select--mini {
+    border-radius: 0px !important;
+    background-color: pink;
+ }
+ .el-radio-group {
+    border-radius: 0px !important;
+    background-color: pink;
 
  }
+
 </style>
 <style lang="stylus">
   $color-pack = false

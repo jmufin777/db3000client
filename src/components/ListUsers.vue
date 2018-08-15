@@ -28,11 +28,11 @@
     </el-col>
     </el-row>
 
-    <div style="height:100%;overflow:scroll">
-    <el-row v-for="(element,i) in tableShow " :key="i" class=" my-1 px-0 mx-0" :gutter="2"
+    <div style="height:100%;overflow:scroll" class="mt-2">
+    <el-row v-for="(element,i) in tableShow " :key="i" class="blue  pa-1 mx-0" style="margin-bottom:1px" :gutter="2"
     v-bind:class="{  JsemVidet: groupFind(element)
       , NejsemVidet:  !groupFind(element)
-         }"
+     }"
     >
     <el-col :span="24" class="peopleUsers   pa-0   ruka"   style="margin-top :1px">
       <el-col :span=10  style="text-align:left">
@@ -41,12 +41,13 @@
 
         <el-tooltip  placement="top" effect="light">
           <div slot="content">Popis: </div>
-       <el-badge :value="groupCount(element.idefix)" class="item orange lighten-5 " style="min-width:90%;left:5%">
+      <el-badge :value="groupCount(element.idefix)"  class="blue item my-0" style="background-color:white;width:95%;height:100%;border-radius:0px">
+
         <!-- <div style="border:solid 1px;height:100%" class="white"> -->
-        <div class=" ma-2 "
-        v-bind:class="{white: element.level !=3 && element.level>0, orange: element.level == 3 }"
+        <div class=" ma-0 "
+        v-bind:class="{blue: element.level !=3 && element.level>0, green: element.level == 3 }"
         size="mini">
-          {{element.fullname}} [{{ element.level }}]
+          {{element.fullname}}
         </div>
        </el-badge>
         </el-tooltip>
@@ -54,8 +55,6 @@
       </el-col>
     <el-col :span="2">
             <button  :disabled="IsWaiting"  style="width:100%" class="info"   @click="EditUser(element.idefix)" ><i class="el-icon-edit"></i></button>
-
-
      </el-col>
       <el-col :span=10 :offset=1>
         <div class=" my-1 px-0 mx-0" >
@@ -64,8 +63,7 @@
         no-data-text="Cekam na data"
         placeholder="Menu" size="mini"
         @change="changeMenu(element.idefix,i)"
-        class="orange lighten-5"
-
+        style="width:105%"
       >
       <el-option
       v-for="Men in Menu"
@@ -84,17 +82,19 @@
       </el-col>
 
     </el-col>
-    <el-col :span="24">
+
 
 <!-- skupiny -->
+
     <el-col :span="24" :offset="0">
         <div class=" my-0 px-0 mx-0" style="width:100%">
+      <draggable v-model="tableGroups[element.idefix]"  :options="{group:{ name:'peopleUsers' }}">
         <el-select  v-model="tableGroups[element.idefix]" filterable clearable multiple
         no-match-text="Nenalezeno"
         no-data-text="Cekam na data"
         placeholder="Skupiny Clenstvi" size="mini"
         @change="changeGroups(element.idefix,i)"
-        style="width:90%"
+        style="width:95%"
         class="orange lighten-5"
         >
         <el-option
@@ -106,9 +106,10 @@
           <span style="float: right; color: green; font-size: 12px">{{ Gr.idefix }}</span>
         </el-option>
   </el-select>
+      </draggable>
    </div>
   </el-col>
- </el-col>
+
 
     </el-row>
     </div>
@@ -394,6 +395,11 @@ export default {
       this.searchInfo = list.searchInfo
 
     })
+    eventBus.$on('setUsers', (list) => {
+
+      this.setUsers(1)
+    })
+
    setTimeout(function() {
     document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
   },100)
