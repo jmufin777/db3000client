@@ -24,9 +24,7 @@
     ></el-button>
       </el-tooltip>
     </el-col>
-
     </el-col>
-
    </el-row>
     <div style="max-height:80%;overflow:scroll" v-bind:class="{Makam: IsWaiting}">
     <el-row :gutter="0" style="margin-top:12px">
@@ -42,9 +40,7 @@
             @click="editModule(item,idb)"><v-icon  @dblclick="editModule(item,idb)" small left >{{item[1]>''?item[1]:'code'}}</v-icon></el-col>
         <el-col :span=12 :push="1" style="text-align:left">{{item[0]}}</el-col>
    </el-col>
-
     </draggable>
-
 
     <draggable v-if="tableData.length==0 " v-model="menu_set_3"  :options="{group:{ name:'people',  pull:'clone' }}"
      @start="drag=true" @end="drag=false" :move="chooseItem" >

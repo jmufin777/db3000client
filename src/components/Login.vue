@@ -54,6 +54,8 @@ export default {
   },
   mounted () {
     if (this.$store.state.isUserLoggedIn) {
+      this.loginUpdate()
+      this.menuUpate()
       this.$router.push({
         name: 'desktop'
       })
@@ -63,6 +65,8 @@ export default {
     logout () {
       this.$store.dispatch('setToken', null)
       this.$store.dispatch('setUser', null)
+      this.$store.dispatch('setLevel', null)
+      this.$store.dispatch('setIdefix', null)
       this.$router.push({ name: 'login' })
     },
     async login0 () {
@@ -73,13 +77,55 @@ export default {
         })
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
-        this.$router.push({
+        this.$store.dispatch('setLevel', response.data.level)
+        this.$store.dispatch('setIdefix', response.data.idefix)
+        this.menuUpate()
+        .then(res => {
+          this.$router.push({
           name: 'desktop'
         })
+
+        })
+
       } catch (error) {
         this.error = error.response.data.error
       }
+    },
+    async loginUpdate () {
+      try {
+        const response = await AuthService.update({
+          login: this.$store.state.user,
+        })
+        this.$store.dispatch('setLevel', response.data.level)
+        this.$store.dispatch('setIdefix', response.data.idefix)
+      } catch (error) {
+                  // alert('3')
+        this.error = error.response.data.error
+      }
+    },
+
+    async menuUpate() {
+        try {
+          const response = await AuthService.menuUpdate({
+            idefix: this.$store.state.idefix
+          })
+              console.log(response.data.items)
+          //  console.log(JSON.parse(JSON.stringify(response.data.data[0].items)))
+              this.xMenuy1 = JSON.parse(JSON.stringify(response.data.items))
+              this.$store.dispatch('setMenuMain',this.xMenuy1)
+              this.$store.commit('SETMENUMAIN',this.xMenuy1)
+              this.xMenuy1 = JSON.parse(JSON.stringify(this.$store.state.xMenuMain))
+
+        } catch(error) {
+          this.error = error.response.data.error
+        }
     }
+
+
+
+
+
+
   }
 
 }

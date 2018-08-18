@@ -39,7 +39,7 @@
     <el-col :span="23" :offset="1"  class="peopleUsers   pa-0   ruka"   style="margin-top :1px">
       <el-row>
         <el-col :span="8" style="text-align:left" >
-          <div class=" mx-0 my-1" >
+          <div class=" ma-2 " >
           <el-tooltip  placement="top" effect="light">
              <div slot="content">Popis: <hr>{{element.popis}}</div>
                     <el-badge :value="groupCount(element.idefix)"  class="blue item my-0" style="background-color:white;width:95%;height:100%;border-radius:0px">

@@ -20,7 +20,7 @@
      <el-col :span="24">
       <el-tooltip content="Aktualizuje seznam z databaze" placement="top" effect="light">
     <el-button  :disabled="IsWaiting" type="success" icon='el-icon-success'  size="mini" class="elevation-0" style="margin-left:8px"
-        @click="setUsers(1)"
+        @click="setUsers('All')"
     ></el-button>
     </el-tooltip>
     </el-col>
@@ -54,7 +54,7 @@
     </div>
       </el-col>
     <el-col :span="2">
-            <button  :disabled="IsWaiting"  style="width:100%" class="info"   @click="EditUser(element.idefix)" ><i class="el-icon-edit"></i></button>
+            <button  :disabled="IsWaiting"  style="width:100%" class="info"   @click="EditUser(element)" ><i class="el-icon-edit"></i></button>
      </el-col>
       <el-col :span=10 :offset=1>
         <div class=" my-1 px-0 mx-0" >
@@ -113,7 +113,7 @@
 
     </el-row>
     </div>
-    <list-user-edit v-if="centerDialogVisible"></list-user-edit>
+    <list-user-edit ></list-user-edit>
 
   </div>
   </template>
@@ -167,20 +167,34 @@ export default {
        name: 'login'
       })
     }
-    this.updateAll()
-
+    this.updateAll('All')
       // alert(JSON.stringify(this.tableMenus)+"/"+JSON.stringify(this.Menu) +this.Menu[288])
-
-
   },
 
   methods: {
   setUsers(id) {
-    this.updateAll()
+    this.updateAll(id)
   },
-  EditUser (idefix) {
+
+  newUser() {
+       const  formIdefix  = {}
+       formIdefix.idefix = -1
+       formIdefix.zobraz = 0
+       formIdefix.plati = 1
+       formIdefix.plati_od = '01.01.2018'
+       formIdefix.plati_do = '01.01.2088'
+       // alert('a')
+       eventBus.$emit('dlg', {
+         'form': formIdefix
+      })
+  },
+
+  EditUser (formIdefix) {
       this.centerDialogVisible = true
-      eventBus.$emit('dlg', this.centerDialogVisible)
+      if (!formIdefix.idefix ) return
+        eventBus.$emit('dlg', {
+         'form': formIdefix
+      })
 
   },
 
@@ -227,7 +241,7 @@ export default {
     return lRet
   },
 
-  async updateAll()  {
+  async updateAll(id)  {
       var i=0
 
       try {
@@ -252,21 +266,19 @@ export default {
           res.data.data.forEach(element  => {
             //console.log(`ELE<ENTO: ${element.idefix} ${element.nazev}`)
               this.Group.push({idefix:element.idefix*1, Nazev:element.nazev})
-
           })
                this.Group = _.uniqBy(this.Group )
         })
 
       } catch(e){
          console.log('Group',e)
-
       }
 
 
       try {
         console.log('data Jsou 1')
 
-         await ListUsersService.all(this.user, 'All')
+         await ListUsersService.all(this.user, id) // id je prikaz nebo idefix
          .then( res => {
 
             if (res.data.info == 0 ) {
@@ -307,7 +319,7 @@ export default {
        return nret
        //(tableModules[element.idefix].length)?tableModules[element.idefix].length:0
      },
-     emptyUser(idefix){
+  emptyUser(idefix){
        var lret = true
        try {
          lret = this.tableGroups[idefix].length == 0 && this.tableMenus[idefix].length == 0
@@ -316,7 +328,7 @@ export default {
        }
        return lret
      },
-     async changeGroups(idefix, i){
+  async changeGroups(idefix, i){
        this.IsWaiting=true
 
        this.tableShow[i].tableGroups1= this.tableGroups[idefix]
@@ -331,7 +343,7 @@ export default {
        })
        // alert(this.tableModules[idefix]+"  " + i)
      },
-     async changeMenu(idefix, i) {
+  async changeMenu(idefix, i) {
        this.IsWaiting=true
        this.tableShow[i].tableMenus1= this.tableMenus[idefix]
        // alert(idefix + " / " + i + "/ "+ this.tableGroups[idefix] + this.tableShow[i])
@@ -347,7 +359,7 @@ export default {
 
      },
 
-    async my_data () {
+  async my_data () {
      return ;
       this.loading = true
       const tableData  = (await ListUsers.all()).data
@@ -363,7 +375,7 @@ export default {
     }
   },
 
-  computed: {
+ computed: {
     ...mapState([
       'isUserLoggedIn',
       'user'
@@ -372,8 +384,6 @@ export default {
   watch: {
     tableData:  function(item) {
       this.tableShow=[]
-
-
       this.tableData.forEach(element => {
         element.Menus1  =  ""
         element.Groups1 = []
@@ -396,17 +406,23 @@ export default {
 
     })
     eventBus.$on('setUsers', (list) => {
-
       this.setUsers(1)
+    })
+    eventBus.$on('UserOk',() => {
+
+      this.setUsers('last')
     })
 
    setTimeout(function() {
     document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
   },100)
+
   window.addEventListener('resize', (function() {
-   document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
-  })
+    document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
+    })
   )
+
+
   }
 }
 </script>

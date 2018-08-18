@@ -24,8 +24,9 @@
     <!-- <el-checkbox label="Kontejner" v-model="contain" border size="mini" ></el-checkbox>
     <el-checkbox label="MujObal" v-model="mujdiv" border size="mini" ></el-checkbox> -->
      <!-- <el-checkbox label="WinPar" v-model="winpar" border size="mini" ></el-checkbox> -->
-     <el-checkbox label="Demo2" v-model="demo2" border size="mini" ></el-checkbox>
-     <el-checkbox label="MenuAdmin" v-model="demo" border size="mini" ></el-checkbox>
+     <span> {{ level }} {{idefix}}</span>
+     <el-checkbox label="Demo2" v-if="level==3" v-model="demo2" border size="mini" ></el-checkbox>
+     <el-checkbox label="MenuAdmin" v-if="level==3"  v-model="demo" border size="mini" ></el-checkbox>
 
 
     <v-spacer></v-spacer>
@@ -58,9 +59,7 @@
     <el-badge :value="openWins.length" class="item ">
       <el-button size="small" class="el-icon-upload2"></el-button>
     </el-badge>
-
   <el-dropdown-menu slot="dropdown">
-
      <el-dropdown-item  command="FindAllWin">Ukazat vse</el-dropdown-item>
      <el-dropdown-item v-for="(openWin, iO) in openWins" :key="iO" :command="openWin">{{openWin.name}}</el-dropdown-item>
      <el-dropdown-item  command="CloseAllWin">Zavrit vse</el-dropdown-item>
@@ -119,12 +118,7 @@ Moduly:
  @dragging
  @dragstop -->
 
-
 <menu-admin v-if="demo"></menu-admin>
-
-
-
-
 <win-dow v-if="radio2===1" v-for="(comp,i) in compa" :key="'c'+i"
     :id="comp[0].modul "
     :title="comp[0].title"
@@ -195,9 +189,7 @@ Moduly:
   <v-footer app fixed>
       <span>&copy; db3000 2018</span>
      [ {{ StartRight }} ]
-
   </v-footer>
-
   </v-app>
 
 </template>
@@ -232,7 +224,6 @@ import MenuNav from './MenuNav'
 import MenuSchema from './MenuSchema'
 import MenuAdminIndex from './MenuAdminIndex'
 
-
 import ListUsers from './ListUsers'
 import ListModules from '@/components/ListModules.vue'
 import ListGroups from '@/components/ListGroups.vue'
@@ -243,9 +234,6 @@ import SetMaterial from './SetMaterial'
 
 import draggable from 'vuedraggable'
 import vuedraggableresizable from 'vue-draggable-resizable'
-
-
-
 
 
 // import {ServerTable, ClientTable, Event} from 'vue-tables-2'
@@ -297,7 +285,10 @@ export default {
     },
     ...mapState([
       'isUserLoggedIn',
-      'xMenuMain'
+      'xMenuMain',
+      'level',
+      'idefix'
+
 
     ]),
   },
@@ -730,6 +721,7 @@ export default {
     logout () {
       this.$store.dispatch('setToken', null)
       this.$store.dispatch('setUser', null)
+      this.$store.dispatch('setLevel', null)
       this.$router.push({ name: 'login' })
     }
   },

@@ -33,6 +33,12 @@ export default new Router({
       component: Login
     },
     {
+      path: '/login-update',
+      name: 'login-update',
+      component: Login
+    },
+
+    {
       path: '/desktop/:ktery',
       name: 'desktop',
       component: Desktop

@@ -4,7 +4,7 @@ export default {
     return Api().get('list_users', {params:  {u: user, typ: typ }} )
   },
   init (user, form , typ ) {
-      return Api().post('list_users', {form: form ,user: user, typ: typ })
+        return Api().post('list_users', {form: form ,user: user, typ: typ })
   },
   delete (user, id ) {
     return Api().delete('list_users', {params: {  user: user,id: id}} )
@@ -17,5 +17,10 @@ export default {
   },
   updateGroups (user,  form ) {
     return Api().put('list_users-groups', { form: form,  user: user})
+  },
+  loginExists (user, typ) {
+
+    return Api().get('list_users-login-exists', {params:  {u: user, typ: typ }} )
   }
+
 }

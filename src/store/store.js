@@ -15,6 +15,8 @@ export default new Vuex.Store({
   state: {
     token: null,
     user: null,
+    level: null,
+    idefix: null,
     isUserLoggedIn: false,
     WinDows: [],
     active: null,
@@ -30,6 +32,12 @@ export default new Vuex.Store({
     },
     setUser (state, user) {
       state.user = user
+    },
+    setLevel (state, level) {
+      state.level = level
+    },
+    setIdefix (state, idefix) {
+      state.idefix = idefix
     },
     TXT (state, textik) {
       state.txt = textik
@@ -85,6 +93,12 @@ export default new Vuex.Store({
     },
     setUser ({commit}, user) {
       commit('setUser', user)
+    },
+    setLevel ({commit}, level) {
+      commit('setLevel', level)
+    },
+    setIdefix ({commit}, idefix) {
+      commit('setIdefix', idefix)
     },
     setTxt ({commit}, textik) {
       commit('TXT',textik)

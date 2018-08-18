@@ -19,6 +19,11 @@ import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-l
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import lang from 'element-ui/lib/locale/lang/cs-CZ'
+import locale from 'element-ui/lib/locale'
+
+// configure language
+locale.use(lang)
 
 import draggable from 'vuedraggable'
 import vuedraggableresizable from 'vue-draggable-resizable'
