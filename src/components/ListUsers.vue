@@ -4,9 +4,14 @@
     <el-row  :gutter="0">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
-      <el-col :span="18" >
+      <el-col :span="12" >
         <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Uzivatele">
        </el-input>
+      </el-col>
+      <el-col :span="6" >
+        <el-checkbox border  clearable size="mini" v-model="search_is" @change="setUsersCheck()">
+          Neplatni
+       </el-checkbox>
       </el-col>
 
       <el-col :span="2" :offset="0" >
@@ -146,6 +151,7 @@ export default {
       info: '',
       error: '',
       search: '',
+      search_is: false,
       searchInfo:'',
       tableData: [],
       tableShow: [] ,
@@ -173,7 +179,17 @@ export default {
 
   methods: {
   setUsers(id) {
+
     this.updateAll(id)
+  },
+
+  setUsersCheck() {
+    if (this.search_is == false) {
+      this.updateAll('All')
+    } else {
+      this.updateAll('neplati')
+    }
+
   },
 
   newUser() {
@@ -338,7 +354,7 @@ export default {
          this.IsWaiting=false
        })
        .catch ((e) =>{
-         alert(e)
+
          this.IsWaiting=false
        })
        // alert(this.tableModules[idefix]+"  " + i)
@@ -406,11 +422,13 @@ export default {
 
     })
     eventBus.$on('setUsers', (list) => {
+
       this.setUsers(1)
     })
     eventBus.$on('UserOk',() => {
 
       this.setUsers('last')
+
     })
 
    setTimeout(function() {

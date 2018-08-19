@@ -12,7 +12,7 @@
               </v-toolbar>
               <v-card-text>
 
-                <v-form>
+                <v-form v-if="!$store.state.isUserLoggedIn">
                   <v-text-field v-model='login' prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
                   <v-text-field v-model="password" id="password" prepend-icon="lock" name="password" label="Heslo"  type="password"></v-text-field>
                 </v-form>
@@ -53,34 +53,129 @@ export default {
     source: String
   },
   mounted () {
+    if (!this.$store.state.isUserLoggedIn) {
+      this.$message({
+                 message: 'Neprihlaseno, prihlaste se prosim',
+                 type: 'error',
+                 center: true,
+                 duration: 3000
+              })
+    }
+
     if (this.$store.state.isUserLoggedIn) {
+
+      this.$message({
+                dangerouslyUseHTMLString: true,
+                message: 'Prihlaseno, Overuji pristupove urovne',
+                type: 'error',
+                center: true,
+                duration: 1500
+              })
       this.loginUpdate()
+      .then(res => {
+           this.$message({
+                dangerouslyUseHTMLString: true,
+                message: 'Uroven overena, cekame, na polozky menu',
+                type: 'success',
+                center: true,
+                duration: 2000
+              });
+
+      })
+
+
+
+
       this.menuUpate()
+      .then( res => {
+
+           this.$message({
+                dangerouslyUseHTMLString: true,
+                message: 'Vitejte',
+                type: 'success',
+                center: true,
+                duration: 5000
+              });
+
+      })
       this.$router.push({
         name: 'desktop'
       })
     }
   },
   methods: {
-    logout () {
-      this.$store.dispatch('setToken', null)
-      this.$store.dispatch('setUser', null)
-      this.$store.dispatch('setLevel', null)
-      this.$store.dispatch('setIdefix', null)
-      this.$router.push({ name: 'login' })
+    async logout () {
+       this.$message({
+         dangerouslyUseHTMLString: true,
+         message: 'Odhlasuji',
+         type: 'error',
+         center: true,
+         duration: 1000
+       })
+       alert('logout 111'+ 'x')
+       try {
+         const response = await AuthService.logout({
+          idefix: this.idefix
+        })
+
+        this.$store.dispatch('setToken', null)
+        this.$store.dispatch('setUser', null)
+        this.$store.dispatch('setLevel', null)
+        this.$store.dispatch('setIdefix', null)
+        this.$router.push({ name: 'login' })
+
+      } catch(error) {
+        this.$message({
+                dangerouslyUseHTMLString: true,
+                message: `Doslo k chybe ${this.error} logout nebude evidovan`,
+                type: 'error',
+                center: true,
+                duration: 10000
+              })
+        this.error = error.response.data.error
+        this.$store.dispatch('setToken', null)
+        this.$store.dispatch('setUser', null)
+        this.$store.dispatch('setLevel', null)
+        this.$store.dispatch('setIdefix', null)
+        this.$router.push({ name: 'login' })
+      }
     },
     async login0 () {
+
+            this.$message({
+                dangerouslyUseHTMLString: true,
+                message: 'Prihlasuji - autorizuji v databazi',
+                type: 'error',
+
+                center: true,
+                duration: 1000
+              });
       try {
         const response = await AuthService.login({
           login: this.login,
           password: this.password
         })
+        this.$message({
+                dangerouslyUseHTMLString: true,
+                message: 'Nacitam menu',
+                type: 'info',
+
+                center: true,
+                duration: 2000
+              })
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
         this.$store.dispatch('setLevel', response.data.level)
         this.$store.dispatch('setIdefix', response.data.idefix)
         this.menuUpate()
         .then(res => {
+           this.$message({
+            dangerouslyUseHTMLString: true,
+            message: 'Spoustim aplikaci',
+            type: 'info',
+            center: true,
+            duration: 2000
+           })
           this.$router.push({
           name: 'desktop'
         })
@@ -88,6 +183,14 @@ export default {
         })
 
       } catch (error) {
+        this.$message({
+                dangerouslyUseHTMLString: true,
+                message: `Doslo k chybe ${this.error}`,
+                type: 'error',
+
+                center: true,
+                duration: 1000
+              })
         this.error = error.response.data.error
       }
     },

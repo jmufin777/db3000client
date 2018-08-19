@@ -64,6 +64,42 @@ export default {
 
  }
 
+ /* Tabulky */
+ * {
+  box-sizing: border-box;
+}
+
+
+table {
+
+	border-collapse: collapse;
+	overflow: hidden;
+  background-color: #ccc;
+}
+
+
+th {
+  background-color: #f0f0f0;
+}
+td {
+  background-color: white;
+}
+td, th {
+  min-width: 2em;
+  max-width: 10em;
+  height: 2em;
+  max-height: 2em;
+  min-height: 2em;
+  width: 10em;
+  border: 1px solid #ccc;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+html div {
+ -ms-overflow-style: none;
+}
+
 </style>
 <style lang="stylus">
   $color-pack = false

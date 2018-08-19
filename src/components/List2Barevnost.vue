@@ -1,43 +1,67 @@
 <template>
- <v-data-table
-    :headers="headers"
-    :items="list"
-    class="elevation-10"
-    :total-items="total"
-    :loading="loading"
-  >
-    <v-progress-linear color="blue" v-model="valueDeterminate"></v-progress-linear>
-    <template slot="items" slot-scope="props" class="ma-0 pa-0">
-      <td>{{ props.item.id }}</td>
-      <td class="text-xs-center pa-0 ma-0">{{ props.item.kod }}</td>
-      <td class="text-xs-center">
-          <v-edit-dialog
-            :return-value.sync="props.item.nazev"
-            large
-            lazy
-            persistent
-            @save="save"
-            @cancel="cancel"
-            @open="open"
-            @close="close"
-          >
-            <div>{{ props.item.nazev }}</div>
-            <div slot="input" class="mt-0 title">Zmena nazvu</div>
-            <v-text-field
-              slot="input"
-              v-model="props.item.nazev"
-              label="Edit"
-              single-line
-              counter
-              autofocus
-            ></v-text-field>
-          </v-edit-dialog>
-        </td>
-    </template>
-    <template slot="pageText" slot-scope="{ pageStart, pageStop }">
-        From {{ pageStart }} to {{ pageStop }}
+<div id="m201" style="overflow:scroll" >
+
+   <el-table
+    :data="list"
+    style="width:480px"
+    size="mini"
+    max-height="250"
+    >
+    <el-table-column
+      fixed
+      prop="id"
+      label="Id"
+      width="100">
+    </el-table-column>
+    <el-table-column
+      prop="kod"
+      label="Kod"
+      width="120">
+    </el-table-column>
+    <el-table-column
+      prop="nazev"
+      label="Nazev"
+      width="150">
+    </el-table-column>
+
+    <el-table-column
+      fixed="right"
+      label="Operations"
+      width="120">
+      <template slot-scope="scope">
+        <el-button
+          @click.native.prevent="deleteRow(scope.$index, list)"
+          type="text"
+          size="small">
+          Remove
+        </el-button>
       </template>
-  </v-data-table>
+    </el-table-column>
+  </el-table>
+
+ <div style="width:480px">
+  <table width="100%">
+    <thead>
+      <tr>
+      <th style="width:25%">Id</th><th style="width:25%">Kod</th><th style="width:50%">Nazev</th>
+      </tr>
+      </thead>
+  </table>
+ </div>
+
+<div id="m221" style="overflow:scroll;width:480px" >
+
+  <table width="100%">
+    <tr v-for="(item,i) in list" :key="i">
+      <td style="width:25%" @click.self="Alert(item.id)">{{ item.id}}</td>
+      <td style="width:25%">{{ item.kod}}</td>
+      <td style="width:50%">{{ item.nazev}}</td>
+
+    </tr>
+  </table>
+  </div>
+
+</div>
 
 </template>
 
@@ -71,6 +95,31 @@ export default {
       this.list = (await List2Barevnost.all()).data
     }
   },
+
+  created () {
+
+setTimeout(function(){
+    document.getElementById("m201").style.height=Math.round(window.innerHeight - 110)  + "px"
+    document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
+  },100)
+
+  window.addEventListener('resize', (function() {
+   document.getElementById("m201").style.height=Math.round(window.innerHeight - 110)  + "px"
+    document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
+  })
+
+
+
+
+
+
+
+  )
+
+
+
+
+  },
   watch: {
     pagination: {
       handler () {
@@ -89,6 +138,13 @@ export default {
       this.list = (await List2Barevnost.all()).data
       this.total = this.list.length
       this.loading = false
+    },
+    deleteRow(index, rows) {
+        rows.splice(index, 1);
+      },
+    Alert(txt) {
+      alert(txt)
+
     },
     close () {
 

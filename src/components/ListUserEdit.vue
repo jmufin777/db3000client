@@ -333,7 +333,7 @@ export default {
  //  this.aaa()
 
   },
-  destroyed () {
+  beforedestroy () {
     document.getElementById("dialog004").removeEventListener('keydown')
   },
   watch: {

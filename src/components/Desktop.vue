@@ -24,7 +24,11 @@
     <!-- <el-checkbox label="Kontejner" v-model="contain" border size="mini" ></el-checkbox>
     <el-checkbox label="MujObal" v-model="mujdiv" border size="mini" ></el-checkbox> -->
      <!-- <el-checkbox label="WinPar" v-model="winpar" border size="mini" ></el-checkbox> -->
-     <span> {{ level }} {{idefix}}</span>
+     <div >
+     <span class="ma-2 pa-2 blue"> level: {{ level }} id: {{idefix}} login: {{ $store.state.user }}</span>
+     </div>
+     <db-status></db-status>
+
      <el-checkbox label="Demo2" v-if="level==3" v-model="demo2" border size="mini" ></el-checkbox>
      <el-checkbox label="MenuAdmin" v-if="level==3"  v-model="demo" border size="mini" ></el-checkbox>
 
@@ -206,6 +210,7 @@ Moduly:
 import _ from 'lodash'
 import _f from '@/funkce/Desktop_switch.js'
 import { eventBus } from '@/main.js'
+import AuthService from '@/services/AuthService'
 
 import { g } from '@/funkce/global.js'
 import hw from './Blank.vue'
@@ -224,6 +229,7 @@ import MenuNav from './MenuNav'
 import MenuSchema from './MenuSchema'
 import MenuAdminIndex from './MenuAdminIndex'
 
+
 import ListUsers from './ListUsers'
 import ListModules from '@/components/ListModules.vue'
 import ListGroups from '@/components/ListGroups.vue'
@@ -234,6 +240,9 @@ import SetMaterial from './SetMaterial'
 
 import draggable from 'vuedraggable'
 import vuedraggableresizable from 'vue-draggable-resizable'
+
+//Kontrola a sprava
+import DbStatus from  '@/components/globals//DbStatus'
 
 
 // import {ServerTable, ClientTable, Event} from 'vue-tables-2'
@@ -247,6 +256,7 @@ import {mapState} from 'vuex'
 export default {
 //  props: ['server'],
   components: {
+    'db-status': DbStatus,
     'menu-nav': MenuNav,
 
     'menu-admin': MenuAdminIndex,
@@ -287,7 +297,9 @@ export default {
       'isUserLoggedIn',
       'xMenuMain',
       'level',
-      'idefix'
+      'idefix',
+
+
 
 
     ]),
@@ -718,11 +730,43 @@ export default {
       alert('111')
       this.getMenu()
     },
-    logout () {
+ async  logout () {
+
+   try{
+
+         const response = await AuthService.logout({
+          idefix: this.idefix
+        })
+
+        this.$store.dispatch('setToken', null)
+        this.$store.dispatch('setUser', null)
+        this.$store.dispatch('setLevel', null)
+        this.$router.push({ name: 'login' })
+} catch (err){
+      this.$store.dispatch('setToken', null)
+      this.$store.dispatch('setUser', null)
+      this.$store.dispatch('setLevel', null)
+      this.$store.dispatch('setIdefix', null)
+      this.$router.push({ name: 'login' })
+
+}
+
+
+
+
+
+
+
+
+
+
+
+      /*
       this.$store.dispatch('setToken', null)
       this.$store.dispatch('setUser', null)
       this.$store.dispatch('setLevel', null)
       this.$router.push({ name: 'login' })
+      */
     }
   },
   mounted () {
