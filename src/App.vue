@@ -84,6 +84,7 @@ th {
 td {
   background-color: white;
 }
+
 td, th {
   min-width: 2em;
   max-width: 10em;
@@ -93,12 +94,23 @@ td, th {
   width: 10em;
   border: 1px solid #ccc;
 }
+
+.mth {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
+.mtd {
+  background-color: white;
+  border: 1px solid #ccc;
+}
 ::-webkit-scrollbar {
   display: none;
 }
 html div {
  -ms-overflow-style: none;
 }
+
+
 
 </style>
 <style lang="stylus">

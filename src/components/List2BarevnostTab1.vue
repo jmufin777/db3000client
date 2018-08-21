@@ -11,99 +11,59 @@
    </el-input>
   </el-col>
   </el-row>
-  <el-row><el-col :span="24">
-  tohle je dobry , velky tabulky zbytecne slozitej pristup k datum a jednotlivejm polozkam
+
+<el-row><el-col :span="24">
+  tohle je rychly ale ma to mouchy
 </el-col></el-row>
 
-   <el-table
-    id="t201"
-    :data="list"
-    style="width:100%"
-    size="mini"
-    height="90%"
 
+<div class="box" id="t201" >
+						<vue-scrolling-table
+							:scroll-horizontal="scrollHorizontal"
+							:scroll-vertical="scrollVertical"
+							:sync-header-scroll="syncHeaderScroll"
+							:sync-footer-scroll="syncFooterScroll"
+							:include-footer="includeFooter"
+							:dead-area-color="deadAreaColor"
+							:class="{ freezeFirstColumn:freezeFirstColumn }">
+							<template slot="thead">
+								<tr>
+									<th v-for="col in columns"
+									:class="col.cssClasses"
+									:key="col.id">{{ col.title }}</th>
+                  <th>Akce</th>
 
-    max-height="90%"
-    ref="tableColors"
-    highlight-current-row
-    @current-change="handleCurrentChange"
-    @selection-change="handleSelectionChange">
-    >
-    <el-table-column
-      fixed
-      type="selection"
-      width="55"
-      >
-    </el-table-column>
-    <el-table-column
-      fixed
-      prop="id"
-      label="Id"
-      width="100"
-      sortable
-      >
+								</tr>
+							</template>
+							<template slot="tbody" >
+								<tr v-for="item in items" :key="item.id"
+                v-bind:class="{  JsemVidet: groupFind(item) , NejsemVidet:  !groupFind(item) }"
+                >
+									<td v-for="col in columns"
+										:class="col.cssClasses"
+										:key="col.id">
+                    <div v-if="currId === item.id && col.id == colId" >
+                      <el-input  :value="item[col.id]" class="pa-1" :id="'bar_col'+item.id+col.id" size="mini" ></el-input>
+                    </div>
+                    <div v-else-if="currId === item.id && col.id != colId" >
+                      <el-input  :value="item[col.id]" center size="mini" ></el-input>
+                    </div>
+                    <div v-else @click.self="currid(item.id, col.id)">
+                    {{ item[col.id] }}
+                    </div>
+                    </td>
+                    <td @click.self="currid(item.id,'x')">x</td>
 
-    </el-table-column>
-    <el-table-column
-      prop="kod"
-      label="Kod"
-      width="120"
+								</tr>
+							</template>
+							<template slot="tfoot">
+								<tr><th colspan="2" ><div class="white black--text">
+                  neco<br>neco<br>neco<br>neco<br>neco<br>
+                  </div></th></tr>
+							</template>
+						</vue-scrolling-table>
+					</div>
 
-      select=""
-      >
-      <template slot-scope="scope">
-
-        <div v-if="currId === scope.row.id ">
-          <el-input autofocus v-model="scope.row.kod" type="text" :value="scope.row.kod"  size="mini">{{ scope.row.kod}}</el-input>
-          {{ scope.row.kod }} i1: {{ scope.row.index  }}
-        </div>
-        <div v-else >
-            {{ scope.row.kod }} i2: {{ scope.row.index  }}
-        </div>
-
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="nazev"
-      label="Nazev"
-      width="150">
-      <template slot-scope="scope">
-        <div v-if="currId === scope.row.id ">
-          <el-input v-model="scope.row.nazev" type="text" :value="scope.row.naze"  size="mini">{{ scope.row.nazev}}</el-input>
-        </div>
-        <div v-else >
-            {{ scope.row.nazev }}
-        </div>
-
-      </template>
-    </el-table-column>
-
-
-    <el-table-column
-      fixed="right"
-      label="Akce"
-      width="120">
-      <template slot-scope="scope">
-        <el-button
-          v-if="scope.row.id > 0"
-          @click.native.prevent="deleteRow(scope.$index, list)"
-          type="text"
-          size="mini"
-          >
-          Vymaz
-
-        </el-button>
-          <el-button
-          v-else
-          @click.native.prevent="appendRow(scope.$index, list)"
-          type="text"
-          size="mini"
-          >
-          Pridej
-        </el-button>
-      </template>
-    </el-table-column>
-  </el-table>
   <hr>
 <div>
   {{ aInfo}}
@@ -112,6 +72,7 @@
 </div>
 
 </div>
+
 
 </template>
 
@@ -134,16 +95,20 @@ export default {
       form: {},
       //Moje tabule a data
       currId: null,
-      headers: [
-        {
-          text: 'Id',
-          align: 'center',
-          sortable: true,
-          value: 'id'
-        },
-        { text: 'Kod', value: 'kod' },
-        { text: 'Name', value: 'name' }
-      ],
+      colId: null,
+      scrollVertical: true,
+			scrollHorizontal: true,
+			syncHeaderScroll: true,
+			syncFooterScroll: true,
+			includeFooter: true,
+			deadAreaColor: "#DDDDDD",
+			maxRows: 100,
+			freezeFirstColumn: false,
+			columns: [
+				{ id: "id", title: "ID", cssClasses: "" },
+				{ id: "kod", title: "Kod", cssClasses: "" },
+				{ id: "nazev", title: "Nazev", cssClasses: "w2" },
+			],
       list: []
     }
   },
@@ -197,13 +162,17 @@ setTimeout(function(){
       this.total = this.list.length
       this.IsWaiting = false
     },
+    currid (itemId, colid) {
+       this.currId = itemId
+       this.colId = colid
+    },
     deleteRow(index, rows) {
       if (confirm('Vymazat ?')){
         rows.splice(index, 1);
       }
       },
     async appendRow(index,rows) {
-       alert(index)
+
        this.aInfo=rows[index]
        console.log(rows[0])
        for (var x in rows[0]){
@@ -219,52 +188,34 @@ setTimeout(function(){
 
       await List2Barevnost.all()
       .then(res => {
-
         //this.info= res
         this.list = res.data
-
-
           var x
           for(x in this.list[0]) {
               this.aInfo[x]=''
           }
           this.aInfo['id']=-1
           this.list.unshift(this.aInfo)
-
       })
-
-
-
-
-
-
-
     } ,
-     setCurrent(row) {  //Zavolat s cislem radky,treba tlacitkem,ted j nepotrenuju
+    groupFind(element){
+    var lRet = false
+    var elstr=''
+    var seekStr=['id', 'nazev', 'kod']
+    for ( var x  in element){
+      if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
+    }
 
-        this.$refs.tableColors.setCurrentRow(row);
+    if (this.search < ' ' ) {
+      return true
+    }
+      if (this.search > ' ' &&
+      (elstr).replace(RegExp(this.search,'i'),'')!==(elstr)
+      ) {
+        return true
+      }
+    },
 
-      },
-      handleCurrentChange(val) {
-
-        //this.info=val.kod
-        //this.currId = val.id;
-
-
-         this.currentRow = val;
-         this.aInfo = val
-         if (val) {
-           this.info = val.id
-           this.currId = val.id
-         } else {
-           this.info = 'Del'
-         }
-
-
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
     Alert(txt) {
       alert(txt)
 
@@ -286,6 +237,9 @@ setTimeout(function(){
     }
   },
   computed: {
+		items() {
+			return this.list.slice(0, this.maxRows)
+		},
     ...mapState([
       'isUserLoggedIn',
       'user'
@@ -296,4 +250,40 @@ setTimeout(function(){
 
 </script>
 <style scoped>
+table.scrolling .w2 {
+	width: 20em;
+	min-width: 20em;
+	max-width: 20em;
+}
+table.scrolling tfoot tr th {
+	width: 130em;
+	min-width: 130em;
+	max-width: 130em;
+}
+table.freezeFirstColumn thead tr,
+table.freezeFirstColumn tbody tr {
+	display: block;
+	width: min-content;
+}
+table.freezeFirstColumn thead td:first-child,
+table.freezeFirstColumn tbody td:first-child,
+table.freezeFirstColumn thead th:first-child,
+table.freezeFirstColumn tbody th:first-child {
+	position: sticky;
+	position: -webkit-sticky;
+	left: 0;
+}
+* {
+	font-family: sans-serif;
+}
+.box {
+	clear: both;
+	padding: 0;
+	min-height: 300px;
+	height: 40vh;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: hidden;
+}
+
 </style>

@@ -3,7 +3,7 @@
     <v-list-tile >
      <v-list-tile-content>
        <v-list-tile-title>
-         <el-input prefix-icon="el-icon-search" clearable size="mini" v-model="search" placeholder="Hledat v menu">
+         <el-input prefix-icon="el-icon-search" autofocus clearable size="mini" v-model="search" placeholder="Hledat v menu">
        </el-input>
        </v-list-tile-title>
      </v-list-tile-content>

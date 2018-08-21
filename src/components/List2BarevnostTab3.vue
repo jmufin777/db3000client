@@ -11,9 +11,6 @@
    </el-input>
   </el-col>
   </el-row>
-  <el-row><el-col :span="24">
-  tohle je dobry , velky tabulky zbytecne slozitej pristup k datum a jednotlivejm polozkam
-</el-col></el-row>
 
    <el-table
     id="t201"

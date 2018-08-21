@@ -27,11 +27,11 @@
      <div >
      <span class="ma-2 pa-2 blue"> level: {{ level }} id: {{idefix}} login: {{ $store.state.user }}</span>
      </div>
+
      <db-status></db-status>
 
      <el-checkbox label="Demo2" v-if="level==3" v-model="demo2" border size="mini" ></el-checkbox>
      <el-checkbox label="MenuAdmin" v-if="level==3"  v-model="demo" border size="mini" ></el-checkbox>
-
 
     <v-spacer></v-spacer>
    <el-radio-group v-model="radio2" size="mini">
@@ -218,6 +218,7 @@ import testy from './_Testy/testy'
 import formFX from './_Testy/formFX'
 
 import DevDoc from './dev/DevDoc'
+import DevDocUITab from './dev/DevDocUITab'
 import DevPP from './dev/DevPP'
 import DevPPKalc from './dev/DevPPKalc'
 import testPet from './dev/testPet'
@@ -235,11 +236,16 @@ import ListModules from '@/components/ListModules.vue'
 import ListGroups from '@/components/ListGroups.vue'
 
 import List2Barevnost from './List2Barevnost'
+import List2BarevnostTab1 from './List2BarevnostTab1'
+import List2BarevnostTab2 from './List2BarevnostTab2'
+import List2BarevnostTab3 from './List2BarevnostTab3'
 import SetWidth from './SetWidth'
 import SetMaterial from './SetMaterial'
 
 import draggable from 'vuedraggable'
 import vuedraggableresizable from 'vue-draggable-resizable'
+
+import VueSpreadsheetLite from "@/components/List2BarevnostTab4";
 
 //Kontrola a sprava
 import DbStatus from  '@/components/globals//DbStatus'
@@ -256,6 +262,7 @@ import {mapState} from 'vuex'
 export default {
 //  props: ['server'],
   components: {
+
     'db-status': DbStatus,
     'menu-nav': MenuNav,
 
@@ -264,16 +271,21 @@ export default {
 
     'dev-doc': DevDoc,
     'dev-pp': DevPP,
+    'dev-doc-ui-tab': DevDocUITab,
+
     'dev-pp-kalc': DevPPKalc,
     'test-pet': testPet,
 
-
-
+    'vsl': VueSpreadsheetLite,
 
     'form-helper': hw,
     'testy': testy,
     'test-menu': TestMenu,
     'list2-barevnost': List2Barevnost,
+    'list2-barevnost1': List2BarevnostTab1,
+    'list2-barevnost2': List2BarevnostTab2,
+    'list2-barevnost3': List2BarevnostTab3,
+    'list2-barevnost4': VueSpreadsheetLite,
     'list-users': ListUsers,
     'list-modules': ListModules,
     'list-groups': ListGroups,

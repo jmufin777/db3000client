@@ -2,9 +2,9 @@
 
 <div >
  <el-popover
-  placement="right"
-  width="1000"
-  trigger="click">
+  placement="right-end"
+  width="80%"
+  trigger="hover">
 
 <div>
   <ul>
@@ -36,7 +36,7 @@
         <td align="center">{{w.delka}}</td>
         <td align="center">{{w.naposled}}</td>
         <td align="center">IP/Prace/Domov</td>
-        <td align="center" ><el-checkbox :value="true"><v-icon color="blue darken-2">fa-bicycle</v-icon></el-checkbox></td>
+        <td align="center" ><el-checkbox v-model="message2" :value="message2"><v-icon color="blue darken-2">fa-bicycle</v-icon></el-checkbox></td>
         <td align="center" ><el-checkbox v-model="message"><v-icon color="blue darken-2">message</v-icon></el-checkbox></td>
         <td align="center" ><el-checkbox><v-icon color="blue darken-2">email</v-icon></el-checkbox></td>
         <td align="center" ><el-checkbox><v-icon color="blue darken-2">sms</v-icon></el-checkbox></td>
@@ -49,7 +49,6 @@
 
 
   <el-button slot="reference" class="ma-2 pa-2" v-bind:class="{ success: vse.pouzito<=1, warning: vse.pouzito > 1 }">Db stav {{pouzito}}
-    vuex: {{ $store.state.idefix}}
 
   </el-button >
  </el-popover>
@@ -71,6 +70,7 @@ export default {
   data () {
     return {
       message: true,
+      message2: true,
 
       max_conn: 99,
       pouzito: 99,
@@ -104,9 +104,10 @@ export default {
      })
 
   },
+
   async   db_status () {
       const self = this
-
+   try {
      await  DbStatusService.all({idefix: this.$store.state.idefix})
       .then (res => {
         this.vse= res.data.data
@@ -114,21 +115,36 @@ export default {
         this.interval1 = setTimeout(function() {
           self.db_status()
           self.db_who()
-        },6000)
+        },2600)
 
       })
       .catch((e) => {
           this.pouzito =88
           this.$message({
 
-                message: `Databze Error ${e}`,
+                message: `Databze Error E1 ${e}`,
                 type: 'error',
                 center: true,
                 duration: 2000
              })
+         this.interval1 = setTimeout(function() {
+          self.db_status()
+          self.db_who()
+        },5600)
+
       })
+    } catch (e2) {
+          this.pouzito =89
+          console.log("error 2 status")
+
+          this.interval1 = setTimeout(function() {
+          self.db_status()
+          self.db_who()
+        },5600)
+
 
     }
+   }
   },
    beforeDestroy () {
        clearInterval(this.interval1)

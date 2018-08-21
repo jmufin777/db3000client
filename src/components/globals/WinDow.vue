@@ -175,7 +175,7 @@ export default {
     }
   },
   created () {
-
+    //pokud neni okno na storu , hlasi konzole chyby
     this.x1=this.$store.state.WinDows[this.idxx()].x
     this.y1=this.$store.state.WinDows[this.idxx()].y
     this.h1=this.$store.state.WinDows[this.idxx()].h

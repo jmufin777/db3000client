@@ -1,5 +1,6 @@
   <template>
-<div id="m201" style="overflow:scroll;width:750px" class="pa-2" >
+<el-row id="m201" style="overflow:scroll"  class="pa-2" >
+  <el-col :span="24">
   <el-row  :gutter="100">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
@@ -11,99 +12,33 @@
    </el-input>
   </el-col>
   </el-row>
-  <el-row><el-col :span="24">
-  tohle je dobry , velky tabulky zbytecne slozitej pristup k datum a jednotlivejm polozkam
-</el-col></el-row>
+<div>
+  Tohle je nejlepsi, muj grig bez tabulky, fixace scroll na divu
+</div>
+ <div style="height:100%;overflow:scroll" class="mt-0" id="t201">
+<el-row  >
+  <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth">
+    {{col.title}}
+  </el-col>
+ </el-row>
 
-   <el-table
-    id="t201"
-    :data="list"
-    style="width:100%"
-    size="mini"
-    height="90%"
-
-
-    max-height="90%"
-    ref="tableColors"
-    highlight-current-row
-    @current-change="handleCurrentChange"
-    @selection-change="handleSelectionChange">
-    >
-    <el-table-column
-      fixed
-      type="selection"
-      width="55"
+<div style="height:100%;overflow:scroll" class="mt-0" id="t202">
+  <el-row v-for="( item, i ) in list" :key="item.id"
+      v-bind:class="{  JsemVidet: groupFind(item) , NejsemVidet:  !groupFind(item) }"
+  >
+  <el-col :span="24">
+    	<el-col v-for="col in cols"
+			class="mtd"
+			:key="col.id"
+      :span="col.span"
       >
-    </el-table-column>
-    <el-table-column
-      fixed
-      prop="id"
-      label="Id"
-      width="100"
-      sortable
-      >
+      {{ item[col.id] }}
+    	</el-col>
+  </el-col>
+  </el-row>
+  </div>
+  </div>
 
-    </el-table-column>
-    <el-table-column
-      prop="kod"
-      label="Kod"
-      width="120"
-
-      select=""
-      >
-      <template slot-scope="scope">
-
-        <div v-if="currId === scope.row.id ">
-          <el-input autofocus v-model="scope.row.kod" type="text" :value="scope.row.kod"  size="mini">{{ scope.row.kod}}</el-input>
-          {{ scope.row.kod }} i1: {{ scope.row.index  }}
-        </div>
-        <div v-else >
-            {{ scope.row.kod }} i2: {{ scope.row.index  }}
-        </div>
-
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="nazev"
-      label="Nazev"
-      width="150">
-      <template slot-scope="scope">
-        <div v-if="currId === scope.row.id ">
-          <el-input v-model="scope.row.nazev" type="text" :value="scope.row.naze"  size="mini">{{ scope.row.nazev}}</el-input>
-        </div>
-        <div v-else >
-            {{ scope.row.nazev }}
-        </div>
-
-      </template>
-    </el-table-column>
-
-
-    <el-table-column
-      fixed="right"
-      label="Akce"
-      width="120">
-      <template slot-scope="scope">
-        <el-button
-          v-if="scope.row.id > 0"
-          @click.native.prevent="deleteRow(scope.$index, list)"
-          type="text"
-          size="mini"
-          >
-          Vymaz
-
-        </el-button>
-          <el-button
-          v-else
-          @click.native.prevent="appendRow(scope.$index, list)"
-          type="text"
-          size="mini"
-          >
-          Pridej
-        </el-button>
-      </template>
-    </el-table-column>
-  </el-table>
   <hr>
 <div>
   {{ aInfo}}
@@ -111,7 +46,8 @@
   {{ info }}
 </div>
 
-</div>
+</el-col>
+</el-row>
 
 </template>
 
@@ -134,16 +70,11 @@ export default {
       form: {},
       //Moje tabule a data
       currId: null,
-      headers: [
-        {
-          text: 'Id',
-          align: 'center',
-          sortable: true,
-          value: 'id'
-        },
-        { text: 'Kod', value: 'kod' },
-        { text: 'Name', value: 'name' }
-      ],
+  		cols: [
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:4},
+				{ id: "nazev", title: "Nazev", cssClasses: "mtd", span: 16},
+			],
       list: []
     }
   },
@@ -167,6 +98,7 @@ export default {
 setTimeout(function(){
     document.getElementById("m201").style.height=Math.round(window.innerHeight - 110)  + "px"
     document.getElementById("t201").style.height=Math.round(window.innerHeight - 140)  + "px"
+        document.getElementById("t202").style.height=Math.round(window.innerHeight - 170)  + "px"
 
     // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
   },100)
@@ -174,6 +106,7 @@ setTimeout(function(){
   window.addEventListener('resize', (function() {
     document.getElementById("m201").style.height=Math.round(window.innerHeight - 110)  + "px"
     document.getElementById("t201").style.height=Math.round(window.innerHeight - 140)  + "px"
+    document.getElementById("t202").style.height=Math.round(window.innerHeight - 170)  + "px"
     // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
   })
   )
@@ -191,6 +124,27 @@ setTimeout(function(){
       // alert('destory')
   },
   methods: {
+   currid (itemId, colid) {
+       this.currId = itemId
+       this.colId = colid
+    },
+    groupFind(element){
+    var lRet = false
+    var elstr=''
+    var seekStr=['id', 'nazev', 'kod']
+    for ( var x  in element){
+      if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
+    }
+
+    if (this.search < ' ' ) {
+      return true
+    }
+      if (this.search > ' ' &&
+      (elstr).replace(RegExp(this.search,'i'),'')!==(elstr)
+      ) {
+        return true
+      }
+    },
     async my_data () {
       this.IsWaiting = true
       this.list = (await List2Barevnost.all()).data
