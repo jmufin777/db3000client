@@ -38,6 +38,7 @@
 							<template slot="tbody" >
 								<tr v-for="item in items" :key="item.id"
                 v-bind:class="{  JsemVidet: groupFind(item) , NejsemVidet:  !groupFind(item) }"
+                class="green"
                 >
 									<td v-for="col in columns"
 										:class="col.cssClasses"

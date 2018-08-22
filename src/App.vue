@@ -99,9 +99,14 @@ td, th {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
 }
+
 .mtd {
   background-color: white;
   border: 1px solid #ccc;
+}
+.mtd2 {
+  background-color: white;
+  border: 1px dotted #000000;
 }
 ::-webkit-scrollbar {
   display: none;
@@ -109,6 +114,40 @@ td, th {
 html div {
  -ms-overflow-style: none;
 }
+.mright {
+  text-align: right;
+}
+.mleft {
+  text-align: left;
+}
+.center {
+  text-align: center
+}
+.cell {
+  text-align: right;
+
+}
+.cell_edit {
+  text-align: left;
+  font-style: italic;
+
+}
+
+.dcell {
+
+  border: solid 1px;border-color:silver;
+
+}
+.dcell_edit {
+  text-align: left;
+  font-style: italic;
+  border: solid 1px;border-color:black;
+
+}
+
+
+
+
 
 
 
