@@ -78,6 +78,54 @@
 import {mapState} from 'vuex'
 import List2Barevnost from '@/services/List2BarevnostService'
 
+function hasClass(element, cls) {
+    return element.className.split(' ').indexOf(cls) > -1
+}
+
+function hasClassId(elementId, cls) {
+  return document.getElementById(elementId).className.split(' ').indexOf(cls) > -1
+}
+
+function addClass(element, cls) {
+  if (! hasClass(element,cls)){
+    element.className+=(' ' + cls)
+    element.className=element.className.trim()
+  }
+}
+
+function removeClass(element, cls) {
+  if ( hasClass(element,cls)){
+    element.className = element.className.replace(cls,'')
+  }
+}
+
+function changeClass(element,oldClass,newClass) {
+          removeClass(element,oldClass)
+          addClass(element,newClass)
+}
+
+
+
+function isVisible(el) {
+  var top = el.offsetTop;
+  var left = el.offsetLeft;
+  var width = el.offsetWidth;
+  var height = el.offsetHeight;
+
+  while(el.offsetParent) {
+    el = el.offsetParent;
+    top += el.offsetTop;
+    left += el.offsetLeft;
+  }
+
+  return (
+    top < (window.pageYOffset + window.innerHeight) &&
+    left < (window.pageXOffset + window.innerWidth) &&
+    (top + height) > window.pageYOffset &&
+    (left + width) > window.pageXOffset
+  );
+}
+
 export default {
   props: ['visible'],
   data () {
@@ -135,7 +183,7 @@ setTimeout(function(){
     document.getElementById("t201").style.height=Math.round(window.innerHeight - 140)  + "px"
     document.getElementById("t202").style.height=Math.round(window.innerHeight - 270)  + "px"
 
-    document.getElementById("t202").addEventListener('keyup', (function(e) {
+    document.getElementById("t202").addEventListener('keydown', (function(e) {
            //document.getElementById('btn_user_submit').focus()
            self.obsluha(e, e.target)
       }))
@@ -195,40 +243,42 @@ setTimeout(function(){
      var curRow = aEl[2]*1
      var curCol = aEl[4]*1
      var newId =  aEl[0]+'_r_'
-     e.preventDefault()
-     e.stopPropagation()
-     e.stopImmediatePropagation()
 
-
-
-
+    e.preventDefault()
+    e.stopPropagation()
+    e.stopImmediatePropagation()
 
      self.aInfo = aEl
      self.aInfo.push([rows, cols])
-     self.aInfo.push([el.id])
+     self.aInfo.push(['Target: '+ el.id])
      self.aInfo.push([elObalId])
-
-
+     self.aInfo.push(["Klavesa" + e.keyCode])
 
 
      this.info=rows+  "/ " +  cols
 
      if (e.keyCode == 13 && el.hasAttribute('readonly')) {
-       el.className=el.className.replace(/cell/,'cell_edit')
+       //el.className=el.className.replace(/cell/,'cell_edit')
+
        el.removeAttribute('readonly')
        this.isWrite = true
      }
      el.onfocus = ( function () {
 
         // self.aInfo.push(['1. elObaId', elObalId, ' Obal ', elObal ])
-        elObal.className=elObal.className.replace(/dcell/,'dcell_edit')
+        //elObal.className=elObal.className.replace(/dcell/,'dcell_edit')
+        //elObal.className=elObal.className.replace(/dcell_edit/,'').trim()
+        //elObal.className=elObalNew.className.replace(/dcell/,'').trim()
+
+        el.style.color="red"
 
      })
 
      el.onblur = ( function(){
        el.setAttribute('readonly',true)
-       el.className=el.className.replace(/cell_edit/,'cell')
+       //el.className=el.className.replace(/cell_edit/,'cell')
        elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
+       el.style.color="black"
 
      })
      switch (e.keyCode) {
@@ -237,21 +287,72 @@ setTimeout(function(){
           el.setAttribute('readonly',true)
           el.className=el.className.replace(/cell_edit/,'cell')
           elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
+
           el.focus()
+          // window.scrollTo(pageXOffset, 0);
 
        }
        case 40: //Sipka dolu
        if (curRow < rows) {
           newId +=  (curRow + 1) + '_c_' +curCol
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+
           isPresun = true
           document.getElementById(newId).focus()
-          // alert(newId)
-                   // alert(document.getElementById(newId))
+
+       }
+        break;
+       case 34: //pgDn
+       if (curRow < rows) {
+         var origId=newId
+         for (var i=curRow; i < rows ; i++ ){
+          newId +=  (i + 1) + '_c_' +curCol
+          var newObalId =  'd'+newId.substring(1)
+          self.aInfo.push(["i: "+ i +" newId: " + newId])
+          document.getElementById(newId).focus()
+
+
+
+          var newObal = document.getElementById(newObalId)
+          if (isVisible(newObal) ) {
+            addClass(newObal,"oznac")
+          //    break;
+          }
+          if (!isVisible(newObal) ) {
+            removeClass(newObal,"oznac")
+          //    break;
+          }
+          newId= origId
+          self.aInfo.push(["videti jest? " +newObalId+" "+ isVisible(newObal)])
+
+
+          /*
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+
+
+          document.getElementById(newId).focus() */
+
+         }
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+          //document.getElementById(newId).focus()
+          isPresun = true
+
+
        }
         break;
         case 38: //Sipka nehoru
        if (curRow > 0) {
           newId +=  (curRow - 1) + '_c_' +curCol
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+
           isPresun = true
           // alert(newId)
           document.getElementById(newId).focus()
@@ -262,6 +363,10 @@ setTimeout(function(){
       case 37: //Sipka left
        if (curCol > 0) {
           newId +=  (curRow ) + '_c_' +(curCol - 1)
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
           isPresun = true
           // alert(newId)
           document.getElementById(newId).focus()
@@ -273,6 +378,10 @@ setTimeout(function(){
       case 39: //Sipka right
        if (curCol < cols) {
           newId +=  (curRow ) + '_c_' +(curCol + 1)
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
           isPresun = true
           // alert(newId)
           document.getElementById(newId).focus()

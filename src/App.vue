@@ -7,6 +7,11 @@
 </template>
 
 <script>
+
+
+
+
+
 export default {
   name: 'App'
 
@@ -142,6 +147,13 @@ html div {
   text-align: left;
   font-style: italic;
   border: solid 1px;border-color:black;
+
+}
+
+.oznac {
+  text-align: left;
+  font-style: italic;
+  border: solid 10px;border-color:black;
 
 }
 
