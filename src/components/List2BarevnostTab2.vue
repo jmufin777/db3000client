@@ -7,18 +7,29 @@
     </el-col>
   </el-row>
   <el-row  :gutter="20">
-  <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
+  <el-col :span="8" :offset="0" style="margin-top:5px;padding-left:10px" >
   <el-input prefix-icon="el-icon-search" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
-   </el-input>
+  </el-input>
+  </el-col>
+  <el-col :span="2" :offset="0" style="margin-top:5px;padding-left:10px" >
+    <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
+        @click="newLine()"
+    ></el-button>
+  </el-col>
+  <el-col :span="2" :offset="0" style="margin-top:5px;padding-left:10px" >
+    <el-button  type="warning" icon='el-icon-minus'  size="mini" class="elevation-0"
+        @click="newLine()"
+    ></el-button>
   </el-col>
   </el-row>
 <div>
-  Tohle je nejlepsi, muj grig bez tabulky, fixace scroll na divu
-  zakladni konvence jarda r- radka, d obal bunky, c -sloupec
+
 </div>
- <div style="height:100%;overflow:scroll" class="mt-0" id="t201">
+
+<div style="height:100%;overflow:scroll" class="mt-0" id="t201">
 
 <el-row  >
+
   <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth">
     {{col.title}}
   </el-col>
@@ -30,7 +41,9 @@
       :id="'d202_r_'+irow"
 
   >
+
   <el-col :span="24" >
+
     	<el-col v-for="(col,icol) in cols"
 
 			:key="col.id"
@@ -41,11 +54,32 @@
 
         <input type="text"
         class="white px-4 cell" :id="'c202_r_'+irow+'_c_'+icol"
-        :value="item[col.id]" style="width:100%;border:0px" readonly></input>
+        :value="item[col.id]" style="width:100%;border:0px" readonly
+
+        >
 
        </div>
 
+
+
     	</el-col>
+      <el-col :span="1">
+       <div>
+         <button size="mini" type="info" tooltips="Smazat" >X</button>
+      </div>
+     </el-col>
+
+    <el-col :span="1">
+       <div>
+         <button size="mini" type="info" tooltips="Smazat" >B</button>
+      </div>
+     </el-col>
+
+
+
+
+
+
   </el-col>
   </el-row>
   </div>
@@ -138,26 +172,30 @@ export default {
         isFocus: null,
         lastkey: 0,
         blurKey: 0,
-
-
       },
       search:'',
       //event
-      eTabule: null,
+
       //event
       aInfo: [],
       total: 0,
       pagination: {},
-      currentRow: null,
+
       form: {},
       //Moje tabule a data
       currId: null,
+      currentRow: null,
+      minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:4},
-				{ id: "nazev", title: "Nazev", cssClasses: "mtd", span: 16},
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 3, isEdit: false},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:3, isEdit: true},
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 7, isEdit: true},
+        { id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false},
+        { id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false},
 			],
-      list: []
+      list: [],
+      listNewLine: [],
+      listEdits: []
     }
   },
   async mounted () {
@@ -167,11 +205,14 @@ export default {
       this.IsWaiting = false
       //this.aInfo.push=this.list[0]
       var x
+
       for(x in this.list[0]) {
           this.aInfo[x]=''
+
       }
           this.aInfo['id']=-1
-          this.list.unshift(this.aInfo)
+//          this.list.unshift(this.aInfo)
+
     }
   },
 
@@ -184,8 +225,13 @@ setTimeout(function(){
     document.getElementById("t202").style.height=Math.round(window.innerHeight - 270)  + "px"
 
     document.getElementById("t202").addEventListener('keydown', (function(e) {
-           //document.getElementById('btn_user_submit').focus()
-           self.obsluha(e, e.target)
+
+             self.obsluha(e, e.target)
+      }))
+
+    document.getElementById("t202").addEventListener('click', (function(e) {
+
+             self.obsluha(e, e.target)
       }))
 
 
@@ -231,11 +277,25 @@ setTimeout(function(){
   },
 
   methods: {
+   newLine ()  {
+     var x
+      this.listNewLine = []
+      for(x in this.list[0]) {
+          this.aInfo[x]=''
+          this.listNewLine[x]=''
+      }
+          this.minId = this.minId -1
+          this.listNewLine['id']= this.minId
+          this.list.push(this.listNewLine)
+   },
    obsluha (e)  {
+
      var self = this
      var rows = this.list.length - 1
      var cols = this.cols.length - 1
+
      const el=e.target
+
      var isPresun =false
      var elObalId = 'd'+ el.id.substring(1)
      var elObal = document.getElementById(elObalId)
@@ -243,25 +303,77 @@ setTimeout(function(){
      var curRow = aEl[2]*1
      var curCol = aEl[4]*1
      var newId =  aEl[0]+'_r_'
+     var isEdit = self.cols[curCol].isEdit
 
-    e.preventDefault()
-    e.stopPropagation()
-    e.stopImmediatePropagation()
+    var ekeyCode           = e.keyCode
+    var keyCodes           = Array()
+    var keyCodesExitSave   = Array()
+    var keyCodesExitEscape = Array()
+    if (e.type=='click') {
+      ekeyCode = -13
+    }
 
-     self.aInfo = aEl
-     self.aInfo.push([rows, cols])
-     self.aInfo.push(['Target: '+ el.id])
-     self.aInfo.push([elObalId])
-     self.aInfo.push(["Klavesa" + e.keyCode])
+    keyCodesExitSave   = [13,9,-13]
+    keyCodesExitEscape = [27]
+
+    // var keyCodesExitSave =
+
+    keyCodes = keyCodes.concat([13,27,9,-13])
+    keyCodes = keyCodes.concat([40,37,38,39])  //Sipky
+    keyCodes = keyCodes.concat([33,34])  // PedzDaun, pedzAp
+
+    //
+    if (self.isWrite) {
+      var isReturn = true
+      if (keyCodesExitSave.indexOf(ekeyCode)>-1) {
+//        self.aInfo.push(["ExitSave",curCol,curRow])
+        self.isWrite = false
+        // this.cols[curCol].id
+        self.list[curRow][this.cols[curCol].id]=el.value
+        el.setAttribute('readonly',true)
+        isReturn = false
+
+      }
+
+
+      if (keyCodesExitEscape.indexOf(ekeyCode)>-1) {
+        self.isWrite = false
+        el.setAttribute('readonly',true)
+        changeClass(elObal,'dcell','dcell_edit')
+        el.value = this.list[curRow][this.cols[curCol].id]
+//        elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
+        return true
+
+        el.focus()
+      }
+
+      if (ekeyCode==13){
+          ekeyCode=40
+        }
+        if (isReturn == true) {
+          return true
+        }
+
+    }
+
+//self.aInfo = aEl
+       //self.aInfo.push(keyCodes)
+         //self.aInfo.push(ekeyCode)
+    //  self.aInfo.push([rows, cols])
+    //  self.aInfo.push(['Target: '+ el.id])
+    //  self.aInfo.push([elObalId])
+    //  self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
 
 
      this.info=rows+  "/ " +  cols
 
-     if (e.keyCode == 13 && el.hasAttribute('readonly')) {
+     if (Math.abs(ekeyCode) == 13 ) {
        //el.className=el.className.replace(/cell/,'cell_edit')
-
-       el.removeAttribute('readonly')
-       this.isWrite = true
+      if ( el.hasAttribute('readonly') && isEdit ) {
+          el.removeAttribute('readonly')
+          self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+          self.isWrite = true
+      }
      }
      el.onfocus = ( function () {
 
@@ -274,24 +386,37 @@ setTimeout(function(){
 
      })
 
+     el.onchange = ( function () {
+       // alert('aaa')
+        // self.aInfo.push(['1. elObaId', elObalId, ' Obal ', elObal ])
+        //elObal.className=elObal.className.replace(/dcell/,'dcell_edit')
+        //elObal.className=elObal.className.replace(/dcell_edit/,'').trim()
+        //elObal.className=elObalNew.className.replace(/dcell/,'').trim()
+        el.style.color="green"
+        self.aInfo.push(self.list[curRow])
+
+     })
+
+
      el.onblur = ( function(){
        el.setAttribute('readonly',true)
        //el.className=el.className.replace(/cell_edit/,'cell')
        elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
        el.style.color="black"
 
-     })
-     switch (e.keyCode) {
-       case 27:
-       if (this.isWrite == true){
-          el.setAttribute('readonly',true)
-          el.className=el.className.replace(/cell_edit/,'cell')
-          elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
 
-          el.focus()
-          // window.scrollTo(pageXOffset, 0);
+       if (self.list[curRow][self.cols[curCol].id]!=el.value) {
+          self.list[curRow][self.cols[curCol].id]=el.value
 
        }
+
+
+       //alert('aaa' + ekeyCode+ el.value)
+
+     })
+     switch (ekeyCode) {
+
+
        case 40: //Sipka dolu
        if (curRow < rows) {
           newId +=  (curRow + 1) + '_c_' +curCol
@@ -354,11 +479,10 @@ setTimeout(function(){
           changeClass(elObal,'dcell_edit','dcell')
 
           isPresun = true
-          // alert(newId)
           document.getElementById(newId).focus()
           // alert(document.getElementById(newId))
        }
-        this.aInfo.push('ESC')
+
         break;
       case 37: //Sipka left
        if (curCol > 0) {
@@ -372,8 +496,9 @@ setTimeout(function(){
           document.getElementById(newId).focus()
           // alert(document.getElementById(newId))
        }
-        this.aInfo.push('ESC')
+//        this.aInfo.push('ESC')
         break;
+
 
       case 39: //Sipka right
        if (curCol < cols) {
@@ -387,10 +512,56 @@ setTimeout(function(){
           document.getElementById(newId).focus()
           // alert(document.getElementById(newId))
        }
-        this.aInfo.push('ESC')
+        //this.aInfo.push('ESC')
         break;
+      case 9: //Tabulator
+       var newCol = 0
+       if (curCol < cols) {
+          newCol = curCol + 1
+          newId +=  (curRow ) + '_c_' +(newCol)
+        }
+       if (curCol == cols) {
+
+       if (curRow < rows) {
+          newCol =  1
+          newId +=  (curRow + 1) + '_c_' +(newCol)
+        }
+       if (curRow == rows) {
+          self.newLine()
+          newCol =  1
+          newId +=  (curRow + 1) + '_c_'+(newCol)
+          return
+        }
+       }
+
+
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+          isPresun = true
+          // alert(newId)
+          document.getElementById(newId).focus()
+          if ( self.cols[newCol].isEdit && document.getElementById(newId).hasAttribute('readonly') ) {
+          document.getElementById(newId).removeAttribute('readonly')
+          // self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+          this.isWrite = true
+          }
+
+
+          // alert(document.getElementById(newId))
+
+
+        break;
+
        default:
         break;
+     }
+
+     if (keyCodes.indexOf(ekeyCode)>-1){
+       e.preventDefault()
+       e.stopPropagation()
+       e.stopImmediatePropagation()
      }
 /*
       if (this.isWrite == true && isPresun == true ) {
@@ -415,7 +586,7 @@ setTimeout(function(){
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev', 'kod']
+    var seekStr=['id', 'nazev', 'kod','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }
@@ -526,11 +697,15 @@ setTimeout(function(){
   computed: {
     ...mapState([
       'isUserLoggedIn',
-      'user'
+      'user',
+      'xMenuMain',
+      'level',
+      'idefix',
     ])
 
   }
 }
+
 
 </script>
 <style scoped>
