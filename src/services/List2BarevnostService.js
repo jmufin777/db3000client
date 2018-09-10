@@ -12,7 +12,9 @@ export default {
     return Api().put('list2_barevnost', { form: form,  user: user})
    },
   insert (user,  form ) {
-    return Api().post('list2_barevnost',  {form: form ,user: user })
+    console.log({'Form': form})
+
+    return Api().post('list2_barevnost',  { form: form ,user: user })
    }
 
 }

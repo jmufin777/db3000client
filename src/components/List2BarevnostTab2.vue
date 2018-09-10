@@ -11,15 +11,33 @@
   <el-input prefix-icon="el-icon-search" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
-  <el-col :span="2" :offset="0" style="margin-top:5px;padding-left:10px" >
+  <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
+    <el-badge :value="list.length">
     <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
         @click="newLine()"
     ></el-button>
+    </el-badge>
+  </el-col>
+
+  <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
+    <el-badge :value="listEdits.length">
+    <el-button  type="warning" icon='el-icon-back'  size="mini" class="elevation-0"
+        @click="backLines()"
+    ></el-button>
+    </el-badge>
   </el-col>
   <el-col :span="2" :offset="0" style="margin-top:5px;padding-left:10px" >
-    <el-button  type="warning" icon='el-icon-minus'  size="mini" class="elevation-0"
-        @click="newLine()"
+
+    <el-button  v-if="listEdits.length==0"   size="mini" class="elevation-0 " type="success" icon='el-icon-success'
+        @click="saveLines()"
     ></el-button>
+
+
+    <el-button  v-if="listEdits.length>0"   size="mini" class="elevation-0 " type="danger" icon='el-icon-success'
+        @click="saveLines(0)"
+    ></el-button>
+
+
   </el-col>
   </el-row>
 <div>
@@ -30,58 +48,79 @@
 
 <el-row  >
 
-  <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth">
+  <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth" >
+
+    <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-caret-top" size="mini"></i></button>
+    <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-caret-bottom" size="mini"></i></button>
+
     {{col.title}}
   </el-col>
+ <el-col :span="1" class="mth">
+   Akce
+ </el-col>
  </el-row>
 
 <div style="height:100%;overflow:scroll" class="mt-0" id="t202">
+  <form id="f201">
+
   <el-row v-for="( item, irow ) in list" :key="item.id"
-      v-bind:class="{  JsemVidet: groupFind(item) , NejsemVidet:  !groupFind(item) }"
+      v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
       :id="'d202_r_'+irow"
+
 
   >
 
-  <el-col :span="24" >
 
+  <el-col :span="24"
+
+  >
     	<el-col v-for="(col,icol) in cols"
-
 			:key="col.id"
       :span="col.span"
-
       >
-      <div :id="'d202_r_'+irow+'_c_'+icol"  class='dcell'>
+      <div :id="'d202_r_'+irow+'_c_'+icol"  class='dcell' >
 
-        <input type="text"
-        class="white px-4 cell" :id="'c202_r_'+irow+'_c_'+icol"
-        :value="item[col.id]" style="width:100%;border:0px" readonly
+        <input type="number" v-if="col.type =='number'"
+        class=" px-4 cell" :id="'c202_r_'+irow+'_c_'+icol"
+        :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
         >
+        <input type="text" v-else
+        class=" px-4 cell " :id="'c202_r_'+irow+'_c_'+icol"
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+        :value="item[col.id]"  style="width:100%;border:none;height:100%" readonly
 
-       </div>
 
 
+        >
+        <input type="date" v-if="col.type =='datetime-local' && false"
+        class="white px-4 cell seda" :id="'c202_r_'+irow+'_c_'+icol"
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+        :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
+        min="2017-06-01T08:30" max="2020-06-30T16:30"
+        >
+        <select  v-if="col.type =='select'  && false "
+        class=" px-4 cell" :id="'c202_r_'+irow+'_c_'+icol"
+         style="width:100%;border:none;height:100%" readonly
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+        >
+        <option :value="item[col.id]" selected >{{ item[col.id] }}</option>
+        <option :value="2" >2</option>
+        </select>
+      </div>
 
     	</el-col>
-      <el-col :span="1">
-       <div>
-         <button size="mini" type="info" tooltips="Smazat" >X</button>
+     <el-col :span="1" >
+      <div class='dcell'  style="width::100% ; background:white"
+      v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+      >
+         <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow)" ><i class="el-icon-delete" size="mini"></i></button>
       </div>
      </el-col>
-
-    <el-col :span="1">
-       <div>
-         <button size="mini" type="info" tooltips="Smazat" >B</button>
-      </div>
-     </el-col>
-
-
-
-
-
-
   </el-col>
   </el-row>
+  </form>
   </div>
   </div>
 
@@ -111,6 +150,8 @@
 <script>
 import {mapState} from 'vuex'
 import List2Barevnost from '@/services/List2BarevnostService'
+import List2BarevnostVue from './List2Barevnost.vue';
+import { setTimeout } from 'timers';
 
 function hasClass(element, cls) {
     return element.className.split(' ').indexOf(cls) > -1
@@ -137,7 +178,6 @@ function changeClass(element,oldClass,newClass) {
           removeClass(element,oldClass)
           addClass(element,newClass)
 }
-
 
 
 function isVisible(el) {
@@ -175,33 +215,34 @@ export default {
       },
       search:'',
       //event
-
       //event
+
       aInfo: [],
       total: 0,
       pagination: {},
-
       form: {},
       //Moje tabule a data
       currId: null,
       currentRow: null,
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 3, isEdit: false},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:3, isEdit: true},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 7, isEdit: true},
-        { id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false},
-        { id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false},
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 3, isEdit: false, type: "text"},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:3, isEdit: true, type: "number"},
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 7, isEdit: true, type: "text"},
+        { id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local"},
+        { id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text"},
 			],
       list: [],
-      listNewLine: [],
-      listEdits: []
+      listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
+      listEdits: [],   //Prehled zmen s prinakem edit, delete
+      lastSort: ['id','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
     }
   },
   async mounted () {
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
       this.list = (await List2Barevnost.all()).data
+
       this.IsWaiting = false
       //this.aInfo.push=this.list[0]
       var x
@@ -214,6 +255,28 @@ export default {
 //          this.list.unshift(this.aInfo)
 
     }
+        var new_id ='c202_r_'+0+'_c_'+1
+              //alert(new_id)
+        setTimeout(function(){
+             var newObal= document.getElementById('d'+new_id.substring(1))
+              this.isWrite =false
+            //  document.getElementById(new_id).focus()
+             // document.getElementById(new_id).click()
+              document.getElementById(new_id).setAttribute('readonly',true)
+              if (!document.getElementById(new_id).type== 'number' ) {
+                document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
+              }
+
+            //setTimeout(function(){
+
+
+              changeClass(newObal,'dcell','dcell_edit')
+              document.getElementById(new_id).focus()
+
+         },200)
+
+
+
   },
 
   created () {
@@ -233,9 +296,6 @@ setTimeout(function(){
 
              self.obsluha(e, e.target)
       }))
-
-
-
     // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
   },100)
 
@@ -250,7 +310,14 @@ setTimeout(function(){
   },
   beforeDestroy () {
 
-    // alert('beforeDestroy')
+
+     if (this.listEdits.length>0) {
+       //alert('beforeDestroy')
+       if (confirm('Ulozit zmeny ?')){
+          this.saveLines(0)
+       }
+     }
+
   },
   destroyed () {
     if (document.getElementById("t202")){
@@ -258,7 +325,6 @@ setTimeout(function(){
       //document.getElementById("t202").removeEventListener(document.getElementById("t202"),'keydown')
 
     }
-
     // alert('destos'+document.getElementById("t202"))
   },
   beforeUpdate () {
@@ -272,11 +338,120 @@ setTimeout(function(){
         alert('watch')
       },
       deep: true,
-
     }
   },
 
   methods: {
+   async saveLines(id){
+     this.aInfo=[]
+     var Posli=Array()
+     var  aTmp= {}
+     var aDel= []
+     var aZmenySend=[]
+
+      this.listEdits.forEach((el)=>{
+        //console.log(el[1])
+        if (el[1]=='delete'){
+          aDel.push(el[0].id)
+        }
+       if (el[1]=='edit'){
+          aZmenySend.push(el[0].id)
+        }
+      })
+
+     var isInsert=false
+     this.list.forEach((el,idx) => {
+       aTmp=Array()
+       if (  (id <= 0 || (id != 0 && id == el.id ) ) && _.indexOf(aZmenySend,el.id)>-1 ) {
+         if (el.id < 0 && el.kod >''){
+           isInsert=true
+         }
+        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev })
+        Posli.push(aTmp)
+       }
+     })
+
+     await List2Barevnost.insert(this.user, {data: Posli, del: aDel })
+     .then (res => {
+       console.log("Poslal:" , Posli )
+     })
+     .catch((e) =>{
+       alert('b'+ e)
+
+     })
+      var neco = []
+     try {
+      this.list = (await   List2Barevnost.all()).data
+        //alert(this.lastSort[0]+"/"+this.lastSort[1])
+        if (this.lastSort[1]=='desc'){
+          this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
+        } else {
+          this.list = _.sortBy(this.list,this.lastSort[0])
+        }
+
+      if (isInsert == true ){
+        this.list = _.sortBy(this.list,'id').reverse()
+
+        ////
+        var new_id ='c202_r_'+0+'_c_'+1
+              //alert(new_id)
+        setTimeout(function(){
+             var newObal= document.getElementById('d'+new_id.substring(1))
+              this.isWrite =false
+            //  document.getElementById(new_id).focus()
+             // document.getElementById(new_id).click()
+              document.getElementById(new_id).setAttribute('readonly',true)
+              if (!document.getElementById(new_id).type == 'number') {
+                document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
+              }
+            //setTimeout(function(){
+              changeClass(newObal,'dcell','dcell_edit')
+              document.getElementById(new_id).focus()
+         },200)
+
+        /////
+
+
+      }
+      this.listEdits = []
+
+
+      //console.log("Prislo",neco)
+     }
+     catch(e) {
+       alert('Chyba pri zmenach'+ e )
+     }
+
+   },
+   sortByKey(ckey, ascdesc) {
+     //alert('sort'+ ckey)
+    if (ascdesc == 'asc') {
+      this.list = _.sortBy(this.list,ckey)
+        this.cols.forEach((el, k ) => {
+          if (el.id==ckey){
+            this.cols[k]["sort"]="asc"
+            this.lastSort[0] =ckey
+            this.lastSort[1] ="asc"
+            return
+          }
+      })
+      //this.cols[ckey]['sort']="asc"
+    }
+    if (ascdesc == 'desc') {
+      this.list = _.sortBy(this.list,ckey).reverse()
+         this.cols.forEach((el, k ) => {
+          if (el.id==ckey){
+            this.cols[k]["sort"]="desc"
+            this.lastSort[0] =ckey
+            this.lastSort[1] ="desc"
+            return
+          }
+      })
+      //this.cols[id]['sort']="desc"
+    }
+
+   },
+
    newLine ()  {
      var x
       this.listNewLine = []
@@ -287,6 +462,169 @@ setTimeout(function(){
           this.minId = this.minId -1
           this.listNewLine['id']= this.minId
           this.list.push(this.listNewLine)
+          if (this.lastSort[1]=="asc") {
+            this.list = _.sortBy(this.list,this.lastSort[0])
+          } else {
+            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
+          }
+          var new_id=""
+          this.list.forEach((el,idx) => {
+            if  (el.id == this.minId){
+              //var new_id = 'c'
+              new_id ='c202_r_'+idx+'_c_'+1
+              return
+
+
+
+              //alert(new_id)
+            }
+          })
+          setTimeout(function(){
+            document.getElementById(new_id).focus()
+            document.getElementById(new_id).click()
+            document.getElementById(new_id).removeAttribute('readonly')
+            document.getElementById(new_id).select()
+         },100)
+
+
+
+   },
+   deleteLine(nRow) {
+     const self = this
+
+     this.$confirm('Vymazat zaznam', '',{
+       distinguishCancelAndClose: true,
+       confirmButtonText: 'Ano?',
+       cancelButtonText: 'Ne'
+     })
+     .then(()=>{
+       var eof = false
+       var top = false
+       var next = false
+     if (this.list[nRow].id>0){
+       if (nRow==this.list.length -1){
+         eof = true
+         //alert('Sup na konec')
+       }
+       if (nRow==0){
+         top = true
+         //alert('Sup na konec')
+       }
+       if (nRow>0 && nRow<this.list.length){
+         next = true
+         //alert('Sup na konec')
+       }
+       this.listEdits.push([this.list[nRow],'delete'])
+
+     }
+
+     var new_id=""
+
+     this.list.splice(nRow,1)
+     if (eof == true) {
+       new_id='c202_r_'+(this.list.length -1)+'_c_'+1
+     }
+     if (top == true) {
+       new_id='c202_r_'+(0)+'_c_'+1
+     }
+
+    if (next == true) {
+       new_id='c202_r_'+(nRow)+'_c_'+1
+     }
+
+        if (new_id > '')  {
+
+
+            //alert(newObal + "/ " + new_id)
+
+
+
+          setTimeout(function(){
+            if (!document.getElementById(new_id)){
+                //alert(new_id + 'neco je sptane' + eof + "top " + top + "next "+next )
+                new_id='c202_r_'+(self.list.length -1)+'_c_'+1
+            }
+              var newObal= document.getElementById('d'+new_id.substring(1))
+
+              this.isWrite =false
+            //  document.getElementById(new_id).focus()
+             // document.getElementById(new_id).click()
+              document.getElementById(new_id).setAttribute('readonly',true)
+              if (!document.getElementById(new_id).type == 'number') {
+                document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
+              }
+
+            //setTimeout(function(){
+
+
+              changeClass(newObal,'dcell','dcell_edit')
+              document.getElementById(new_id).focus()
+              /*
+              var e = new Event("keyup");
+              // e.key="a";    // just enter the char you want to send
+              //e.keyCode=e.key.charCodeAt(0);
+              e.keyCode=27
+              e.which=e.keyCode;
+              e.altKey=false;
+              e.ctrlKey=false;
+              e.shiftKey=false;
+              e.metaKey=false;
+              //e.bubbles=true;
+              //document.dispatchEvent(e);
+              document.getElementById(new_id).dispatchEvent(e);
+              //alert('escpe')
+            //},1000)
+
+       //       document.getElementById(new_id).select()
+       */
+
+          },200)
+         }
+
+
+     })
+     .catch( action =>{
+       this.$message({
+         type: 'info',
+         message: 'Ponechano'
+
+       })
+
+     })
+     //alert(nRow)
+   },
+   backLines(){
+     var eDelka = this.listEdits.length -1
+     var x
+     var id = 0
+     if (eDelka>-1){
+//       this.aInfo.push(this.listEdits[eDelka][1])
+
+       if (this.listEdits[eDelka][1] == 'delete'){
+           this.list.push(this.listEdits[eDelka][0])
+           this.list = _.sortBy(this.list,'id')
+           this.listEdits.splice(eDelka,1)
+
+           eDelka = this.listEdits.length -1
+           return
+       }
+
+       if (this.listEdits[eDelka][1] == 'edit'){
+         id = this.listEdits[eDelka][0].id
+         this.list.forEach((el, k) => {
+           if (el.id == id){
+             this.list[k] = this.listEdits[eDelka][0]
+             this.listEdits.splice(eDelka,1)
+             this.aInfo.push(el.id)
+             this.aInfo.push(this.list[k])
+             return
+           }
+
+         })
+
+       }
+
+     }
    },
    obsluha (e)  {
 
@@ -295,6 +633,11 @@ setTimeout(function(){
      var cols = this.cols.length - 1
 
      const el=e.target
+     if (el.type=="button" || !el.type) {
+
+       return
+     }
+
 
      var isPresun =false
      var elObalId = 'd'+ el.id.substring(1)
@@ -306,9 +649,11 @@ setTimeout(function(){
      var isEdit = self.cols[curCol].isEdit
 
     var ekeyCode           = e.keyCode
+    var eshiftKey          = e.shiftKey
     var keyCodes           = Array()
     var keyCodesExitSave   = Array()
     var keyCodesExitEscape = Array()
+
     if (e.type=='click') {
       ekeyCode = -13
     }
@@ -317,6 +662,31 @@ setTimeout(function(){
     keyCodesExitEscape = [27]
 
     // var keyCodesExitSave =
+
+
+    if (!self.isWrite && ekeyCode==13 && e.metaKey){
+      //alert('Savez')
+      this.saveLines(0)
+      if (!el.type == 'number') {
+        el.selectionEnd = el.selectionStart
+      }
+      return
+    }
+
+    if (!self.isWrite && ekeyCode == 46 ){
+
+      this.deleteLine(curRow)
+      return
+    }
+
+    if (!self.isWrite && ekeyCode == 90 && e.metaKey && self.listEdits.length>0){
+//       this.$alert(ekeyCode)
+       this.backLines()
+       return
+    //  this.deleteLine(curRow)
+
+    }
+
 
     keyCodes = keyCodes.concat([13,27,9,-13])
     keyCodes = keyCodes.concat([40,37,38,39])  //Sipky
@@ -329,7 +699,30 @@ setTimeout(function(){
 //        self.aInfo.push(["ExitSave",curCol,curRow])
         self.isWrite = false
         // this.cols[curCol].id
-        self.list[curRow][this.cols[curCol].id]=el.value
+
+      if (self.list[curRow][self.cols[curCol].id]!=el.value) {
+         var prev = self.list[curRow][self.cols[curCol].id]
+          // alert('eee' + prev + "/ "+self.list[curRow])
+          var oldRecord = Array()
+          var y
+          for (y in self.list[curRow]) {
+              oldRecord[y] = self.list[curRow][y]
+          }
+
+          //self.listEdits.push([self.list[curRow],'edit',prev])
+          self.listEdits.push([oldRecord,'edit',prev])
+          var eLen= self.listEdits.length-1
+
+          //self.listEdits[eLen][self.cols[curCol].id] = prev
+
+          self.list[curRow][self.cols[curCol].id]=el.value
+          self.aInfo.push(self.listEdits)
+          self.aInfo.push(oldRecord)
+
+
+       }
+
+
         el.setAttribute('readonly',true)
         isReturn = false
 
@@ -356,13 +749,13 @@ setTimeout(function(){
 
     }
 
-//self.aInfo = aEl
-       //self.aInfo.push(keyCodes)
-         //self.aInfo.push(ekeyCode)
-    //  self.aInfo.push([rows, cols])
-    //  self.aInfo.push(['Target: '+ el.id])
-    //  self.aInfo.push([elObalId])
-    //  self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+   //self.aInfo = aEl
+   //self.aInfo.push(keyCodes)
+   //self.aInfo.push(ekeyCode)
+   //  self.aInfo.push([rows, cols])
+   //  self.aInfo.push(['Target: '+ el.id])
+   //  self.aInfo.push([elObalId])
+   //  self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
 
 
      this.info=rows+  "/ " +  cols
@@ -371,10 +764,13 @@ setTimeout(function(){
        //el.className=el.className.replace(/cell/,'cell_edit')
       if ( el.hasAttribute('readonly') && isEdit ) {
           el.removeAttribute('readonly')
+          el.select()
           self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+          // el.selectionEnd = el.selectionStart;
           self.isWrite = true
       }
      }
+
      el.onfocus = ( function () {
 
         // self.aInfo.push(['1. elObaId', elObalId, ' Obal ', elObal ])
@@ -382,7 +778,13 @@ setTimeout(function(){
         //elObal.className=elObal.className.replace(/dcell_edit/,'').trim()
         //elObal.className=elObalNew.className.replace(/dcell/,'').trim()
 
-        el.style.color="red"
+        el.style.color="black"
+        if (!self.isWrite) {
+          if(!el.type == 'number') {
+            el.selectionEnd = el.selectionStart
+          }
+
+        }
 
      })
 
@@ -393,7 +795,16 @@ setTimeout(function(){
         //elObal.className=elObal.className.replace(/dcell_edit/,'').trim()
         //elObal.className=elObalNew.className.replace(/dcell/,'').trim()
         el.style.color="green"
-        self.aInfo.push(self.list[curRow])
+        return
+
+       if (self.list[curRow][self.cols[curCol].id]!=el.value) {
+          self.listEdits.push([self.list[curRow],'edit'])
+          self.list[curRow][self.cols[curCol].id]=el.value
+       }
+
+       // self.listEdits.push([self.list[curRow],'edit'])
+        //self.aInfo.push(self.list[curRow])
+
 
      })
 
@@ -405,17 +816,16 @@ setTimeout(function(){
        el.style.color="black"
 
 
-       if (self.list[curRow][self.cols[curCol].id]!=el.value) {
+       if (curRow < self.list.length && self.list[curRow][self.cols[curCol].id]!=el.value) {
+          self.listEdits.push([self.list[curRow],'edit'])
           self.list[curRow][self.cols[curCol].id]=el.value
 
        }
-
 
        //alert('aaa' + ekeyCode+ el.value)
 
      })
      switch (ekeyCode) {
-
 
        case 40: //Sipka dolu
        if (curRow < rows) {
@@ -436,7 +846,7 @@ setTimeout(function(){
          for (var i=curRow; i < rows ; i++ ){
           newId +=  (i + 1) + '_c_' +curCol
           var newObalId =  'd'+newId.substring(1)
-          self.aInfo.push(["i: "+ i +" newId: " + newId])
+
           document.getElementById(newId).focus()
 
 
@@ -514,25 +924,48 @@ setTimeout(function(){
        }
         //this.aInfo.push('ESC')
         break;
-      case 9: //Tabulator
+    case 9: //Tabulator
        var newCol = 0
-       if (curCol < cols) {
-          newCol = curCol + 1
-          newId +=  (curRow ) + '_c_' +(newCol)
-        }
-       if (curCol == cols) {
+       if (!eshiftKey){
+        if (curCol < cols && !eshiftKey ) {
+           newCol = curCol + 1
+           newId +=  (curRow ) + '_c_' +(newCol)
+         }
 
-       if (curRow < rows) {
-          newCol =  1
-          newId +=  (curRow + 1) + '_c_' +(newCol)
-        }
-       if (curRow == rows) {
-          self.newLine()
-          newCol =  1
-          newId +=  (curRow + 1) + '_c_'+(newCol)
-          return
+
+        if (curCol == cols && !eshiftKey ) {
+        if (curRow < rows) {
+           newCol =  1
+           newId +=  (curRow + 1) + '_c_' +(newCol)
+         }
+        if (curRow == rows) {
+           self.newLine()
+           newCol =  1
+           newId +=  (curRow + 1) + '_c_'+(newCol)
+
+
+           return
+         }
         }
        }
+
+       if (eshiftKey) {
+        if (curCol <= cols && curCol > 0 ) {
+          newCol = curCol - 1
+          newId +=  (curRow ) + '_c_' +(newCol)
+        }
+        if (curCol == 0 && curRow>0) {
+          newCol = cols - 1
+          newId +=  (curRow -1 ) + '_c_' +(newCol)
+        }
+
+        if (curCol == 0 && curRow==0) {
+          //newCol = colls - 1
+          newId +=  (curRow  ) + '_c_' +(newCol)
+        }
+
+       }
+
 
 
           var newObalId =  'd'+newId.substring(1)
@@ -541,12 +974,30 @@ setTimeout(function(){
           changeClass(elObal,'dcell_edit','dcell')
           isPresun = true
           // alert(newId)
-          document.getElementById(newId).focus()
+
           if ( self.cols[newCol].isEdit && document.getElementById(newId).hasAttribute('readonly') ) {
           document.getElementById(newId).removeAttribute('readonly')
+          document.getElementById(newId).focus()
+          document.getElementById(newId).select()
+
+          // element.selectionEnd = element.selectionStart;
+
+
           // self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
           this.isWrite = true
+          } else {
+            document.getElementById(newId).selectionEnd = document.getElementById(newId).selectionStart;
+            document.getElementById(newId).focus()
           }
+
+
+
+
+          // alert(document.getElementById(newId))
+
+
+        break;
+
 
 
           // alert(document.getElementById(newId))

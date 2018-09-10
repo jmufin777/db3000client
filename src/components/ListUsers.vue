@@ -1,6 +1,5 @@
 <template>
 <div id="m005" style="overflow:scroll">
-
     <el-row  :gutter="0">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
@@ -33,7 +32,7 @@
     </el-col>
     </el-row>
 
-    <div style="height:100%;overflow:scroll" class="mt-2">
+    <div style="height:100%;overflow:scroll" class="mt-0">
     <el-row v-for="(element,i) in tableShow " :key="i" class="blue  pa-1 mx-0" style="margin-bottom:1px" :gutter="2"
     v-bind:class="{  JsemVidet: groupFind(element)
       , NejsemVidet:  !groupFind(element)
@@ -43,7 +42,6 @@
       <el-col :span=10  style="text-align:left">
         <!-- groupCount(element.idefix) -->
     <div class=" ma-2 " >
-
         <el-tooltip  placement="top" effect="light">
           <div slot="content">Popis: </div>
       <el-badge :value="groupCount(element.idefix)"  class="blue item my-0" style="background-color:white;width:95%;height:100%;border-radius:0px">

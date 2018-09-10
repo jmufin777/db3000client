@@ -128,25 +128,27 @@ html div {
 .center {
   text-align: center
 }
+
+
 .cell {
   text-align: right;
-
 }
 .cell_edit {
   text-align: left;
   font-style: italic;
-
 }
 
 .dcell {
 
   border: solid 1px;border-color:silver;
+   height: 22px;
 
 }
 .dcell_edit {
   text-align: left;
   font-style: italic;
   border: solid 1px;border-color:black;
+   height: 22px;
 
 }
 
@@ -155,6 +157,12 @@ html div {
   font-style: italic;
   border: solid 10px;border-color:black;
 
+}
+.seda {
+  background: #eee !important;
+}
+.bila{
+  background-color: white !important;
 }
 
 
