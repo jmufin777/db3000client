@@ -162,7 +162,7 @@ export default {
     }
   },
 
-  created () {
+created () {
 
 setTimeout(function(){
     document.getElementById("m201").style.height=Math.round(window.innerHeight - 110)  + "px"
@@ -232,10 +232,6 @@ setTimeout(function(){
           this.list.unshift(this.aInfo)
 
       })
-
-
-
-
 
 
 

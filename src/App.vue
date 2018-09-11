@@ -85,6 +85,7 @@ table {
 
 th {
   background-color: #f0f0f0;
+
 }
 td {
   background-color: white;
@@ -103,6 +104,7 @@ td, th {
 .mth {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
+  font-size:12px;
 }
 
 .mtd {
@@ -155,7 +157,7 @@ html div {
 .oznac {
   text-align: left;
   font-style: italic;
-  border: solid 10px;border-color:black;
+  border: solid 1px;border-color:black;
 
 }
 .seda {
@@ -163,6 +165,9 @@ html div {
 }
 .bila{
   background-color: white !important;
+}
+.bila2{
+  background-color: #E0F7FA !important;
 }
 
 

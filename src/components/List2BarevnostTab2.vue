@@ -48,13 +48,13 @@
 
 <el-row  >
 
-  <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth" >
-
-    <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-caret-top" size="mini"></i></button>
-    <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-caret-bottom" size="mini"></i></button>
-
-    {{col.title}}
-  </el-col>
+  <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth"
+  v-bind:class="{'green--text': lastSort[0]==col.id }"
+  >
+        {{col.title}}
+    <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
+    <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button>
+      </el-col>
  <el-col :span="1" class="mth">
    Akce
  </el-col>
@@ -66,8 +66,6 @@
   <el-row v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
       :id="'d202_r_'+irow"
-
-
   >
 
 
@@ -81,7 +79,7 @@
       <div :id="'d202_r_'+irow+'_c_'+icol"  class='dcell' >
 
         <input type="number" v-if="col.type =='number'"
-        class=" px-4 cell" :id="'c202_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c202_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
@@ -121,6 +119,30 @@
   </el-col>
   </el-row>
   </form>
+  <div>
+    <br><br>
+
+    <table>
+      <tr v-for="(i1, idx) in list" :key="i1.idx" v-if="idx==0">
+         <td v-for="(i1 ,idyz) in i1" :key="idyz">{{ idyz }}</td>
+      </tr>
+      <tr v-for="(i1, idx) in list" :key="idx">
+
+        <td v-for="(i2 ,idy) in i1" :key="idy">{{ i2 }} </td>
+      </tr>
+    </table>
+<br>
+<table>
+      <tr v-for="(ie1, iedx) in listEdits" :key="ie1.idx" v-if="iedx==0">
+         <td v-for="(ie1 ,iedyz) in ie1" :key="iedyz">{{ iedyz }}</td>
+      </tr>
+      <tr v-for="(ie1, iedx) in listEdits" :key="iedx">
+
+        <td v-for="(ie2 ,iedy) in ie1" :key="iedy">{{ ie2 }} </td>
+      </tr>
+    </table>
+
+  </div>
   </div>
   </div>
 
@@ -263,6 +285,7 @@ export default {
             //  document.getElementById(new_id).focus()
              // document.getElementById(new_id).click()
               document.getElementById(new_id).setAttribute('readonly',true)
+              removeClass(document.getElementById(new_id),"bila2")
               if (!document.getElementById(new_id).type== 'number' ) {
                 document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
               }
@@ -373,18 +396,20 @@ setTimeout(function(){
 
      await List2Barevnost.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
-       console.log("Poslal:" , Posli )
+
      })
      .catch((e) =>{
        alert('b'+ e)
 
      })
+     //return
       var neco = []
+
      try {
       this.list = (await   List2Barevnost.all()).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
-          this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
+           this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
         } else {
           this.list = _.sortBy(this.list,this.lastSort[0])
         }
@@ -456,8 +481,8 @@ setTimeout(function(){
      var x
       this.listNewLine = []
       for(x in this.list[0]) {
-          this.aInfo[x]=''
-          this.listNewLine[x]=''
+          this.aInfo[x]=null
+          this.listNewLine[x]=null
       }
           this.minId = this.minId -1
           this.listNewLine['id']= this.minId
@@ -474,8 +499,6 @@ setTimeout(function(){
               new_id ='c202_r_'+idx+'_c_'+1
               return
 
-
-
               //alert(new_id)
             }
           })
@@ -491,8 +514,16 @@ setTimeout(function(){
    },
    deleteLine(nRow) {
      const self = this
+    //  if (confirm('Vymazat zaznam? '+nRow + "  id:" +this.list[nRow].id )) {
+    //    this.listEdits.push([this.list[nRow],'delete'])
+    //    this.list.splice(nRow,1)
+    //  }
 
-     this.$confirm('Vymazat zaznam', '',{
+    //  return
+
+      var xId = this.list[nRow].id
+      var tmpI = -1000000
+     this.$confirm('Vymazat zaznam' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev, '',{
        distinguishCancelAndClose: true,
        confirmButtonText: 'Ano?',
        cancelButtonText: 'Ne'
@@ -501,8 +532,15 @@ setTimeout(function(){
        var eof = false
        var top = false
        var next = false
-     if (this.list[nRow].id>0){
-       if (nRow==this.list.length -1){
+       self.list.forEach((el,i)=>{
+         if (xId == el.id){
+           tmpI = i
+           return
+         }
+       })
+
+     if (self.list[tmpI].id>0){
+       if (tmpI==this.list.length -1){
          eof = true
          //alert('Sup na konec')
        }
@@ -514,15 +552,19 @@ setTimeout(function(){
          next = true
          //alert('Sup na konec')
        }
-       this.listEdits.push([this.list[nRow],'delete'])
+       //self.listEdits.push([this.list[nRow],'delete'])
 
      }
 
      var new_id=""
-
-     this.list.splice(nRow,1)
+      if (tmpI > -1000){
+        self.listEdits.push([self.list[tmpI],'delete'])
+        self.list.splice(tmpI,1)
+        //return
+       }
+     //self.list.splice(nRow,1)
      if (eof == true) {
-       new_id='c202_r_'+(this.list.length -1)+'_c_'+1
+       new_id='c202_r_'+(self.list.length -1)+'_c_'+1
      }
      if (top == true) {
        new_id='c202_r_'+(0)+'_c_'+1
@@ -534,14 +576,11 @@ setTimeout(function(){
 
         if (new_id > '')  {
 
-
             //alert(newObal + "/ " + new_id)
-
-
 
           setTimeout(function(){
             if (!document.getElementById(new_id)){
-                //alert(new_id + 'neco je sptane' + eof + "top " + top + "next "+next )
+                alert(new_id + 'neco je sptane' + eof + "top " + top + "next "+next )
                 new_id='c202_r_'+(self.list.length -1)+'_c_'+1
             }
               var newObal= document.getElementById('d'+new_id.substring(1))
@@ -550,6 +589,7 @@ setTimeout(function(){
             //  document.getElementById(new_id).focus()
              // document.getElementById(new_id).click()
               document.getElementById(new_id).setAttribute('readonly',true)
+              removeClass(document.getElementById(new_id),"bila2")
               if (!document.getElementById(new_id).type == 'number') {
                 document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
               }
@@ -710,6 +750,7 @@ setTimeout(function(){
           }
 
           //self.listEdits.push([self.list[curRow],'edit',prev])
+          //alert('tady')
           self.listEdits.push([oldRecord,'edit',prev])
           var eLen= self.listEdits.length-1
 
@@ -724,6 +765,7 @@ setTimeout(function(){
 
 
         el.setAttribute('readonly',true)
+        removeClass(el,"bila2")
         isReturn = false
 
       }
@@ -733,6 +775,7 @@ setTimeout(function(){
         self.isWrite = false
         el.setAttribute('readonly',true)
         changeClass(elObal,'dcell','dcell_edit')
+        removeClass(el,"bila2")
         el.value = this.list[curRow][this.cols[curCol].id]
 //        elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
         return true
@@ -764,6 +807,7 @@ setTimeout(function(){
        //el.className=el.className.replace(/cell/,'cell_edit')
       if ( el.hasAttribute('readonly') && isEdit ) {
           el.removeAttribute('readonly')
+          addClass(el,"bila2")
           el.select()
           self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
           // el.selectionEnd = el.selectionStart;
@@ -810,17 +854,20 @@ setTimeout(function(){
 
 
      el.onblur = ( function(){
-       el.setAttribute('readonly',true)
+       //el.setAttribute('readonly',true)
        //el.className=el.className.replace(/cell_edit/,'cell')
        elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
        el.style.color="black"
 
 
-       if (curRow < self.list.length && self.list[curRow][self.cols[curCol].id]!=el.value) {
+       if ( !el.hasAttribute('readonly') && curRow < self.list.length && self.list[curRow][self.cols[curCol].id]!=el.value) {
+          //alert('tady :' + el.hasAttribute('readonly'))
           self.listEdits.push([self.list[curRow],'edit'])
           self.list[curRow][self.cols[curCol].id]=el.value
 
        }
+       el.setAttribute('readonly',true)
+       removeClass(el,"bila2")
 
        //alert('aaa' + ekeyCode+ el.value)
 
@@ -861,7 +908,7 @@ setTimeout(function(){
           //    break;
           }
           newId= origId
-          self.aInfo.push(["videti jest? " +newObalId+" "+ isVisible(newObal)])
+          //self.aInfo.push(["videti jest? " +newObalId+" "+ isVisible(newObal)])
 
 
           /*
@@ -873,6 +920,7 @@ setTimeout(function(){
 
          }
           changeClass(newObal,'dcell','dcell_edit')
+
           changeClass(elObal,'dcell_edit','dcell')
           //document.getElementById(newId).focus()
           isPresun = true
@@ -887,6 +935,8 @@ setTimeout(function(){
           var newObal = document.getElementById(newObalId)
           changeClass(newObal,'dcell','dcell_edit')
           changeClass(elObal,'dcell_edit','dcell')
+          addClass(newObal,'elevation-20')
+          removeClass(elObal,'elevation-20')
 
           isPresun = true
           document.getElementById(newId).focus()
@@ -901,6 +951,9 @@ setTimeout(function(){
           var newObal = document.getElementById(newObalId)
           changeClass(newObal,'dcell','dcell_edit')
           changeClass(elObal,'dcell_edit','dcell')
+          addClass(newObal,'elevation-20')
+          removeClass(elObal,'elevation-20')
+
           isPresun = true
           // alert(newId)
           document.getElementById(newId).focus()
@@ -917,6 +970,8 @@ setTimeout(function(){
           var newObal = document.getElementById(newObalId)
           changeClass(newObal,'dcell','dcell_edit')
           changeClass(elObal,'dcell_edit','dcell')
+          addClass(newObal,'elevation-20')
+          removeClass(elObal,'elevation-20')
           isPresun = true
           // alert(newId)
           document.getElementById(newId).focus()
@@ -979,6 +1034,7 @@ setTimeout(function(){
           document.getElementById(newId).removeAttribute('readonly')
           document.getElementById(newId).focus()
           document.getElementById(newId).select()
+          addClass(document.getElementById(newId),"bila2")
 
           // element.selectionEnd = element.selectionStart;
 
