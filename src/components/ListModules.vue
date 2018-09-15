@@ -276,15 +276,15 @@ export default {
         ,'dev-doc'
         ,'dev-pp'
         ,'dev-pp-kalc'
-        ,'form-helper'
+
         ,'testy'
         ,'test-menu'
-        ,'list2-barevnost'
+        ,'list2-barevnost2'
         ,'list-users'
         ,'list-modules'
         ,'set-width'
         ,'set-material'
-        ,'form-fx'
+
         ,'old-1'
       ],
       menu_set_2: [
@@ -300,7 +300,6 @@ export default {
 
       ],
       menu_trash: [['Kos', 'delete_foreve', 'menu_switch', 'menu-admin', 'true','','','','','Item',[]],
-       ['----', 'delete_foreve', 'menu_switch', 'menu-admin', 'true','','','','','Item',[]],
        ['----', 'delete_foreve', 'menu_switch', 'menu-admin', 'true','','','','','Item',[]]]
 
     }

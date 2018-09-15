@@ -199,8 +199,6 @@ Moduly:
 </template>
 <style>
 
-
-
 </style>
 
 
@@ -221,12 +219,12 @@ import DevDoc from './dev/DevDoc'
 import DevDocUITab from './dev/DevDocUITab'
 import DevPP from './dev/DevPP'
 import DevPPKalc from './dev/DevPPKalc'
+import old1 from './dev/Old_1'
 import testPet from './dev/testPet'
 
 import TestMenu from './_Testy/TestMenu'
 
 import MenuNav from './MenuNav'
-
 import MenuSchema from './MenuSchema'
 import MenuAdminIndex from './MenuAdminIndex'
 
@@ -235,17 +233,20 @@ import ListUsers from './ListUsers'
 import ListModules from '@/components/ListModules.vue'
 import ListGroups from '@/components/ListGroups.vue'
 
-import List2Barevnost from './List2Barevnost'
-import List2BarevnostTab1 from './List2BarevnostTab1'
+
+import List2SkupinyStroju from './List2SkupinyStroju'
 import List2BarevnostTab2 from './List2BarevnostTab2'
-import List2BarevnostTab3 from './List2BarevnostTab3'
+
+import DBsystem from './DBsystem'
+
+
 import SetWidth from './SetWidth'
 import SetMaterial from './SetMaterial'
 
 import draggable from 'vuedraggable'
 import vuedraggableresizable from 'vue-draggable-resizable'
 
-import VueSpreadsheetLite from "@/components/List2BarevnostTab4";
+// import VueSpreadsheetLite from "@/components/List2BarevnostTab4";
 
 //Kontrola a sprava
 import DbStatus from  '@/components/globals//DbStatus'
@@ -255,15 +256,18 @@ import DbStatus from  '@/components/globals//DbStatus'
 // npm install --save vue-tables-2
 
 // Old
-import old1 from './Old_1'
+
 
 import {mapState} from 'vuex'
+
+
 
 export default {
 //  props: ['server'],
   components: {
 
     'db-status': DbStatus,
+    'db-system': DBsystem,
     'menu-nav': MenuNav,
 
     'menu-admin': MenuAdminIndex,
@@ -276,16 +280,15 @@ export default {
     'dev-pp-kalc': DevPPKalc,
     'test-pet': testPet,
 
-    'vsl': VueSpreadsheetLite,
+
 
     'form-helper': hw,
     'testy': testy,
     'test-menu': TestMenu,
-    'list2-barevnost': List2Barevnost,
-    'list2-barevnost1': List2BarevnostTab1,
+
+    'list2-skupinystroju': List2SkupinyStroju,
     'list2-barevnost2': List2BarevnostTab2,
-    'list2-barevnost3': List2BarevnostTab3,
-    'list2-barevnost4': VueSpreadsheetLite,
+
     'list-users': ListUsers,
     'list-modules': ListModules,
     'list-groups': ListGroups,
@@ -382,7 +385,7 @@ export default {
 
 
       select: 'Modul',
-      comp_list: ['form-helper', 'testy', 'test-menu', 'list2-barevnost', 'list-users', 'set-width', 'set-material', 'form-fx', 'old-1'],
+      comp_list: ['form-helper', 'testy', 'test-menu', 'list2-barevnost2', 'list-users', 'set-width', 'set-material', 'form-fx', 'old-1'],
       activeName: 'first', // tabs pro el
       isCollapse: true,
       myFlex: -1,
@@ -419,7 +422,7 @@ export default {
         // ['FX', 'accessible', 'menu_switch', 'form-fx', 'true']
       ],
       menu_set_2: [
-        ['Barevnost', 'format_color_fill', 'menu_switch', 'list2-barevnost', 'true','','','','','Item',[]],
+        ['Barevnost', 'format_color_fill', 'menu_switch', 'list2-barevnost2', 'true','','','','','Item',[]],
         ['Sirky', 'code', 'menu_switch', 'set-width', 'true','','','','','Item',[]],
         ['Materiály', 'texture', 'menu_switch', 'set-material', 'true','','','','','Item',[]],
         ['Stroje', 'texture', 'menu_switch', 'set-material', 'true','','','','','Item',[]]
@@ -569,7 +572,7 @@ export default {
       aEmpty2[10].push(['Potisknutelnost', 'texture', 'menu_switch', 'material-potisknutelnost', 'true','','','','','Item',[]])
       aEmpty2[10].push(['Rozmery', 'texture', 'menu_switch', 'material-rozmery', 'true','','','','','Item',[]])
       aEmpty2[10].push(['Typ', 'texture', 'menu_switch', 'material-typ', 'true','','','','','Item',[]])
-      aEmpty3 = ['Barevnosti', 'texture', 'menu_switch', 'stroje-barevnost', 'true','','','','','Item',[]]
+      aEmpty3 = ['Barevnosti', 'texture', 'menu_switch', 'stroje-barevnost2', 'true','','','','','Item',[]]
       aEmpty2[10].push(['Stroje', 'texture', '', '', 'true','','','','','Group',[]])
 
       aEmpty[10].push(aEmpty2)

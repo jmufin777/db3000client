@@ -1,9 +1,9 @@
 import Api from '@/services/Api'
 
 export default {
-  all () {
+  all (user,typ) {
     // console.log('jedou credentials: ', credentials)
-    return Api().get('list2_barevnost')
+    return Api().get('list2_barevnost',{params: {  user: user,id: typ }})
   },
   delete (user, id ) {
     return Api().delete('list2_barevnost', {params: {  user: user,id: id}} )

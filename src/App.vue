@@ -104,7 +104,7 @@ td, th {
 .mth {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
-  font-size:12px;
+  font-size:14px;
 }
 
 .mtd {
@@ -143,14 +143,14 @@ html div {
 .dcell {
 
   border: solid 1px;border-color:silver;
-   height: 22px;
+   /* height: 22px; */
 
 }
 .dcell_edit {
   text-align: left;
   font-style: italic;
   border: solid 1px;border-color:black;
-   height: 22px;
+   /* height: 22px; */
 
 }
 

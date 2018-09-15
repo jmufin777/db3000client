@@ -5,7 +5,7 @@ import Login from '@/components/Login'
 import Desktop from '@/components/Desktop'
 import Testy from '@/components/_Testy/testy'
 import TestMenu from '@/components/_Testy/TestMenu.vue'
-import List2Barevnost from '@/components/List2Barevnost'
+import List2Barevnost2 from '@/components/List2BarevnostTab2.vue'
 
 import DevDoc from '@/components/dev/DevDoc.vue'
 import DevPP from '@/components/dev/DevPP.vue'
@@ -13,7 +13,7 @@ import DevPPKalc from '@/components/dev/DevPPKalc.vue'
 
 
 import ListUsers from '@/components/ListUsers.vue'
-import Old1 from '@/components/Old_1.vue'
+import Old1 from '@/components/dev/Old_1.vue'
 
 import MenuSchema from '@/components/MenuSchema.vue'
 import ListModules from '@/components/ListModules.vue'
@@ -70,9 +70,9 @@ export default new Router({
       component: TestMenu
     },
     {
-      path: '/list2-barevnost',
-      name: 'list2-barevnost',
-      component: List2Barevnost
+      path: '/list2-barevnost2',
+      name: 'list2-barevnost2',
+      component: List2Barevnost2
     },
     {
       path: '/list-modules',

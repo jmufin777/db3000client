@@ -1,5 +1,5 @@
   <template>
-<el-row id="m201" style="overflow:scroll"  class="pa-2" >
+<el-row id="m9901" style="overflow:scroll"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -8,7 +8,7 @@
   </el-row>
   <el-row  :gutter="20">
   <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" id="search_201" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
+  <el-input prefix-icon="el-icon-search" id="search_9901" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -48,9 +48,9 @@
 
 </div>
 
-<div style="height:100%;overflow:scroll" class="mt-0" id="t201">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t9901">
 
-<el-row    style="backgroud: white">
+<el-row  >
   <el-col :span="2" class="mth">
    Akce
  </el-col>
@@ -74,13 +74,13 @@
  </el-col>
  </el-row>
 
-<div style="height:100%;overflow:scroll" class="mt-0" id="t202">
-  <form id="f201">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t9902">
+  <form id="f9901">
 
   <el-row v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
-      :id="'d202_r_'+irow"
-        style="backgroud: white"
+      :id="'d9902_r_'+irow"
+      style="backgroud: white"
   >
 
   <el-col :span="2" >
@@ -102,30 +102,44 @@
       :span="col.span"
       v-show="col.props.visible=='yes'"
       >
-      <div :id="'d202_r_'+irow+'_c_'+icol"  class='dcell' >
+
+      <div v-if="col.type=='textarea'" :id="'d9902_r_'+irow+'_c_'+icol"  class='dcell' >
+        <v-textarea
+        auto-grow
+         class=" px-0 cell " :id="'c9902_r_'+irow+'_c_'+icol"
+        :value="item[col.id]" style="width:100%;border:none;height:100%;text-align:left" readonly
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+        ></v-textarea>
+
+      </div>
+      <div v-else :id="'d9902_r_'+irow+'_c_'+icol"  class='dcell' >
 
         <input type="number" v-if="col.type =='number'"
-        class=" px-4 cell " :id="'c202_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c9902_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
 
         >
+
+
+
+
         <input type="text" v-else
-        class=" px-4 cell " :id="'c202_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c9902_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]"  style="width:100%;border:none;height:100%" readonly
 
         >
         <input type="date" v-if="col.type =='datetime-local' && false"
-        class="white px-4 cell seda" :id="'c202_r_'+irow+'_c_'+icol"
+        class="white px-4 cell seda" :id="'c9902_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
 
-        min="2007-06-01T08:30" max="2020-06-30T16:30"
+        min="2007-06-01T08:30" max="99020-06-30T16:30"
         >
         <select  v-if="col.type =='select'  && false "
-        class=" px-4 cell" :id="'c202_r_'+irow+'_c_'+icol"
+        class=" px-4 cell" :id="'c9902_r_'+irow+'_c_'+icol"
          style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
@@ -199,8 +213,8 @@
 
 <script>
 import {mapState} from 'vuex'
-import List2Barevnost from '@/services/List2BarevnostService'
-// import List2BarevnostVue from './List2Barevnost.vue';
+import DBsystem from '@/services/DBsystemService'
+
 import { setTimeout } from 'timers';
 
 function hasClass(element, cls) {
@@ -254,7 +268,7 @@ export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'barevnost2',
+      moduleName: 'db-system',
       saveNow: false,
 
       IsWaiting: false,
@@ -281,8 +295,12 @@ export default {
       minId: 0, //Pro vklad zaporna ID
   		cols: [
 				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:3, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 7, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:2, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "name", title: "Name", cssClasses: "mtd", span: 3, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "struct", title: "Struktura", cssClasses: "mtd", span: 5, isEdit: true, type: "textarea" ,props:{visible: 'yes'}},
+        { id: "index_name", title: "Index", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "reindex", title: "ReInd", cssClasses: "mtd", span: 2, isEdit: true, type: "number" ,props:{visible: 'yes'}},
+        { id: "initq", title: "Start", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],
@@ -297,14 +315,14 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await List2Barevnost.all(this.user,'nic')).data
+      this.list = (await DBsystem.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
         this.list =[{
           id: -1,
           kod: 100,
-          nazev:'Nova'
+          name:'Nova'
         }]
 
         this.newLine()
@@ -332,7 +350,7 @@ export default {
 //          this.list.unshift(this.aInfo)
 
     }
-        var new_id ='c202_r_'+0+'_c_'+1
+        var new_id ='c9902_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -361,16 +379,16 @@ export default {
     var self=this
 
 setTimeout(function(){
-    document.getElementById("m201").style.height=Math.round(window.innerHeight - 110)  + "px"
-    document.getElementById("t201").style.height=Math.round(window.innerHeight - 140)  + "px"
-    document.getElementById("t202").style.height=Math.round(window.innerHeight - 270)  + "px"
+    document.getElementById("m9901").style.height=Math.round(window.innerHeight - 110)  + "px"
+    document.getElementById("t9901").style.height=Math.round(window.innerHeight - 140)  + "px"
+    document.getElementById("t9902").style.height=Math.round(window.innerHeight - 270)  + "px"
 
-    document.getElementById("t202").addEventListener('keydown', (function(e) {
+    document.getElementById("t9902").addEventListener('keydown', (function(e) {
 
              self.obsluha(e, e.target)
       }))
 
-    document.getElementById("t202").addEventListener('click', (function(e) {
+    document.getElementById("t9902").addEventListener('click', (function(e) {
 
              self.obsluha(e, e.target)
       }))
@@ -378,9 +396,9 @@ setTimeout(function(){
   },100)
 
   window.addEventListener('resize', (function() {
-    document.getElementById("m201").style.height=Math.round(window.innerHeight - 110)  + "px"
-    document.getElementById("t201").style.height=Math.round(window.innerHeight - 140)  + "px"
-    document.getElementById("t202").style.height=Math.round(window.innerHeight - 270)  + "px"
+    document.getElementById("m9901").style.height=Math.round(window.innerHeight - 110)  + "px"
+    document.getElementById("t9901").style.height=Math.round(window.innerHeight - 140)  + "px"
+    document.getElementById("t9902").style.height=Math.round(window.innerHeight - 270)  + "px"
     // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
   })
 
@@ -398,12 +416,12 @@ setTimeout(function(){
 
   },
   destroyed () {
-    if (document.getElementById("t202")){
+    if (document.getElementById("t9902")){
         ///nejde
-      //document.getElementById("t202").removeEventListener(document.getElementById("t202"),'keydown')
+      //document.getElementById("t9902").removeEventListener(document.getElementById("t9902"),'keydown')
 
     }
-    // alert('destos'+document.getElementById("t202"))
+    // alert('destos'+document.getElementById("t9902"))
   },
   beforeUpdate () {
 
@@ -444,12 +462,12 @@ setTimeout(function(){
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev })
+        aTmp.push({id: el.id,kod: el.kod, name: el.name,struct: el.struct,index_name: el.index_name,reindex: el.reindex, initq: el.initq })
         Posli.push(aTmp)
        }
      })
 
-     await List2Barevnost.insert(this.user, {data: Posli, del: aDel })
+     await DBsystem.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -461,7 +479,7 @@ setTimeout(function(){
       var neco = []
 
      try {
-      this.list = (await   List2Barevnost.all(this.user,'nic')).data
+      this.list = (await   DBsystem.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -473,7 +491,7 @@ setTimeout(function(){
         this.list = _.sortBy(this.list,'id').reverse()
 
         ////
-        var new_id ='c202_r_'+0+'_c_'+1
+        var new_id ='c9902_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -538,7 +556,7 @@ setTimeout(function(){
      var x
       this.listNewLine = []
 
-      this.Max = (await List2Barevnost.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await DBsystem.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -563,7 +581,7 @@ setTimeout(function(){
           this.list.forEach((el,idx) => {
             if  (el.id == this.minId){
               //var new_id = 'c'
-              new_id ='c202_r_'+idx+'_c_'+1
+              new_id ='c9902_r_'+idx+'_c_'+1
               return
 
               //alert(new_id)
@@ -590,7 +608,7 @@ setTimeout(function(){
 
       var xId = this.list[nRow].id
       var tmpI = -1000000
-     this.$confirm('Vymazat zaznam' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev, '',{
+     this.$confirm('Vymazat zaznam' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].name, '',{
        distinguishCancelAndClose: true,
        confirmButtonText: 'Ano?',
        cancelButtonText: 'Ne'
@@ -631,14 +649,14 @@ setTimeout(function(){
        }
      //self.list.splice(nRow,1)
      if (eof == true) {
-       new_id='c202_r_'+(self.list.length -1)+'_c_'+1
+       new_id='c9902_r_'+(self.list.length -1)+'_c_'+1
      }
      if (top == true) {
-       new_id='c202_r_'+(0)+'_c_'+1
+       new_id='c9902_r_'+(0)+'_c_'+1
      }
 
     if (next == true) {
-       new_id='c202_r_'+(nRow)+'_c_'+1
+       new_id='c9902_r_'+(nRow)+'_c_'+1
      }
 
         if (new_id > '')  {
@@ -648,7 +666,7 @@ setTimeout(function(){
           setTimeout(function(){
             if (!document.getElementById(new_id)){
                 alert(new_id + 'neco je sptane' + eof + "top " + top + "next "+next )
-                new_id='c202_r_'+(self.list.length -1)+'_c_'+1
+                new_id='c9902_r_'+(self.list.length -1)+'_c_'+1
             }
               var newObal= document.getElementById('d'+new_id.substring(1))
 
@@ -795,8 +813,8 @@ setTimeout(function(){
 
    //self.aInfo.push([ekeyCode])
    //return
-    if (document.getElementById('search_201') && ekeyCode == 114 ){
-       document.getElementById('search_201').focus()
+    if (document.getElementById('search_9901') && ekeyCode == 114 ){
+       document.getElementById('search_9901').focus()
      }
     keyCodes = keyCodes.concat([13,27,9,-13])
     keyCodes = keyCodes.concat([40,37,38,39])  //Sipky
@@ -1178,7 +1196,7 @@ setTimeout(function(){
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev', 'kod','user_insert']
+    var seekStr=['id', 'name', 'kod','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }
@@ -1194,7 +1212,7 @@ setTimeout(function(){
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await List2Barevnost.all(this.user,nic)).data
+      this.list = (await DBsystem.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -1212,13 +1230,13 @@ setTimeout(function(){
        }
         console.log("FORM:", this.form)
       try {
-        await (List2Barevnost.insert(this.user, this.form))
+        await (DBsystem.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await List2Barevnost.all(this.user,'nic')
+      await DBsystem.all(this.user,'nic')
       .then(res => {
 
         //this.info= res
