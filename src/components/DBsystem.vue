@@ -62,8 +62,8 @@
   >
 
         {{col.title}}
-    <i v-if="col.sort && col.sort=='asc'"    @click="sortByKey(col.id,'desc')" class="el-icon-upload2"   ></i>
-    <i v-if="!col.sort || col.sort=='desc'"  @click="sortByKey(col.id,'asc')" class="el-icon-download"  ></i>
+    <i v-if="col.sort && col.sort=='asc'"    @click="sortByKey(col.id,'desc')" class="el-icon-sort-down"   ></i>
+    <i v-if="!col.sort || col.sort=='desc'"  @click="sortByKey(col.id,'asc')" class="el-icon-sort-up"  ></i>
 
     <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
     <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
@@ -85,45 +85,54 @@
 
   <el-col :span="2" >
     <div class='dcell'  style="width::100% ; background:white"
+
     v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
 
-         <v-icon @click="deleteLine(irow)" >fa-edit</v-icon></button>
+         <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
 
-    </div>
+   </div>
   </el-col>
 
-  <el-col :span="22"
-
-
-  >
+  <el-col :span="22"  >
     	<el-col v-for="(col,icol) in cols"
 			:key="col.id"
       :span="col.span"
       v-show="col.props.visible=='yes'"
       >
-
-      <div v-if="col.type=='textarea'" :id="'d9902_r_'+irow+'_c_'+icol"  class='dcell' >
+      <div v-if="col.type=='textarea'" :id="'d9902_r_'+irow+'_c_'+icol"  class='dcell pa-0 ma-0' >
         <v-textarea
-        auto-grow
-         class=" px-0 cell " :id="'c9902_r_'+irow+'_c_'+icol"
+         auto-grow
+         outline
+         row-height="1"
+         class=" pa-0 ma-0 cell "
+         :id="'c9902_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%;text-align:left" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         ></v-textarea>
-
       </div>
+
+      <div v-else-if="col.type=='textareaArray'" :id="'xxd9902_r_'+irow+'_c_'+icol"  class='dcell pa-0 ma-0' >
+        <table v-if="Array.isArray(item[col.id])">
+          <tr v-for="(sub1,i1) in item[col.id]" :key="i1">
+            <td>
+         Table     {{ item[col.id][i1] }}
+              </td>
+          </tr>
+        </table>
+      </div>
+
+
+
       <div v-else :id="'d9902_r_'+irow+'_c_'+icol"  class='dcell' >
 
         <input type="number" v-if="col.type =='number'"
-        class=" px-4 cell " :id="'c9902_r_'+irow+'_c_'+icol"
+        class=" px-0 cell " :id="'c9902_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
 
         >
-
-
-
 
         <input type="text" v-else
         class=" px-4 cell " :id="'c9902_r_'+irow+'_c_'+icol"
@@ -138,15 +147,7 @@
 
         min="2007-06-01T08:30" max="99020-06-30T16:30"
         >
-        <select  v-if="col.type =='select'  && false "
-        class=" px-4 cell" :id="'c9902_r_'+irow+'_c_'+icol"
-         style="width:100%;border:none;height:100%" readonly
-        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
-        >
-        <option :value="item[col.id]" selected >{{ item[col.id] }}</option>
-        <option :value="2" >2</option>
-        </select>
       </div>
 
     	</el-col>
@@ -161,28 +162,13 @@
   </el-row>
   </form>
 
+  <db-system-edit v-if="IsDialog == true ">
+    <div slot="a1" class="ma-2 pa-2">DB System {{ Info }} </div>
+
+  </db-system-edit>
+
   <div>
     <br><br>
-
-    <!-- <table>
-      <tr v-for="(i1, idx) in list" :key="i1.idx" v-if="idx==0">
-         <td v-for="(i1 ,idyz) in i1" :key="idyz">{{ idyz }}</td>
-      </tr>
-      <tr v-for="(i1, idx) in list" :key="idx">
-
-        <td v-for="(i2 ,idy) in i1" :key="idy">{{ i2 }} </td>
-      </tr>
-    </table>
-<br>
-<table>
-      <tr v-for="(ie1, iedx) in listEdits" :key="ie1.idx" v-if="iedx==0">
-         <td v-for="(ie1 ,iedyz) in ie1" :key="iedyz">{{ iedyz }}</td>
-      </tr>
-      <tr v-for="(ie1, iedx) in listEdits" :key="iedx">
-
-        <td v-for="(ie2 ,iedy) in ie1" :key="iedy">{{ ie2 }} </td>
-      </tr>
-    </table> -->
 
   </div>
   </div>
@@ -190,7 +176,8 @@
 
   <hr>
 <div>
-  <win-dow :title="'events'" :id="`events`"
+
+  <!-- <win-dow :title="'events'" :id="`events`"
     :x="200"
     :w="700"
     :y="100"
@@ -201,7 +188,7 @@
     >
   i: {{ info }}
   ai: {{ aInfo}}
-  </win-dow>
+  </win-dow> -->
   <hr>
 
 </div>
@@ -214,8 +201,11 @@
 <script>
 import {mapState} from 'vuex'
 import DBsystem from '@/services/DBsystemService'
+import DBsystemEdit from './DBsystemEdit'
+import { eventBus } from '@/main.js'
+import { setTimeout, clearInterval } from 'timers'
 
-import { setTimeout } from 'timers';
+
 
 function hasClass(element, cls) {
     return element.className.split(' ').indexOf(cls) > -1
@@ -265,14 +255,20 @@ function isVisible(el) {
 }
 
 export default {
+
+  components: {
+    'db-system-edit': DBsystemEdit
+  },
   props: ['visible'],
   data () {
     return {
       moduleName: 'db-system',
       saveNow: false,
+      IsDialog: true,
 
       IsWaiting: false,
       info:'',
+      Info: '',
 
       isWrite: false,
       infoStatus: {
@@ -294,13 +290,13 @@ export default {
       currentRow: null,
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:2, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "name", title: "Name", cssClasses: "mtd", span: 3, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "struct", title: "Struktura", cssClasses: "mtd", span: 5, isEdit: true, type: "textarea" ,props:{visible: 'yes'}},
-        { id: "index_name", title: "Index", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "reindex", title: "ReInd", cssClasses: "mtd", span: 2, isEdit: true, type: "number" ,props:{visible: 'yes'}},
-        { id: "initq", title: "Start", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 2, isEdit: false, type: "text"  ,props:{visible: 'yes', form: 'no'}},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:2, isEdit: true, type: "number",props:{visible: 'yes', form: 'yes',span: 10,spanTitle: 2, newRow: 1,focus:1}},
+        { id: "name", title: "Name", cssClasses: "mtd", span: 3, isEdit: true, type: "text" ,props:{visible: 'yes', form: 'yes',span: 10,spanTitle: 2, newRow: 0,focus:0}},
+        { id: "struct", title: "Struktura", cssClasses: "mtd", span: 5, isEdit: true, type: "textarea" ,props:{visible: 'yes', form: 'yes' ,span: 20,spanTitle: 2, newRow: 1,focus:0}},
+        { id: "index_name", title: "Index", cssClasses: "mtd", span: 5, isEdit: true, type: "textareaArray" ,props:{visible: 'yes', form: 'yes',span: 20,spanTitle: 2, newRow: 1,focus:0}},
+        { id: "reindex", title: "ReInd", cssClasses: "mtd", span: 2, isEdit: true, type: "number" ,props:{visible: 'yes', form: 'yes' ,span: 20,spanTitle: 2, newRow: 1,focus:0}},
+        { id: "initq", title: "Start", cssClasses: "mtd", span: 4, isEdit: true, type: "textareaArray" ,props:{visible: 'no', form: 'no',span: 20,spanTitle: 2, newRow: 1,focus:0}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],
@@ -340,6 +336,7 @@ export default {
       this.IsWaiting = false
 
       //this.aInfo.push=this.list[0]
+      /*
       var x
 
       for(x in this.list[0]) {
@@ -348,8 +345,10 @@ export default {
       }
           this.aInfo['id']=-1
 //          this.list.unshift(this.aInfo)
+     */
 
     }
+
         var new_id ='c9902_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
@@ -439,7 +438,7 @@ setTimeout(function(){
 
   methods: {
    async saveLines(id){
-     this.aInfo=[]
+     //this.aInfo=[]
      var Posli=Array()
      var  aTmp= {}
      var aDel= []
@@ -560,7 +559,7 @@ setTimeout(function(){
 
 
       for(x in this.list[0]) {
-          this.aInfo[x]=null
+        //  this.aInfo[x]=null
           this.listNewLine[x]=null
       }
           this.minId = this.minId -1
@@ -595,6 +594,21 @@ setTimeout(function(){
          },100)
 
 
+
+   },
+   editLine(nRow) {
+     const self = this
+     self.IsDialog = true
+     self.Info = nRow
+     eventBus.$emit('dlg9901', {
+           'IsDialog': self.IsDialog,
+           'cols': self.cols,
+           'record': self.list[nRow],
+           'nRow': nRow
+
+
+
+      })
 
    },
    deleteLine(nRow) {
@@ -740,8 +754,8 @@ setTimeout(function(){
            if (el.id == id){
              this.list[k] = this.listEdits[eDelka][0]
              this.listEdits.splice(eDelka,1)
-             this.aInfo.push(el.id)
-             this.aInfo.push(this.list[k])
+             //this.aInfo.push(el.id)
+             //this.aInfo.push(this.list[k])
              return
            }
 
@@ -845,8 +859,8 @@ setTimeout(function(){
           //self.listEdits[eLen][self.cols[curCol].id] = prev
 
           self.list[curRow][self.cols[curCol].id]=el.value
-          self.aInfo.push(self.listEdits)
-          self.aInfo.push(oldRecord)
+          //self.aInfo.push(self.listEdits)
+          //self.aInfo.push(oldRecord)
 
 
        }
@@ -897,7 +911,7 @@ setTimeout(function(){
           el.removeAttribute('readonly')
           addClass(el,"bila2")
           el.select()
-          self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+          ///self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
           // el.selectionEnd = el.selectionStart;
           self.isWrite = true
       }
@@ -1222,8 +1236,8 @@ setTimeout(function(){
       }
       },
     async appendRow(index,rows) {
-       alert(index)
-       this.aInfo=rows[index]
+       alert('Append Rows Smazat? ',index)
+       //this.aInfo=rows[index]
        console.log(rows[0])
        for (var x in rows[0]){
          this.form[x] = rows[0][x]
@@ -1242,13 +1256,15 @@ setTimeout(function(){
         //this.info= res
         this.list = res.data
 
-
+        /*
           var x
           for(x in this.list[0]) {
               this.aInfo[x]=''
           }
           this.aInfo['id']=-1
+
           this.list.unshift(this.aInfo)
+           */
 
       })
 

@@ -141,7 +141,6 @@ html div {
 }
 
 .dcell {
-
   border: solid 1px;border-color:silver;
    /* height: 22px; */
 

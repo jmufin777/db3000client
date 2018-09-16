@@ -9,11 +9,13 @@
   id="dialog004"
 
   >
+<!-- <el-row> <el-col :span="24"> -->
 
   <span slot="title" size="mini" class="blue" style="height:14px">
     <div v-if="form.idefix>0 "size="mini" class="blue--text">{{form.login }}  {{form.idefix}}  zmena {{info}} </div>
-    <div v-if="form.idefix==-1 "size="mini" class="blue--text">Novy uzivatel {{info}}</div>
+    <div v-if="form.idefix==-1 "size="mini" class="blue--text">Novy uzivatel</div>
   </span>
+  <!-- </el-col></el-row> -->
 
 <el-form   ref="form" :model="form" label-width="70px" :label-position="labelPosition" :rules="rules2" class="demo-ruleForm is-success">
 
@@ -140,10 +142,10 @@ export default {
   data()  {
     var Heslo = (rule, value, callback) => {
         if (!value.match(/.{5}/)  && this.form.idefix == -1 ) {
-          callback(new Error('1Heslo povinne'))
+          callback(new Error('1. Heslo povinne'))
           this.$nextTick(() => this.$refs.heslo.focus())
         } else if (!value.match(/.{5}/) && this.value > ' ' && this.heslo2 > ' ') {
-            this.$nextTick(() => this.$refs.heslo.focus())
+            // this.$nextTick(() => this.$refs.heslo.focus())
             callback(new Error('2Kravina'))
         } else if (this.form.idefix > -1 && this.form.heslo<' ' && this.form.heslo2 < ' '){
             callback()
@@ -157,10 +159,10 @@ export default {
 
         if (value < ' ' && this.form.heslo>' ') {
           callback(new Error(' Kontrolni heslo chybi'))
-          this.$nextTick(() => this.$refs.heslo2.focus())
+          // this.$nextTick(() => this.$refs.heslo2.focus())
         } else if (value !== this.form.heslo) {
           callback(new Error(' Hesla se neshoduji'  ))
-          this.$nextTick(() => this.$refs.heslo.focus())
+          // this.$nextTick(() => this.$refs.heslo.focus())
         } else if (this.form.heslo>' ' && !this.form.heslo.match(/.{5}/) ) {
             callback(new Error(' Heslo je kratke'  ))
 
