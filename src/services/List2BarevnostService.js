@@ -2,7 +2,7 @@ import Api from '@/services/Api'
 
 export default {
   all (user,typ) {
-    // console.log('jedou credentials: ', credentials)
+    //console.log('jedou credentials: ')
     return Api().get('list2_barevnost',{params: {  user: user,id: typ }})
   },
   delete (user, id ) {

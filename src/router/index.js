@@ -6,6 +6,8 @@ import Desktop from '@/components/Desktop'
 import Testy from '@/components/_Testy/testy'
 import TestMenu from '@/components/_Testy/TestMenu.vue'
 import List2Barevnost2 from '@/components/List2BarevnostTab2.vue'
+import List2StrojSkup from '@/components/List2StrojSkup.vue'
+import List2Potisknutelnost from '@/components/List2Potisknutelnost.vue'
 
 import DevDoc from '@/components/dev/DevDoc.vue'
 import DevPP from '@/components/dev/DevPP.vue'
@@ -73,6 +75,16 @@ export default new Router({
       path: '/list2-barevnost2',
       name: 'list2-barevnost2',
       component: List2Barevnost2
+    },
+    {
+      path: '/list2-strojskup',
+      name: 'list2-strojskup',
+      component: List2StrojSkup
+    },
+    {
+      path: '/list2-potisknutelnost',
+      name: 'list2-potisknutelnost',
+      component: List2Potisknutelnost
     },
     {
       path: '/list-modules',

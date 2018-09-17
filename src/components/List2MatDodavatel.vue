@@ -1,5 +1,5 @@
   <template>
-<el-row id="m211" style="overflow:scroll"  class="pa-2" >
+<el-row id="m351" style="overflow:scroll"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -8,13 +8,13 @@
   </el-row>
   <el-row  :gutter="20">
   <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" id="search_211" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
+  <el-input prefix-icon="el-icon-search" id="search_351" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
     <el-badge :value="list.length">
     <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
-        @click="newLine()"
+        @click="newLine(-1)"
     ></el-button>
     </el-badge>
   </el-col>
@@ -48,10 +48,15 @@
 
 </div>
 
-<div style="height:100%;overflow:scroll" class="mt-0" id="t211">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t351">
 
-<el-row  >
+<el-row    style="backgroud: white">
+  <el-col :span="2" class="mth">
+   Akce
+ </el-col>
 
+
+ <el-col :span="22">
   <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth"
   v-bind:class="{'green--text': lastSort[0]==col.id }"
   v-show="col.props.visible=='yes'"
@@ -64,21 +69,36 @@
     <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
     <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
       </el-col>
- <el-col :span="1" class="mth">
-   Akce
+ <el-col :span="2" class="mth">
+   X
+ </el-col>
  </el-col>
  </el-row>
 
-<div style="height:100%;overflow:scroll" class="mt-0" id="t212">
-  <form id="f211">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t352">
+  <form id="f351">
 
   <el-row v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
-      :id="'d212_r_'+irow"
+      :id="'d352_r_'+irow"
+        style="backgroud: white"
   >
 
 
-  <el-col :span="24"
+  <el-col :span="2" >
+
+
+    <div class='dcell'  style="width::100% ; background:white"
+    v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+    >
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
+
+   </div>
+  </el-col>
+
+
+  <el-col :span="22"
 
 
   >
@@ -87,30 +107,31 @@
       :span="col.span"
       v-show="col.props.visible=='yes'"
       >
-      <div :id="'d212_r_'+irow+'_c_'+icol"  class='dcell' >
+      <div :id="'d352_r_'+irow+'_c_'+icol"  class='dcell' >
 
         <input type="number" v-if="col.type =='number'"
-        class=" px-4 cell " :id="'c212_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c352_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
 
         >
         <input type="text" v-else
-        class=" px-4 cell " :id="'c212_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c352_r_'+irow+'_c_'+icol"
+
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-        :value="item[col.id]"  style="width:100%;border:none;height:100%" readonly
+       :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
 
         >
         <input type="date" v-if="col.type =='datetime-local' && false"
-        class="white px-4 cell seda" :id="'c212_r_'+irow+'_c_'+icol"
+        class="white px-4 cell seda" :id="'c352_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
 
-        min="2007-06-01T08:30" max="2120-06-30T16:30"
+        min="2007-06-01T08:30" max="3520-06-30T16:30"
         >
         <select  v-if="col.type =='select'  && false "
-        class=" px-4 cell" :id="'c212_r_'+irow+'_c_'+icol"
+        class=" px-4 cell" :id="'c352_r_'+irow+'_c_'+icol"
          style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
@@ -121,7 +142,7 @@
       </div>
 
     	</el-col>
-     <el-col :span="1" >
+     <el-col :span="2" >
       <div class='dcell'  style="width::100% ; background:white"
       v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
       >
@@ -159,8 +180,8 @@
   </div>
   </div>
 
-  <hr>
-<div>
+  <!-- <hr> -->
+<!-- <div>
   <win-dow :title="'events'" :id="`events`"
     :x="200"
     :w="700"
@@ -173,7 +194,7 @@
   i: {{ info }}
   ai: {{ aInfo}}
   </win-dow>
-  <hr>
+  <hr> -->
 
 </div>
 
@@ -183,10 +204,13 @@
 </template>
 
 <script>
+
 import {mapState} from 'vuex'
-import List2Barevnost from '@/services/List2BarevnostService'
-// import List2BarevnostVue from './List2Barevnost.vue';
-import { setTimeout } from 'timers';
+import { eventBus } from '@/main.js'
+import { setTimeout, clearInterval } from 'timers'
+import List2MatDodavatel from '@/services/List2MatDodavatelService'
+// import List2StrojSkupVue from './List2StrojSkup.vue';
+
 
 function hasClass(element, cls) {
     return element.className.split(' ').indexOf(cls) > -1
@@ -239,8 +263,10 @@ export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'barevnost2',
+      moduleName: 'MatDodavatel',
       saveNow: false,
+
+      IsDialog: true,
 
       IsWaiting: false,
       info:'',
@@ -265,8 +291,8 @@ export default {
       currentRow: null,
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:3, isEdit: true, type: "number",props:{visible: 'yes'}},
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 7, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
@@ -274,7 +300,7 @@ export default {
       list: [],
       listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
       listEdits: [],   //Prehled zmen s prinakem edit, delete
-      lastSort: ['id','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      lastSort: ['kod','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
     }
   },
   async mounted () {
@@ -282,7 +308,7 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await List2Barevnost.all(this.user,'nic')).data
+      this.list = (await List2MatDodavatel.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
@@ -292,7 +318,7 @@ export default {
           nazev:'Nova'
         }]
 
-        this.newLine()
+        this.newLine(-1)
         this.IsWaiting = false
         return
 
@@ -317,7 +343,7 @@ export default {
 //          this.list.unshift(this.aInfo)
 
     }
-        var new_id ='c212_r_'+0+'_c_'+1
+        var new_id ='c352_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -336,7 +362,7 @@ export default {
               changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
 
-         },200)
+         },50)
 
 
 
@@ -346,16 +372,16 @@ export default {
     var self=this
 
 setTimeout(function(){
-    document.getElementById("m211").style.height=Math.round(window.innerHeight - 110)  + "px"
-    document.getElementById("t211").style.height=Math.round(window.innerHeight - 140)  + "px"
-    document.getElementById("t212").style.height=Math.round(window.innerHeight - 270)  + "px"
+    document.getElementById("m351").style.height=Math.round(window.innerHeight - 110)  + "px"
+    document.getElementById("t351").style.height=Math.round(window.innerHeight - 140)  + "px"
+    document.getElementById("t352").style.height=Math.round(window.innerHeight - 270)  + "px"
 
-    document.getElementById("t212").addEventListener('keydown', (function(e) {
+    document.getElementById("t352").addEventListener('keydown', (function(e) {
 
              self.obsluha(e, e.target)
       }))
 
-    document.getElementById("t212").addEventListener('click', (function(e) {
+    document.getElementById("t352").addEventListener('click', (function(e) {
 
              self.obsluha(e, e.target)
       }))
@@ -363,9 +389,9 @@ setTimeout(function(){
   },100)
 
   window.addEventListener('resize', (function() {
-    document.getElementById("m211").style.height=Math.round(window.innerHeight - 110)  + "px"
-    document.getElementById("t211").style.height=Math.round(window.innerHeight - 140)  + "px"
-    document.getElementById("t212").style.height=Math.round(window.innerHeight - 270)  + "px"
+    document.getElementById("m351").style.height=Math.round(window.innerHeight - 110)  + "px"
+    document.getElementById("t351").style.height=Math.round(window.innerHeight - 140)  + "px"
+    document.getElementById("t352").style.height=Math.round(window.innerHeight - 270)  + "px"
     // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
   })
 
@@ -383,12 +409,12 @@ setTimeout(function(){
 
   },
   destroyed () {
-    if (document.getElementById("t212")){
+    if (document.getElementById("t352")){
         ///nejde
-      //document.getElementById("t212").removeEventListener(document.getElementById("t212"),'keydown')
+      //document.getElementById("t352").removeEventListener(document.getElementById("t352"),'keydown')
 
     }
-    // alert('destos'+document.getElementById("t212"))
+    // alert('destos'+document.getElementById("t352"))
   },
   beforeUpdate () {
 
@@ -405,6 +431,40 @@ setTimeout(function(){
   },
 
   methods: {
+
+
+editLine(nRow) {
+     const self = this
+     self.IsDialog = true
+     self.Info = nRow
+     eventBus.$emit('dlg9901', {
+           'IsDialog': self.IsDialog,
+           'cols': self.cols,
+           'record': self.list[nRow],
+           'nRow': nRow
+
+
+
+      })
+
+   },
+
+copyLine(nRow) {
+
+     const self = this
+     self.IsDialog = true
+     self.Info = nRow
+
+     self.newLine(nRow)
+
+
+
+
+
+
+   },
+
+
    async saveLines(id){
      this.aInfo=[]
      var Posli=Array()
@@ -434,7 +494,7 @@ setTimeout(function(){
        }
      })
 
-     await List2Barevnost.insert(this.user, {data: Posli, del: aDel })
+     await List2MatDodavatel.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -446,7 +506,7 @@ setTimeout(function(){
       var neco = []
 
      try {
-      this.list = (await   List2Barevnost.all(this.user,'nic')).data
+      this.list = (await   List2MatDodavatel.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -458,7 +518,7 @@ setTimeout(function(){
         this.list = _.sortBy(this.list,'id').reverse()
 
         ////
-        var new_id ='c212_r_'+0+'_c_'+1
+        var new_id ='c352_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -472,7 +532,7 @@ setTimeout(function(){
             //setTimeout(function(){
               changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
-         },200)
+         },50)
 
         /////
 
@@ -519,22 +579,31 @@ setTimeout(function(){
 
    },
 
-   async newLine ()  {
+   async newLine (nRow)  {
      var x
       this.listNewLine = []
 
-      this.Max = (await List2Barevnost.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await List2MatDodavatel.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
           this.aInfo[x]=null
           this.listNewLine[x]=null
+          if (nRow >0)    {
+               this.listNewLine[x]= this.list[nRow][x]
+          }
       }
+
           this.minId = this.minId -1
           this.listNewLine['id']= this.minId
 
-          this.listNewLine['kod'] = this.Max + Math.abs(this.minId)
+          if (nRow >0)    {
+            this.listNewLine['kod'] = this.list[nRow]['kod']
+          } else {
+            this.listNewLine['kod'] = this.Max + Math.abs(this.minId)
+          }
           this.list.push(this.listNewLine)
+
         //  this.aInfo.push(this.Max)
           /*
           if (this.lastSort[1]=="asc") {
@@ -548,7 +617,7 @@ setTimeout(function(){
           this.list.forEach((el,idx) => {
             if  (el.id == this.minId){
               //var new_id = 'c'
-              new_id ='c212_r_'+idx+'_c_'+1
+              new_id ='c352_r_'+idx+'_c_'+1
               return
 
               //alert(new_id)
@@ -616,14 +685,14 @@ setTimeout(function(){
        }
      //self.list.splice(nRow,1)
      if (eof == true) {
-       new_id='c212_r_'+(self.list.length -1)+'_c_'+1
+       new_id='c352_r_'+(self.list.length -1)+'_c_'+1
      }
      if (top == true) {
-       new_id='c212_r_'+(0)+'_c_'+1
+       new_id='c352_r_'+(0)+'_c_'+1
      }
 
     if (next == true) {
-       new_id='c212_r_'+(nRow)+'_c_'+1
+       new_id='c352_r_'+(nRow)+'_c_'+1
      }
 
         if (new_id > '')  {
@@ -633,7 +702,7 @@ setTimeout(function(){
           setTimeout(function(){
             if (!document.getElementById(new_id)){
                 alert(new_id + 'neco je sptane' + eof + "top " + top + "next "+next )
-                new_id='c212_r_'+(self.list.length -1)+'_c_'+1
+                new_id='c352_r_'+(self.list.length -1)+'_c_'+1
             }
               var newObal= document.getElementById('d'+new_id.substring(1))
 
@@ -670,7 +739,7 @@ setTimeout(function(){
        //       document.getElementById(new_id).select()
        */
 
-          },200)
+          },100)
          }
 
 
@@ -780,8 +849,8 @@ setTimeout(function(){
 
    //self.aInfo.push([ekeyCode])
    //return
-    if (document.getElementById('search_211') && ekeyCode == 114 ){
-       document.getElementById('search_211').focus()
+    if (document.getElementById('search_351') && ekeyCode == 114 ){
+       document.getElementById('search_351').focus()
      }
     keyCodes = keyCodes.concat([13,27,9,-13])
     keyCodes = keyCodes.concat([40,37,38,39])  //Sipky
@@ -1179,7 +1248,7 @@ setTimeout(function(){
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await List2Barevnost.all(this.user,nic)).data
+      this.list = (await List2MatDodavatel.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -1197,13 +1266,13 @@ setTimeout(function(){
        }
         console.log("FORM:", this.form)
       try {
-        await (List2Barevnost.insert(this.user, this.form))
+        await (List2MatDodavatel.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await List2Barevnost.all(this.user,'nic')
+      await List2MatDodavatel.all(this.user,'nic')
       .then(res => {
 
         //this.info= res

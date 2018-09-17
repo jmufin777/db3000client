@@ -30,14 +30,13 @@
 
      <db-status></db-status>
 
-     <el-checkbox label="Demo2" v-if="level==3" v-model="demo2" border size="mini" ></el-checkbox>
+     <!-- <el-checkbox label="Demo2" v-if="level==3" v-model="demo2" border size="mini" ></el-checkbox> -->
      <el-checkbox label="MenuAdmin" v-if="level==3"  v-model="demo" border size="mini" ></el-checkbox>
 
     <v-spacer></v-spacer>
    <el-radio-group v-model="radio2" size="mini">
-    <el-radio-button :label="1">Okna</el-radio-button>
+    <!-- <el-radio-button :label="1">Okna</el-radio-button> -->
     <el-radio-button :label="10">Karty</el-radio-button>
-
     <el-radio-button :label="20">Plocha</el-radio-button>
   </el-radio-group>
   <el-input-number size="mini" :max="24" :min="-1" v-model="myFlex"></el-input-number>
@@ -71,15 +70,13 @@
 </el-dropdown>
 
   <!-- <v-btn @click="closeTest">CloseAll</v-btn> -->
-
 <v-spacer></v-spacer>
 
-
-<router-link :to="{name: 'desktop', params: { ktery: 'old-1' } }" >old_1</router-link>
+<!-- <router-link :to="{name: 'desktop', params: { ktery: 'old-1' } }" >old_1</router-link>
 Test2:
 <router-link :to="{name: 'desktop', params: {ktery: 'menu-schema'}}">MenuSchema</router-link>
 Moduly:
-<router-link :to="{name: 'desktop', params: {ktery: 'list-modules'}}">Moduly</router-link>
+<router-link :to="{name: 'desktop', params: {ktery: 'list-modules'}}">Moduly</router-link> -->
 <v-spacer></v-spacer>
       <v-btn
         v-if="$store.state.isUserLoggedIn"
@@ -148,22 +145,22 @@ Moduly:
   <el-row v-if=" radio2==10" :gutter=0 >
     <draggable v-model="compa"  :options="{group:{ name:'app_move' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
       <el-col v-for="(comp_app, iapp) in compa" :key="iapp" :span="myFlex || 24/ compa.length">
-       <el-card shadow="hover">
-      <el-tooltip  placement="bottom" effect="light" >
-      <div slot="content">Vytvori nezavislou kopii v samostatne okne</div>
-      <el-button   v-if="radio3>'' && radio2==10" type="error" icon="el-icon-upload2"  size="mini" class="elevation-20"
-      @click="moveModuleToWin(comp_app[0].modul,1)"
-      ></el-button>
-      </el-tooltip>
-      <el-tooltip  placement="bottom" effect="light">
-      <div slot="content">Ukonci praci s touto obrazovkou</div>
-     <el-button v-if="radio3>'' && radio2==10 " type="error" icon="el-icon-close"  size="mini" class="elevation-20"
-      @click="closeModule(comp_app[0].modul)" >
-  </el-button>
-   </el-tooltip>
-    <keep-alive>
-       <component v-bind:is="comp_app[0].modul" ></component>
-    </keep-alive>
+    <el-card shadow="hover">
+        <el-tooltip  placement="bottom" effect="light" >
+        <div slot="content">Vytvori nezavislou kopii v samostatne okne</div>
+        <el-button   v-if="radio3>'' && radio2==10" type="error" icon="el-icon-upload2"  size="mini" class="elevation-20"
+        @click="moveModuleToWin(comp_app[0].modul,1)"
+        ></el-button>
+        </el-tooltip>
+        <el-tooltip  placement="bottom" effect="light">
+        <div slot="content">Ukonci praci s touto obrazovkou</div>
+      <el-button v-if=" radio2==10 " type="error" icon="el-icon-close"  size="mini" class="elevation-20"
+        @click="closeModule(comp_app[0].modul)" >
+    </el-button>
+    </el-tooltip>
+      <keep-alive>
+        <component v-bind:is="comp_app[0].modul" ></component>
+      </keep-alive>
   </el-card>
   </el-col>
   </draggable>
@@ -229,13 +226,15 @@ import MenuSchema from './MenuSchema'
 import MenuAdminIndex from './MenuAdminIndex'
 
 
+
 import ListUsers from './ListUsers'
 import ListModules from '@/components/ListModules.vue'
 import ListGroups from '@/components/ListGroups.vue'
 
-
-import List2SkupinyStroju from './List2SkupinyStroju'
+import List2Index from './List2Index'
+import List2StrojSkup from './List2StrojSkup'
 import List2BarevnostTab2 from './List2BarevnostTab2'
+import List2Potisknutelnost from './List2Potisknutelnost.vue'
 
 import DBsystem from './DBsystem'
 
@@ -285,9 +284,10 @@ export default {
     'form-helper': hw,
     'testy': testy,
     'test-menu': TestMenu,
-
-    'list2-skupinystroju': List2SkupinyStroju,
-    'list2-barevnost2': List2BarevnostTab2,
+    'list2-index': List2Index,
+    'list2-strojskup': List2StrojSkup,
+    'list2-barevnost': List2BarevnostTab2,
+    'list2-potisknutelnost': List2Potisknutelnost,
 
     'list-users': ListUsers,
     'list-modules': ListModules,
@@ -318,6 +318,16 @@ export default {
   },
 
   watch: {
+    compa: function(){
+      if (this.compa.length==1){
+        this.myFlex=24
+      } else {
+        this.myFlex=12
+      }
+
+
+
+    },
 
     radio2: function() {
       if (this.radio2==1){
@@ -343,7 +353,8 @@ export default {
 
 
 
-         this.compa.push([{modul: atmp[idx], title: atmp[idx - 3], where: atmp[idx+2]}])
+         //this.compa.push([{modul: atmp[idx], title: atmp[idx - 3], where: atmp[idx+2]}])
+         this.compa.unshift([{modul: atmp[idx], title: atmp[idx - 3], where: atmp[idx+2]}])
 
          this.$router.push({
           name: 'desktop',
@@ -389,7 +400,7 @@ export default {
       activeName: 'first', // tabs pro el
       isCollapse: true,
       myFlex: -1,
-      radio2: 20,
+      radio2: 10,
       radio3: '',
       openWins: [],
 
@@ -655,7 +666,8 @@ export default {
      // alert(ind)
 
       if (ind < 0) {
-        this.compa.push([{modul: par[3], title: par[0], where: par[5]}])
+        // this.compa.push([{modul: par[3], title: par[0], where: par[5]}])
+        this.compa.unshift([{modul: par[3], title: par[0], where: par[5]}])
         this.radio3= par[3]
         this.compa = _.uniqBy(this.compa)
       } else {

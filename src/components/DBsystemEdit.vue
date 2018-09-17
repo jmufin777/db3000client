@@ -36,7 +36,7 @@
           <tr v-for="(sub1,i1) in recData[col.id]" :key="i1">
             <td>
               <el-input  v-model="recData[col.id][i1]"   size="mini"  ></el-input>
-              </td>
+             </td>
           </tr>
         </table>
 
@@ -111,7 +111,7 @@ export default {
        document.getElementById("de9901").addEventListener('keyup', (function(e) {
 
          if (e.keyCode == 13) {
-
+           alert('13')
            document.getElementById('btn_user_submit9901').focus()
          }
            if (e.keyCode == 27) {

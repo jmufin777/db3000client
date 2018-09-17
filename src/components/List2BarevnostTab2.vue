@@ -14,7 +14,7 @@
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
     <el-badge :value="list.length">
     <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
-        @click="newLine()"
+        @click="newLine(-1)"
     ></el-button>
     </el-badge>
   </el-col>
@@ -55,6 +55,7 @@
    Akce
  </el-col>
 
+
  <el-col :span="22">
   <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth"
   v-bind:class="{'green--text': lastSort[0]==col.id }"
@@ -68,8 +69,8 @@
     <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
     <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
       </el-col>
- <el-col :span="1" class="mth">
-   Akce
+ <el-col :span="2" class="mth">
+   X
  </el-col>
  </el-col>
  </el-row>
@@ -83,15 +84,19 @@
         style="backgroud: white"
   >
 
+
   <el-col :span="2" >
+
+
     <div class='dcell'  style="width::100% ; background:white"
     v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
 
-         <v-icon @click="deleteLine(irow)" >fa-edit</v-icon></button>
-
-    </div>
+   </div>
   </el-col>
+
 
   <el-col :span="22"
 
@@ -114,7 +119,7 @@
         <input type="text" v-else
         class=" px-4 cell " :id="'c202_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-        :value="item[col.id]"  style="width:100%;border:none;height:100%" readonly
+        :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
 
         >
         <input type="date" v-if="col.type =='datetime-local' && false"
@@ -136,7 +141,7 @@
       </div>
 
     	</el-col>
-     <el-col :span="1" >
+     <el-col :span="2" >
       <div class='dcell'  style="width::100% ; background:white"
       v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
       >
@@ -174,8 +179,8 @@
   </div>
   </div>
 
-  <hr>
-<div>
+  <!-- <hr> -->
+<!-- <div>
   <win-dow :title="'events'" :id="`events`"
     :x="200"
     :w="700"
@@ -188,7 +193,7 @@
   i: {{ info }}
   ai: {{ aInfo}}
   </win-dow>
-  <hr>
+  <hr> -->
 
 </div>
 
@@ -198,10 +203,13 @@
 </template>
 
 <script>
+
 import {mapState} from 'vuex'
+import { eventBus } from '@/main.js'
+import { setTimeout, clearInterval } from 'timers'
 import List2Barevnost from '@/services/List2BarevnostService'
 // import List2BarevnostVue from './List2Barevnost.vue';
-import { setTimeout } from 'timers';
+
 
 function hasClass(element, cls) {
     return element.className.split(' ').indexOf(cls) > -1
@@ -257,6 +265,8 @@ export default {
       moduleName: 'barevnost2',
       saveNow: false,
 
+      IsDialog: true,
+
       IsWaiting: false,
       info:'',
 
@@ -280,16 +290,16 @@ export default {
       currentRow: null,
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:3, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 7, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:5, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 12, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],
       list: [],
       listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
       listEdits: [],   //Prehled zmen s prinakem edit, delete
-      lastSort: ['id','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      lastSort: ['kod','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
     }
   },
   async mounted () {
@@ -307,7 +317,7 @@ export default {
           nazev:'Nova'
         }]
 
-        this.newLine()
+        this.newLine(-1)
         this.IsWaiting = false
         return
 
@@ -351,7 +361,7 @@ export default {
               changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
 
-         },200)
+         },50)
 
 
 
@@ -420,6 +430,40 @@ setTimeout(function(){
   },
 
   methods: {
+
+
+editLine(nRow) {
+     const self = this
+     self.IsDialog = true
+     self.Info = nRow
+     eventBus.$emit('dlg9901', {
+           'IsDialog': self.IsDialog,
+           'cols': self.cols,
+           'record': self.list[nRow],
+           'nRow': nRow
+
+
+
+      })
+
+   },
+
+copyLine(nRow) {
+
+     const self = this
+     self.IsDialog = true
+     self.Info = nRow
+
+     self.newLine(nRow)
+
+
+
+
+
+
+   },
+
+
    async saveLines(id){
      this.aInfo=[]
      var Posli=Array()
@@ -487,7 +531,7 @@ setTimeout(function(){
             //setTimeout(function(){
               changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
-         },200)
+         },50)
 
         /////
 
@@ -534,7 +578,7 @@ setTimeout(function(){
 
    },
 
-   async newLine ()  {
+   async newLine (nRow)  {
      var x
       this.listNewLine = []
 
@@ -544,12 +588,21 @@ setTimeout(function(){
       for(x in this.list[0]) {
           this.aInfo[x]=null
           this.listNewLine[x]=null
+          if (nRow >0)    {
+               this.listNewLine[x]= this.list[nRow][x]
+          }
       }
+
           this.minId = this.minId -1
           this.listNewLine['id']= this.minId
 
-          this.listNewLine['kod'] = this.Max + Math.abs(this.minId)
+          if (nRow >0)    {
+            this.listNewLine['kod'] = this.list[nRow]['kod']
+          } else {
+            this.listNewLine['kod'] = this.Max + Math.abs(this.minId)
+          }
           this.list.push(this.listNewLine)
+
         //  this.aInfo.push(this.Max)
           /*
           if (this.lastSort[1]=="asc") {
@@ -685,7 +738,7 @@ setTimeout(function(){
        //       document.getElementById(new_id).select()
        */
 
-          },200)
+          },100)
          }
 
 

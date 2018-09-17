@@ -1,5 +1,5 @@
   <template>
-<el-row id="m9901" style="overflow:scroll"  class="pa-2" >
+<el-row id="m331" style="overflow:scroll"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -8,13 +8,13 @@
   </el-row>
   <el-row  :gutter="20">
   <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" id="search_9901" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
+  <el-input prefix-icon="el-icon-search" id="search_331" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
     <el-badge :value="list.length">
     <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
-        @click="newLine()"
+        @click="newLine(-1)"
     ></el-button>
     </el-badge>
   </el-col>
@@ -48,12 +48,13 @@
 
 </div>
 
-<div style="height:100%;overflow:scroll" class="mt-0" id="t9901">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t331">
 
-<el-row  >
+<el-row    style="backgroud: white">
   <el-col :span="2" class="mth">
    Akce
  </el-col>
+
 
  <el-col :span="22">
   <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth"
@@ -62,96 +63,81 @@
   >
 
         {{col.title}}
-    <i v-if="col.sort && col.sort=='asc'"    @click="sortByKey(col.id,'desc')" class="el-icon-sort-down"   ></i>
-    <i v-if="!col.sort || col.sort=='desc'"  @click="sortByKey(col.id,'asc')" class="el-icon-sort-up"  ></i>
+    <i v-if="col.sort && col.sort=='asc'"    @click="sortByKey(col.id,'desc')" class="el-icon-upload2"   ></i>
+    <i v-if="!col.sort || col.sort=='desc'"  @click="sortByKey(col.id,'asc')" class="el-icon-download"  ></i>
 
     <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
     <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
       </el-col>
- <el-col :span="1" class="mth">
-   Akce
+ <el-col :span="2" class="mth">
+   X
  </el-col>
  </el-col>
  </el-row>
 
-<div style="height:100%;overflow:scroll" class="mt-0" id="t9902">
-  <form id="f9901">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t332">
+  <form id="f331">
 
   <el-row v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
-      :id="'d9902_r_'+irow"
-      style="backgroud: white"
+      :id="'d332_r_'+irow"
+        style="backgroud: white"
   >
 
-  <el-col :span="2" >
-    <div class='dcell'  style="width::100% ; background:white"
 
+  <el-col :span="2" >
+
+
+    <div class='dcell'  style="width::100% ; background:white"
     v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
-
-         <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
 
    </div>
   </el-col>
 
-  <el-col :span="22"  >
+
+  <el-col :span="22"
+  >
     	<el-col v-for="(col,icol) in cols"
 			:key="col.id"
       :span="col.span"
       v-show="col.props.visible=='yes'"
       >
-      <div v-if="col.type=='textarea'" :id="'d9902_r_'+irow+'_c_'+icol"  class='dcell pa-0 ma-0' >
-        <v-textarea
-         auto-grow
-         outline
-         row-height="1"
-         class=" pa-0 ma-0 cell "
-         :id="'c9902_r_'+irow+'_c_'+icol"
-        :value="item[col.id]" style="width:100%;border:none;height:100%;text-align:left" readonly
-        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-        ></v-textarea>
-      </div>
-
-      <div v-else-if="col.type=='textareaArray'" :id="'xxd9902_r_'+irow+'_c_'+icol"  class='dcell pa-0 ma-0' >
-        <table v-if="Array.isArray(item[col.id])">
-          <tr v-for="(sub1,i1) in item[col.id]" :key="i1">
-            <td>
-         Table     {{ item[col.id][i1] }}
-              </td>
-          </tr>
-        </table>
-      </div>
-
-
-
-      <div v-else :id="'d9902_r_'+irow+'_c_'+icol"  class='dcell' >
+      <div :id="'d332_r_'+irow+'_c_'+icol"  class='dcell' >
 
         <input type="number" v-if="col.type =='number'"
-        class=" px-0 cell " :id="'c9902_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c332_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-
-
-        >
-
+       >
         <input type="text" v-else
-        class=" px-4 cell " :id="'c9902_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c332_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-        :value="item[col.id]"  style="width:100%;border:none;height:100%" readonly
+        :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
 
         >
         <input type="date" v-if="col.type =='datetime-local' && false"
-        class="white px-4 cell seda" :id="'c9902_r_'+irow+'_c_'+icol"
+        class="white px-4 cell seda" :id="'c332_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
 
-        min="2007-06-01T08:30" max="99020-06-30T16:30"
+        min="2007-06-01T08:30" max="3320-06-30T16:30"
         >
+        <select  v-if="col.type =='select'  && false "
+        class=" px-4 cell" :id="'c332_r_'+irow+'_c_'+icol"
+         style="width:100%;border:none;height:100%" readonly
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
+        >
+        <option :value="item[col.id]" selected >{{ item[col.id] }}</option>
+        <option :value="2" >2</option>
+        </select>
       </div>
 
     	</el-col>
-     <el-col :span="1" >
+     <el-col :span="2" >
       <div class='dcell'  style="width::100% ; background:white"
       v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
       >
@@ -162,22 +148,36 @@
   </el-row>
   </form>
 
-  <db-system-edit v-if="IsDialog == true ">
-    <div slot="a1" class="ma-2 pa-2">DB System {{ Info }} </div>
-
-  </db-system-edit>
-
   <div>
     <br><br>
 
+    <!-- <table>
+      <tr v-for="(i1, idx) in list" :key="i1.idx" v-if="idx==0">
+         <td v-for="(i1 ,idyz) in i1" :key="idyz">{{ idyz }}</td>
+      </tr>
+      <tr v-for="(i1, idx) in list" :key="idx">
+
+        <td v-for="(i2 ,idy) in i1" :key="idy">{{ i2 }} </td>
+      </tr>
+    </table>
+<br>
+<table>
+      <tr v-for="(ie1, iedx) in listEdits" :key="ie1.idx" v-if="iedx==0">
+         <td v-for="(ie1 ,iedyz) in ie1" :key="iedyz">{{ iedyz }}</td>
+      </tr>
+      <tr v-for="(ie1, iedx) in listEdits" :key="iedx">
+
+        <td v-for="(ie2 ,iedy) in ie1" :key="iedy">{{ ie2 }} </td>
+      </tr>
+    </table> -->
+
   </div>
   </div>
   </div>
 
-  <hr>
-<div>
-
-  <!-- <win-dow :title="'events'" :id="`events`"
+  <!-- <hr> -->
+<!-- <div>
+  <win-dow :title="'events'" :id="`events`"
     :x="200"
     :w="700"
     :y="100"
@@ -188,8 +188,8 @@
     >
   i: {{ info }}
   ai: {{ aInfo}}
-  </win-dow> -->
-  <hr>
+  </win-dow>
+  <hr> -->
 
 </div>
 
@@ -199,20 +199,15 @@
 </template>
 
 <script>
+
 import {mapState} from 'vuex'
-import DBsystem from '@/services/DBsystemService'
-import DBsystemEdit from './DBsystemEdit'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-
+import List2MatSirka from '@/services/List2MatSirkaService'
+// import List2MatSirkaVue from './List2MatSirka.vue';
 
 
 function hasClass(element, cls) {
-    try {
-     console.log(element.hasOwnProperty('className'));
-    } catch(e){
-      return ''
-    }
     return element.className.split(' ').indexOf(cls) > -1
 }
 
@@ -221,11 +216,6 @@ function hasClassId(elementId, cls) {
 }
 
 function addClass(element, cls) {
-  try {
-     console.log(element.hasOwnProperty('className'));
-    } catch(e){
-      return ''
-    }
   if (! hasClass(element,cls)){
     element.className+=(' ' + cls)
     element.className=element.className.trim()
@@ -233,11 +223,6 @@ function addClass(element, cls) {
 }
 
 function removeClass(element, cls) {
-  try {
-     console.log(element.hasOwnProperty('className'));
-    } catch(e){
-      return ''
-    }
   if ( hasClass(element,cls)){
     element.className = element.className.replace(cls,'')
   }
@@ -270,20 +255,16 @@ function isVisible(el) {
 }
 
 export default {
-
-  components: {
-    'db-system-edit': DBsystemEdit
-  },
   props: ['visible'],
   data () {
     return {
-      moduleName: 'db-system',
+      moduleName: 'matsirka',
       saveNow: false,
+
       IsDialog: true,
 
       IsWaiting: false,
       info:'',
-      Info: '',
 
       isWrite: false,
       infoStatus: {
@@ -305,20 +286,16 @@ export default {
       currentRow: null,
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 2, isEdit: false, type: "text"  ,props:{visible: 'yes', form: 'no'}},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:2, isEdit: true, type: "number",props:{visible: 'yes', form: 'yes',span: 10,spanTitle: 2, newRow: 1,focus:1}},
-        { id: "name", title: "Name", cssClasses: "mtd", span: 3, isEdit: true, type: "text" ,props:{visible: 'yes', form: 'yes',span: 10,spanTitle: 2, newRow: 0,focus:0}},
-        { id: "struct", title: "Struktura", cssClasses: "mtd", span: 5, isEdit: true, type: "textarea" ,props:{visible: 'yes', form: 'yes' ,span: 20,spanTitle: 2, newRow: 1,focus:0}},
-        { id: "index_name", title: "Index", cssClasses: "mtd", span: 5, isEdit: true, type: "textareaArray" ,props:{visible: 'yes', form: 'yes',span: 20,spanTitle: 2, newRow: 1,focus:0}},
-        { id: "reindex", title: "ReInd", cssClasses: "mtd", span: 2, isEdit: true, type: "number" ,props:{visible: 'yes', form: 'yes' ,span: 20,spanTitle: 2, newRow: 1,focus:0}},
-        { id: "initq", title: "Start", cssClasses: "mtd", span: 4, isEdit: true, type: "textareaArray" ,props:{visible: 'no', form: 'no',span: 20,spanTitle: 2, newRow: 1,focus:0}},
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:6, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "sirka_mm", title: "Sirka", cssClasses: "mtd", span: 7, isEdit: true, type: "number" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],
       list: [],
       listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
       listEdits: [],   //Prehled zmen s prinakem edit, delete
-      lastSort: ['id','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      lastSort: ['kod','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
     }
   },
   async mounted () {
@@ -326,17 +303,17 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await DBsystem.all(this.user,'nic')).data
+      this.list = (await List2MatSirka.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
         this.list =[{
           id: -1,
           kod: 100,
-          name:'Nova'
+          sirma_mm:0
         }]
 
-        this.newLine()
+        this.newLine(-1)
         this.IsWaiting = false
         return
 
@@ -351,7 +328,6 @@ export default {
       this.IsWaiting = false
 
       //this.aInfo.push=this.list[0]
-      /*
       var x
 
       for(x in this.list[0]) {
@@ -360,11 +336,9 @@ export default {
       }
           this.aInfo['id']=-1
 //          this.list.unshift(this.aInfo)
-     */
 
     }
-
-        var new_id ='c9902_r_'+0+'_c_'+1
+        var new_id ='c332_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -383,7 +357,7 @@ export default {
               changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
 
-         },200)
+         },50)
 
 
 
@@ -393,16 +367,16 @@ export default {
     var self=this
 
 setTimeout(function(){
-    document.getElementById("m9901").style.height=Math.round(window.innerHeight - 110)  + "px"
-    document.getElementById("t9901").style.height=Math.round(window.innerHeight - 140)  + "px"
-    document.getElementById("t9902").style.height=Math.round(window.innerHeight - 270)  + "px"
+    document.getElementById("m331").style.height=Math.round(window.innerHeight - 110)  + "px"
+    document.getElementById("t331").style.height=Math.round(window.innerHeight - 140)  + "px"
+    document.getElementById("t332").style.height=Math.round(window.innerHeight - 270)  + "px"
 
-    document.getElementById("t9902").addEventListener('keydown', (function(e) {
+    document.getElementById("t332").addEventListener('keydown', (function(e) {
 
              self.obsluha(e, e.target)
       }))
 
-    document.getElementById("t9902").addEventListener('click', (function(e) {
+    document.getElementById("t332").addEventListener('click', (function(e) {
 
              self.obsluha(e, e.target)
       }))
@@ -410,9 +384,9 @@ setTimeout(function(){
   },100)
 
   window.addEventListener('resize', (function() {
-    document.getElementById("m9901").style.height=Math.round(window.innerHeight - 110)  + "px"
-    document.getElementById("t9901").style.height=Math.round(window.innerHeight - 140)  + "px"
-    document.getElementById("t9902").style.height=Math.round(window.innerHeight - 270)  + "px"
+    document.getElementById("m331").style.height=Math.round(window.innerHeight - 110)  + "px"
+    document.getElementById("t331").style.height=Math.round(window.innerHeight - 140)  + "px"
+    document.getElementById("t332").style.height=Math.round(window.innerHeight - 270)  + "px"
     // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
   })
 
@@ -430,12 +404,12 @@ setTimeout(function(){
 
   },
   destroyed () {
-    if (document.getElementById("t9902")){
+    if (document.getElementById("t332")){
         ///nejde
-      //document.getElementById("t9902").removeEventListener(document.getElementById("t9902"),'keydown')
+      //document.getElementById("t332").removeEventListener(document.getElementById("t332"),'keydown')
 
     }
-    // alert('destos'+document.getElementById("t9902"))
+    // alert('destos'+document.getElementById("t332"))
   },
   beforeUpdate () {
 
@@ -452,8 +426,42 @@ setTimeout(function(){
   },
 
   methods: {
+
+
+editLine(nRow) {
+     const self = this
+     self.IsDialog = true
+     self.Info = nRow
+     eventBus.$emit('dlg9901', {
+           'IsDialog': self.IsDialog,
+           'cols': self.cols,
+           'record': self.list[nRow],
+           'nRow': nRow
+
+
+
+      })
+
+   },
+
+copyLine(nRow) {
+
+     const self = this
+     self.IsDialog = true
+     self.Info = nRow
+
+     self.newLine(nRow)
+
+
+
+
+
+
+   },
+
+
    async saveLines(id){
-     //this.aInfo=[]
+     this.aInfo=[]
      var Posli=Array()
      var  aTmp= {}
      var aDel= []
@@ -476,12 +484,12 @@ setTimeout(function(){
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, name: el.name,struct: el.struct,index_name: el.index_name,reindex: el.reindex, initq: el.initq })
+        aTmp.push({id: el.id,kod: el.kod, sirka_mm: el.sirka_mm })
         Posli.push(aTmp)
        }
      })
 
-     await DBsystem.insert(this.user, {data: Posli, del: aDel })
+     await List2MatSirka.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -493,7 +501,7 @@ setTimeout(function(){
       var neco = []
 
      try {
-      this.list = (await   DBsystem.all(this.user,'nic')).data
+      this.list = (await   List2MatSirka.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -505,7 +513,7 @@ setTimeout(function(){
         this.list = _.sortBy(this.list,'id').reverse()
 
         ////
-        var new_id ='c9902_r_'+0+'_c_'+1
+        var new_id ='c332_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -519,7 +527,7 @@ setTimeout(function(){
             //setTimeout(function(){
               changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
-         },200)
+         },50)
 
         /////
 
@@ -566,23 +574,31 @@ setTimeout(function(){
 
    },
 
-   async newLine ()  {
+   async newLine (nRow)  {
      var x
       this.listNewLine = []
 
-      this.Max = (await DBsystem.all(this.user,'max')).data[0].kod*1 +10
-      alert(this.Max)
+      this.Max = (await List2MatSirka.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
-        //  this.aInfo[x]=null
+          this.aInfo[x]=null
           this.listNewLine[x]=null
+          if (nRow >0)    {
+               this.listNewLine[x]= this.list[nRow][x]
+          }
       }
+
           this.minId = this.minId -1
           this.listNewLine['id']= this.minId
 
-          this.listNewLine['kod'] = this.Max + Math.abs(this.minId)
+          if (nRow >0)    {
+            this.listNewLine['kod'] = this.list[nRow]['kod']
+          } else {
+            this.listNewLine['kod'] = this.Max + Math.abs(this.minId)
+          }
           this.list.push(this.listNewLine)
+
         //  this.aInfo.push(this.Max)
           /*
           if (this.lastSort[1]=="asc") {
@@ -596,7 +612,7 @@ setTimeout(function(){
           this.list.forEach((el,idx) => {
             if  (el.id == this.minId){
               //var new_id = 'c'
-              new_id ='c9902_r_'+idx+'_c_'+1
+              new_id ='c332_r_'+idx+'_c_'+1
               return
 
               //alert(new_id)
@@ -612,21 +628,6 @@ setTimeout(function(){
 
 
    },
-   editLine(nRow) {
-     const self = this
-     self.IsDialog = true
-     self.Info = nRow
-     eventBus.$emit('dlg9901', {
-           'IsDialog': self.IsDialog,
-           'cols': self.cols,
-           'record': self.list[nRow],
-           'nRow': nRow
-
-
-
-      })
-
-   },
    deleteLine(nRow) {
      const self = this
     //  if (confirm('Vymazat zaznam? '+nRow + "  id:" +this.list[nRow].id )) {
@@ -638,7 +639,7 @@ setTimeout(function(){
 
       var xId = this.list[nRow].id
       var tmpI = -1000000
-     this.$confirm('Vymazat zaznam' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].name, '',{
+     this.$confirm('Vymazat zaznam' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].sirka_mm, '',{
        distinguishCancelAndClose: true,
        confirmButtonText: 'Ano?',
        cancelButtonText: 'Ne'
@@ -679,14 +680,14 @@ setTimeout(function(){
        }
      //self.list.splice(nRow,1)
      if (eof == true) {
-       new_id='c9902_r_'+(self.list.length -1)+'_c_'+1
+       new_id='c332_r_'+(self.list.length -1)+'_c_'+1
      }
      if (top == true) {
-       new_id='c9902_r_'+(0)+'_c_'+1
+       new_id='c332_r_'+(0)+'_c_'+1
      }
 
     if (next == true) {
-       new_id='c9902_r_'+(nRow)+'_c_'+1
+       new_id='c332_r_'+(nRow)+'_c_'+1
      }
 
         if (new_id > '')  {
@@ -696,7 +697,7 @@ setTimeout(function(){
           setTimeout(function(){
             if (!document.getElementById(new_id)){
                 alert(new_id + 'neco je sptane' + eof + "top " + top + "next "+next )
-                new_id='c9902_r_'+(self.list.length -1)+'_c_'+1
+                new_id='c332_r_'+(self.list.length -1)+'_c_'+1
             }
               var newObal= document.getElementById('d'+new_id.substring(1))
 
@@ -733,7 +734,7 @@ setTimeout(function(){
        //       document.getElementById(new_id).select()
        */
 
-          },200)
+          },100)
          }
 
 
@@ -770,8 +771,8 @@ setTimeout(function(){
            if (el.id == id){
              this.list[k] = this.listEdits[eDelka][0]
              this.listEdits.splice(eDelka,1)
-             //this.aInfo.push(el.id)
-             //this.aInfo.push(this.list[k])
+             this.aInfo.push(el.id)
+             this.aInfo.push(this.list[k])
              return
            }
 
@@ -843,8 +844,8 @@ setTimeout(function(){
 
    //self.aInfo.push([ekeyCode])
    //return
-    if (document.getElementById('search_9901') && ekeyCode == 114 ){
-       document.getElementById('search_9901').focus()
+    if (document.getElementById('search_331') && ekeyCode == 114 ){
+       document.getElementById('search_331').focus()
      }
     keyCodes = keyCodes.concat([13,27,9,-13])
     keyCodes = keyCodes.concat([40,37,38,39])  //Sipky
@@ -875,8 +876,8 @@ setTimeout(function(){
           //self.listEdits[eLen][self.cols[curCol].id] = prev
 
           self.list[curRow][self.cols[curCol].id]=el.value
-          //self.aInfo.push(self.listEdits)
-          //self.aInfo.push(oldRecord)
+          self.aInfo.push(self.listEdits)
+          self.aInfo.push(oldRecord)
 
 
        }
@@ -927,7 +928,7 @@ setTimeout(function(){
           el.removeAttribute('readonly')
           addClass(el,"bila2")
           el.select()
-          ///self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+          self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
           // el.selectionEnd = el.selectionStart;
           self.isWrite = true
       }
@@ -1002,11 +1003,7 @@ setTimeout(function(){
           changeClass(newObal,'dcell','dcell_edit')
           changeClass(elObal,'dcell_edit','dcell')
           isPresun = true
-          try {
           document.getElementById(newId).focus()
-          } catch(e){
-            console.log('nFofus', ekeyCode)
-          }
        }
        break;
        case 34: //pgDn
@@ -1039,11 +1036,7 @@ setTimeout(function(){
 
 
           isPresun = true
-          try {
           document.getElementById(newId).focus()
-          } catch(e){
-            console.log('nFofus', ekeyCode)
-          }
          },100)
 
         break;
@@ -1077,11 +1070,7 @@ setTimeout(function(){
 
 
           isPresun = true
-          try {
           document.getElementById(newId).focus()
-          } catch(e){
-            console.log('nFofus', ekeyCode)
-          }
          },100)
 
         break;
@@ -1096,11 +1085,7 @@ setTimeout(function(){
           removeClass(elObal,'elevation-20')
 
           isPresun = true
-          try {
           document.getElementById(newId).focus()
-          } catch(e){
-            console.log('nFofus', ekeyCode)
-          }
           // alert(document.getElementById(newId))
        }
 
@@ -1117,11 +1102,7 @@ setTimeout(function(){
 
           isPresun = true
           // alert(newId)
-          try {
           document.getElementById(newId).focus()
-          } catch(e){
-            console.log('nFofus', ekeyCode)
-          }
           // alert(document.getElementById(newId))
        }
 //        this.aInfo.push('ESC')
@@ -1139,11 +1120,7 @@ setTimeout(function(){
           removeClass(elObal,'elevation-20')
           isPresun = true
           // alert(newId)
-          try {
           document.getElementById(newId).focus()
-          } catch(e){
-            console.log('nFofus', ekeyCode)
-          }
           // alert(document.getElementById(newId))
        }
         //this.aInfo.push('ESC')
@@ -1250,7 +1227,7 @@ setTimeout(function(){
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'name', 'kod','user_insert']
+    var seekStr=['id', 'sirka_mm', 'kod','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }
@@ -1266,7 +1243,7 @@ setTimeout(function(){
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await DBsystem.all(this.user,nic)).data
+      this.list = (await List2MatSirka.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -1276,35 +1253,33 @@ setTimeout(function(){
       }
       },
     async appendRow(index,rows) {
-       alert('Append Rows Smazat? ',index)
-       //this.aInfo=rows[index]
+       alert(index)
+       this.aInfo=rows[index]
        console.log(rows[0])
        for (var x in rows[0]){
          this.form[x] = rows[0][x]
        }
         console.log("FORM:", this.form)
       try {
-        await (DBsystem.insert(this.user, this.form))
+        await (List2MatSirka.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await DBsystem.all(this.user,'nic')
+      await List2MatSirka.all(this.user,'nic')
       .then(res => {
 
         //this.info= res
         this.list = res.data
 
-        /*
+
           var x
           for(x in this.list[0]) {
               this.aInfo[x]=''
           }
           this.aInfo['id']=-1
-
           this.list.unshift(this.aInfo)
-           */
 
       })
 
