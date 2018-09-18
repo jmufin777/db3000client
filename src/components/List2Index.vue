@@ -1,47 +1,53 @@
 <template>
 <div >
 
-    <div style="float:left;background:white;height:250px;width:30%">
-      Skupiny stroju
+
+    <div  v-for="(c,i) in compa2" :key="i" style="float:left;background:white;height:250px;width:33%" :id="c[0]">
+      {{c[1]}}
+          <component :is="c[0]"></component>
+      </div>
+<!--
+    <div style="float:left;background:white;height:250px;width:30%" id="list2-strojskup">
+      Skupiny strojuxxxx
           <list2-strojskup></list2-strojskup>
       </div>
 
 
 
 
-    <div style="float:left;background:white;height:250px;width:30%;;overflow:auto">
+    <div style="float:left;background:white;height:250px;width:30%;;overflow:auto" id="list2-barevnost">
       Barevnost
             <list2-barevnost></list2-barevnost>
             &nbsp;</div>
 
-    <div style="float:left;background:white;height:250px;width:30%">
+    <div style="float:left;background:white;height:250px;width:30%" id="list2-potisknutelnost">
       Potisknutelnost
             <list2-potisknutelnost></list2-potisknutelnost>
        </div>
-       <div style="float:left;background:white;height:250px;width:25%">
+       <div style="float:left;background:white;height:250px;width:25%" id="list2-matskup">
          Skupiny materialu
             <list2-matskup></list2-matskup>
        </div>
-            <div style="float:left;background:white;height:250px;width:25%">
+            <div style="float:left;background:white;height:250px;width:25%" id="list2-matsirka">
               Sirky materialu
             <list2-matsirka></list2-matsirka>
        </div>
 
 
-            <div style="float:left;background:white;height:250px;width:45%;overflow:auto">
+            <div style="float:left;background:white;height:250px;width:45%;overflow:auto" id="list2-matdostupnost">
               Dostupnost materialu
             <list2-matdostupnost></list2-matdostupnost>
            </div>
 
-        <div style="float:left;background:white;height:250px;width:30%">
+        <div style="float:left;background:white;height:250px;width:30%" id="list2-matdodavatel">
           Dodavatel materialu
         <list2-matdodavatel></list2-matdodavatel>
          &nbsp;</div>
-        <div style="float:left;background:white;height:250px;width:30%">
+        <div style="float:left;background:white;height:250px;width:30%" id="list2-matvyrobce">
           Vyrobce materialu
         <list2-matvyrobce></list2-matvyrobce>
          &nbsp;</div>
-
+     //-->
 </div>
 
 
@@ -53,6 +59,7 @@ import { eventBus } from '@/main.js'
 
 import List2StrojSkup from './List2StrojSkup'
 import List2MatSkup from './List2MatSkup'
+import List2MatSubSkup from './List2MatSubSkup'
 import List2MatSirka from './List2MatSirka.vue'
 import List2BarevnostTab2 from './List2BarevnostTab2'
 import List2Potisknutelnost from './List2Potisknutelnost.vue'
@@ -64,14 +71,55 @@ export default {
   components:{
   'list2-matsirka': List2MatSirka,
   'list2-matskup': List2MatSkup,
- 'list2-strojskup': List2StrojSkup,
- 'list2-barevnost': List2BarevnostTab2,
- 'list2-potisknutelnost': List2Potisknutelnost,
+  'list2-matsubskup': List2MatSubSkup,
+  'list2-strojskup': List2StrojSkup,
+  'list2-barevnost': List2BarevnostTab2,
+  'list2-potisknutelnost': List2Potisknutelnost,
   'list2-matdostupnost': List2MatDostupnost,
   'list2-matdodavatel': List2MatDodavatel,
   'list2-matvyrobce': List2MatVyrobce,
+  },
+  data: () => {
+    return {
+      compa2:
+        [
+
+          ['list2-matskup', "Skupina Materialy"],
+          ['list2-matsubskup', "Podskupina Materialy"],
+          ['list2-strojskup', "Skupina Stroje"],
+          ['list2-barevnost', "Barevnost"],
+          ['list2-matvyrobce','Presne oznaceni - vyrobce'],
+          ['list2-potisknutelnost', "Postiknutelnost"],
+          ['list2-matdostupnost','Dostupnost'],
+          ['list2-matsirka', "Sirka"],
+          ['list2-matdodavatel','Dodavatel materialu'],
+
+        ]
+
+
+    }
+
+  },
+  mounted () {
+      if (!this.isUserLoggedIn) {
+      this.$router.push({
+        name: 'login'
+      })
+    }
+  },
+  computed: {
+
+    ...mapState([
+      'isUserLoggedIn',
+      'xMenuMain',
+      'level',
+      'idefix',
+    ])
   }
 }
+
+
+
 </script>
 <style scoped>
 </style>

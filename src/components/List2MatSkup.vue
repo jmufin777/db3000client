@@ -367,33 +367,53 @@ export default {
     var self=this
 
 setTimeout(function(){
-    document.getElementById("m321").style.height=Math.round(window.innerHeight - 110)  + "px"
-    document.getElementById("t321").style.height=Math.round(window.innerHeight - 140)  + "px"
-    document.getElementById("t322").style.height=Math.round(window.innerHeight - 270)  + "px"
+  var tmpObj=''
+  var _obj1 ='m321'
+  var _obj2 ='t321'
+  var _obj3 ='t322'
 
-    document.getElementById("t322").addEventListener('keydown', (function(e) {
+  if (document.getElementById('list2-matskup'))  {
+    tmpObj = document.getElementById('list2-matskup')
+    var s1 = 20
+    var s2 = 50
+    var s3 = 100
+    var _h = tmpObj.clientHeight
+    var _w = tmpObj.clientWidth
+
+  } else {
+    tmpObj = window
+    var s1 = 110
+    var s2 = 140
+    var s3 = 270
+    var _h = tmpObj.innerHeight
+    var _w = tmpObj.innerWidth
+
+  }
+
+
+    document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
+    document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
+    document.getElementById(_obj3).style.height=Math.round(_h - s3)  + "px"
+    document.getElementById(_obj3).addEventListener('keydown', (function(e) {
+             self.obsluha(e, e.target)
+      }))
+
+    document.getElementById(_obj3).addEventListener('click', (function(e) {
 
              self.obsluha(e, e.target)
       }))
 
-    document.getElementById("t322").addEventListener('click', (function(e) {
-
-             self.obsluha(e, e.target)
-      }))
-    // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
-  },100)
-
-  window.addEventListener('resize', (function() {
-    document.getElementById("m321").style.height=Math.round(window.innerHeight - 110)  + "px"
-    document.getElementById("t321").style.height=Math.round(window.innerHeight - 140)  + "px"
-    document.getElementById("t322").style.height=Math.round(window.innerHeight - 270)  + "px"
+    window.addEventListener('resize', (function() {
+    document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
+    document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
+    document.getElementById(_obj3).style.height=Math.round(_h - s3)  + "px"
     // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
   })
-
   )
+    // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
+  },100)
   },
   beforeDestroy () {
-
 
      if (this.listEdits.length>0) {
        //alert('beforeDestroy')

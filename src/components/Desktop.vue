@@ -233,6 +233,7 @@ import ListGroups from '@/components/ListGroups.vue'
 
 import List2Index from './List2Index'
 import List2StrojSkup from './List2StrojSkup'
+import List2MatSubSkup from './List2MatSubSkup'
 import List2BarevnostTab2 from './List2BarevnostTab2'
 import List2Potisknutelnost from './List2Potisknutelnost.vue'
 
@@ -286,6 +287,7 @@ export default {
     'test-menu': TestMenu,
     'list2-index': List2Index,
     'list2-strojskup': List2StrojSkup,
+    'list2-matsubskup': List2MatSubSkup,
     'list2-barevnost': List2BarevnostTab2,
     'list2-potisknutelnost': List2Potisknutelnost,
 
