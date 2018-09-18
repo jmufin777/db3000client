@@ -112,21 +112,33 @@
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
        >
-       <select v-else-if="col.type=='selectone'" v-model="list[irow].idefix_matskup"
-               class=" px-4 cell " :id="'c372_r_'+irow+'_c_'+icol"
+       <select v-else-if="col.type=='selectone'" v-model="list[irow][col.id]"
+              class=" px-4 cell " :id="'c372_r_'+irow+'_c_'+icol"
               v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+              style="width:100%;border:none;height:22px;width:100%"
               readonly
        >
-
           <option
-            v-for="(item2,i) in col.values" :key="item2.idefix"
-
+            v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
             :value="item2.idefix"
 
-            >{{item2.nazev}}
+            >
           </option>
 
        </select>
+    <el-dropdown v-else-if="col.type=='selectone2'">
+      <span class="el-dropdown-link">
+        {{list[irow][col.id]}}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+          <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                  v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
+                  :value="item2.idefix"
+              >
+              <el-checkbox>{{item2.nazev}}</el-checkbox>
+              </el-dropdown-item>
+          </el-dropdown-menu>
+    </el-dropdown>
 
         <input type="text" v-else
         class=" px-4 cell " :id="'c372_r_'+irow+'_c_'+icol"
@@ -142,15 +154,7 @@
 
         min="2007-06-01T08:30" max="3720-06-30T16:30"
         >
-        <select  v-if="col.type =='select'  && false "
-        class=" px-4 cell" :id="'c372_r_'+irow+'_c_'+icol"
-         style="width:100%;border:none;height:100%" readonly
-        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
-        >
-        <option :value="item[col.id]" selected >{{ item[col.id] }}</option>
-        <option :value="2" >2</option>
-        </select>
       </div>
 
     	</el-col>
@@ -194,6 +198,7 @@
 
   <!-- <hr> -->
  <div>
+   <!--
   <win-dow :title="'events'" :id="`events`"
     :x="200"
     :w="700"
@@ -206,7 +211,8 @@
   i: {{ cols }}
 
   </win-dow>
-  <hr>
+  //-->
+
 
 </div>
 
@@ -302,6 +308,8 @@ export default {
       //Moje tabule a data
       currId: null,
       currentRow: null,
+      currentOrigValue: null,
+      lastId: '',
       minId: 0, //Pro vklad zaporna ID
   		cols: [
 				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
@@ -671,7 +679,6 @@ copyLine(nRow) {
               //var new_id = 'c'
               new_id ='c372_r_'+idx+'_c_'+1
               return
-
               //alert(new_id)
             }
           })
@@ -679,11 +686,10 @@ copyLine(nRow) {
             document.getElementById(new_id).focus()
             document.getElementById(new_id).click()
             document.getElementById(new_id).removeAttribute('readonly')
-            document.getElementById(new_id).select()
+            if (!document.getElementById(new_id).type.match(/select/g)){
+              document.getElementById(new_id).select()
+            }
          },100)
-
-
-
    },
    deleteLine(nRow) {
      const self = this
@@ -984,19 +990,31 @@ copyLine(nRow) {
       if ( el.hasAttribute('readonly') && isEdit ) {
           el.removeAttribute('readonly')
           addClass(el,"bila2")
+          if (el.type.match(/select/g)){
+          el.focus()
+          } else {
+
           el.select()
-          self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+          }
+          // self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
           // el.selectionEnd = el.selectionStart;
           self.isWrite = true
       }
      }
 
-     el.onfocus = ( function () {
 
+     el.onfocus = ( function () {
+        if (el.type == 'select-one' && el.id != self.lastId) {
+            self.currentOrigValue = el.value
+            self.lastId = el.id
+            //alert(origValue)
+            //alert('1111')
+        }
         // self.aInfo.push(['1. elObaId', elObalId, ' Obal ', elObal ])
         //elObal.className=elObal.className.replace(/dcell/,'dcell_edit')
         //elObal.className=elObal.className.replace(/dcell_edit/,'').trim()
         //elObal.className=elObalNew.className.replace(/dcell/,'').trim()
+
 
         el.style.color="black"
         if (!self.isWrite) {
@@ -1009,13 +1027,23 @@ copyLine(nRow) {
      })
 
      el.onchange = ( function () {
+        if (el.type == 'select-one' && el.hasAttribute('readonly')==true ) {
+            // el.value = self.currentOrigValue
+             self.listEdits.push([self.list[curRow],'edit'])
+             self.list[curRow][self.cols[curCol].id]=el.value
+            //alert('V rezimu prohlizeni nelze zmenit ,moznosti :  click, Enter, Tab ' + el.value + '/ ' +  self.currentOrigValue + '/' + self.lastId)
+            // return true
+        }
+        if (el.type == 'select-one' && el.hasAttribute('readonly')==false ) {
+          //alert('change' + el.type+ "/" + el.hasAttribute('readonly')+" Wr "+ self.isWrite )
+          self.listEdits.push([self.list[curRow],'edit'])
+          self.list[curRow][self.cols[curCol].id]=el.value
+        }
 
         if (self.saveNow==true ){
           //alert('change' + el.id)
           self.saveLines(0)
         }
-
-
 
         el.style.color="green"
         return
@@ -1035,12 +1063,13 @@ copyLine(nRow) {
      el.onblur = ( function(){
        //el.setAttribute('readonly',true)
        //el.className=el.className.replace(/cell_edit/,'cell')
+       //alert('blur' + el.type+ "/" + el.hasAttribute('readonly'))
        elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
        el.style.color="black"
 
 
        if ( !el.hasAttribute('readonly') && curRow < self.list.length && self.list[curRow][self.cols[curCol].id]!=el.value) {
-          //alert('tady :' + el.hasAttribute('readonly'))
+         ///alert('tady :' + el.hasAttribute('readonly'))
           self.listEdits.push([self.list[curRow],'edit'])
           self.list[curRow][self.cols[curCol].id]=el.value
 
@@ -1236,7 +1265,9 @@ copyLine(nRow) {
           if ( self.cols[newCol].isEdit && document.getElementById(newId).hasAttribute('readonly') ) {
           document.getElementById(newId).removeAttribute('readonly')
           document.getElementById(newId).focus()
-          document.getElementById(newId).select()
+          if (!self.cols[newCol].type.match(/select/g)){
+            document.getElementById(newId).select()
+          }
           addClass(document.getElementById(newId),"bila2")
 
           // element.selectionEnd = element.selectionStart;
@@ -1284,7 +1315,7 @@ copyLine(nRow) {
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev', 'kod','user_insert']
+    var seekStr=['id', 'nazev', 'kod','skupina','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }
