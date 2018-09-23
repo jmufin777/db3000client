@@ -35,21 +35,31 @@ export default {
     }
   },
   mounted () {
-    this.pList.push(Array("Zvirectvo","Zvirectvo","https://cs.wikipedia.org/wiki/%C4%8Cesk%C3%BD_svaz_chovatel%C5%AF_drobn%C3%A9ho_zv%C3%AD%C5%99ectva"))
-    this.pList.push(Array("Zvirectvo","Zvirectvo","https://heroldreznickepotreby.cz/eshop/reznicke-potreby/jatecni-pristroje-a-prislusenstvi/jatecni-pristroje/1469-jatecni-pristroj-na-kraliky-a-drobne-zvirectvo"))
-    this.pList.push(Array("GJ_P_1","GJ","https://www.fxblue.com//fxblueview.aspx?id=645853"))
-    this.pList.push(Array("Real_1","R (104)","https://www.fxblue.com/fxblueview.aspx?id=356107"))
-    this.pList.push(Array("XM_1","Slepidlo","https://www.fxblue.com//fxblueview.aspx?id=19078945"))
-    this.pList.push(Array("XM_2","K1_4b","https://www.fxblue.com//fxblueview.aspx?id=19078954"))
+    this.pList.push(Array("PTF54 EU","PTF54 EU","https://www.fxblue.com/fxblueview.aspx?id=20440414"))
+    this.pList.push(Array("EU R 1","EU R 1 (104)","https://www.fxblue.com/fxblueview.aspx?id=356107"))
+    this.pList.push(Array("PTF57 GJ","PTF57 GJ","https://www.fxblue.com/fxblueview.aspx?id=20443066"))
+    this.pList.push(Array("GJ_P_1 R","GJ R","https://www.fxblue.com//fxblueview.aspx?id=645853"))
+
+    this.pList.push(Array("PTF50-01 EJ","PTF50 EJ","https://www.fxblue.com/fxblueview.aspx?id=20424457"))
+    this.pList.push(Array("PTF50-03 EJ","PTF50-03 EJ","https://www.fxblue.com/fxblueview.aspx?id=20429274"))
+    this.pList.push(Array("PTF52 EJ","PTF52 EJ","https://www.fxblue.com/fxblueview.aspx?id=20435820"))
+    this.pList.push(Array("PTF55 EJ","PTF55 EJ","https://www.fxblue.com/fxblueview.aspx?id=20443065"))
+    this.pList.push(Array("Kacka EJ R","Kacka EJ R","https://www.fxblue.com//fxblueview.aspx?id=Kacka_1")) //Prvni treba brukr, duhy naky upresneni, treti odkaz
+
+
+
+    this.pList.push(Array("XM_2 R","K1_4b R","https://www.fxblue.com//fxblueview.aspx?id=19078954"))
     this.pList.push(Array("D nove","D Manual+ EU port","https://www.fxblue.com//fxblueview.aspx?id=20293568"  ))
     this.pList.push(Array("Moje","Moje2","https://www.fxblue.com//fxblueview.aspx?id=19078945,19078954")) //Prvni treba brukr, duhy naky upresneni, treti odkaz
-    this.pList.push(Array("Kacka_1","Kacka_1","https://www.fxblue.com//fxblueview.aspx?id=Kacka_1")) //Prvni treba brukr, duhy naky upresneni, treti odkaz
+
     this.pList.push(Array("Limit1 ","Limit 1","https://www.fxblue.com/fxblueview.aspx?id=limit1"))
     // this.//https://www.fxblue.com/users/1
     this.pList.push(Array("DAX","DAX","https://www.fxblue.com/fxblueview.aspx?id=dax_hankeys"))
     this.pList.push(Array("Kombajn","Kombajn","https://www.fxblue.com//fxblueview.aspx?id=kombajn"))
     this.pList.push(Array("DAX2","DAX PX","https://www.fxblue.com//fxblueview.aspx?id=905196"))
     this.pList.push(Array("Pokus","Pokus","https://www.fxblue.com//fxblueview.aspx?id=Kacka_1,19078954,645852,356107,limit1,20293568"))
+     //this.pList.push(Array("XM_1","Slepidlo","https://www.fxblue.com//fxblueview.aspx?id=19078945"))
+
 
     20293568
     // -,kombajn

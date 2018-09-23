@@ -73,6 +73,7 @@ import List2MatDodavatel from './List2MatDodavatel.vue'
 import List2MatVyrobce from './List2MatVyrobce.vue'
 
 import ListStroj from './ListStroj.vue'
+import ListMat from './ListMat.vue'
 
 export default {
   components:{
@@ -89,6 +90,7 @@ export default {
   'list2-matvyrobce': List2MatVyrobce,
 
   'list-stroj': ListStroj,
+  'list-mat': ListMat,
   'list2-strojlaminace': List2StrojLaminace,
   },
   data: () => {
@@ -107,7 +109,9 @@ export default {
           ['list2-matdostupnost','Dostupnost'],
           ['list2-matsirka', "Sirka"],
           ['list2-matdodavatel','Dodavatel materialu'],
-    //      ['list-stroj','Stroje'],
+          ['list-stroj','Stroje'],
+          ['list-mat','Materialy'],
+
 
         ]
 

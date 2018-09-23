@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+//import { hasClass } from './funkce/fce'
+
 
 import vuetify from 'vuetify'
 import { sync } from 'vuex-router-sync'
@@ -76,11 +78,6 @@ new Vue({
     App,
     VueFrame,
     VueFriendlyIframe,
-
-
-
-
-
   },
 
   template: '<App/>'

@@ -8,7 +8,7 @@
   </el-row>
   <el-row  :gutter="20">
   <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" id="search_371" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
+  <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -108,12 +108,12 @@
       <div :id="'d372_r_'+irow+'_c_'+icol"  class='dcell' >
 
         <input type="number" v-if="col.type =='number'"
-        class=" px-4 cell " :id="'c372_r_'+irow+'_c_'+icol"
+        class=" px-0 cell " :id="'c372_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
        >
        <select v-else-if="col.type=='selectone'" v-model="list[irow][col.id]"
-              class=" px-4 cell " :id="'c372_r_'+irow+'_c_'+icol"
+              class=" px-0 cell " :id="'c372_r_'+irow+'_c_'+icol"
               v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
               style="width:100%;border:none;height:22px;width:100%"
               readonly
@@ -141,14 +141,14 @@
     </el-dropdown>
 
         <input type="text" v-else
-        class=" px-4 cell " :id="'c372_r_'+irow+'_c_'+icol"
+        class=" px-0 cell " :id="'c372_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
 
         >
 
         <input type="date" v-if="col.type =='datetime-local' && false"
-        class="white px-4 cell seda" :id="'c372_r_'+irow+'_c_'+icol"
+        class="white px-0 cell seda" :id="'c372_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
 
@@ -198,7 +198,7 @@
 
   <!-- <hr> -->
  <div>
-   <!--
+
   <win-dow :title="'events'" :id="`events`"
     :x="200"
     :w="700"
@@ -208,10 +208,11 @@
     :parent="false"
     :maximize="false"
     >
-  i: {{ cols }}
+  i: {{ aInfo }}
+
 
   </win-dow>
-  //-->
+
 
 
 </div>
@@ -228,55 +229,11 @@ import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import List2MatSubSkup from '@/services/List2MatSubSkupService'
 import List2MatSkup from '@/services/List2MatSkupService'
+
+import f from '@/services/fce'
 // import List2MatSubSkupVue from './List2MatSubSkup.vue';
 
 
-function hasClass(element, cls) {
-    return element.className.split(' ').indexOf(cls) > -1
-}
-
-function hasClassId(elementId, cls) {
-  return document.getElementById(elementId).className.split(' ').indexOf(cls) > -1
-}
-
-function addClass(element, cls) {
-  if (! hasClass(element,cls)){
-    element.className+=(' ' + cls)
-    element.className=element.className.trim()
-  }
-}
-
-function removeClass(element, cls) {
-  if ( hasClass(element,cls)){
-    element.className = element.className.replace(cls,'')
-  }
-}
-
-function changeClass(element,oldClass,newClass) {
-          removeClass(element,oldClass)
-          addClass(element,newClass)
-}
-
-
-function isVisible(el) {
-  var top = el.offsetTop;
-  var left = el.offsetLeft;
-  var width = el.offsetWidth;
-  var height = el.offsetHeight;
-
-  while(el.offsetParent) {
-    el = el.offsetParent;
-    top += el.offsetTop;
-    left += el.offsetLeft;
-  }
-
-  return (
-    top < (window.pageYOffset + window.innerHeight) &&
-    left < (window.pageXOffset + window.innerWidth) &&
-    (top + height) > window.pageYOffset &&
-    (left + width) > window.pageXOffset
-  );
-}
 
 export default {
   props: ['visible'],
@@ -284,9 +241,7 @@ export default {
     return {
       moduleName: 'matskup',
       saveNow: false,
-
       IsDialog: true,
-
       IsWaiting: false,
       info:'',
 
@@ -300,7 +255,7 @@ export default {
       search:'',
       //event
       //event
-
+      objSearchBar: 'search_371',
       aInfo: [],
       total: 0,
       pagination: {},
@@ -380,8 +335,6 @@ export default {
       })
       //console.log( this.cols)
 
-
-
     }
         var new_id ='c372_r_'+0+'_c_'+1
               //alert(new_id)
@@ -391,7 +344,7 @@ export default {
             //  document.getElementById(new_id).focus()
              // document.getElementById(new_id).click()
               document.getElementById(new_id).setAttribute('readonly',true)
-              removeClass(document.getElementById(new_id),"bila2")
+              f.removeClass(document.getElementById(new_id),"bila2")
               if (!document.getElementById(new_id).type== 'number' ) {
                 document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
               }
@@ -399,7 +352,7 @@ export default {
             //setTimeout(function(){
 
 
-              changeClass(newObal,'dcell','dcell_edit')
+              f.changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
 
          },50)
@@ -411,52 +364,18 @@ export default {
   created () {
     var self=this
 
+
 setTimeout(function(){
-  var tmpObj=''
-  var _obj1 ='m371'
-  var _obj2 ='t371'
-  var _obj3 ='t372'
-
-  if (document.getElementById('list2-matskup'))  {
-    tmpObj = document.getElementById('list2-matskup')
-    var s1 = 20
-    var s2 = 50
-    var s3 = 100
-    var _h = tmpObj.clientHeight
-    var _w = tmpObj.clientWidth
-
-  } else {
-    tmpObj = window
-    var s1 = 110
-    var s2 = 140
-    var s3 = 270
-    var _h = tmpObj.innerHeight
-    var _w = tmpObj.innerWidth
-
-  }
 
 
-    document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
-    document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
-    document.getElementById(_obj3).style.height=Math.round(_h - s3)  + "px"
-    document.getElementById(_obj3).addEventListener('keydown', (function(e) {
-             self.obsluha(e, e.target)
-      }))
-
-    document.getElementById(_obj3).addEventListener('click', (function(e) {
-
-             self.obsluha(e, e.target)
-      }))
-
-    window.addEventListener('resize', (function() {
-    document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
-    document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
-    document.getElementById(_obj3).style.height=Math.round(_h - s3)  + "px"
-    // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
-  })
-  )
-    // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
+    var tmpObj=''
+    var _obj1 ='m371'
+    var _obj2 ='t371'
+    var _obj3 ='t372'
+    var moduleName='list2-matsubskup'
+    f.setUp(_obj1,_obj2,_obj3,self,moduleName)
   },100)
+
   },
   beforeDestroy () {
 
@@ -514,12 +433,7 @@ copyLine(nRow) {
      const self = this
      self.IsDialog = true
      self.Info = nRow
-
      self.newLine(nRow)
-
-
-
-
 
 
    },
@@ -590,7 +504,7 @@ copyLine(nRow) {
                 document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
               }
             //setTimeout(function(){
-              changeClass(newObal,'dcell','dcell_edit')
+              f.changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
          },50)
 
@@ -768,7 +682,7 @@ copyLine(nRow) {
             //  document.getElementById(new_id).focus()
              // document.getElementById(new_id).click()
               document.getElementById(new_id).setAttribute('readonly',true)
-              removeClass(document.getElementById(new_id),"bila2")
+              f.removeClass(document.getElementById(new_id),"bila2")
               if (!document.getElementById(new_id).type == 'number') {
                 document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
               }
@@ -776,7 +690,7 @@ copyLine(nRow) {
             //setTimeout(function(){
 
 
-              changeClass(newObal,'dcell','dcell_edit')
+              f.changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
       /*
               var e = new Event("keyup");
@@ -845,467 +759,10 @@ copyLine(nRow) {
 
      }
    },
-   obsluha (e)  {
-
-     var self = this
-     var rows = this.list.length - 1
-     var cols = this.cols.length - 1
-
-     const el=e.target
-     if (el.type=="button" || !el.type) {
-
-       return
-     }
-
-
-     var isPresun =false
-     var elObalId = 'd'+ el.id.substring(1)
-     var elObal = document.getElementById(elObalId)
-     var aEl = el.id.split('_')
-     var curRow = aEl[2]*1
-     var curCol = aEl[4]*1
-     var newId =  aEl[0]+'_r_'
-     var isEdit = self.cols[curCol].isEdit
-
-    var ekeyCode           = e.keyCode
-    var eshiftKey          = e.shiftKey
-    var keyCodes           = Array()
-    var keyCodesExitSave   = Array()
-    var keyCodesExitEscape = Array()
-
-    if (e.type=='click') {
-      ekeyCode = -13
-    }
-
-    keyCodesExitSave   = [13,9,-13]
-    keyCodesExitEscape = [27]
-
-    // var keyCodesExitSave =
-
-
-    if (!self.isWrite && ekeyCode==13 && e.metaKey){
-      //alert('Savez')
-      this.saveLines(0)
-      if (!el.type == 'number') {
-        el.selectionEnd = el.selectionStart
-      }
-      return
-    }
-
-    if (!self.isWrite && (ekeyCode == 46 || ekeyCode == 8 )) {
-      this.deleteLine(curRow)
-      return
-    }
-
-    if (!self.isWrite && ekeyCode == 90 && e.metaKey && self.listEdits.length>0){
-//       this.$alert(ekeyCode)
-       this.backLines()
-       return
-    //  this.deleteLine(curRow)
-
-    }
-
-   //self.aInfo.push([ekeyCode])
-   //return
-    if (document.getElementById('search_371') && ekeyCode == 114 ){
-       document.getElementById('search_371').focus()
-     }
-    keyCodes = keyCodes.concat([13,27,9,-13])
-    keyCodes = keyCodes.concat([40,37,38,39])  //Sipky
-    keyCodes = keyCodes.concat([33,34,35,36])  // PedzDaun, pedzAp. End,Home
-
-    //
-    if (self.isWrite) {
-      var isReturn = true
-      if (keyCodesExitSave.indexOf(ekeyCode)>-1) {
-//        self.aInfo.push(["ExitSave",curCol,curRow])
-        self.isWrite = false
-        // this.cols[curCol].id
-
-      if (self.list[curRow][self.cols[curCol].id]!=el.value) {
-         var prev = self.list[curRow][self.cols[curCol].id]
-          // alert('eee' + prev + "/ "+self.list[curRow])
-          var oldRecord = Array()
-          var y
-          for (y in self.list[curRow]) {
-              oldRecord[y] = self.list[curRow][y]
-          }
-
-          //self.listEdits.push([self.list[curRow],'edit',prev])
-          //alert('tady')
-          self.listEdits.push([oldRecord,'edit',prev])
-          var eLen= self.listEdits.length-1
-
-          //self.listEdits[eLen][self.cols[curCol].id] = prev
-
-          self.list[curRow][self.cols[curCol].id]=el.value
-          self.aInfo.push(self.listEdits)
-          self.aInfo.push(oldRecord)
-
-
-       }
-
-
-        el.setAttribute('readonly',true)
-        removeClass(el,"bila2")
-        isReturn = false
-
-      }
-
-
-      if (keyCodesExitEscape.indexOf(ekeyCode)>-1) {
-        self.isWrite = false
-        el.setAttribute('readonly',true)
-        changeClass(elObal,'dcell','dcell_edit')
-        removeClass(el,"bila2")
-        el.value = this.list[curRow][this.cols[curCol].id]
-//        elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
-        return true
-
-        el.focus()
-      }
-
-      if (ekeyCode==13){
-          ekeyCode=40
-        }
-        if (isReturn == true) {
-          return true
-        }
-
-    }
-
-   //self.aInfo = aEl
-   //self.aInfo.push(keyCodes)
-   //self.aInfo.push(ekeyCode)
-   //  self.aInfo.push([rows, cols])
-   //  self.aInfo.push(['Target: '+ el.id])
-   //  self.aInfo.push([elObalId])
-   //  self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
-
-
-     this.info=rows+  "/ " +  cols
-
-     if (Math.abs(ekeyCode) == 13 ) {
-       //el.className=el.className.replace(/cell/,'cell_edit')
-      if ( el.hasAttribute('readonly') && isEdit ) {
-          el.removeAttribute('readonly')
-          addClass(el,"bila2")
-          if (el.type.match(/select/g)){
-          el.focus()
-          } else {
-
-          el.select()
-          }
-          // self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
-          // el.selectionEnd = el.selectionStart;
-          self.isWrite = true
-      }
-     }
-
-
-     el.onfocus = ( function () {
-        if (el.type == 'select-one' && el.id != self.lastId) {
-            self.currentOrigValue = el.value
-            self.lastId = el.id
-            //alert(origValue)
-            //alert('1111')
-        }
-        // self.aInfo.push(['1. elObaId', elObalId, ' Obal ', elObal ])
-        //elObal.className=elObal.className.replace(/dcell/,'dcell_edit')
-        //elObal.className=elObal.className.replace(/dcell_edit/,'').trim()
-        //elObal.className=elObalNew.className.replace(/dcell/,'').trim()
-
-
-        el.style.color="black"
-        if (!self.isWrite) {
-          if(!el.type == 'number') {
-            el.selectionEnd = el.selectionStart
-          }
-
-        }
-
-     })
-
-     el.onchange = ( function () {
-        if (el.type == 'select-one' && el.hasAttribute('readonly')==true ) {
-            // el.value = self.currentOrigValue
-             self.listEdits.push([self.list[curRow],'edit'])
-             self.list[curRow][self.cols[curCol].id]=el.value
-            //alert('V rezimu prohlizeni nelze zmenit ,moznosti :  click, Enter, Tab ' + el.value + '/ ' +  self.currentOrigValue + '/' + self.lastId)
-            // return true
-        }
-        if (el.type == 'select-one' && el.hasAttribute('readonly')==false ) {
-          //alert('change' + el.type+ "/" + el.hasAttribute('readonly')+" Wr "+ self.isWrite )
-          self.listEdits.push([self.list[curRow],'edit'])
-          self.list[curRow][self.cols[curCol].id]=el.value
-        }
-
-        if (self.saveNow==true ){
-          //alert('change' + el.id)
-          self.saveLines(0)
-        }
-
-        el.style.color="green"
-        return
-
-       if (self.list[curRow][self.cols[curCol].id]!=el.value) {
-          self.listEdits.push([self.list[curRow],'edit'])
-          self.list[curRow][self.cols[curCol].id]=el.value
-       }
-
-       // self.listEdits.push([self.list[curRow],'edit'])
-        //self.aInfo.push(self.list[curRow])
-
-
-     })
-
-
-     el.onblur = ( function(){
-       //el.setAttribute('readonly',true)
-       //el.className=el.className.replace(/cell_edit/,'cell')
-       //alert('blur' + el.type+ "/" + el.hasAttribute('readonly'))
-       elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
-       el.style.color="black"
-
-
-       if ( !el.hasAttribute('readonly') && curRow < self.list.length && self.list[curRow][self.cols[curCol].id]!=el.value) {
-         ///alert('tady :' + el.hasAttribute('readonly'))
-          self.listEdits.push([self.list[curRow],'edit'])
-          self.list[curRow][self.cols[curCol].id]=el.value
-
-       }
-       el.setAttribute('readonly',true)
-       removeClass(el,"bila2")
-       //alert('aaa' + ekeyCode+ el.value)
-
-     })
-     switch (ekeyCode) {
-
-       case 40: //Sipka dolu
-       if (curRow < rows) {
-          newId +=  (curRow + 1) + '_c_' +curCol
-          var newObalId =  'd'+newId.substring(1)
-          var newObal = document.getElementById(newObalId)
-          changeClass(newObal,'dcell','dcell_edit')
-          changeClass(elObal,'dcell_edit','dcell')
-          isPresun = true
-          document.getElementById(newId).focus()
-       }
-       break;
-       case 34: //pgDn
-        var tmpRow=curRow + 6
-        var tmpNewId = newId
-        newId +=  (tmpRow) + '_c_' +curCol
-
-       while (tmpRow >= self.list.length && tmpRow>-1){
-          tmpRow--
-          newId = tmpNewId
-          newId +=  (tmpRow ) + '_c_' +curCol
-
-          if (document.getElementById(newId)){
-            //alert(newId)
-            break;
-          }
-        }
-        setTimeout(function(){
-
-          var newObalId =  'd'+newId.substring(1)
-          var newObal = document.getElementById(newObalId)
-          addClass(elObal,'dcell')
-          addClass(newObal,'dcell_edit')
-
-
-          changeClass(elObal,'dcell_edit','dcell')
-          changeClass(newObal,'dcell','dcell_edit')
-          removeClass(elObal,'elevation-20')
-          addClass(newObal,'elevation-20')
-
-
-          isPresun = true
-          document.getElementById(newId).focus()
-         },100)
-
-        break;
-        case 33: //pgUp
-        var tmpRow=curRow - 6
-        var tmpNewId = newId
-        newId +=  (tmpRow) + '_c_' +curCol
-
-       while (tmpRow <0 && tmpRow<self.list.length ){
-          tmpRow++
-          newId = tmpNewId
-          newId +=  (tmpRow ) + '_c_' +curCol
-
-          if (document.getElementById(newId)){
-            //alert(newId)
-            break;
-          }
-        }
-        setTimeout(function(){
-
-          var newObalId =  'd'+newId.substring(1)
-          var newObal = document.getElementById(newObalId)
-          addClass(elObal,'dcell')
-          addClass(newObal,'dcell_edit')
-
-
-          changeClass(elObal,'dcell_edit','dcell')
-          changeClass(newObal,'dcell','dcell_edit')
-          removeClass(elObal,'elevation-20')
-          addClass(newObal,'elevation-20')
-
-
-          isPresun = true
-          document.getElementById(newId).focus()
-         },100)
-
-        break;
-        case 38: //Sipka nehoru
-       if (curRow > 0) {
-          newId +=  (curRow - 1) + '_c_' +curCol
-          var newObalId =  'd'+newId.substring(1)
-          var newObal = document.getElementById(newObalId)
-          changeClass(newObal,'dcell','dcell_edit')
-          changeClass(elObal,'dcell_edit','dcell')
-          addClass(newObal,'elevation-20')
-          removeClass(elObal,'elevation-20')
-
-          isPresun = true
-          document.getElementById(newId).focus()
-          // alert(document.getElementById(newId))
-       }
-
-        break;
-      case 37: //Sipka left
-       if (curCol > 0) {
-          newId +=  (curRow ) + '_c_' +(curCol - 1)
-          var newObalId =  'd'+newId.substring(1)
-          var newObal = document.getElementById(newObalId)
-          changeClass(newObal,'dcell','dcell_edit')
-          changeClass(elObal,'dcell_edit','dcell')
-          addClass(newObal,'elevation-20')
-          removeClass(elObal,'elevation-20')
-
-          isPresun = true
-          // alert(newId)
-          document.getElementById(newId).focus()
-          // alert(document.getElementById(newId))
-       }
-//        this.aInfo.push('ESC')
-        break;
-
-
-      case 39: //Sipka right
-       if (curCol < cols) {
-          newId +=  (curRow ) + '_c_' +(curCol + 1)
-          var newObalId =  'd'+newId.substring(1)
-          var newObal = document.getElementById(newObalId)
-          changeClass(newObal,'dcell','dcell_edit')
-          changeClass(elObal,'dcell_edit','dcell')
-          addClass(newObal,'elevation-20')
-          removeClass(elObal,'elevation-20')
-          isPresun = true
-          // alert(newId)
-          document.getElementById(newId).focus()
-          // alert(document.getElementById(newId))
-       }
-        //this.aInfo.push('ESC')
-        break;
-    case 9: //Tabulator
-       var newCol = 0
-       if (!eshiftKey){
-        if (curCol < cols && !eshiftKey ) {
-           newCol = curCol + 1
-           newId +=  (curRow ) + '_c_' +(newCol)
-         }
-
-
-        if (curCol == cols && !eshiftKey ) {
-        if (curRow < rows) {
-           newCol =  1
-           newId +=  (curRow + 1) + '_c_' +(newCol)
-         }
-        if (curRow == rows) {
-           self.newLine()
-           newCol =  1
-           newId +=  (curRow + 1) + '_c_'+(newCol)
-
-
-           return
-         }
-        }
-       }
-
-       if (eshiftKey) {
-        if (curCol <= cols && curCol > 0 ) {
-          newCol = curCol - 1
-          newId +=  (curRow ) + '_c_' +(newCol)
-        }
-        if (curCol == 0 && curRow>0) {
-          newCol = cols - 1
-          newId +=  (curRow -1 ) + '_c_' +(newCol)
-        }
-
-        if (curCol == 0 && curRow==0) {
-          //newCol = colls - 1
-          newId +=  (curRow  ) + '_c_' +(newCol)
-        }
-
-       }
-
-
-
-          var newObalId =  'd'+newId.substring(1)
-          var newObal = document.getElementById(newObalId)
-          changeClass(newObal,'dcell','dcell_edit')
-          changeClass(elObal,'dcell_edit','dcell')
-          isPresun = true
-          // alert(newId)
-
-          if ( self.cols[newCol].isEdit && document.getElementById(newId).hasAttribute('readonly') ) {
-          document.getElementById(newId).removeAttribute('readonly')
-          document.getElementById(newId).focus()
-          if (!self.cols[newCol].type.match(/select/g)){
-            document.getElementById(newId).select()
-          }
-          addClass(document.getElementById(newId),"bila2")
-
-          // element.selectionEnd = element.selectionStart;
-
-
-          // self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
-          this.isWrite = true
-          } else {
-            document.getElementById(newId).selectionEnd = document.getElementById(newId).selectionStart;
-            document.getElementById(newId).focus()
-          }
-
-
-        break;
-
-       default:
-        break;
-     }
-
-     if (keyCodes.indexOf(ekeyCode)>-1){
-       e.preventDefault()
-       e.stopPropagation()
-       e.stopImmediatePropagation()
-     }
-/*
-      if (this.isWrite == true && isPresun == true ) {
-       document.getElementById(newId).className=el.className.replace(/cell/,'cell_edit')
-       document.getElementById(newId).removeAttribute('readonly')
-      }
-*/
-       // this.isWrite = true
-
-
-
-     // 40 sipka dolu, 38 sikpa nahoru, 37 left, 39 right
-
-     //
+   obsluha (e) {
+     f.obsluha2(e,  this)
    },
+
 
 
    currid (itemId, colid) {

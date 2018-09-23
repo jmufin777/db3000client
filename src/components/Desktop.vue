@@ -231,13 +231,18 @@ import ListUsers from './ListUsers'
 import ListModules from '@/components/ListModules.vue'
 import ListGroups from '@/components/ListGroups.vue'
 
+//Havni seznamy - provoz
 import ListStroj from './ListStroj'
+import ListMat from './ListMat'
 
+//Doplnky a seznamy - provoz
 import List2Index from './List2Index'
 import List2StrojSkup from './List2StrojSkup'
 import List2StrojLaminace from './List2StrojLaminace'
 
 import List2MatSubSkup from './List2MatSubSkup'
+import List2MatDostupnost from './List2MatDostupnost'
+
 import List2BarevnostTab2 from './List2BarevnostTab2'
 import List2Potisknutelnost from './List2Potisknutelnost.vue'
 
@@ -295,11 +300,14 @@ export default {
     'list2-matsubskup': List2MatSubSkup,
     'list2-barevnost': List2BarevnostTab2,
     'list2-potisknutelnost': List2Potisknutelnost,
+    'list2-matdostupnost': List2MatDostupnost,
+
 
     'list-users': ListUsers,
     'list-modules': ListModules,
     'list-groups': ListGroups,
     'list-stroj': ListStroj,
+    'list-mat': ListMat,
 
 
     'set-width': SetWidth,
@@ -808,6 +816,7 @@ export default {
         name: 'login'
       })
     }
+    //alert('Des'+ $this.hasClass.hasClass('aaa'))
 
     this.xMenuCopy = this.xMenu
     // alert(this.xMenu)

@@ -606,19 +606,22 @@ export default {
   },
   created () {
     setTimeout(function() {
-     document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
-     document.getElementById("m0031").style.height=Math.round(window.innerHeight - 150)  + "px"
-     document.getElementById("m0032").style.height=Math.round(window.innerHeight - 150)  + "px"
+    if (document.getElementById("m003")) {
+        document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+        document.getElementById("m0031").style.height=Math.round(window.innerHeight - 150)  + "px"
+        document.getElementById("m0032").style.height=Math.round(window.innerHeight - 150)  + "px"
+
+        window.addEventListener('resize', (function() {
+        document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+        document.getElementById("m0031").style.height=Math.round(window.innerHeight - 150)  + "px"
+        document.getElementById("m0032").style.height=Math.round(window.innerHeight - 150)  + "px"
+
+        })
+        )
+    }
+
     },100)
-    window.addEventListener('resize', (function() {
-     document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
-     document.getElementById("m0031").style.height=Math.round(window.innerHeight - 150)  + "px"
-     document.getElementById("m0032").style.height=Math.round(window.innerHeight - 150)  + "px"
 
-    })
-
-
-  )
 
   }
 

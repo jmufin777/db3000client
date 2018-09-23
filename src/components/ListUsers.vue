@@ -431,12 +431,15 @@ export default {
 
    setTimeout(function() {
     document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
+      if (document.getElementById("m005")){
+        window.addEventListener('resize', (function() {
+          document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
+        })
+        )
+      }
   },100)
 
-  window.addEventListener('resize', (function() {
-    document.getElementById("m005").style.height=Math.round(window.innerHeight - 110)  + "px"
-    })
-  )
+
 
 
   }

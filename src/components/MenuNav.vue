@@ -8,8 +8,6 @@
        </v-list-tile-title>
      </v-list-tile-content>
    </v-list-tile>
-
-
        <div style='display:none'>{{ xmenu2 = this.$store.state.xMenuMain }}</div>
       <span class="span_hide" v-for="(ym0, k ) in xmenu2" :key="k" v-model="xmenu2"   >
 
@@ -225,8 +223,6 @@ export default {
 <style scoped>
 .span_hide {
   visibility: visible;
-
-
-
 }
+
 </style>

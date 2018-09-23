@@ -1,5 +1,5 @@
   <template>
-<el-row id="m201" style="overflow:scroll"  class="pa-2" >
+<el-row id="m361" style="overflow:scroll"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -8,7 +8,7 @@
   </el-row>
   <el-row  :gutter="20">
   <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
+  <el-input prefix-icon="el-icon-search" id="search_361" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -48,7 +48,7 @@
 
 </div>
 
-<div style="height:100%;overflow:scroll" class="mt-0" id="t201">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t361">
 
 <el-row    style="backgroud: white">
   <el-col :span="2" class="mth">
@@ -75,12 +75,12 @@
  </el-col>
  </el-row>
 
-<div style="height:100%;overflow:scroll" class="mt-0" id="t202">
-  <form id="f201">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t362">
+  <form id="f361">
 
   <el-row v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
-      :id="'d202_r_'+irow"
+      :id="'d362_r_'+irow"
         style="backgroud: white"
   >
 
@@ -107,30 +107,31 @@
       :span="col.span"
       v-show="col.props.visible=='yes'"
       >
-      <div :id="'d202_r_'+irow+'_c_'+icol"  class='dcell' >
+      <div :id="'d362_r_'+irow+'_c_'+icol"  class='dcell' >
 
         <input type="number" v-if="col.type =='number'"
-        class=" px-4 cell " :id="'c202_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c362_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
 
         >
         <input type="text" v-else
-        class=" px-4 cell " :id="'c202_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c362_r_'+irow+'_c_'+icol"
+
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-        :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
+       :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
 
         >
         <input type="date" v-if="col.type =='datetime-local' && false"
-        class="white px-4 cell seda" :id="'c202_r_'+irow+'_c_'+icol"
+        class="white px-4 cell seda" :id="'c362_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
 
-        min="2007-06-01T08:30" max="2020-06-30T16:30"
+        min="2007-06-01T08:30" max="3620-06-30T16:30"
         >
         <select  v-if="col.type =='select'  && false "
-        class=" px-4 cell" :id="'c202_r_'+irow+'_c_'+icol"
+        class=" px-4 cell" :id="'c362_r_'+irow+'_c_'+icol"
          style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
@@ -186,7 +187,7 @@
     :w="700"
     :y="100"
     :z="90"
-    :h="351"
+    :h="361"
     :parent="false"
     :maximize="false"
     >
@@ -207,18 +208,62 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-import List2Barevnost from '@/services/List2BarevnostService'
-
-import f from '@/services/fce'
-// import List2BarevnostVue from './List2Barevnost.vue';
+import List2MatVyrobce from '@/services/List2MatVyrobceService'
+// import List2StrojSkupVue from './List2StrojSkup.vue';
 
 
+function hasClass(element, cls) {
+    return element.className.split(' ').indexOf(cls) > -1
+}
+
+function hasClassId(elementId, cls) {
+  return document.getElementById(elementId).className.split(' ').indexOf(cls) > -1
+}
+
+function addClass(element, cls) {
+  if (! hasClass(element,cls)){
+    element.className+=(' ' + cls)
+    element.className=element.className.trim()
+  }
+}
+
+function removeClass(element, cls) {
+  if ( hasClass(element,cls)){
+    element.className = element.className.replace(cls,'')
+  }
+}
+
+function changeClass(element,oldClass,newClass) {
+          removeClass(element,oldClass)
+          addClass(element,newClass)
+}
+
+
+function isVisible(el) {
+  var top = el.offsetTop;
+  var left = el.offsetLeft;
+  var width = el.offsetWidth;
+  var height = el.offsetHeight;
+
+  while(el.offsetParent) {
+    el = el.offsetParent;
+    top += el.offsetTop;
+    left += el.offsetLeft;
+  }
+
+  return (
+    top < (window.pageYOffset + window.innerHeight) &&
+    left < (window.pageXOffset + window.innerWidth) &&
+    (top + height) > window.pageYOffset &&
+    (left + width) > window.pageXOffset
+  );
+}
 
 export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'barevnost2',
+      moduleName: 'MatVyrobce',
       saveNow: false,
 
       IsDialog: true,
@@ -236,7 +281,7 @@ export default {
       search:'',
       //event
       //event
-      objSearchBar: 'search_201',
+
       aInfo: [],
       total: 0,
       pagination: {},
@@ -247,8 +292,10 @@ export default {
       minId: 0, //Pro vklad zaporna ID
   		cols: [
 				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:5, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 12, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "vyrobce", title: "Vyrobce", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],
@@ -263,7 +310,7 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await List2Barevnost.all(this.user,'nic')).data
+      this.list = (await List2MatVyrobce.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
@@ -298,7 +345,7 @@ export default {
 //          this.list.unshift(this.aInfo)
 
     }
-        var new_id ='c202_r_'+0+'_c_'+1
+        var new_id ='c362_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -306,7 +353,7 @@ export default {
             //  document.getElementById(new_id).focus()
              // document.getElementById(new_id).click()
               document.getElementById(new_id).setAttribute('readonly',true)
-              f.removeClass(document.getElementById(new_id),"bila2")
+              removeClass(document.getElementById(new_id),"bila2")
               if (!document.getElementById(new_id).type== 'number' ) {
                 document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
               }
@@ -314,7 +361,7 @@ export default {
             //setTimeout(function(){
 
 
-              f.changeClass(newObal,'dcell','dcell_edit')
+              changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
 
          },50)
@@ -328,15 +375,50 @@ export default {
 
 setTimeout(function(){
   var tmpObj=''
-  var _obj1 ='m201'
-  var _obj2 ='t201'
-  var _obj3 ='t202'
-  var moduleName = 'list2-barevnost'
-  f.setUp(_obj1,_obj2,_obj3,self,moduleName)
+  var _obj1 ='m361'
+  var _obj2 ='t361'
+  var _obj3 ='t362'
 
+  if (document.getElementById('list2-matvyrobce'))  {
+    tmpObj = document.getElementById('list2-matvyrobce')
+    var s1 = 20
+    var s2 = 50
+    var s3 = 100
+    var _h = tmpObj.clientHeight
+    var _w = tmpObj.clientWidth
+
+  } else {
+    tmpObj = window
+    var s1 = 110
+    var s2 = 140
+    var s3 = 270
+    var _h = tmpObj.innerHeight
+    var _w = tmpObj.innerWidth
+
+  }
+
+
+    document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
+    document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
+    document.getElementById(_obj3).style.height=Math.round(_h - s3)  + "px"
+    document.getElementById(_obj3).addEventListener('keydown', (function(e) {
+             self.obsluha(e, e.target)
+      }))
+
+    document.getElementById(_obj3).addEventListener('click', (function(e) {
+
+             self.obsluha(e, e.target)
+      }))
+
+    window.addEventListener('resize', (function() {
+    document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
+    document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
+    document.getElementById(_obj3).style.height=Math.round(_h - s3)  + "px"
+    // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
+  })
+  )
+    // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
   },100)
-
-
   },
   beforeDestroy () {
 
@@ -350,12 +432,12 @@ setTimeout(function(){
 
   },
   destroyed () {
-    if (document.getElementById("t202")){
+    if (document.getElementById("t362")){
         ///nejde
-      //document.getElementById("t202").removeEventListener(document.getElementById("t202"),'keydown')
+      //document.getElementById("t362").removeEventListener(document.getElementById("t362"),'keydown')
 
     }
-    // alert('destos'+document.getElementById("t202"))
+    // alert('destos'+document.getElementById("t362"))
   },
   beforeUpdate () {
 
@@ -435,7 +517,7 @@ copyLine(nRow) {
        }
      })
 
-     await List2Barevnost.insert(this.user, {data: Posli, del: aDel })
+     await List2MatVyrobce.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -447,7 +529,7 @@ copyLine(nRow) {
       var neco = []
 
      try {
-      this.list = (await   List2Barevnost.all(this.user,'nic')).data
+      this.list = (await   List2MatVyrobce.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -459,7 +541,7 @@ copyLine(nRow) {
         this.list = _.sortBy(this.list,'id').reverse()
 
         ////
-        var new_id ='c202_r_'+0+'_c_'+1
+        var new_id ='c362_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -471,7 +553,7 @@ copyLine(nRow) {
                 document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
               }
             //setTimeout(function(){
-              f.changeClass(newObal,'dcell','dcell_edit')
+              changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
          },50)
 
@@ -524,7 +606,7 @@ copyLine(nRow) {
      var x
       this.listNewLine = []
 
-      this.Max = (await List2Barevnost.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await List2MatVyrobce.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -558,7 +640,7 @@ copyLine(nRow) {
           this.list.forEach((el,idx) => {
             if  (el.id == this.minId){
               //var new_id = 'c'
-              new_id ='c202_r_'+idx+'_c_'+1
+              new_id ='c362_r_'+idx+'_c_'+1
               return
 
               //alert(new_id)
@@ -626,14 +708,14 @@ copyLine(nRow) {
        }
      //self.list.splice(nRow,1)
      if (eof == true) {
-       new_id='c202_r_'+(self.list.length -1)+'_c_'+1
+       new_id='c362_r_'+(self.list.length -1)+'_c_'+1
      }
      if (top == true) {
-       new_id='c202_r_'+(0)+'_c_'+1
+       new_id='c362_r_'+(0)+'_c_'+1
      }
 
     if (next == true) {
-       new_id='c202_r_'+(nRow)+'_c_'+1
+       new_id='c362_r_'+(nRow)+'_c_'+1
      }
 
         if (new_id > '')  {
@@ -643,7 +725,7 @@ copyLine(nRow) {
           setTimeout(function(){
             if (!document.getElementById(new_id)){
                 alert(new_id + 'neco je sptane' + eof + "top " + top + "next "+next )
-                new_id='c202_r_'+(self.list.length -1)+'_c_'+1
+                new_id='c362_r_'+(self.list.length -1)+'_c_'+1
             }
               var newObal= document.getElementById('d'+new_id.substring(1))
 
@@ -651,7 +733,7 @@ copyLine(nRow) {
             //  document.getElementById(new_id).focus()
              // document.getElementById(new_id).click()
               document.getElementById(new_id).setAttribute('readonly',true)
-              f.removeClass(document.getElementById(new_id),"bila2")
+              removeClass(document.getElementById(new_id),"bila2")
               if (!document.getElementById(new_id).type == 'number') {
                 document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
               }
@@ -659,8 +741,27 @@ copyLine(nRow) {
             //setTimeout(function(){
 
 
-              f.changeClass(newObal,'dcell','dcell_edit')
+              changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
+      /*
+              var e = new Event("keyup");
+              // e.key="a";    // just enter the char you want to send
+              //e.keyCode=e.key.charCodeAt(0);
+              e.keyCode=27
+              e.which=e.keyCode;
+              e.altKey=false;
+              e.ctrlKey=false;
+              e.shiftKey=false;
+              e.metaKey=false;
+              //e.bubbles=true;
+              //document.dispatchEvent(e);
+              document.getElementById(new_id).dispatchEvent(e);
+              //alert('escpe')
+            //},1000)
+
+       //       document.getElementById(new_id).select()
+       */
+
           },100)
          }
 
@@ -709,8 +810,441 @@ copyLine(nRow) {
 
      }
    },
-   obsluha (e) {
-     f.obsluha2(e, this.objSearchBar, this)
+   obsluha (e)  {
+
+     var self = this
+     var rows = this.list.length - 1
+     var cols = this.cols.length - 1
+
+     const el=e.target
+     if (el.type=="button" || !el.type) {
+
+       return
+     }
+
+
+     var isPresun =false
+     var elObalId = 'd'+ el.id.substring(1)
+     var elObal = document.getElementById(elObalId)
+     var aEl = el.id.split('_')
+     var curRow = aEl[2]*1
+     var curCol = aEl[4]*1
+     var newId =  aEl[0]+'_r_'
+     var isEdit = self.cols[curCol].isEdit
+
+    var ekeyCode           = e.keyCode
+    var eshiftKey          = e.shiftKey
+    var keyCodes           = Array()
+    var keyCodesExitSave   = Array()
+    var keyCodesExitEscape = Array()
+
+    if (e.type=='click') {
+      ekeyCode = -13
+    }
+
+    keyCodesExitSave   = [13,9,-13]
+    keyCodesExitEscape = [27]
+
+    // var keyCodesExitSave =
+
+
+    if (!self.isWrite && ekeyCode==13 && e.metaKey){
+      //alert('Savez')
+      this.saveLines(0)
+      if (!el.type == 'number') {
+        el.selectionEnd = el.selectionStart
+      }
+      return
+    }
+
+    if (!self.isWrite && (ekeyCode == 46 || ekeyCode == 8 )) {
+      this.deleteLine(curRow)
+      return
+    }
+
+    if (!self.isWrite && ekeyCode == 90 && e.metaKey && self.listEdits.length>0){
+//       this.$alert(ekeyCode)
+       this.backLines()
+       return
+    //  this.deleteLine(curRow)
+
+    }
+
+   //self.aInfo.push([ekeyCode])
+   //return
+    if (document.getElementById('search_361') && ekeyCode == 114 ){
+       document.getElementById('search_361').focus()
+     }
+    keyCodes = keyCodes.concat([13,27,9,-13])
+    keyCodes = keyCodes.concat([40,37,38,39])  //Sipky
+    keyCodes = keyCodes.concat([33,34,35,36])  // PedzDaun, pedzAp. End,Home
+
+    //
+    if (self.isWrite) {
+      var isReturn = true
+      if (keyCodesExitSave.indexOf(ekeyCode)>-1) {
+//        self.aInfo.push(["ExitSave",curCol,curRow])
+        self.isWrite = false
+        // this.cols[curCol].id
+
+      if (self.list[curRow][self.cols[curCol].id]!=el.value) {
+         var prev = self.list[curRow][self.cols[curCol].id]
+          // alert('eee' + prev + "/ "+self.list[curRow])
+          var oldRecord = Array()
+          var y
+          for (y in self.list[curRow]) {
+              oldRecord[y] = self.list[curRow][y]
+          }
+
+          //self.listEdits.push([self.list[curRow],'edit',prev])
+          //alert('tady')
+          self.listEdits.push([oldRecord,'edit',prev])
+          var eLen= self.listEdits.length-1
+
+          //self.listEdits[eLen][self.cols[curCol].id] = prev
+
+          self.list[curRow][self.cols[curCol].id]=el.value
+          self.aInfo.push(self.listEdits)
+          self.aInfo.push(oldRecord)
+
+
+       }
+
+
+        el.setAttribute('readonly',true)
+        removeClass(el,"bila2")
+        isReturn = false
+
+      }
+
+
+      if (keyCodesExitEscape.indexOf(ekeyCode)>-1) {
+        self.isWrite = false
+        el.setAttribute('readonly',true)
+        changeClass(elObal,'dcell','dcell_edit')
+        removeClass(el,"bila2")
+        el.value = this.list[curRow][this.cols[curCol].id]
+//        elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
+        return true
+
+        el.focus()
+      }
+
+      if (ekeyCode==13){
+          ekeyCode=40
+        }
+        if (isReturn == true) {
+          return true
+        }
+
+    }
+
+   //self.aInfo = aEl
+   //self.aInfo.push(keyCodes)
+   //self.aInfo.push(ekeyCode)
+   //  self.aInfo.push([rows, cols])
+   //  self.aInfo.push(['Target: '+ el.id])
+   //  self.aInfo.push([elObalId])
+   //  self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+
+
+     this.info=rows+  "/ " +  cols
+
+     if (Math.abs(ekeyCode) == 13 ) {
+       //el.className=el.className.replace(/cell/,'cell_edit')
+      if ( el.hasAttribute('readonly') && isEdit ) {
+          el.removeAttribute('readonly')
+          addClass(el,"bila2")
+          el.select()
+          self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+          // el.selectionEnd = el.selectionStart;
+          self.isWrite = true
+      }
+     }
+
+     el.onfocus = ( function () {
+
+        // self.aInfo.push(['1. elObaId', elObalId, ' Obal ', elObal ])
+        //elObal.className=elObal.className.replace(/dcell/,'dcell_edit')
+        //elObal.className=elObal.className.replace(/dcell_edit/,'').trim()
+        //elObal.className=elObalNew.className.replace(/dcell/,'').trim()
+
+        el.style.color="black"
+        if (!self.isWrite) {
+          if(!el.type == 'number') {
+            el.selectionEnd = el.selectionStart
+          }
+
+        }
+
+     })
+
+     el.onchange = ( function () {
+
+        if (self.saveNow==true ){
+          //alert('change' + el.id)
+          self.saveLines(0)
+        }
+
+
+
+        el.style.color="green"
+        return
+
+       if (self.list[curRow][self.cols[curCol].id]!=el.value) {
+          self.listEdits.push([self.list[curRow],'edit'])
+          self.list[curRow][self.cols[curCol].id]=el.value
+       }
+
+       // self.listEdits.push([self.list[curRow],'edit'])
+        //self.aInfo.push(self.list[curRow])
+
+
+     })
+
+
+     el.onblur = ( function(){
+       //el.setAttribute('readonly',true)
+       //el.className=el.className.replace(/cell_edit/,'cell')
+       elObal.className=elObal.className.replace(/dcell_edit/,'dcell')
+       el.style.color="black"
+
+
+       if ( !el.hasAttribute('readonly') && curRow < self.list.length && self.list[curRow][self.cols[curCol].id]!=el.value) {
+          //alert('tady :' + el.hasAttribute('readonly'))
+          self.listEdits.push([self.list[curRow],'edit'])
+          self.list[curRow][self.cols[curCol].id]=el.value
+
+       }
+       el.setAttribute('readonly',true)
+       removeClass(el,"bila2")
+       //alert('aaa' + ekeyCode+ el.value)
+
+     })
+     switch (ekeyCode) {
+
+       case 40: //Sipka dolu
+       if (curRow < rows) {
+          newId +=  (curRow + 1) + '_c_' +curCol
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+          isPresun = true
+          document.getElementById(newId).focus()
+       }
+       break;
+       case 34: //pgDn
+        var tmpRow=curRow + 6
+        var tmpNewId = newId
+        newId +=  (tmpRow) + '_c_' +curCol
+
+       while (tmpRow >= self.list.length && tmpRow>-1){
+          tmpRow--
+          newId = tmpNewId
+          newId +=  (tmpRow ) + '_c_' +curCol
+
+          if (document.getElementById(newId)){
+            //alert(newId)
+            break;
+          }
+        }
+        setTimeout(function(){
+
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          addClass(elObal,'dcell')
+          addClass(newObal,'dcell_edit')
+
+
+          changeClass(elObal,'dcell_edit','dcell')
+          changeClass(newObal,'dcell','dcell_edit')
+          removeClass(elObal,'elevation-20')
+          addClass(newObal,'elevation-20')
+
+
+          isPresun = true
+          document.getElementById(newId).focus()
+         },100)
+
+        break;
+        case 33: //pgUp
+        var tmpRow=curRow - 6
+        var tmpNewId = newId
+        newId +=  (tmpRow) + '_c_' +curCol
+
+       while (tmpRow <0 && tmpRow<self.list.length ){
+          tmpRow++
+          newId = tmpNewId
+          newId +=  (tmpRow ) + '_c_' +curCol
+
+          if (document.getElementById(newId)){
+            //alert(newId)
+            break;
+          }
+        }
+        setTimeout(function(){
+
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          addClass(elObal,'dcell')
+          addClass(newObal,'dcell_edit')
+
+
+          changeClass(elObal,'dcell_edit','dcell')
+          changeClass(newObal,'dcell','dcell_edit')
+          removeClass(elObal,'elevation-20')
+          addClass(newObal,'elevation-20')
+
+
+          isPresun = true
+          document.getElementById(newId).focus()
+         },100)
+
+        break;
+        case 38: //Sipka nehoru
+       if (curRow > 0) {
+          newId +=  (curRow - 1) + '_c_' +curCol
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+          addClass(newObal,'elevation-20')
+          removeClass(elObal,'elevation-20')
+
+          isPresun = true
+          document.getElementById(newId).focus()
+          // alert(document.getElementById(newId))
+       }
+
+        break;
+      case 37: //Sipka left
+       if (curCol > 0) {
+          newId +=  (curRow ) + '_c_' +(curCol - 1)
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+          addClass(newObal,'elevation-20')
+          removeClass(elObal,'elevation-20')
+
+          isPresun = true
+          // alert(newId)
+          document.getElementById(newId).focus()
+          // alert(document.getElementById(newId))
+       }
+//        this.aInfo.push('ESC')
+        break;
+
+
+      case 39: //Sipka right
+       if (curCol < cols) {
+          newId +=  (curRow ) + '_c_' +(curCol + 1)
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+          addClass(newObal,'elevation-20')
+          removeClass(elObal,'elevation-20')
+          isPresun = true
+          // alert(newId)
+          document.getElementById(newId).focus()
+          // alert(document.getElementById(newId))
+       }
+        //this.aInfo.push('ESC')
+        break;
+    case 9: //Tabulator
+       var newCol = 0
+       if (!eshiftKey){
+        if (curCol < cols && !eshiftKey ) {
+           newCol = curCol + 1
+           newId +=  (curRow ) + '_c_' +(newCol)
+         }
+
+
+        if (curCol == cols && !eshiftKey ) {
+        if (curRow < rows) {
+           newCol =  1
+           newId +=  (curRow + 1) + '_c_' +(newCol)
+         }
+        if (curRow == rows) {
+           self.newLine()
+           newCol =  1
+           newId +=  (curRow + 1) + '_c_'+(newCol)
+
+
+           return
+         }
+        }
+       }
+
+       if (eshiftKey) {
+        if (curCol <= cols && curCol > 0 ) {
+          newCol = curCol - 1
+          newId +=  (curRow ) + '_c_' +(newCol)
+        }
+        if (curCol == 0 && curRow>0) {
+          newCol = cols - 1
+          newId +=  (curRow -1 ) + '_c_' +(newCol)
+        }
+
+        if (curCol == 0 && curRow==0) {
+          //newCol = colls - 1
+          newId +=  (curRow  ) + '_c_' +(newCol)
+        }
+
+       }
+
+
+
+          var newObalId =  'd'+newId.substring(1)
+          var newObal = document.getElementById(newObalId)
+          changeClass(newObal,'dcell','dcell_edit')
+          changeClass(elObal,'dcell_edit','dcell')
+          isPresun = true
+          // alert(newId)
+
+          if ( self.cols[newCol].isEdit && document.getElementById(newId).hasAttribute('readonly') ) {
+          document.getElementById(newId).removeAttribute('readonly')
+          document.getElementById(newId).focus()
+          document.getElementById(newId).select()
+          addClass(document.getElementById(newId),"bila2")
+
+          // element.selectionEnd = element.selectionStart;
+
+
+          // self.aInfo.push(["Klavesa" + e.keyCode,"IsWrite: " + this.isWrite])
+          this.isWrite = true
+          } else {
+            document.getElementById(newId).selectionEnd = document.getElementById(newId).selectionStart;
+            document.getElementById(newId).focus()
+          }
+
+
+        break;
+
+       default:
+        break;
+     }
+
+     if (keyCodes.indexOf(ekeyCode)>-1){
+       e.preventDefault()
+       e.stopPropagation()
+       e.stopImmediatePropagation()
+     }
+/*
+      if (this.isWrite == true && isPresun == true ) {
+       document.getElementById(newId).className=el.className.replace(/cell/,'cell_edit')
+       document.getElementById(newId).removeAttribute('readonly')
+      }
+*/
+       // this.isWrite = true
+
+
+
+     // 40 sipka dolu, 38 sikpa nahoru, 37 left, 39 right
+
+     //
    },
 
 
@@ -737,7 +1271,7 @@ copyLine(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await List2Barevnost.all(this.user,nic)).data
+      this.list = (await List2MatVyrobce.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -755,13 +1289,13 @@ copyLine(nRow) {
        }
         console.log("FORM:", this.form)
       try {
-        await (List2Barevnost.insert(this.user, this.form))
+        await (List2MatVyrobce.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await List2Barevnost.all(this.user,'nic')
+      await List2MatVyrobce.all(this.user,'nic')
       .then(res => {
 
         //this.info= res

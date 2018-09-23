@@ -8,7 +8,7 @@
   </el-row>
   <el-row  :gutter="20">
   <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" id="search_811" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
+  <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -48,7 +48,7 @@
 
 </div>
 
-<div style="height:100%;overflow:scroll" class="mt-0" id="t811">
+<div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId1">
 
 <el-row    style="backgroud: white">
   <el-col :span="2" class="mth">
@@ -238,7 +238,7 @@ export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'Stroje',
+      moduleName: 'list-mat',
       saveNow: false,
 
       IsDialog: true,
@@ -256,9 +256,9 @@ export default {
       search:'',
       //event
       //event
-      objId1: '811',
-      objId2: '812',
-      objSearchBar: 'search_811',
+      objId1: '821',
+      objId2: '822',
+      objSearchBar: 'search_821',
 
       aInfo: [],
       total: 0,
@@ -377,7 +377,7 @@ setTimeout(function(){
   var _obj1 ='m' + self.objId1
   var _obj2 ='t' + self.objId1
   var _obj3 ='t' + self.objId2
-  var moduleName='list-stroj'
+  var moduleName= self.moduleName
 
   f.setUp(_obj1,_obj2,_obj3,self,moduleName)
 

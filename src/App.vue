@@ -39,10 +39,13 @@ export default {
 
  }
  .NejsemVidet {
-   opacity: 0.1;
-   visibility: hidden;
-   display: none;
+   opacity: 0.5;
+   /* visibility: hidden;
+   display: none; */
+   visibility: visible;
+   display: block;
  }
+
  div {
    border-radius: 0px !important;
  }
@@ -70,6 +73,7 @@ export default {
  }
 
  /* Tabulky */
+
  * {
   box-sizing: border-box;
 }
@@ -140,6 +144,7 @@ html div {
   font-style: italic;
 }
 
+
 .dcell {
   border: solid 1px;border-color:silver;
    /* height: 22px; */
@@ -168,9 +173,6 @@ html div {
 .bila2{
   background-color: #E0F7FA !important;
 }
-
-
-
 
 
 
