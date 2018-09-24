@@ -826,6 +826,10 @@ export default {
 
     this.AddDefault()
     this.MenuF()
+    if (this.$store.state.user=='host') {
+      this.compa.unshift([{modul: 'test-pet', title: 'F', where: 'par[5]'}])
+    }
+
 
 
     window.addEventListener('resize', this.handleResize)
