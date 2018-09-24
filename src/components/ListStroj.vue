@@ -620,7 +620,7 @@ copyLine(nRow) {
           this.list.forEach((el,idx) => {
             if  (el.id == this.minId){
               //var new_id = 'c'
-              new_id ='c' + selef.objId2 +'_r_'+idx+'_c_'+1
+              new_id ='c' + self.objId2 +'_r_'+idx+'_c_'+1
               return
               //alert(new_id)
             }

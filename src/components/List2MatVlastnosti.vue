@@ -121,8 +121,10 @@
           <option
             v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
             :value="item2.idefix"
+
             >
           </option>
+
        </select>
     <el-dropdown v-else-if="col.type=='selectone2'">
       <span class="el-dropdown-link">
@@ -202,7 +204,7 @@
     :w="700"
     :y="100"
     :z="90"
-    :h="351"
+    :h="359"
     :parent="false"
     :maximize="false"
     >
@@ -223,7 +225,7 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-import List2MatDodavatel from '@/services/List2MatDodavatelService'
+import List2MatVlastnosti from '@/services/List2MatVlastnostiService'
 import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
@@ -234,7 +236,7 @@ export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'list2-matdodavatel',
+      moduleName: 'list2-matvlastnosti',
       saveNow: false,
 
       IsDialog: true,
@@ -252,9 +254,9 @@ export default {
       search:'',
       //event
       //event
-      objId1: '351',
-      objId2: '352',
-      objSearchBar: 'search_351',
+      objId1: '401',
+      objId2: '402',
+      objSearchBar: 'search_401',
 
       aInfo: [],
       total: 0,
@@ -267,22 +269,11 @@ export default {
       lastId: '',
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 3, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:3, isEdit: true, type: "number",props:{visible: 'yes'}},
 
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "mat", title: "Material", cssClasses: "mtd", span: 1, isEdit: true, type: "selectone" ,values: [] ,selected: 0,props:{visible: 'yes'}},
-        { id: "ico", title: "ICO", cssClasses: "mtd", span: 1, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "ulice", title: "Ulice", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "obec", title: "Obec", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "psc", title: "psc", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "tel", title: "Tel", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "mail", title: "Email", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "dic", title: "DIC", cssClasses: "mtd", span: 1, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-
-
-         // dic, ulice, obec,psc, tel, mail
-
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 6, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "popis", title: "Popis", cssClasses: "mtd", span: 7, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
@@ -300,7 +291,7 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await List2MatDodavatel.all(this.user,'nic')).data
+      this.list = (await List2MatVlastnosti.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
@@ -333,14 +324,6 @@ export default {
       }
           this.aInfo['id']=-1
 //          this.list.unshift(this.aInfo)
-
-      this.cols.forEach((el,i)=>{
-        if (el.id =='mat') {
-
-            this.cols[i].values.push({idefix: 1, nazev: "Ano"      })
-            this.cols[i].values.push({idefix: 2, nazev: "Ne"      })
-        }
-      })
 
 
       //console.log( this.cols)
@@ -472,14 +455,7 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, ico: el.ico
-         ,dic: el.dic
-         ,ulice: el.ulice
-         ,obec: el.obec
-         ,psc: el.psc
-         ,tel: el.tel
-         ,mail: el.mail
-         ,mat: el.mat
+        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, popis: el.popis
 
 
 
@@ -488,7 +464,7 @@ copyLine(nRow) {
        }
      })
 
-     await List2MatDodavatel.insert(this.user, {data: Posli, del: aDel })
+     await List2MatVlastnosti.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -500,7 +476,7 @@ copyLine(nRow) {
       var neco = []
 
      try {
-      this.list = (await   List2MatDodavatel.all(this.user,'nic')).data
+      this.list = (await   List2MatVlastnosti.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -578,7 +554,7 @@ copyLine(nRow) {
       const self = this
       this.listNewLine = []
 
-      this.Max = (await List2MatDodavatel.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await List2MatVlastnosti.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -722,6 +698,12 @@ copyLine(nRow) {
             }
 
 
+
+
+
+
+
+
           },100)
          }
 
@@ -782,7 +764,7 @@ copyLine(nRow) {
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev', 'kod','ico','dic', 'ulice', 'obec','psc', 'tel', 'mail','user_insert']
+    var seekStr=['id', 'nazev', 'kod','popis','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }
@@ -798,7 +780,7 @@ copyLine(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await List2MatDodavatel.all(this.user,nic)).data
+      this.list = (await List2MatVlastnosti.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -816,13 +798,13 @@ copyLine(nRow) {
        }
         console.log("FORM:", this.form)
       try {
-        await (List2MatDodavatel.insert(this.user, this.form))
+        await (List2MatVlastnosti.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await List2MatDodavatel.all(this.user,'nic')
+      await List2MatVlastnosti.all(this.user,'nic')
       .then(res => {
 
         //this.info= res

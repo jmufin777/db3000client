@@ -245,6 +245,8 @@ import List2MatDostupnost from './List2MatDostupnost'
 
 import List2BarevnostTab2 from './List2BarevnostTab2'
 import List2Potisknutelnost from './List2Potisknutelnost.vue'
+import List2MatDodavatel from './List2MatDodavatel.vue'
+
 
 import DBsystem from './DBsystem'
 
@@ -308,6 +310,7 @@ export default {
     'list-groups': ListGroups,
     'list-stroj': ListStroj,
     'list-mat': ListMat,
+    'list-dodavatel': List2MatDodavatel,
 
 
     'set-width': SetWidth,

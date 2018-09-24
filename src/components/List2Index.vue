@@ -1,14 +1,18 @@
 <template>
 <div >
-
-
-    <div  v-for="(c,i) in compa2" :key="i" style="float:left;background:white;height:250px;width:33%" :id="c[0]">
+<keep-alive>
+<draggable v-model="compa2"  :options="{group: 'SoloSeparate'}" @start="drag=true" @end="drag=false"  :drag-handle="'.drag00'">
+    <div  v-for="(c,i) in compa2" :key="i" :style="'float:left;background:white;height:250px;width:'+c[2]+'%'" :id="c[0]">
       {{c[1]}}
       <div>
+
           <component :is="c[0]"></component>
+
       </div>
       <br><br>
    </div>
+</draggable>
+</keep-alive>
 <!--
     <div style="float:left;background:white;height:250px;width:30%" id="list2-strojskup">
       Skupiny strojuxxxx
@@ -68,6 +72,7 @@ import List2MatSubSkup from './List2MatSubSkup'
 import List2MatSirka from './List2MatSirka.vue'
 import List2BarevnostTab2 from './List2BarevnostTab2'
 import List2Potisknutelnost from './List2Potisknutelnost.vue'
+import List2MatVlastnosti from './List2MatVlastnosti.vue'
 import List2MatDostupnost from './List2MatDostupnost.vue'
 import List2MatDodavatel from './List2MatDodavatel.vue'
 import List2MatVyrobce from './List2MatVyrobce.vue'
@@ -84,6 +89,7 @@ export default {
   'list2-strojlaminace': List2StrojLaminace,
   'list2-strojtiskmod': List2StrojTiskMod,
   'list2-barevnost': List2BarevnostTab2,
+  'list2-matvlastnosti': List2MatVlastnosti,
   'list2-potisknutelnost': List2Potisknutelnost,
   'list2-matdostupnost': List2MatDostupnost,
   'list2-matdodavatel': List2MatDodavatel,
@@ -95,22 +101,33 @@ export default {
   },
   data: () => {
     return {
+      c33: 33,
       compa2:
         [
 
-          ['list2-matskup', "Skupina Materialy"],
-          ['list2-matsubskup', "Podskupina Materialy"],
-          ['list2-strojskup', "Skupina Stroje"],
-          ['list2-strojlaminace', "Stroje - Laminace"],
-          ['list2-strojtiskmod', "Stroje - Tisk Mod"],
-          ['list2-barevnost', "Barevnost"],
-          ['list2-matvyrobce','Presne oznaceni - vyrobce'],
-          ['list2-potisknutelnost', "Postiknutelnost"],
-          ['list2-matdostupnost','Dostupnost'],
-          ['list2-matsirka', "Sirka"],
-          ['list2-matdodavatel','Dodavatel materialu'],
-          ['list-stroj','Stroje'],
-          ['list-mat','Materialy'],
+          ['list-mat','Materialy',100],
+          ['list2-matvyrobce','Presne oznaceni - vyrobce',50],
+          ['list2-matvlastnosti','Vlastnost',50],
+
+          ['list2-matsubskup', "Podskupina Materialy",50],
+
+          ['list2-matdostupnost','Dostupnost',50],
+          ['list2-matskup', "Skupina Materialy",33],
+
+          ['list2-matdodavatel','Dodavatel materialu',100],
+
+          ['list2-strojskup', "Skupina Stroje",33],
+          ['list2-strojlaminace', "Stroje - Laminace",33],
+          ['list2-strojtiskmod', "Stroje - Tisk Mod",33],
+          ['list2-barevnost', "Barevnost",33],
+
+          ['list2-potisknutelnost', "Postiknutelnost",33],
+
+          ['list2-matsirka', "Sirka",33],
+
+
+          ['list-stroj','Stroje',100],
+
 
 
         ]

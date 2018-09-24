@@ -7,7 +7,7 @@
     </el-col>
   </el-row>
   <el-row  :gutter="20">
-  <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
+  <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" >
   <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
