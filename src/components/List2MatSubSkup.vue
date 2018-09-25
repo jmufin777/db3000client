@@ -1,4 +1,5 @@
   <template>
+
 <el-row id="m371" style="overflow:scroll"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
@@ -199,7 +200,7 @@
   <!-- <hr> -->
  <div>
 
-  <win-dow :title="'events'" :id="`events`"
+  <!-- <win-dow :title="'events'" :id="`events`"
     :x="200"
     :w="700"
     :y="100"
@@ -211,7 +212,7 @@
   i: {{ aInfo }}
 
 
-  </win-dow>
+  </win-dow> -->
 
 
 

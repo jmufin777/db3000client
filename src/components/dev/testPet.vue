@@ -7,6 +7,9 @@
   <div slot="header" class="clearfix drag00">
     <span><a :href="item[2]" :target="item[1]">{{item[1]}}</a></span>
     <el-button style="float: right; padding: 3px 0" type="text" class="drag00" >Presun</el-button>
+    <el-button style="float: right; padding: 3px 0" type="text" class="drag00" >Zavri Vse</el-button>
+    <el-button style="float: right; padding: 3px 0" type="text" class="drag00" >Stop</el-button>
+    <el-button style="float: right; padding: 3px 0" type="text" class="drag00" >Start</el-button>
   </div>
   <div class="text item" style="height:500px">
       <iframe id="frameDoc3" name="frameDoc3" :src="item[2]" style="width:100%; height:100%" width="100%" height="100%"></iframe>
@@ -15,8 +18,6 @@
 </el-card>
 </el-col>
 </draggable>
-
-
 
    <!-- <iframe id="frameDoc3" name="frameDoc3" src="./" style="width:100%; height:100%" width="100%" height="100%"></iframe> -->
 
@@ -39,18 +40,17 @@ export default {
     this.pList.push(Array("GJ_P_1 R","GJ R","https://www.fxblue.com//fxblueview.aspx?id=645853"))
     this.pList.push(Array("EU R 1","EU R 1 (104)","https://www.fxblue.com/fxblueview.aspx?id=356107"))
     this.pList.push(Array("Kacka EJ R","Kacka EJ R","https://www.fxblue.com//fxblueview.aspx?id=Kacka_1")) //Prvni treba brukr, duhy naky upresneni, treti odkaz
+    this.pList.push(Array("PTF54 EU R","PTF54 EU R MAX","https://www.fxblue.com/fxblueview.aspx?id=1000053597"))
 
     this.pList.push(Array("PTF57 GJ","PTF57 GJ MAX","https://www.fxblue.com/fxblueview.aspx?id=20443066"))
     this.pList.push(Array("PTF55 EJ","PTF55 EJ MAX","https://www.fxblue.com/fxblueview.aspx?id=20443065"))
-    this.pList.push(Array("PTF54 EU","PTF54 EU MAX","https://www.fxblue.com/fxblueview.aspx?id=20440414"))
+    this.pList.push(Array("PTF54-EU","PTF54-EU MAX","https://www.fxblue.com/fxblueview.aspx?id=20440414"))
     this.pList.push(Array("Soucet EJ","Soucet EJ","https://www.fxblue.com//fxblueview.aspx?id=Kacka_1,20424457,20429274,20435820,20443065")) //Prvni treba brukr, duhy naky upresneni, treti odkaz
     this.pList.push(Array("Soucet MAX","Soucet MAX ","https://www.fxblue.com//fxblueview.aspx?id=20443065,20443066,20440414")) //Prvni treba brukr, duhy naky upresneni, treti odkaz
 
     this.pList.push(Array("PTF50-01 EJ","PTF50 EJ","https://www.fxblue.com/fxblueview.aspx?id=20424457"))
     this.pList.push(Array("PTF50-03 EJ","PTF50-03 EJ","https://www.fxblue.com/fxblueview.aspx?id=20429274"))
     this.pList.push(Array("PTF52 EJ","PTF52 EJ","https://www.fxblue.com/fxblueview.aspx?id=20435820"))
-
-
 
 
 

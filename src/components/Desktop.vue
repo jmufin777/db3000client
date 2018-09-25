@@ -797,14 +797,6 @@ export default {
 
 
 
-
-
-
-
-
-
-
-
       /*
       this.$store.dispatch('setToken', null)
       this.$store.dispatch('setUser', null)
@@ -814,6 +806,7 @@ export default {
     }
   },
   mounted () {
+    const self = this
     if (!this.isUserLoggedIn) {
       this.$router.push({
         name: 'login'
@@ -827,7 +820,13 @@ export default {
     this.AddDefault()
     this.MenuF()
     if (this.$store.state.user=='host') {
-      this.compa.unshift([{modul: 'test-pet', title: 'F', where: 'par[5]'}])
+      setTimeout(function(){
+        self.drawer =  false
+        self.compa.unshift([{modul: 'test-pet', title: 'F', where: 'par[5]'}])
+
+      },500)
+
+
     }
 
 

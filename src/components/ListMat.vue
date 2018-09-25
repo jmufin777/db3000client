@@ -226,7 +226,7 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-import ListStroj from '@/services/ListStrojService'
+import ListMat from '@/services/ListMatService'
 import List2StrojSkup from '@/services/List2StrojSkupService'
 import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
@@ -272,22 +272,34 @@ export default {
       minId: 0, //Pro vklad zaporna ID
   		cols: [
 				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "idefix_strojskup", title: "Skupina", cssClasses: "mtd" ,span:3, isEdit: true, type: "selectone" ,values: [] ,selected: 0,props:{visible: 'yes'}},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
-     { id: "sirka_mat_max_mm", title: "Sirka\nMat", cssClasses: "mtd" ,span: 1, isEdit: true, type: "number"  ,props:{visible: 'yes'}},
-     { id: "delka_mat_max_mm", title: "Delka\nMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "sirka_tisk_max_mm", title: "Sirka\nTisk", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "delka_tisk_max_mm", title: "Sirka\nTisk", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_strana_mm", title: "To\nStr", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_start_mm", title: "To\nStart", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_spacecopy_mm", title: "Space\nCopy", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_spacejobs_mm", title: "Space\nJob", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_end_mm", title: "ToEnd", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "bez_okraj", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "spadavka_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "space_znacky_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+
+
+          { id: "kod" , title: "Kod", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "typ" , title: "typ", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "idefix_matsubskup" , title: "Typ2", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "idefix_vyrobce", title: "Vyrobce", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "nazev1", title: "Nazev1", cssClasses: "mtd" ,span:1, isEdit: true, type: "text",props:{visible: 'yes'}},
+          { id: "nazev2", title: "Nazev2", cssClasses: "mtd" ,span:1, isEdit: true, type: "textr",props:{visible: 'yes'}},
+          { id: "nazev3", title: "Nazev3", cssClasses: "mtd" ,span:1, isEdit: true, type: "text",props:{visible: 'yes'}},
+          { id: "popis", title: "popis", cssClasses: "mtd" ,span:1, isEdit: true, type: "text",props:{visible: 'yes'}},
+          { id: "idefix_dotavatel", title: "Dod", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "sila_mm", title: "sila", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "vaha_gm2", title: "vaha", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "sirka_mm_zbytek", title: "Z Sirka", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "vyska_mm_zbytek", title: "Z Vyska", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "cena_nakup_m2", title: "Cena Nakup m2", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "koef_naklad", title: "koef Naklad", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "koef_prodej", title: "koef Prodej", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "cena_nakup_kg", title: "Cena nakup Kg", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "cena_nakup_arch", title: "Cena Nakup Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "cena_naklad_arch", title: "Cena Naklad Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "cena_naklad_m2", title: "Cena Naklad m2", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "cena_prodej_m2", title: "Cena Prodej M2", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "cena_prodej_arch", title: "Cena Prodej Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+
+
+
 
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
@@ -305,14 +317,14 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await ListStroj.all(this.user,'nic')).data
+      this.list = (await ListMat.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
         this.list =[{
           id: -1,
           kod: 100,
-          nazev:'Nova'
+          nazev1:'Nova'
         }]
 
         this.newLine(-1)
@@ -476,27 +488,36 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, idefix_strojskup: el.idefix_strojskup,nazev: el.nazev
-        ,sirka_mat_max_mm: el.sirka_mat_max_mm
-        ,delka_mat_max_mm: el.delka_mat_max_mm
-        ,sirka_tisk_max_mm: el.sirka_tisk_max_mm
-        ,delka_tisk_max_mm: el.delka_tisk_max_mm
-        ,tech_okraj_strana_mm: el.tech_okraj_strana_mm
-        ,tech_okraj_start_mm: el.tech_okraj_start_mm
-        ,tech_okraj_spacecopy_mm: el.tech_okraj_spacecopy_mm
-        ,tech_okraj_spacejobs_mm: el.tech_okraj_spacejobs_mm
-        ,tech_okraj_end_mm: el.tech_okraj_end_mm
-        ,bez_okraj: el.bez_okraj
-        ,spadavka_mm: el.spadavka_mm
-        ,space_znacky_mm: el.space_znacky_mm
-
+        aTmp.push({id: el.id
+         ,kod : el.kod
+         ,typ : el.typ
+         ,idefix_matsubskup: el.idefix_matsubskup
+         ,idefix_vyrobce: el.idefix_vyrobce
+         ,nazev1: el.nazev1
+         ,nazev2: el.nazev2
+         ,nazev3: el.nazev3
+         ,popis: el.popis
+         ,idefix_dotavatel: el.idefix_dotavatel
+         ,sila_mm: el.sila_mm
+         ,vaha_gm2: el.vaha_gm2
+         ,sirka_mm_zbytek: el.sirka_mm_zbytek
+         ,vyska_mm_zbytek: el.vyska_mm_zbytek
+         ,cena_nakup_m2: el.cena_nakup_m2
+         ,koef_naklad: el.koef_naklad
+         ,koef_prodej: el.koef_prodej
+         ,cena_nakup_kg: el.cena_nakup_kg
+         ,cena_nakup_arch: el.cena_nakup_arch
+         ,cena_naklad_arch: el.cena_naklad_arch
+         ,cena_naklad_m2: el.cena_naklad_m2
+         ,cena_prodej_m2: el.cena_prodej_m2
+         ,cena_prodej_arch: el.cena_prodej_arch
 
         })
         Posli.push(aTmp)
        }
      })
 
-     await ListStroj.insert(this.user, {data: Posli, del: aDel })
+     await ListMat.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -508,7 +529,7 @@ copyLine(nRow) {
       var neco = []
 
      try {
-      this.list = (await   ListStroj.all(this.user,'nic')).data
+      this.list = (await   ListMat.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -586,7 +607,7 @@ copyLine(nRow) {
       const self = this
       this.listNewLine = []
 
-      this.Max = (await ListStroj.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await ListMat.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -645,7 +666,7 @@ copyLine(nRow) {
 
       var xId = this.list[nRow].id
       var tmpI = -1000000
-     this.$confirm('Vymazat zaznam' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev, '',{
+     this.$confirm('Vymazat zaznam' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev1, '',{
        distinguishCancelAndClose: true,
        confirmButtonText: 'Ano?',
        cancelButtonText: 'Ne'
@@ -796,7 +817,7 @@ copyLine(nRow) {
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev', 'kod','skupina','user_insert']
+    var seekStr=['id', 'nazev1', 'nazev2','nazev3','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }
@@ -812,7 +833,7 @@ copyLine(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await ListStroj.all(this.user,nic)).data
+      this.list = (await ListMat.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -830,13 +851,13 @@ copyLine(nRow) {
        }
         console.log("FORM:", this.form)
       try {
-        await (ListStroj.insert(this.user, this.form))
+        await (ListMat.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await ListStroj.all(this.user,'nic')
+      await ListMat.all(this.user,'nic')
       .then(res => {
 
         //this.info= res
