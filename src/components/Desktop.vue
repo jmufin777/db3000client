@@ -233,7 +233,7 @@ import ListGroups from '@/components/ListGroups.vue'
 
 //Havni seznamy - provoz
 import ListStroj from './ListStroj'
-import ListMat from './ListMat'
+import ListMat from './ListMatView'
 
 //Doplnky a seznamy - provoz
 import List2Index from './List2Index'

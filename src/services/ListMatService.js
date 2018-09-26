@@ -5,6 +5,11 @@ export default {
     //console.log('jedou credentials: ')
     return Api().get('list-mat',{params: {  user: user,id: typ }})
   },
+  one (user,typ) {
+    //console.log('jedou credentials: ')
+    // alert('ONO' + typ )
+    return Api().get('list-mat-one',{params: {  user: user,id: typ }})
+  },
   delete (user, id ) {
     return Api().delete('list-mat', {params: {  user: user,id: id}} )
   },

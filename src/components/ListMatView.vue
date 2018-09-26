@@ -91,8 +91,8 @@
     <div class='dcell'  style="width::100% ; background:white"
     v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
-       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
-       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLineToForm(irow)" ><i class="el-icon-document" size="mini"></i></button>
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLineToForm(irow)" ><i class="el-icon-edit" size="mini"></i></button>
 
    </div>
   </el-col>
@@ -140,9 +140,26 @@
           </el-dropdown-menu>
     </el-dropdown>
 
+        <input type="text" v-else-if="col.type=='textview'"
+        class=" px-0 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+        :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly disabled="true"
+
+        >
+
+        <input type="text" v-else-if="col.type=='numberview'"
+        class=" px-0 pr-2 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+        :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:right" readonly disabled="true"
+
+        >
+
+
+
         <input type="text" v-else
         class=" px-0 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+
         :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
 
         >
@@ -172,7 +189,7 @@
   <div>
     <br><br>
 
-    <!-- <table>
+ <table>
       <tr v-for="(i1, idx) in list" :key="i1.idx" v-if="idx==0">
          <td v-for="(i1 ,idyz) in i1" :key="idyz">{{ idyz }}</td>
       </tr>
@@ -182,7 +199,8 @@
       </tr>
     </table>
 <br>
-<table>
+<list-mat-edit></list-mat-edit>
+<!-- <table>
       <tr v-for="(ie1, iedx) in listEdits" :key="ie1.idx" v-if="iedx==0">
          <td v-for="(ie1 ,iedyz) in ie1" :key="iedyz">{{ iedyz }}</td>
       </tr>
@@ -191,6 +209,7 @@
         <td v-for="(ie2 ,iedy) in ie1" :key="iedy">{{ ie2 }} </td>
       </tr>
     </table> -->
+
 
   </div>
   </div>
@@ -223,12 +242,14 @@
 
 <script>
 
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import ListMat from '@/services/ListMatService'
+import ListMatEdit from './ListMatEdit'
 import List2StrojSkup from '@/services/List2StrojSkupService'
 import f from '@/services/fce'
+
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
 
@@ -236,6 +257,9 @@ import f from '@/services/fce'
 
 export default {
   props: ['visible'],
+  components: {
+    'list-mat-edit': ListMatEdit
+  },
   data () {
     return {
       moduleName: 'list-mat',
@@ -271,32 +295,33 @@ export default {
       lastId: '',
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "idefix", title: "Idefix", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
 
 
 
-          { id: "kod" , title: "Kod", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "idefix_matskup" , title: "Typ", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "idefix_matsubskup" , title: "Typ2", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "idefix_vyrobce", title: "Vyrobce", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "nazev1", title: "Nazev1", cssClasses: "mtd" ,span:1, isEdit: true, type: "text",props:{visible: 'yes'}},
-          { id: "nazev2", title: "Nazev2", cssClasses: "mtd" ,span:1, isEdit: true, type: "textr",props:{visible: 'yes'}},
-          { id: "nazev3", title: "Nazev3", cssClasses: "mtd" ,span:1, isEdit: true, type: "text",props:{visible: 'yes'}},
-          { id: "popis", title: "popis", cssClasses: "mtd" ,span:1, isEdit: true, type: "text",props:{visible: 'yes'}},
-          { id: "idefix_dodavatel", title: "Dod", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "sila_mm", title: "sila", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "vaha_gm2", title: "vaha", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "sirka_mm_zbytek", title: "Z Sirka", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "vyska_mm_zbytek", title: "Z Vyska", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "cena_nakup_m2", title: "Cena Nakup m2", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "koef_naklad", title: "koef Naklad", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "koef_prodej", title: "koef Prodej", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "cena_nakup_kg", title: "Cena nakup Kg", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "cena_nakup_arch", title: "Cena Nakup Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "cena_naklad_arch", title: "Cena Naklad Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "cena_naklad_m2", title: "Cena Naklad m2", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "cena_prodej_m2", title: "Cena Prodej M2", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
-          { id: "cena_prodej_arch", title: "Cena Prodej Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+          { id: "kod" , title: "Kod", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "idefix_matskup" , title: "Typ", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "idefix_matsubskup" , title: "Typ2", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "idefix_vyrobce", title: "Vyrobce", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "nazev1", title: "Nazev1", cssClasses: "mtd" ,span:1, isEdit: true, type: "textview",props:{visible: 'yes'}},
+          { id: "nazev2", title: "Nazev2", cssClasses: "mtd" ,span:1, isEdit: true, type: "textview",props:{visible: 'yes'}},
+          { id: "nazev3", title: "Nazev3", cssClasses: "mtd" ,span:1, isEdit: true, type: "textview",props:{visible: 'yes'}},
+          { id: "popis", title: "popis", cssClasses: "mtd" ,span:1, isEdit: true, type: "textclick",props:{visible: 'yes'}},
+          { id: "idefix_dodavatel", title: "Dod", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "sila_mm", title: "sila", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "vaha_gm2", title: "vaha", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "sirka_mm_zbytek", title: "Z Sirka", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "vyska_mm_zbytek", title: "Z Vyska", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "cena_nakup_m2", title: "Cena Nakup m2", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "koef_naklad", title: "koef Naklad", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "koef_prodej", title: "koef Prodej", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "cena_nakup_kg", title: "Cena nakup Kg", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "cena_nakup_arch", title: "Cena Nakup Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "cena_naklad_arch", title: "Cena Naklad Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "cena_naklad_m2", title: "Cena Naklad m2", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "cena_prodej_m2", title: "Cena Prodej M2", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
+          { id: "cena_prodej_arch", title: "Cena Prodej Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
 
 
 
@@ -436,7 +461,7 @@ editLine(nRow) {
      const self = this
      self.IsDialog = true
      self.Info = nRow
-     eventBus.$emit('dlg9901', {
+     eventBus.$emit('dlg821', {
            'IsDialog': self.IsDialog,
            'cols': self.cols,
            'record': self.list[nRow],
@@ -461,6 +486,38 @@ copyLine(nRow) {
 
 
 
+   },
+
+
+copyLineToForm(nRow) {
+     const self = this
+     self.IsDialog = true
+     self.Info = nRow
+     self.IsDialog = true
+     self.Info = nRow
+     eventBus.$emit('dlg821', {
+           'IsDialog': self.IsDialog,
+           'Akce' : 'copy' ,
+           'Id' :  self.list[nRow]["id"]
+      })
+
+     //alert(nRow+ self.list[nRow]["id"] + " Copy")
+     //self.newLine(nRow)
+   },
+editLineToForm(nRow) {
+     const self = this
+     self.IsDialog = true
+     self.Info = nRow
+     self.IsDialog = true
+     self.Info = nRow
+     eventBus.$emit('dlg821', {
+           'IsDialog': self.IsDialog,
+           'Akce' : 'edit' ,
+           'Id' :  self.list[nRow]["id"]
+      })
+
+     //alert(nRow+ self.list[nRow]["id"] + " Copy")
+     //self.newLine(nRow)
    },
 
 

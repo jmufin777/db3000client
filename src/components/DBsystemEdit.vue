@@ -16,7 +16,7 @@
   id="dialog9004" -->
 
   >
-<div style="opacity:1; background:white;width:100% " id="de9901">
+<div style="opacity:1; background:white;width:100% " class="white" id="de9901">
   <slot name="a1" :sm="8" :md="8" :lg="8" :xl="8"></slot>
 <el-row> <el-col :span="24">
 </el-col></el-row>
