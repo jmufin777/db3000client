@@ -333,16 +333,25 @@ export default {
       'xMenuMain',
       'level',
       'idefix',
-
+      'compaStore'
     ]),
   },
 
   watch: {
     compa: function(){
+
       if (this.compa.length==1){
         this.myFlex=24
       } else {
         this.myFlex=12
+      }
+      //
+      try {
+        this.$store.dispatch('addCompaStore', this.compa)
+
+        //this.$store.commit('SETCOMPASTORE', this.compa )
+      } catch (e) {
+        console.log('Err jarda: ', e )
       }
 
 
@@ -375,6 +384,7 @@ export default {
 
          //this.compa.push([{modul: atmp[idx], title: atmp[idx - 3], where: atmp[idx+2]}])
          this.compa.unshift([{modul: atmp[idx], title: atmp[idx - 3], where: atmp[idx+2]}])
+
 
          this.$router.push({
           name: 'desktop',
@@ -690,6 +700,7 @@ export default {
         this.compa.unshift([{modul: par[3], title: par[0], where: par[5]}])
         this.radio3= par[3]
         this.compa = _.uniqBy(this.compa)
+
       } else {
           this.radio3 = par[3]
       }
@@ -795,8 +806,6 @@ export default {
 
 }
 
-
-
       /*
       this.$store.dispatch('setToken', null)
       this.$store.dispatch('setUser', null)
@@ -807,12 +816,14 @@ export default {
   },
   mounted () {
     const self = this
+
     if (!this.isUserLoggedIn) {
       this.$router.push({
         name: 'login'
       })
     }
     //alert('Des'+ $this.hasClass.hasClass('aaa'))
+    //self.$store.replaceState({})
 
     this.xMenuCopy = this.xMenu
     // alert(this.xMenu)
@@ -827,6 +838,12 @@ export default {
       },500)
 
 
+    } else {
+      if (self.$store.state.compaStore) {
+        self.$store.state.compaStore.forEach(el=>{
+          self.compa.push(el)
+        })
+      }
     }
 
 

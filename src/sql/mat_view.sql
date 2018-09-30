@@ -1,15 +1,67 @@
 select 
-a.* from list_mat a
+*
+--a.*,md.* 
+from list_mat a
+--Enums
 left join list2_matskup ms on a.idefix_matskup = ms.idefix
 left join list2_matsubskup mss on a.idefix_matsubskup = mss.idefix
 left join list2_matvyrobce mv on a.idefix_vyrobce = mv.idefix
-left join list_matvyrobce mv on a.idefix_vyrobce = mv.idefix
+---Propojky 1:1
 left join 
 (select * from list_dodavatel where mat =1 ) md
  on a.idefix_dodavatel = md.idefix
 
+--Propojky n:n
 
-select * from list_mat_vlastnosti
+left join 
+(
+select idefix_mat,b.zkratka,array_agg(distinct sirka_mm::int::text||'x'||vyska_mm::int::text) as rozmer, 
+array_agg(distinct sirka_mm::int) as sirky, array_agg(distinct vyska_mm::int) as delky
+from list_mat_rozmer a join list2_matdostupnost b on a.idefix_dostupnost = b.idefix
+group by b.zkratka, idefix_mat
+) mr on a.idefix =mr.idefix_mat
+  
+ 
+ where a.idefix = 655
+ 
+ 
+
+select idefix_mat,b.zkratka,array_agg(distinct sirka_mm::int::text||'x'||vyska_mm::int::text) as rozmer, 
+array_agg(distinct sirka_mm::int) as sirky, array_agg(distinct vyska_mm::int) as delky
+from list_mat_rozmer a join list2_matdostupnost b on a.idefix_dostupnost = b.idefix
+group by b.zkratka, idefix_mat
+
+select * from list_mat_rozmer
+ 
+ select * from list_mat_rozmer
+ select * from list2_matsubskup
+select * from list_mat_strojskup 
+update list_mat set idefix_dodavatel = 631 where idefix = 655
+update list_mat set popis = 'Testovaci popis materialu' where idefix = 655
+update list_mat set idefix_matskup = 276
+update list_mat set idefix_matsubskup = 430
+
+select * from list2_matskup order by kod
+select * from list_mat_strojskup
+
+select * from list2_matvlastnosti ;
+select * from list2_strojskup;
+select * from list2_matdostupnost;
+select * from list_dodavatel ;
+
+
+insert into list_mat_vlastnosti(idefix_mat,idefix_vlastnost) values (655,939)  
+insert into list_mat_strojskup(idefix_mat,idefix_strojskup) values (655,244) --velkoploch
+insert into list_mat_rozmer(idefix_mat,sirka_mm,vyska_mm, sirka_mm_zbytek,vyska_mm_zbytek, idefix_dostupnost) values (655,106,50000,1,2,286); --na objednavku vzor
+insert into list_mat_rozmer(idefix_mat,sirka_mm,vyska_mm, sirka_mm_zbytek,vyska_mm_zbytek, idefix_dostupnost) values (655,160,50000,3,5,285); --Skladem vzor
+insert into list_mat_rozmer(idefix_mat,sirka_mm,vyska_mm, sirka_mm_zbytek,vyska_mm_zbytek, idefix_dostupnost) values (655,137,50000,3,3,286); --na objednavku vzor
+insert into list_mat_rozmer(idefix_mat,sirka_mm,vyska_mm, sirka_mm_zbytek,vyska_mm_zbytek, idefix_dostupnost) values (655,155,50000,3,4,285); --Skladem vzor
+
+
+select * from list_mat
+--alter table list_mat drop sirka_mm_zbytek cascade
+--alter table list_mat drop vyska_mm_zbytek cascade
+
 select * from list_mat_rozmer
 select * from list_mat_strojskup
 select * from list_mat_stroj

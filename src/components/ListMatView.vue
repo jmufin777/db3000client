@@ -91,6 +91,11 @@
     <div class='dcell'  style="width::100% ; background:white"
     v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
+        <el-tooltip  placement="right" effect="light">
+      <div slot="content">{{ item['popis'] }}</div>
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="showPopis(irow)" ><i class="el-icon-question" size="mini"></i></button>
+     </el-tooltip>
+
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLineToForm(irow)" ><i class="el-icon-document" size="mini"></i></button>
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLineToForm(irow)" ><i class="el-icon-edit" size="mini"></i></button>
 
@@ -199,7 +204,7 @@
       </tr>
     </table>
 <br>
-<list-mat-edit></list-mat-edit>
+<list-mat-edit v-if="IsDialog"></list-mat-edit>
 <!-- <table>
       <tr v-for="(ie1, iedx) in listEdits" :key="ie1.idx" v-if="iedx==0">
          <td v-for="(ie1 ,iedyz) in ie1" :key="iedyz">{{ iedyz }}</td>
@@ -214,9 +219,20 @@
   </div>
   </div>
   </div>
+  <dia-log :title="nadpisInfo" :show="IsShowPopis" v-if="IsShowPopis"><div slot="title2">{{popisInfo}}</div>
+     <v-btn slot="tlacitko"
+            color="primary"
+            flat
+            @click="IsShowPopis = false"
+          >
+            OK
+          </v-btn>
+  </dia-log>
 
   <!-- <hr> -->
  <div>
+
+
    <!--
   <win-dow :title="'events'" :id="`events`"
     :x="200"
@@ -288,6 +304,10 @@ export default {
       total: 0,
       pagination: {},
       form: {},
+      //Popisek materialu
+      IsShowPopis: false,
+      popisInfo: 'Ne',
+      nadpisInfo: 'Ne',
       //Moje tabule a data
       currId: null,
       currentRow: null,
@@ -473,6 +493,17 @@ editLine(nRow) {
 
    },
 
+ showPopis(nRow) {
+   const self = this
+   this.popisInfo = this.list[nRow].popis
+   this.IsShowPopis = true
+   setTimeout(function(){
+     self.IsShowPopis = false
+   },12000)
+   this.nadpisInfo = 'Informace o materialu'
+   //alert(this.list[nRow].popis)
+ },
+
 copyLine(nRow) {
 
      const self = this
@@ -498,7 +529,7 @@ copyLineToForm(nRow) {
      eventBus.$emit('dlg821', {
            'IsDialog': self.IsDialog,
            'Akce' : 'copy' ,
-           'Id' :  self.list[nRow]["id"]
+           'Idefix' :  self.list[nRow]["idefix"]
       })
 
      //alert(nRow+ self.list[nRow]["id"] + " Copy")
@@ -510,10 +541,11 @@ editLineToForm(nRow) {
      self.Info = nRow
      self.IsDialog = true
      self.Info = nRow
+     // alert('aaaa')
      eventBus.$emit('dlg821', {
            'IsDialog': self.IsDialog,
            'Akce' : 'edit' ,
-           'Id' :  self.list[nRow]["id"]
+           'Idefix' :  self.list[nRow]["idefix"]
       })
 
      //alert(nRow+ self.list[nRow]["id"] + " Copy")

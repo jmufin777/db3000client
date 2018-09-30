@@ -25,7 +25,9 @@ export default {
             this.removeClass(element,oldClass)
             this.addClass(element,newClass)
   },
-
+  al(txt) {
+    alert(txt)
+  },
   isVisible(el) {
     var top = el.offsetTop;
     var left = el.offsetLeft;

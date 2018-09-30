@@ -23,6 +23,7 @@ export default new Vuex.Store({
     zMax: 999,
     txt: null,
     xMenuz: [],
+    compaStore: null,
     xMenuMain: []
   },
   mutations: {
@@ -42,8 +43,17 @@ export default new Vuex.Store({
     TXT (state, textik) {
       state.txt = textik
     },
-    SETMENU (state, xMenuz  ) {
+    SETMENU (state, xMenuz) {
        state.xMenuz = xMenuz
+    },
+    SETCOMPASTORE (state, compaStore) {
+      state.compaStore = compaStore
+    },
+    ADDCOMPASTORE (state, compaStore) {
+      state.compaStore = []
+      compaStore.forEach(el => {
+        state.compaStore.push(el)
+      })
     },
     SETMENUMAIN (state, xMenuMain  ) {
       state.xMenuMain = xMenuMain
@@ -51,11 +61,9 @@ export default new Vuex.Store({
    },
     SETWIN (state, newWin) {
        // state.WinDows = []
-
       var nasel = state.WinDows.findIndex( (el) => {
         return el.id === newWin.id
       })
-
 
       // console.log("Nasel : ", nasel )
       if (nasel>=0) {
@@ -86,6 +94,7 @@ export default new Vuex.Store({
     DROPALLWIN (state) {
       state.WinDows = []
     }
+
   },
   actions: {
     setToken ({commit}, token) {
@@ -101,11 +110,11 @@ export default new Vuex.Store({
       commit('setIdefix', idefix)
     },
     setTxt ({commit}, textik) {
-      commit('TXT',textik)
+      commit('TXT', textik)
     },
     setWin ({commit}, newWin) {
       // console.log('Actions- setWin -Dispatch', newWin)
-      commit('SETWIN',newWin)
+      commit('SETWIN', newWin)
     },
     dropWin({commit}, oldWind ) {
       commit('DROPWIN', oldWind)
@@ -115,11 +124,18 @@ export default new Vuex.Store({
     },
 
     setMenu({commit}, xMenuy1) {
-      commit('SETMENU',xMenuy1)
+      commit('SETMENU', xMenuy1)
     },
     setMenuMain({commit}, xMenuMain) {
-      commit('SETMENUMAIN',xMenuMain)
+      commit('SETMENUMAIN', xMenuMain)
+    },
+    setCompaStore({commit}, compaStore) {
+      commit('SETCOMPASTORE', compaStore)
+    },
+    addCompaStore({commit}, compaStore) {
+      commit('ADDCOMPASTORE', compaStore)
     }
+
   },
 
   getters: {

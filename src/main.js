@@ -38,6 +38,7 @@ Vue.component('vue-friendly-iframe', VueFriendlyIframe);
 import VueFrame from 'vue-frame'
 
 import Panel from '@/components/globals/Panel'
+import Dialog from '@/components/globals/Dialog'
 
 import WinDow from '@/components/globals/WinDow'
 
@@ -51,6 +52,7 @@ Vue.component('vue-scrolling-table', VueScrollingTable)
 
 Vue.component('panel', Panel)
 Vue.component('win-dow', WinDow)
+Vue.component('dia-log', Dialog)
 // Vue.component('ram1', Ram1)
 Vue.component('vue-json-pretty', VueJsonPretty)
 // main.js

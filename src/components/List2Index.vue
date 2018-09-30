@@ -78,7 +78,7 @@ import List2MatDodavatel from './List2MatDodavatel.vue'
 import List2MatVyrobce from './List2MatVyrobce.vue'
 
 import ListStroj from './ListStroj.vue'
-import ListMat from './ListMatView.vue'
+import ListMat from './ListMat.vue'
 
 export default {
   components:{
