@@ -358,7 +358,7 @@ export default {
     }
   },
   async mounted () {
-
+    const self = this
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
@@ -423,6 +423,8 @@ export default {
             //setTimeout(function(){
               f.changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
+
+              self.editLineToForm(4)
          },50)
   },
 

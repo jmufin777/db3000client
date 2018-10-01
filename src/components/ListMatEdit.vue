@@ -9,36 +9,40 @@
 
   >
 <!-- <div class="white" id="de821" > -->
-<div style="opacity:1; background:white;width:100%;height:2000px " class="white" id="de821" >
+<div style="opacity:1; background:white;width:100%; " class="white" id="de821" >
   <slot name="a1" :sm="8" :md="8" :lg="8" :xl="8"></slot>
 <el-row> <el-col :span="24">
 </el-col></el-row>
-<el-row>
-  <el-col :span="24">Informace:   </el-col>
-</el-row>
+  <panel :title="Akce">
+    &nbsp;
+  </panel>
+<!-- <el-row>
+
+  <el-col :span="24">{{ Akce }}  </el-col>
+</el-row> -->
 
 <el-form  id="form821" ref="form2" :model="form2" label-width="70px" :label-position="labelPosition" :rules="rules2" class="demo-ruleForm is-success">
    <el-row class="ma-2">
-     <el-col :span="3">Typ </el-col>
+     <el-col :span="3">Skupina </el-col>
      <el-col :span="4" >
 
        <el-select v-model="list.data.mat[0].idefix_matskup"
         filterable
         allow-create
         default-first-option
-        placeholder="Halvni skupina"
+
+        placeholder="Hlavni skupina"
+        id="start821"
 
        style="width:100%" size="mini">
             <el-option
             v-for="item2 in list.data.enum_matskup" :key="item2.idefix*1" :label="item2.nazev"
             :value="item2.idefix*1"
             >
-
           </el-option>
-
        </el-select>
      </el-col>
-          <el-col :span="3">Typ 2</el-col>
+          <el-col :span="3">Upresneni</el-col>
      <el-col :span="8">
 
        <el-select v-model="list.data.mat[0].idefix_matsubskup"
@@ -102,8 +106,6 @@
     <el-row class="ma-2">
      <el-col :span="3">Vlastnosti: </el-col>
      <el-col :span="12">
-
-
        <el-select v-model="list.data.vlastnosti" multiple filterable allow-create default-first-option style="width:100%" size="mini">
             <el-option
             v-for="item4 in list.data.enum_matvlastnosti"
@@ -139,13 +141,19 @@
      <el-col :span="12">
 
 
-       <el-select v-model="list.data.mat[0].idefix_dodavatel"  filterable allow-create default-first-option style="width:100%" size="mini">
+       <el-select v-model="list.data.mat[0].idefix_dodavatel"
+            filterable
+            allow-create
+            default-first-option
+            @change="changeVlastnosti"
+            style="width:100%;"
+            size="mini">
             <el-option
             v-for="item6 in list.data.enum_dodavatel"
             :key="item6.idefix*1"
             :label="item6.nazev"
             :value="item6.idefix*1"
-            @change="changeVlastnosti(item6)"
+
 
             >{{item6.nazev}} </el-option>
        </el-select>
@@ -159,10 +167,160 @@
      </el-col>
      </el-row>
 
- <el-row>
+    <el-row class="ma-2">
+     <el-col :span="3">Kategorie stroju: </el-col>
+     <el-col :span="12">
+       <el-select v-model="list.data.strojskup" multiple filterable allow-create default-first-option style="width:100%" size="mini">
+            <el-option
+            v-for="item8 in list.data.enum_strojskup"
+            :key="item8.idefix*1"
+            :label="item8.nazev"
+            :value="item8.idefix*1"
+            @change="changeVlastnosti(item8)"
+
+            >{{item8.nazev}} </el-option>
+       </el-select>
+     </el-col>
+     </el-row>
+
+      <el-row class="ma-2">
+
+     <el-col :span="12">
+      <el-row>
+        <table >
+          <tr>
+            <td rowspan="1">Dostupnost</td>
+            <td>Sirka</td>
+            <td>Vyska</td>
+            <td>Sirka Zbytek</td>
+            <td>Vyska Zbytek</td>
+          </tr>
+          <tr>
+            <td rowspan="1">
+    <el-select v-model="enum_matdostupnost"
+
+            default-first-option
+            @change="changeVlastnosti"
+            style="width:100%;"
+            size="mini">
+            <el-option
+            v-for="item7 in list.data.enum_matdostupnost"
+            :key="item7.idefix*1"
+            :label="item7.nazev"
+            :value="item7.idefix*1"
+
+
+            >{{item7.nazev}} </el-option>
+       </el-select>
+
+            </td>
+
+            <td>
+              <el-autocomplete
+              class="inline-input mr-1"
+              v-model="sirka_mm"
+              :fetch-suggestions="querySearch3"
+              placeholder="Please Input"
+              @select="handleSelect"
+              size="mini"
+            ></el-autocomplete>
+            </td>
+
+            <td>
+              <el-autocomplete
+              class="inline-input mr-1"
+              v-model="vyska_mm"
+              :fetch-suggestions="querySearch3"
+              placeholder="Please Input"
+              @select="handleSelect"
+              size="mini"
+            ></el-autocomplete>
+            </td>
+            <td>
+              <el-autocomplete
+              class="inline-input mr-1"
+              v-model="sirka_mm_zbytek"
+              :fetch-suggestions="querySearch3"
+              placeholder="Please Input"
+              @select="handleSelect"
+              size="mini"
+            ></el-autocomplete>
+            </td>
+            <td>
+              <el-autocomplete
+              class="inline-input mr-1"
+              v-model="vyska_mm_zbytek"
+              :fetch-suggestions="querySearch3"
+              placeholder="Please Input"
+              @select="handleSelect"
+              size="mini"
+            ></el-autocomplete>
+            </td>
+
+          </tr>
+        </table>
+      </el-row>
+
+     </el-col>
+     <el-col :span="12">
+       <table>
+         <tr v-for="(ie1 , iedx) in list.data.rozmer2" :key="ie1.idx" v-if="iedx==0">
+          <td v-for="(ie2 ,iedyz) in ie1" :key="iedyz">{{ iedyz }}</td>
+         </tr>
+         <tr v-for="(ie3 , iedx2) in list.data.rozmer2" :key="ie3.idx" >
+
+          <td v-for="(ie4 ,i4) in ie3" :key="i4">{{ ie4 }}:{{i4}}</td>
+         </tr>
+
+       </table>
+     </el-col>
+     </el-row>
+
+           <el-row>
+        <el-col :span="3">
+          Tloušťka v mm
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="list.data.mat[0].sila_mm" size="mini"  style="width:100%"></el-input>
+        </el-col>
+        <el-col :span="3"> Váha v g/m2</el-col>
+        <el-col :span="2">
+          <el-input v-model="list.data.mat[0].vaha_gm2" size="mini"  style="width:100%"></el-input>
+        </el-col>
+
+      </el-row>
+      <el-row>
+        <el-col>
+          barva materiálu - Zapomnel jsem - dodelat seznam(kolik barev muze mit jeden material ?)
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <pre>
+         cena_nakup_m2 numeric(10,2),
+         koef_naklad numeric(10,2),   --//spolecna polozka
+         koef_prodej numeric(10,2),
+
+         cena_nakup_kg numeric(10,2),   --!!!! cena za arch je různá podle gramáží papíru
+         cena_nakup_arch numeric(10,2),  --výpočet z ceny za kg, formátu a gr. v db ponecham, prepoctu po ulozeni, nebo prepocitam aplikaci
+         cena_naklad_arch numeric(10,2),    -- vypočteno nákupní cena x nákladový koeficient  - tedy postupne , podle zadanych hodnot
+
+         cena_naklad_m2 numeric(10,2),    -- vypočteno nákupní cena x nákladový koeficient  - tedy postupne , podle zadanych hodnot
+
+
+         cena_prodej_m2 numeric(10,2)   , -- výpočet nákladová cena x prodejní koeficient
+         cena_prodej_arch numeric(10,2)  -- výpočet nákladová cena x prodejní koeficient
+          </pre>
+        </el-col>
+      </el-row>
+
+
+ <el-row class="mt-4">
 <el-form-item>
     <el-button type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
-    >Ulozit</el-button>
+    >Ulozit - Opravit </el-button>
+    <el-button type="primary" id="btn_user_new_submit821" @click="submitForm('form')" size="mini"
+    >Kopie - Novy </el-button>
     <el-button @click="resetForm('form')" size="mini">Reset</el-button>
 </el-form-item>
  </el-row>
@@ -194,9 +352,15 @@ export default {
       links: [],
       labelPosition: 'right',
       IsDialog: false,
+      Akce: 'NICXXX',
       recData: {},
       idRecord: 0,
       list: [],
+      sirka_mm: "0",
+      vyska_mm: "0",
+      sirka_mm_zbytek: "0",
+      vyska_mm_zbytek: "0",
+      enum_matdostupnost: null,
       enums:{
         skup: [],
         subskup: [],
@@ -220,8 +384,18 @@ export default {
     eventBus.$on('dlg821', ( dlgPar ) => {
       //alert('modulik')
       self.IsDialog = true
+      self.Akce = dlgPar.Akce
       //alert(JSON.stringify(dlgPar))
+
       self.getData(dlgPar)
+      .then (res => {
+          if (document.getElementById('start821')){
+            setTimeout(function(){
+              document.getElementById('start821').focus()
+            },200)
+          }
+      })
+
 
 
   })
@@ -266,7 +440,7 @@ export default {
   mounted() {
 
 
-    // alert('M')
+     // alert('M')
   },
 
   methods: {
@@ -330,12 +504,16 @@ export default {
     //Zmeny obsahu  SELECT
 
     changeVlastnosti(item ) {
-      // alert('XXXXXXX')
+      //alert(item.value)
+      alert(JSON.stringify(item))
+    },
+    changeDodavatel(item ) {
+      //alert(item.value)
       alert(JSON.stringify(item))
     },
     ////Zmeny obsahu
     //Auto Komplit
-      querySearch1(queryString, cb) {
+    querySearch1(queryString, cb) {
         var n1 = this.list.data.enum_n1
         var links = n1
         var results = queryString ? links.filter(this.createFilter(queryString)) : links;
