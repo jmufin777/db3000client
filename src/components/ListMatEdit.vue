@@ -101,8 +101,6 @@
      </el-col>
    </el-row>
 
-
-
     <el-row class="ma-2">
      <el-col :span="3">Vlastnosti: </el-col>
      <el-col :span="12">
@@ -115,6 +113,22 @@
             @change="changeVlastnosti(item4)"
 
             >{{item4.nazev}} </el-option>
+       </el-select>
+     </el-col>
+     </el-row>
+
+     <el-row class="ma-2">
+     <el-col :span="3" >Barva : </el-col>
+     <el-col :span="4">
+       <el-select v-model="list.data.barva" multiple filterable allow-create default-first-option style="width:100%" size="mini">
+            <el-option
+            v-for="item9 in list.data.enum_matbarva"
+            :key="item9.idefix*1"
+            :label="item9.nazev"
+            :value="item9.idefix*1"
+            @change="changeVlastnosti(item9)"
+
+            >{{item9.nazev}} </el-option>
        </el-select>
      </el-col>
      </el-row>
@@ -183,6 +197,8 @@
      </el-col>
      </el-row>
 
+
+
       <el-row class="ma-2">
 
      <el-col :span="12">
@@ -200,6 +216,7 @@
     <el-select v-model="enum_matdostupnost"
 
             default-first-option
+            filterable
             @change="changeVlastnosti"
             style="width:100%;"
             size="mini">
@@ -265,18 +282,72 @@
      <el-col :span="12">
        <table>
          <tr v-for="(ie1 , iedx) in list.data.rozmer2" :key="ie1.idx" v-if="iedx==0">
-          <td v-for="(ie2 ,iedyz) in ie1" :key="iedyz">{{ iedyz }}</td>
+           <td >S/O</td>
+           <td>Sirky</td>
+
          </tr>
          <tr v-for="(ie3 , iedx2) in list.data.rozmer2" :key="ie3.idx" >
+           <td>{{ie3.zkratka}}</td>
+           <td>
+             {{ie3.sirky}}
+           </td>
+          <td>
+            <span v-for="(iX, x) in mySplit(ie3.rozmer)" :key="x"
+            >
+            <el-tag v-if="ie3.zkratka=='S'" closable type="success">
+             {{iX}}
+            </el-tag>
+            <el-tag v-else  closable type="warning">
+             {{iX}}
+            </el-tag>
+            </span>
 
-          <td v-for="(ie4 ,i4) in ie3" :key="i4">{{ ie4 }}:{{i4}}</td>
+           </td>
+
+          <td v-for="(ie4 ,i4) in ie3" :key="i4">
+
+              {{ i4 }}
+
+
+
+            </td>
          </tr>
-
        </table>
      </el-col>
      </el-row>
+     <el-row class="ma-2">
+        <el-col :span="3">
+          koef_naklad
+        </el-col>
+        <el-col :span="2">
+           <el-autocomplete
+           class="inline-input mr-1"
+           v-model="list.data.mat[0].koef_naklad"
+           :fetch-suggestions="querySearch19"
+           placeholder="Please Input"
+           @select="handleSelect"
+           size="mini"
+           @change="cena_naklad()"
+           @blur="cena_naklad()"
+         ></el-autocomplete>
+        </el-col>
+        <el-col :span="3">
+          koef_prodej
+        </el-col>
+        <el-col :span="2">
+           <el-autocomplete
+           class="inline-input mr-1"
+           v-model="list.data.mat[0].koef_prodej"
+           :fetch-suggestions="querySearch20"
+           placeholder="Please Input"
+           @select="handleSelect"
+           size="mini"
+       ></el-autocomplete>
 
-           <el-row>
+        </el-col>
+     </el-row>
+
+     <el-row class="ma-2">
         <el-col :span="3">
           Tloušťka v mm
         </el-col>
@@ -287,18 +358,69 @@
         <el-col :span="2">
           <el-input v-model="list.data.mat[0].vaha_gm2" size="mini"  style="width:100%"></el-input>
         </el-col>
+        <el-col :span="3">
+          Nakup kg
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="list.data.mat[0].cena_nakup_kg" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
+        </el-col>
+      </el-row>
+
+
+
+      <el-row class="ma-2">
+        <el-col :span="3">
+           Nakup m2
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="list.data.mat[0].cena_nakup_m2" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
+        </el-col>
+
+
+
+        <el-col :span="3">
+          Naklad m2
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="list.data.mat[0].cena_naklad_m2" size="mini"  style="width:100%" ></el-input>
+        </el-col>
+          <el-col :span="3">
+          Prodej m2
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="list.data.mat[0].cena_prodej_m2" size="mini"  style="width:100%" ></el-input>
+        </el-col>
+
+      </el-row>
+      <el-row class="ma-2">
+        <el-col :span="3">
+          Nakup arch
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="list.data.mat[0].cena_nakup_arch" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
+        </el-col>
+
+
+
+        <el-col :span="3">
+          Naklad arch
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="list.data.mat[0].cena_naklad_arch" size="mini"  style="width:100%" ></el-input>
+        </el-col>
+          <el-col :span="3">
+          Prodej arch
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="list.data.mat[0].cena_prodej_arch" size="mini"  style="width:100%" ></el-input>
+        </el-col>
 
       </el-row>
       <el-row>
         <el-col>
-          barva materiálu - Zapomnel jsem - dodelat seznam(kolik barev muze mit jeden material ?)
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
           <pre>
-         cena_nakup_m2 numeric(10,2),
-         koef_naklad numeric(10,2),   --//spolecna polozka
+         //cena_nakup_m2 numeric(10,2),
+          numeric(10,2),   --//spolecna polozka
          koef_prodej numeric(10,2),
 
          cena_nakup_kg numeric(10,2),   --!!!! cena za arch je různá podle gramáží papíru
@@ -327,12 +449,12 @@
 </el-form>
 </div>
 </v-dialog>
-
 </template>
 <script>
 import { eventBus } from '@/main.js'
 import {mapState} from 'vuex'
 import ListMat from '@/services/ListMatService'
+import f from '@/services/fce'
 
 
 //import List2MatSubSkup from '@/services/List2MatSubSkupService'
@@ -349,6 +471,7 @@ export default {
   },
   data () {
     return {
+      neco: 0,
       links: [],
       labelPosition: 'right',
       IsDialog: false,
@@ -439,7 +562,7 @@ export default {
   },
   mounted() {
 
-
+    //this.cena_naklad()
      // alert('M')
   },
 
@@ -450,26 +573,25 @@ export default {
           // alert(dlgPar.Idefix)
            self.list = []
           if (dlgPar.Idefix > 0 ){
-
             self.list = (await ListMat.one(this.user,dlgPar.Idefix, -1,''))
-
-
-
-              // self.list.data.mat[0].idefix_matskup*=100
-              //self.list.data.mat[0].idefix_matsubskup*=1
-
-
-
-
             }
-
-          //  self.enums.skup = (await List2MatSkup.all(this.user,'nic'))
-
-
-          //alert(JSON.stringify(self.enums.skup))
           },
-          //self.list = (await ListMat.one(this.user,dlgPar.id))
-          //alert(JSON.stringify(self.list))
+    mySplit(ctxt){
+      var neco=(ctxt+",")
+      //alert(neco.split(",")[0] )
+      return neco.split(",")
+    },
+    cena_naklad()  {
+      //alert((this.list.data.mat[0].cena_nakup_m2*1)+"/" + (this.list.data.mat[0].koef_naklad*1) )
+      this.list.data.mat[0].cena_naklad_m2 = (this.list.data.mat[0].cena_nakup_m2*1) *  (this.list.data.mat[0].koef_naklad*1)
+      this.list.data.mat[0].cena_prodej_m2 = (this.list.data.mat[0].cena_naklad_m2*1) *  (this.list.data.mat[0].koef_prodej*1)
+      //this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_nakup
+    } ,
+    cena_prodej()  {
+      //alert((this.list.data.mat[0].cena_nakup_m2*1)+"/" + (this.list.data.mat[0].koef_naklad*1) )
+
+      //this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_nakup
+    } ,
 
     submitForm(formName) {
 
@@ -529,6 +651,21 @@ export default {
       },
       querySearch3(queryString, cb) {
         var n1 = this.list.data.enum_n3
+        var links = n1
+        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        cb(results);
+
+      },
+
+      querySearch20(queryString, cb) {
+        var n1 = this.list.data.enum_koef_prodej
+        var links = n1
+        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        cb(results);
+
+      },
+      querySearch19(queryString, cb) {
+        var n1 = this.list.data.enum_koef_naklad
         var links = n1
         var results = queryString ? links.filter(this.createFilter(queryString)) : links;
         cb(results);

@@ -73,12 +73,13 @@ import List2MatSirka from './List2MatSirka.vue'
 import List2BarevnostTab2 from './List2BarevnostTab2'
 import List2Potisknutelnost from './List2Potisknutelnost.vue'
 import List2MatVlastnosti from './List2MatVlastnosti.vue'
+import List2MatBarva from './List2MatBarva.vue'
 import List2MatDostupnost from './List2MatDostupnost.vue'
 import List2MatDodavatel from './List2MatDodavatel.vue'
 import List2MatVyrobce from './List2MatVyrobce.vue'
 
 import ListStroj from './ListStroj.vue'
-import ListMat from './ListMat.vue'
+// import ListMat from './ListMat.vue'
 
 export default {
   components:{
@@ -90,13 +91,14 @@ export default {
   'list2-strojtiskmod': List2StrojTiskMod,
   'list2-barevnost': List2BarevnostTab2,
   'list2-matvlastnosti': List2MatVlastnosti,
+  'list2-matbarva': List2MatBarva,
   'list2-potisknutelnost': List2Potisknutelnost,
   'list2-matdostupnost': List2MatDostupnost,
   'list2-matdodavatel': List2MatDodavatel,
   'list2-matvyrobce': List2MatVyrobce,
 
   'list-stroj': ListStroj,
-  'list-mat': ListMat,
+  // 'list-mat': ListMat,
   'list2-strojlaminace': List2StrojLaminace,
   },
   data: () => {
@@ -105,13 +107,14 @@ export default {
       compa2:
         [
 
-          ['list-mat','Materialy',100],
+          // ['list-mat','Materialy',100],
           ['list2-matvyrobce','Presne oznaceni - vyrobce',50],
           ['list2-matvlastnosti','Vlastnost',50],
 
-          ['list2-matsubskup', "Podskupina Materialy",50],
 
-          ['list2-matdostupnost','Dostupnost',50],
+          ['list2-matsubskup', "Podskupina Materialy",50],
+          ['list2-matbarva','Barva',33],
+          ['list2-matdostupnost','Dostupnost',33],
           ['list2-matskup', "Skupina Materialy",33],
 
           ['list2-matdodavatel','Dodavatel materialu',100],

@@ -223,7 +223,7 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-import List2MatSkup from '@/services/List2MatSkupService'
+import List2MatBarva from '@/services/List2MatBarvaService'
 import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
@@ -234,7 +234,7 @@ export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'list2-matskup',
+      moduleName: 'list2-matbarva',
       saveNow: false,
 
       IsDialog: true,
@@ -252,9 +252,9 @@ export default {
       search:'',
       //event
       //event
-      objId1: '321',
-      objId2: '322',
-      objSearchBar: 'search_321',
+      objId1: '411',
+      objId2: '412',
+      objSearchBar: 'search_411',
 
       aInfo: [],
       total: 0,
@@ -293,7 +293,7 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await List2MatSkup.all(this.user,'nic')).data
+      this.list = (await List2MatBarva.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
@@ -327,7 +327,13 @@ export default {
           this.aInfo['id']=-1
 //          this.list.unshift(this.aInfo)
 
+      this.cols.forEach((el,i)=>{
+        if (el.id =='mat') {
 
+            this.cols[i].values.push({idefix: 1, nazev: "Ano"      })
+            this.cols[i].values.push({idefix: 2, nazev: "Ne"      })
+        }
+      })
 
 
       //console.log( this.cols)
@@ -467,7 +473,7 @@ copyLine(nRow) {
        }
      })
 
-     await List2MatSkup.insert(this.user, {data: Posli, del: aDel })
+     await List2MatBarva.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -479,7 +485,7 @@ copyLine(nRow) {
       var neco = []
 
      try {
-      this.list = (await   List2MatSkup.all(this.user,'nic')).data
+      this.list = (await   List2MatBarva.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -557,7 +563,7 @@ copyLine(nRow) {
       const self = this
       this.listNewLine = []
 
-      this.Max = (await List2MatSkup.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await List2MatBarva.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -777,7 +783,7 @@ copyLine(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await List2MatSkup.all(this.user,nic)).data
+      this.list = (await List2MatBarva.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -795,13 +801,13 @@ copyLine(nRow) {
        }
         console.log("FORM:", this.form)
       try {
-        await (List2MatSkup.insert(this.user, this.form))
+        await (List2MatBarva.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await List2MatSkup.all(this.user,'nic')
+      await List2MatBarva.all(this.user,'nic')
       .then(res => {
 
         //this.info= res

@@ -1,5 +1,5 @@
-<template>
-<el-row :id="'m'+objId1" style="overflow:scroll"  class="pa-2" >
+  <template>
+<el-row id="m321" style="overflow:scroll"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -7,7 +7,7 @@
     </el-col>
   </el-row>
   <el-row  :gutter="20">
-  <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" >
+  <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
   <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
@@ -48,7 +48,7 @@
 
 </div>
 
-<div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId1">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t321">
 
 <el-row    style="backgroud: white">
   <el-col :span="2" class="mth">
@@ -75,12 +75,12 @@
  </el-col>
  </el-row>
 
-<div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId2 ">
-  <form :id="'f' +objId1">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t322">
+  <form id="f321">
 
   <el-row v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
-      :id="'d'+objId2 + '_r_'+irow"
+      :id="'d322_r_'+irow"
         style="backgroud: white"
   >
 
@@ -105,54 +105,35 @@
       :span="col.span"
       v-show="col.props.visible=='yes'"
       >
-      <div :id="'d'+ objId2+ '_r_'+irow+'_c_'+icol"  class='dcell' >
+      <div :id="'d322_r_'+irow+'_c_'+icol"  class='dcell' >
 
         <input type="number" v-if="col.type =='number'"
-        class=" px-0 cell " :id="'c' + objId2 + '_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c322_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
        >
-       <select v-else-if="col.type=='selectone'" v-model="list[irow][col.id]"
-              class=" px-0 cell " :id="'c' + objId2+ '_r_'+irow+'_c_'+icol"
-              v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-              style="width:100%;border:none;height:22px;width:100%"
-              readonly
-       >
-          <option
-            v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
-            :value="item2.idefix"
-            >
-          </option>
-       </select>
-    <el-dropdown v-else-if="col.type=='selectone2'">
-      <span class="el-dropdown-link">
-        {{list[irow][col.id]}}<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-          <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                  v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
-                  :value="item2.idefix"
-              >
-              <el-checkbox>{{item2.nazev}}</el-checkbox>
-              </el-dropdown-item>
-          </el-dropdown-menu>
-    </el-dropdown>
-
         <input type="text" v-else
-        class=" px-0 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
+        class=" px-4 cell " :id="'c322_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
 
         >
-
         <input type="date" v-if="col.type =='datetime-local' && false"
-        class="white px-0 cell seda" :id="'c'+ objId2 +'_r_'+irow+'_c_'+icol"
+        class="white px-4 cell seda" :id="'c322_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
 
-        min="2007-06-01T08:30" max="8120-06-30T16:30"
+        min="2007-06-01T08:30" max="3220-06-30T16:30"
         >
+        <select  v-if="col.type =='select'  && false "
+        class=" px-4 cell" :id="'c322_r_'+irow+'_c_'+icol"
+         style="width:100%;border:none;height:100%" readonly
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
 
+        >
+        <option :value="item[col.id]" selected >{{ item[col.id] }}</option>
+        <option :value="2" >2</option>
+        </select>
       </div>
 
     	</el-col>
@@ -195,8 +176,7 @@
   </div>
 
   <!-- <hr> -->
- <div>
-   <!--
+<!-- <div>
   <win-dow :title="'events'" :id="`events`"
     :x="200"
     :w="700"
@@ -206,11 +186,10 @@
     :parent="false"
     :maximize="false"
     >
-  i: {{ cols }}
-
+  i: {{ info }}
+  ai: {{ aInfo}}
   </win-dow>
-  //-->
-
+  <hr> -->
 
 </div>
 
@@ -218,14 +197,15 @@
 </el-row>
 
 </template>
+
 <script>
 
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import List2MatSkup from '@/services/List2MatSkupService'
+// import List2MatSkupVue from './List2MatSkup.vue';
 import f from '@/services/fce'
-// import List2StrojSkupVue from './List2MatSubSkup.vue';
 
 
 
@@ -234,7 +214,7 @@ export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'list2-matskup',
+      moduleName: 'matskup',
       saveNow: false,
 
       IsDialog: true,
@@ -252,10 +232,7 @@ export default {
       search:'',
       //event
       //event
-      objId1: '321',
-      objId2: '322',
       objSearchBar: 'search_321',
-
       aInfo: [],
       total: 0,
       pagination: {},
@@ -263,25 +240,15 @@ export default {
       //Moje tabule a data
       currId: null,
       currentRow: null,
-      currentOrigValue: null,
-      lastId: '',
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 11, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "zkratka", title: "zkratka", cssClasses: "mtd", span: 3, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-
-
-
-         // dic, ulice, obec,psc, tel, mail
-
-
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:5, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 9, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "zkratka", title: "Zkratka", cssClasses: "mtd", span: 3, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],
-
-
       list: [],
       listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
       listEdits: [],   //Prehled zmen s prinakem edit, delete
@@ -327,13 +294,8 @@ export default {
           this.aInfo['id']=-1
 //          this.list.unshift(this.aInfo)
 
-
-
-
-      //console.log( this.cols)
-
     }
-        var new_id ='c' + this.objId2+ '_r_'+0+'_c_'+1
+        var new_id ='c322_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -347,9 +309,15 @@ export default {
               }
 
             //setTimeout(function(){
+
+
               f.changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
+
          },50)
+
+
+
   },
 
   created () {
@@ -357,15 +325,14 @@ export default {
 
 setTimeout(function(){
   var tmpObj=''
-  var _obj1 ='m' + self.objId1
-  var _obj2 ='t' + self.objId1
-  var _obj3 ='t' + self.objId2
-  var moduleName= self.moduleName
-
-  f.setUp(_obj1,_obj2,_obj3,self,moduleName)
-
-    // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
+  var _obj1 ='m321'
+  var _obj2 ='t321'
+  var _obj3 ='t322'
+  var moduleName='list2-matskup'
+    f.setUp(_obj1,_obj2,_obj3,self,moduleName)
   },100)
+
+
   },
   beforeDestroy () {
 
@@ -378,13 +345,12 @@ setTimeout(function(){
 
   },
   destroyed () {
-    const self = this
-    if (document.getElementById("t" + self.objId2 )){
+    if (document.getElementById("t322")){
         ///nejde
-
+      //document.getElementById("t322").removeEventListener(document.getElementById("t322"),'keydown')
 
     }
-
+    // alert('destos'+document.getElementById("t322"))
   },
   beforeUpdate () {
 
@@ -428,10 +394,6 @@ copyLine(nRow) {
      self.newLine(nRow)
 
 
-
-
-
-
    },
 
 
@@ -459,10 +421,7 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka
-
-
-        })
+        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka })
         Posli.push(aTmp)
        }
      })
@@ -491,7 +450,7 @@ copyLine(nRow) {
         this.list = _.sortBy(this.list,'id').reverse()
 
         ////
-        var new_id ='c' + this.objId2 + '_r_'+0+'_c_'+1
+        var new_id ='c322_r_'+0+'_c_'+1
               //alert(new_id)
         setTimeout(function(){
              var newObal= document.getElementById('d'+new_id.substring(1))
@@ -554,7 +513,6 @@ copyLine(nRow) {
 
    async newLine (nRow)  {
      var x
-      const self = this
       this.listNewLine = []
 
       this.Max = (await List2MatSkup.all(this.user,'max')).data[0].kod*1 +10
@@ -591,8 +549,9 @@ copyLine(nRow) {
           this.list.forEach((el,idx) => {
             if  (el.id == this.minId){
               //var new_id = 'c'
-              new_id ='c' + self.objId2 +'_r_'+idx+'_c_'+1
+              new_id ='c322_r_'+idx+'_c_'+1
               return
+
               //alert(new_id)
             }
           })
@@ -600,10 +559,11 @@ copyLine(nRow) {
             document.getElementById(new_id).focus()
             document.getElementById(new_id).click()
             document.getElementById(new_id).removeAttribute('readonly')
-            if (!document.getElementById(new_id).type.match(/select/g)){
-              document.getElementById(new_id).select()
-            }
+            document.getElementById(new_id).select()
          },100)
+
+
+
    },
    deleteLine(nRow) {
      const self = this
@@ -657,14 +617,14 @@ copyLine(nRow) {
        }
      //self.list.splice(nRow,1)
      if (eof == true) {
-       new_id='c'+ self.objId2 +'_r_'+(self.list.length -1)+'_c_'+1
+       new_id='c322_r_'+(self.list.length -1)+'_c_'+1
      }
      if (top == true) {
-       new_id='c'+self.objId2+ '_r_'+(0)+'_c_'+1
+       new_id='c322_r_'+(0)+'_c_'+1
      }
 
     if (next == true) {
-       new_id='c'+self.objId2 + '_r_'+(nRow)+'_c_'+1
+       new_id='c322_r_'+(nRow)+'_c_'+1
      }
 
         if (new_id > '')  {
@@ -673,33 +633,43 @@ copyLine(nRow) {
 
           setTimeout(function(){
             if (!document.getElementById(new_id)){
-                // alert(new_id + 'neco je sptane' + eof + "top " + top + "next "+next )
-                new_id='c'+self.objId2+ '_r_'+(self.list.length -1)+'_c_'+1
-                if (!document.getElementById(new_id)){
-                  // alert(new_id + 'neco je sptane 2 Sakris' + eof + "top " + top + "next "+next )
-                } else {
-                  // alert('Trefil jsem se')
-                  setTimeout(function() {
-                    self.isWrite =false
-                    var newObal= document.getElementById('d'+new_id.substring(1))
-                    document.getElementById(new_id).focus()
-                    document.getElementById(new_id).setAttribute('readonly',true)
-
-                   f.removeClass(document.getElementById(new_id),"bila2")
-                   if (!document.getElementById(new_id).type == 'number') {
-                     document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
-                   }
-                  f.changeClass(newObal,'dcell','dcell_edit')
-                  document.getElementById(new_id).focus()
-
-                  },100)
-
-
-                }
-
-                //new_id='c812_r_'+ (0) +'_c_'+1
+                alert(new_id + 'neco je sptane' + eof + "top " + top + "next "+next )
+                new_id='c322_r_'+(self.list.length -1)+'_c_'+1
             }
+              var newObal= document.getElementById('d'+new_id.substring(1))
 
+              this.isWrite =false
+            //  document.getElementById(new_id).focus()
+             // document.getElementById(new_id).click()
+              document.getElementById(new_id).setAttribute('readonly',true)
+              f.removeClass(document.getElementById(new_id),"bila2")
+              if (!document.getElementById(new_id).type == 'number') {
+                document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
+              }
+
+            //setTimeout(function(){
+
+
+              f.changeClass(newObal,'dcell','dcell_edit')
+              document.getElementById(new_id).focus()
+      /*
+              var e = new Event("keyup");
+              // e.key="a";    // just enter the char you want to send
+              //e.keyCode=e.key.charCodeAt(0);
+              e.keyCode=27
+              e.which=e.keyCode;
+              e.altKey=false;
+              e.ctrlKey=false;
+              e.shiftKey=false;
+              e.metaKey=false;
+              //e.bubbles=true;
+              //document.dispatchEvent(e);
+              document.getElementById(new_id).dispatchEvent(e);
+              //alert('escpe')
+            //},1000)
+
+       //       document.getElementById(new_id).select()
+       */
 
           },100)
          }
@@ -750,9 +720,11 @@ copyLine(nRow) {
      }
    },
 
-    obsluha (e) {
+   obsluha (e) {
      f.obsluha2(e,  this)
    },
+
+
 
    currid (itemId, colid) {
        this.currId = itemId
@@ -761,7 +733,7 @@ copyLine(nRow) {
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev', 'kod','zkratka','user_insert']
+    var seekStr=['id', 'nazev', 'kod','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }

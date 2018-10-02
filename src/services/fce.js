@@ -28,6 +28,9 @@ export default {
   al(txt) {
     alert(txt)
   },
+  spl(ctxt,x) {
+    return ctxt.split(x)
+  },
   isVisible(el) {
     var top = el.offsetTop;
     var left = el.offsetLeft;
