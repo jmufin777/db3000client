@@ -13,8 +13,9 @@
   <slot name="a1" :sm="8" :md="8" :lg="8" :xl="8"></slot>
 <el-row> <el-col :span="24">
 </el-col></el-row>
-  <panel :title="Akce">
+  <panel :title="Akce +' : ' + mastrpis ">
     &nbsp;
+    {{list.data.rozmer2}} / {{ idefixThis }}
   </panel>
 <!-- <el-row>
 
@@ -33,6 +34,7 @@
 
         placeholder="Hlavni skupina"
         id="start821"
+
 
        style="width:100%" size="mini">
             <el-option
@@ -201,7 +203,7 @@
 
       <el-row class="ma-2">
 
-     <el-col :span="12">
+     <el-col :span="24">
       <el-row>
         <table >
           <tr>
@@ -217,7 +219,6 @@
 
             default-first-option
             filterable
-            @change="changeVlastnosti"
             style="width:100%;"
             size="mini">
             <el-option
@@ -236,7 +237,7 @@
               <el-autocomplete
               class="inline-input mr-1"
               v-model="sirka_mm"
-              :fetch-suggestions="querySearch3"
+              :fetch-suggestions="querySearch21"
               placeholder="Please Input"
               @select="handleSelect"
               size="mini"
@@ -247,7 +248,7 @@
               <el-autocomplete
               class="inline-input mr-1"
               v-model="vyska_mm"
-              :fetch-suggestions="querySearch3"
+              :fetch-suggestions="querySearch22"
               placeholder="Please Input"
               @select="handleSelect"
               size="mini"
@@ -257,7 +258,7 @@
               <el-autocomplete
               class="inline-input mr-1"
               v-model="sirka_mm_zbytek"
-              :fetch-suggestions="querySearch3"
+              :fetch-suggestions="querySearch23"
               placeholder="Please Input"
               @select="handleSelect"
               size="mini"
@@ -267,24 +268,25 @@
               <el-autocomplete
               class="inline-input mr-1"
               v-model="vyska_mm_zbytek"
-              :fetch-suggestions="querySearch3"
+              :fetch-suggestions="querySearch24"
               placeholder="Please Input"
               @select="handleSelect"
               size="mini"
             ></el-autocomplete>
-            </td>
+            </td><td>
+
+            <el-button type="success" @click="insertRozmer" size="mini">+</el-button></td>
 
           </tr>
         </table>
       </el-row>
 
      </el-col>
-     <el-col :span="12">
-       <table>
+     <el-col :span="24">
+       <table width="100%">
          <tr v-for="(ie1 , iedx) in list.data.rozmer2" :key="ie1.idx" v-if="iedx==0">
            <td >S/O</td>
            <td>Sirky</td>
-
          </tr>
          <tr v-for="(ie3 , iedx2) in list.data.rozmer2" :key="ie3.idx" >
            <td>{{ie3.zkratka}}</td>
@@ -294,23 +296,15 @@
           <td>
             <span v-for="(iX, x) in mySplit(ie3.rozmer)" :key="x"
             >
-            <el-tag v-if="ie3.zkratka=='S'" closable type="success">
-             {{iX}}
+            <el-tag v-if="ie3.zkratka=='S'" closable @close="Zmiz(iX)" type="success">
+             {{myZobr(iX)}}
             </el-tag>
-            <el-tag v-else  closable type="warning">
-             {{iX}}
+            <el-tag v-else  closable @close="Zmiz(iX)" type="warning">
+             {{myZobr(iX)}}
             </el-tag>
             </span>
-
            </td>
 
-          <td v-for="(ie4 ,i4) in ie3" :key="i4">
-
-              {{ i4 }}
-
-
-
-            </td>
          </tr>
        </table>
      </el-col>
@@ -426,9 +420,7 @@
          cena_nakup_kg numeric(10,2),   --!!!! cena za arch je různá podle gramáží papíru
          cena_nakup_arch numeric(10,2),  --výpočet z ceny za kg, formátu a gr. v db ponecham, prepoctu po ulozeni, nebo prepocitam aplikaci
          cena_naklad_arch numeric(10,2),    -- vypočteno nákupní cena x nákladový koeficient  - tedy postupne , podle zadanych hodnot
-
          cena_naklad_m2 numeric(10,2),    -- vypočteno nákupní cena x nákladový koeficient  - tedy postupne , podle zadanych hodnot
-
 
          cena_prodej_m2 numeric(10,2)   , -- výpočet nákladová cena x prodejní koeficient
          cena_prodej_arch numeric(10,2)  -- výpočet nákladová cena x prodejní koeficient
@@ -478,7 +470,10 @@ export default {
       Akce: 'NICXXX',
       recData: {},
       idRecord: 0,
+      idefixThis:0,
       list: [],
+      mastrpis:'X',
+      lastmatskup: 0,
       sirka_mm: "0",
       vyska_mm: "0",
       sirka_mm_zbytek: "0",
@@ -519,14 +514,19 @@ export default {
           }
       })
 
-
-
   })
 
 
   },
   updated (){
-    const self = this
+    const self =   this
+    if (self.list.data && self.list.data.mat[0] && self.list.data.mat[0].idefix_matskup && self.lastmatskup !== (self.list.data.mat[0].idefix_matskup)   ) {
+      self.lastmatskup = self.list.data.mat[0].idefix_matskup
+      this.MastrPis(self.list.data.mat[0].idefix_matskup)
+
+    }
+    // this.MastrPis(self.list.data.mat[0].idefix_matskup)
+
     if (document.getElementById("de821")){
           document.getElementById("de821").addEventListener('keydown', (function(e) {
             //alert(e.keyCode)
@@ -561,6 +561,8 @@ export default {
 
   },
   mounted() {
+//    this.mastrpis =  this.list.data.mat[0].idefix_matskup
+//    this.mastrpis ="XXXX"
 
     //this.cena_naklad()
      // alert('M')
@@ -574,12 +576,82 @@ export default {
            self.list = []
           if (dlgPar.Idefix > 0 ){
             self.list = (await ListMat.one(this.user,dlgPar.Idefix, -1,''))
+            if (dlgPar.Akce=='copy'){
+              self.idefixThis = -1
+            }
+            if (dlgPar.Akce=='edit'){
+              self.idefixThis = dlgPar.Idefix
+            }
             }
           },
     mySplit(ctxt){
-      var neco=(ctxt+",")
+      var neco=(ctxt+'')
       //alert(neco.split(",")[0] )
       return neco.split(",")
+    },
+    myZobr(ctxt){
+      var neco=(ctxt+'')
+      var aPart=neco.split("~")[1]+''
+      if (this.mastrpis == 'D' || this.mastrpis == 'A'){
+        return aPart
+      }
+      if (this.mastrpis == 'R' ){
+        var Sirka = aPart.split('x')[0]+''
+        return Sirka
+
+      }
+
+      return '?: '+ aPart
+      //alert(neco.split(",")[0] )
+
+    },
+    Zmiz(par){
+      var zmizik = par.split('~')[0]
+      const self = this
+      if (zmizik*1 > 0) {
+         this.deleteRozmer(zmizik)
+         alert(par.split('~')[0])
+      }
+    },
+    async deleteRozmer(zmizik ) {
+      const self = this
+      //self.list.data.rozmer2 = []
+       self.list.data.rozmer2 = (await ListMat.one(this.user,this.idefixThis , 14,`delete from list_mat_rozmer where idefix=${zmizik}`)).data.rozmer2
+
+    },
+    async insertRozmer() {
+      const self = this
+      //self.list.data.rozmer2 = []
+      //enum_matdostupnost
+      if (self.sirka_mm > 0 && self.vyska_mm>0 && self.enum_matdostupnost > 0 ){
+      var dotaz_insert = `insert into list_mat_rozmer(idefix_mat,sirka_mm,vyska_mm, sirka_mm_zbytek,vyska_mm_zbytek, idefix_dostupnost)
+      values ( ${self.idefixThis},${self.sirka_mm},${self.vyska_mm},${self.sirka_mm_zbytek},${self.vyska_mm_zbytek},${self.enum_matdostupnost} )`
+
+      self.list.data.rozmer2 = (await ListMat.one(this.user,this.idefixThis , 14,`${dotaz_insert}`)).data.rozmer2
+
+      } else {
+        this.$alert('Neni vybrana dostupnost nebo chybi rozmery', 'Chyba pri vlozeni dostupnosti', {
+          confirmButtonText: 'OK',
+          callback: action => {
+
+          }
+        });
+      }
+
+      // --na objednavku vzor
+       //self.list.data.rozmer2 = (await ListMat.one(this.user,this.idefixThis , 14,`delete from list_mat_rozmer where idefix=${zmizik}`)).data.rozmer2
+
+    },
+    MastrPis(id){
+      const self = this
+      this.list.data.enum_matskup.forEach(el => {
+        if (el.idefix == id){
+          self.mastrpis = el.zkratka
+          return
+
+        }
+      })
+
     },
     cena_naklad()  {
       //alert((this.list.data.mat[0].cena_nakup_m2*1)+"/" + (this.list.data.mat[0].koef_naklad*1) )
@@ -657,6 +729,7 @@ export default {
 
       },
 
+
       querySearch20(queryString, cb) {
         var n1 = this.list.data.enum_koef_prodej
         var links = n1
@@ -670,6 +743,30 @@ export default {
         var results = queryString ? links.filter(this.createFilter(queryString)) : links;
         cb(results);
 
+      },
+      querySearch21(queryString, cb) {
+        var n1 = this.list.data.enum_sirka
+        var links = n1
+        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        cb(results);
+      },
+      querySearch22(queryString, cb) {
+        var n1 = this.list.data.enum_vyska
+        var links = n1
+        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        cb(results);
+      },
+      querySearch23(queryString, cb) {
+        var n1 = this.list.data.enum_sirka_zbytek
+        var links = n1
+        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        cb(results);
+      },
+      querySearch24(queryString, cb) {
+        var n1 = this.list.data.enum_vyska_zbytek
+        var links = n1
+        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        cb(results);
       },
       createFilter(queryString) {
         return (link) => {
