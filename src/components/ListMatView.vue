@@ -424,12 +424,16 @@ export default {
               f.changeClass(newObal,'dcell','dcell_edit')
               document.getElementById(new_id).focus()
 
-              self.editLineToForm(4)
+              // self.editLineToForm(4)
          },50)
   },
 
   created () {
     var self=this
+      eventBus.$on('dlg821rec', ( dlgPar ) => {
+        self.getData()
+
+      })
 
 setTimeout(function(){
   var tmpObj=''
@@ -664,6 +668,21 @@ editLineToForm(nRow) {
      }
 
    },
+   async getData() {
+     // alert('getData')
+     try {
+      this.list = (await   ListMat.all(this.user,'nic')).data
+        //alert(this.lastSort[0]+"/"+this.lastSort[1])
+        if (this.lastSort[1]=='desc'){
+           this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
+        } else {
+          this.list = _.sortBy(this.list,this.lastSort[0])
+        }
+     } catch(e)  {
+       console.log('Funkce getdata vratila chybu')
+     }
+
+   },
    sortByKey(ckey, ascdesc) {
      //alert('sort'+ ckey)
     if (ascdesc == 'asc') {
@@ -746,7 +765,35 @@ editLineToForm(nRow) {
             }
          },100)
    },
-   deleteLine(nRow) {
+   async deleteLine(nRow) {
+     const self = this
+     /*
+      this.$confirm('Vymazat zaznam ' + this.list[nRow].idefix+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev1, '',{
+       distinguishCancelAndClose: true,
+       confirmButtonText: 'Ano?',
+       cancelButtonText: 'Ne'
+     })
+     .then(()=>{
+       var eof = false
+       var top = false
+       var next = false
+       self.IsWaiting = true
+       //self.list = ( ListMat.all(self.user,'nic')).data
+
+     })
+     */
+
+    if (confirm('Vymazat poloku materialu ' + self.list[nRow].nazev1 )) {
+      var prd= (await ListMat.delete(self.user,self.list[nRow].idefix))
+
+
+       self.list = (await ListMat.all(self.user,'nic')).data
+    }
+
+
+
+   },
+   deleteLinex(nRow) {
      const self = this
     //  if (confirm('Vymazat zaznam? '+nRow + "  id:" +this.list[nRow].id )) {
     //    this.listEdits.push([this.list[nRow],'delete'])
@@ -757,7 +804,7 @@ editLineToForm(nRow) {
 
       var xId = this.list[nRow].id
       var tmpI = -1000000
-     this.$confirm('Vymazat zaznam' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev1, '',{
+     this.$confirm('Vymazat zaznam ' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev1, '',{
        distinguishCancelAndClose: true,
        confirmButtonText: 'Ano?',
        cancelButtonText: 'Ne'

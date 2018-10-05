@@ -11,7 +11,8 @@ export default {
     return Api().get('list-mat-one',{params: {  user: user, id: typ, id_query: id_query, string_query: string_query }})
   },
   delete (user, id ) {
-    return Api().delete('list-mat', {params: {  user: user, id: id}} )
+
+    return Api().post('list-mat-delete', {params: {  user: user, id: id}} )
   },
   update (user,  form ) {
     return Api().put('list-mat', { form: form,  user: user})
@@ -20,6 +21,11 @@ export default {
     console.log({'Form': form})
 
     return Api().post('list-mat',  { form: form ,user: user })
+   },
+   saveone (user, idefix, form ) {
+    console.log({'Form': form})
+
+    return Api().post('list-mat-save-one',  { form: form ,user: user, idefix: idefix })
    }
 
 }
