@@ -1,5 +1,9 @@
 select 
-*
+a.idefix
+,ms.nazev as skupina ,mss.nazev  as podskupina
+,a.nazev1,a.nazev2,a.nazev3
+,mv.nazev
+,*
 --a.*,md.* 
 from list_mat a
 --Enums
@@ -15,16 +19,30 @@ left join
 
 left join 
 (
+	
 select idefix_mat,b.zkratka,array_agg(distinct sirka_mm::int::text||'x'||vyska_mm::int::text) as rozmer, 
-array_agg(distinct sirka_mm::int) as sirky, array_agg(distinct vyska_mm::int) as delky
+array_to_string(array_agg(distinct sirka_mm::int),',') as sirky
+				, array_agg(distinct vyska_mm::int) as delky
 from list_mat_rozmer a join list2_matdostupnost b on a.idefix_dostupnost = b.idefix
 group by b.zkratka, idefix_mat
+	
 ) mr on a.idefix =mr.idefix_mat
+
+
+--left join (
+
+--)
+order by ms.nazev, mss.nazev
+
   
+  
+
  
  where a.idefix = 655
  
- 
+select * from list_mat_stroj
+
+
 
 select idefix_mat,b.zkratka,array_agg(distinct sirka_mm::int::text||'x'||vyska_mm::int::text) as rozmer, 
 array_agg(distinct sirka_mm::int) as sirky, array_agg(distinct vyska_mm::int) as delky

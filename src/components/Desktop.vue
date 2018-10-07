@@ -237,14 +237,17 @@ import ListMat from './ListMatView'
 
 //Doplnky a seznamy - provoz
 import List2Index from './List2Index'
+import List2IndexDodVyr from './List2IndexDodVyr'
+import List2IndexMat from './List2IndexMat'
+import List2IndexStroj from './List2IndexStroj'
 import List2StrojSkup from './List2StrojSkup'
 import List2StrojLaminace from './List2StrojLaminace'
 
 import List2MatSubSkup from './List2MatSubSkup'
 import List2MatDostupnost from './List2MatDostupnost'
 
-import List2BarevnostTab2 from './List2BarevnostTab2'
-import List2Potisknutelnost from './List2Potisknutelnost.vue'
+import List2MatBarevnost from './List2MatBarevnost'
+import List2MatPotisknutelnost from './List2MatPotisknutelnost.vue'
 import List2MatDodavatel from './List2MatDodavatel.vue'
 
 
@@ -297,12 +300,16 @@ export default {
     'testy': testy,
     'test-menu': TestMenu,
     'list2-index': List2Index,
+    'list2-index-mat': List2IndexMat,
+    'list2-matsubskup': List2MatSubSkup,
+    'list2-matpotisknutelnost': List2MatPotisknutelnost,
+    'list2-matdostupnost': List2MatDostupnost,
+    'list2-matbarevnost': List2MatBarevnost,
+
+    'list2-index-dodvyr': List2IndexDodVyr,
+    'list2-index-stroj': List2IndexStroj,
     'list2-strojskup': List2StrojSkup,
     'list2-strojlaminace': List2StrojLaminace,
-    'list2-matsubskup': List2MatSubSkup,
-    'list2-barevnost': List2BarevnostTab2,
-    'list2-potisknutelnost': List2Potisknutelnost,
-    'list2-matdostupnost': List2MatDostupnost,
 
 
     'list-users': ListUsers,

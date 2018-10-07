@@ -40,10 +40,9 @@ export default {
  }
  .NejsemVidet {
    opacity: 0.5;
-   /* visibility: hidden;
-   display: none; */
-   visibility: visible;
-   display: block;
+   visibility: hidden;
+   display: none;
+
  }
 
  div {

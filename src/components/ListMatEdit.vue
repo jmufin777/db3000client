@@ -27,8 +27,8 @@
      <el-col :span="4" >
 
        <el-select v-model="list.data.mat[0].idefix_matskup"
-        filterable
-        allow-create
+
+
         default-first-option
         @change="changeSkup"
         placeholder="Hlavni skupina"
@@ -45,7 +45,7 @@
      <el-col :span="8">
       <el-select v-model="list.data.mat[0].idefix_matsubskup"
        filterable
-        allow-create
+
         default-first-option
         @change="changeSubSkup"
         @blur="base"
@@ -102,7 +102,7 @@
     <el-row class="ma-2">
      <el-col :span="3">Vlastnosti: </el-col>
      <el-col :span="12">
-       <el-select v-model="list.data.vlastnosti" multiple filterable allow-create default-first-option
+       <el-select v-model="list.data.vlastnosti" multiple filterable  default-first-option
        @change="changeVlastnosti"
         style="width:100%" size="mini">
             <el-option
@@ -120,7 +120,7 @@
      <el-row class="ma-2">
      <el-col :span="3" >Barva : </el-col>
      <el-col :span="6">
-       <el-select v-model="list.data.barva" multiple filterable allow-create default-first-option
+       <el-select v-model="list.data.barva" multiple filterable  default-first-option
         @change="changeBarva(item9)"
         style="width:100%" size="mini">
             <el-option
@@ -138,7 +138,7 @@
      <el-col :span="3">Vyrobce: </el-col>
      <el-col :span="12">
 
-       <el-select v-model="list.data.mat[0].idefix_vyrobce"  filterable allow-create default-first-option
+       <el-select v-model="list.data.mat[0].idefix_vyrobce"  filterable  default-first-option
         @change="changeVyrobce"
         style="width:100%" size="mini">
             <el-option
@@ -158,7 +158,7 @@
 
        <el-select v-model="list.data.mat[0].idefix_dodavatel"
             filterable
-            allow-create
+
             default-first-option
 
             style="width:100%;"
@@ -179,11 +179,31 @@
        <el-input type="textarea" autosize  v-model="list.data.mat[0].popis" size="mini"  style="width:100%"></el-input>
      </el-col>
      </el-row>
+    <el-row class="ma-2">
+     <el-col :span="3">Technologie: </el-col>
+     <el-col :span="12">
+       <el-select v-model="list.data.stroj" multiple filterable
+
+        default-first-option
+        @change="changeStroj"
+        style="width:100%" size="mini">
+            <el-option
+            v-for="item81 in list.data.enum_stroj"
+            :key="item81.idefix*1"
+            :label="item81.nazev"
+            :value="item81.idefix*1"
+
+            >{{item81.nazev}} </el-option>
+       </el-select>
+     </el-col>
+     </el-row>
 
     <el-row class="ma-2">
      <el-col :span="3">Kategorie stroju: </el-col>
      <el-col :span="12">
-       <el-select v-model="list.data.strojskup" multiple filterable allow-create default-first-option
+       <el-select v-model="list.data.strojskup" multiple filterable
+
+        default-first-option
        @change="changeStrojKat"
         style="width:100%" size="mini">
             <el-option
@@ -601,8 +621,14 @@ export default {
           if (dlgPar.Idefix > 0 ){
             if (dlgPar.Akce=='copy'){
               self.isCopy=true
+              //alert(1)
               self.list = (await ListMat.one(this.user,dlgPar.Idefix, -1,'copy'))
-              self.idefixThis = self.list.data.mat[0].idefix
+              //alert(2)
+              //self.idefixThis = self.list.data.mat[0].idefix
+              self.idefixThis = self.list.data.newId
+              //alert(self.list.data.newId)
+              //alert(self.idefixThis)
+
             }
             if (dlgPar.Akce=='edit'){
               self.isCopy=false
@@ -794,6 +820,7 @@ export default {
         data: self.list.data.mat[0],
         barva: self.list.data.barva,
         strojskup: self.list.data.strojskup,
+        stroj: self.list.data.stroj,
         vlastnosti: self.list.data.vlastnosti
 
           }))
@@ -817,6 +844,8 @@ export default {
         if (self.isCopy == true) {
           this.list = []
           this.IsDialog = false
+          //alert(self.idefixThis,)
+          //return
           var prd= (await ListMat.delete(self.user,self.idefixThis))
           eventBus.$emit('dlg821rec')
         } else {
@@ -892,6 +921,10 @@ export default {
     },
 
 
+   changeStroj(item ) {
+      //alert(item.value)
+      alert(JSON.stringify(item))
+    },
     changeStrojKat(item ) {
       //alert(item.value)
       alert(JSON.stringify(item))
