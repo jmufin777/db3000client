@@ -119,9 +119,10 @@
 
      <el-row class="ma-2">
      <el-col :span="3" >Barva : </el-col>
-     <el-col :span="6">
-       <el-select v-model="list.data.barva" multiple filterable  default-first-option
-        @change="changeBarva(item9)"
+     <el-col :span="4">
+
+       <el-select v-model="list.data.barva"  filterable  default-first-option
+        @change="changeBarva"
         style="width:100%" size="mini">
             <el-option
             v-for="item9 in list.data.enum_matbarva"
@@ -132,6 +133,25 @@
             >{{item9.nazev}} </el-option>
        </el-select>
      </el-col>
+
+
+     <el-col :span="3" >Potisknutelnost : </el-col>
+     <el-col :span="4">
+
+
+       <el-select v-model="list.data.potisknutelnost"  filterable  default-first-option
+        @change="changePotisknutelnost"
+        style="width:100%" size="mini">
+            <el-option
+            v-for="item91 in list.data.enum_matpotisknutelnost"
+            :key="item91.idefix*1"
+            :label="item91.nazev"
+            :value="item91.idefix*1"
+
+            >{{item91.nazev}} </el-option>
+       </el-select>
+     </el-col>
+
      </el-row>
 
      <el-row class="ma-2">
@@ -154,7 +174,7 @@
      </el-row>
      <el-row class="ma-2">
      <el-col :span="3">Dodavatel: </el-col>
-     <el-col :span="12">
+     <el-col :span="7">
 
        <el-select v-model="list.data.mat[0].idefix_dodavatel"
             filterable
@@ -170,6 +190,13 @@
             :value="item6.idefix*1"
             >{{item6.nazev}} </el-option>
        </el-select>
+     </el-col>
+     <el-col :span="3">
+
+       <el-checkbox v-model="list.data.mat[0].dodavatel_priorita"
+          :checked="(list.data.mat[0].dodavatel_priorita==1)?true:false"
+            size="mini">Prioritni
+       </el-checkbox>
      </el-col>
      </el-row>
 
@@ -406,7 +433,7 @@
           Naklad m2
         </el-col>
         <el-col :span="2">
-          <el-input v-model="list.data.mat[0].cena_naklad_m2" size="mini"  style="width:100%" ></el-input>
+          <el-input v-model="list.data.mat[0].cena_naklad_m2" size="mini"  style="width:100%" @change="cena_naklad()" ></el-input>
         </el-col>
           <el-col :span="3">
           Prodej m2
@@ -804,7 +831,18 @@ export default {
     },
     cena_naklad()  {
       //alert((this.list.data.mat[0].cena_nakup_m2*1)+"/" + (this.list.data.mat[0].koef_naklad*1) )
-      this.list.data.mat[0].cena_naklad_m2 = (this.list.data.mat[0].cena_nakup_m2*1) *  (this.list.data.mat[0].koef_naklad*1)
+      //this.list.data.mat[0].cena_naklad_m2 = (this.list.data.mat[0].cena_nakup_m2*1) *  (this.list.data.mat[0].koef_naklad*1)
+      var nakup_result = 0
+      if (this.list.data.mat[0].cena_naklad_m2*1>0){
+        nakup_result = (this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1)/ this.list.data.mat[0].cena_naklad_m2*1
+      }
+      if (this.list.data.mat[0].cena_nakup_m2 *1 <= 0 ){
+        alert('Cena nakup ! musi byt zadana')
+      }
+      if (this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1 >= this.list.data.mat[0].cena_naklad_m2*1){
+          alert("Nakup je prislis drahy , zkotrolujte koeficienty nebo podklady zadavaci" + nakup_result)
+      }
+
       this.list.data.mat[0].cena_prodej_m2 = (this.list.data.mat[0].cena_naklad_m2*1) *  (this.list.data.mat[0].koef_prodej*1)
       //this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_nakup
     } ,
@@ -821,7 +859,9 @@ export default {
         barva: self.list.data.barva,
         strojskup: self.list.data.strojskup,
         stroj: self.list.data.stroj,
-        vlastnosti: self.list.data.vlastnosti
+        vlastnosti: self.list.data.vlastnosti,
+        potisknutelnost: self.list.data.potisknutelnost
+
 
           }))
 
@@ -917,17 +957,22 @@ export default {
 
     changeBarva(item ) {
       //alert(item.value)
-      alert(JSON.stringify(item))
+    //  alert(JSON.stringify(item))
     },
+    changePotisknutelnost(item ) {
+      //alert(item.value)
+      //alert(JSON.stringify(item))
+    },
+
 
 
    changeStroj(item ) {
       //alert(item.value)
-      alert(JSON.stringify(item))
+      //alert(JSON.stringify(item))
     },
     changeStrojKat(item ) {
       //alert(item.value)
-      alert(JSON.stringify(item))
+      //alert(JSON.stringify(item))
     },
     ////Zmeny obsahu
     //Auto Komplit

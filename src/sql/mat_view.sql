@@ -35,13 +35,18 @@ group by b.zkratka, idefix_mat
 order by ms.nazev, mss.nazev
 
   
-  
 
  
  where a.idefix = 655
  
 select * from list_mat_stroj
 
+
+select fce_list_mat_clean('')
+select * from list_mat
+select count(*), count(distinct idefix) from list_mat;
+select fce_list_mat_copy(2937);
+select count(*) from list_mat;
 
 
 select idefix_mat,b.zkratka,array_agg(distinct sirka_mm::int::text||'x'||vyska_mm::int::text) as rozmer, 
