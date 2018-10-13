@@ -8,7 +8,7 @@
   </el-row>
   <el-row  :gutter="20">
   <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
+  <el-input prefix-icon="el-icon-search" id="search_1011" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -48,7 +48,7 @@
 
 </div>
 
-<div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId1">
+<div style="height:100%;overflow:scroll" class="mt-0" id="t811">
 
 <el-row    style="backgroud: white">
   <el-col :span="2" class="mth">
@@ -226,7 +226,8 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-import List2MatVyrobce from '@/services/List2MatVyrobceService'
+import ListStroj from '@/services/ListStrojService'
+import List2StrojSkup from '@/services/List2StrojSkupService'
 import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
@@ -237,7 +238,7 @@ export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'list2-matvyrobce',
+      moduleName: 'Stroje',
       saveNow: false,
 
       IsDialog: true,
@@ -255,9 +256,9 @@ export default {
       search:'',
       //event
       //event
-      objId1: '361',
-      objId2: '362',
-      objSearchBar: 'search_361',
+      objId1: '1011',
+      objId2: '1012',
+      objSearchBar: 'search_1011',
 
       aInfo: [],
       total: 0,
@@ -270,15 +271,28 @@ export default {
       lastId: '',
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "idefix_strojskup", title: "Skupina", cssClasses: "mtd" ,span:3, isEdit: true, type: "selectone" ,values: [] ,selected: 0,props:{visible: 'yes'}},
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 9, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "vyrobce", title: "Vyrobce", cssClasses: "mtd", span: 9, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+     { id: "sirka_mat_max_mm", title: "Sirka\nMat", cssClasses: "mtd" ,span: 1, isEdit: true, type: "number"  ,props:{visible: 'yes'}},
+     { id: "delka_mat_max_mm", title: "Delka\nMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "sirka_tisk_max_mm", title: "Sirka\nTisk", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "delka_tisk_max_mm", title: "Sirka\nTisk", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "tech_okraj_strana_mm", title: "To\nStr", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "tech_okraj_start_mm", title: "To\nStart", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "tech_okraj_spacecopy_mm", title: "Space\nCopy", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "tech_okraj_spacejobs_mm", title: "Space\nJob", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "tech_okraj_end_mm", title: "ToEnd", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "bez_okraj", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "spadavka_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "space_znacky_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
-			],
-
+      ],
+      idefix_strojskup_values: [],
 
       list: [],
       listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
@@ -291,7 +305,7 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await List2MatVyrobce.all(this.user,'nic')).data
+      this.list = (await ListStroj.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
@@ -325,7 +339,14 @@ export default {
           this.aInfo['id']=-1
 //          this.list.unshift(this.aInfo)
 
-
+      this.idefix_strojskup_values = (await List2StrojSkup.all(this.user,'nic')).data
+      this.cols.forEach((el,i)=>{
+        if (el.id =='idefix_strojskup') {
+          this.idefix_strojskup_values.forEach(e2 => {
+            this.cols[i].values.push({idefix: e2.idefix, nazev: e2.nazev      })
+          })
+        }
+      })
       //console.log( this.cols)
 
     }
@@ -356,7 +377,7 @@ setTimeout(function(){
   var _obj1 ='m' + self.objId1
   var _obj2 ='t' + self.objId1
   var _obj3 ='t' + self.objId2
-  var moduleName= self.moduleName
+  var moduleName='list-stroj'
 
   f.setUp(_obj1,_obj2,_obj3,self,moduleName)
 
@@ -455,8 +476,19 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, vyrobce: el.vyrobce
-
+        aTmp.push({id: el.id,kod: el.kod, idefix_strojskup: el.idefix_strojskup,nazev: el.nazev
+        ,sirka_mat_max_mm: el.sirka_mat_max_mm
+        ,delka_mat_max_mm: el.delka_mat_max_mm
+        ,sirka_tisk_max_mm: el.sirka_tisk_max_mm
+        ,delka_tisk_max_mm: el.delka_tisk_max_mm
+        ,tech_okraj_strana_mm: el.tech_okraj_strana_mm
+        ,tech_okraj_start_mm: el.tech_okraj_start_mm
+        ,tech_okraj_spacecopy_mm: el.tech_okraj_spacecopy_mm
+        ,tech_okraj_spacejobs_mm: el.tech_okraj_spacejobs_mm
+        ,tech_okraj_end_mm: el.tech_okraj_end_mm
+        ,bez_okraj: el.bez_okraj
+        ,spadavka_mm: el.spadavka_mm
+        ,space_znacky_mm: el.space_znacky_mm
 
 
         })
@@ -464,7 +496,7 @@ copyLine(nRow) {
        }
      })
 
-     await List2MatVyrobce.insert(this.user, {data: Posli, del: aDel })
+     await ListStroj.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -476,7 +508,7 @@ copyLine(nRow) {
       var neco = []
 
      try {
-      this.list = (await   List2MatVyrobce.all(this.user,'nic')).data
+      this.list = (await   ListStroj.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -554,7 +586,7 @@ copyLine(nRow) {
       const self = this
       this.listNewLine = []
 
-      this.Max = (await List2MatVyrobce.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await ListStroj.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -764,7 +796,7 @@ copyLine(nRow) {
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev', 'kod','vyrobce','user_insert']
+    var seekStr=['id', 'nazev', 'kod','skupina','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }
@@ -780,7 +812,7 @@ copyLine(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await List2MatVyrobce.all(this.user,nic)).data
+      this.list = (await ListStroj.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -798,13 +830,13 @@ copyLine(nRow) {
        }
         console.log("FORM:", this.form)
       try {
-        await (List2MatVyrobce.insert(this.user, this.form))
+        await (ListStroj.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await List2MatVyrobce.all(this.user,'nic')
+      await ListStroj.all(this.user,'nic')
       .then(res => {
 
         //this.info= res

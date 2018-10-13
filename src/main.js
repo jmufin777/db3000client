@@ -32,12 +32,13 @@ import vuedraggableresizable from 'vue-draggable-resizable'
 Vue.component('draggable', draggable)
 Vue.component('vue-draggable-resizable',vuedraggableresizable )
 
-import VueFriendlyIframe from 'vue-friendly-iframe';
-Vue.component('vue-friendly-iframe', VueFriendlyIframe);
+//import VueFriendlyIframe from 'vue-friendly-iframe';
+//Vue.component('vue-friendly-iframe', VueFriendlyIframe);
 
-import VueFrame from 'vue-frame'
+//import VueFrame from 'vue-frame'
 
 import Panel from '@/components/globals/Panel'
+import Panel2 from '@/components/globals/Panel2'
 import Dialog from '@/components/globals/Dialog'
 
 import WinDow from '@/components/globals/WinDow'
@@ -48,13 +49,24 @@ import VueJsonPretty from 'vue-json-pretty'
 import VueScrollingTable from "vue-scrolling-table"
 Vue.component('vue-scrolling-table', VueScrollingTable)
 
+import VueBarcode from 'vue-barcode'
+
 
 
 Vue.component('panel', Panel)
+Vue.component('panel2', Panel2)
 Vue.component('win-dow', WinDow)
 Vue.component('dia-log', Dialog)
 // Vue.component('ram1', Ram1)
 Vue.component('vue-json-pretty', VueJsonPretty)
+Vue.component('barcode', VueBarcode)
+//Vue.component('bar-code', VueBarCode)
+// https://github.com/lindell/vue-barcode
+//--format width height text font-options font text-align text-position text-margin font-size background lineColor margin margin-top margin-bottom margin-left margin-right display-value
+// -- format : CODE128 EAN EAN-13 EAN-8 EAN-5 EAN-2 UPC (A) CODE39 ITF-14 MSI Pharmacode Codabar
+
+
+
 // main.js
 Vue.config.productionTip = false
 
@@ -71,6 +83,7 @@ export const eventBus = new Vue()
 
 
 
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -78,8 +91,9 @@ new Vue({
   store,
   components: {
     App,
-    VueFrame,
-    VueFriendlyIframe,
+//    VueFrame,
+//    VueFriendlyIframe,
+
   },
 
   template: '<App/>'

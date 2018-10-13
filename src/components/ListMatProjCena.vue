@@ -7,7 +7,7 @@
     </el-col>
   </el-row>
   <el-row  :gutter="20">
-  <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
+  <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" >
   <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
@@ -121,10 +121,8 @@
           <option
             v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
             :value="item2.idefix"
-
             >
           </option>
-
        </select>
     <el-dropdown v-else-if="col.type=='selectone2'">
       <span class="el-dropdown-link">
@@ -220,13 +218,12 @@
 </el-row>
 
 </template>
-
 <script>
 
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-import List2MatVyrobce from '@/services/List2MatVyrobceService'
+import ListMatProjCena from '@/services/ListMatProjCena'
 import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
@@ -237,7 +234,7 @@ export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'list2-matvyrobce',
+      moduleName: 'list-matprojcena',
       saveNow: false,
 
       IsDialog: true,
@@ -255,9 +252,9 @@ export default {
       search:'',
       //event
       //event
-      objId1: '361',
-      objId2: '362',
-      objSearchBar: 'search_361',
+      objId1: '1011',
+      objId2: '1012',
+      objSearchBar: 'search_1011',
 
       aInfo: [],
       total: 0,
@@ -270,11 +267,21 @@ export default {
       lastId: '',
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "idefix", title: "IDX", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "idefix_mat", title: "Mat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+        { id: "datum", title: "Den", cssClasses: "mtd" ,span:4, isEdit: true, type: "date",props:{visible: 'yes'}},
+        { id: "nabidka", title: "Nabidka", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "zakazka", title: "Zakazka", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "cena_m2", title: "Cena", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "popis", title: "Popis", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 9, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "vyrobce", title: "Vyrobce", cssClasses: "mtd", span: 9, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+
+
+
+         // dic, ulice, obec,psc, tel, mail
+
+
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],
@@ -291,7 +298,7 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await List2MatVyrobce.all(this.user,'nic')).data
+      this.list = (await List2MatSkup.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
@@ -324,6 +331,8 @@ export default {
       }
           this.aInfo['id']=-1
 //          this.list.unshift(this.aInfo)
+
+
 
 
       //console.log( this.cols)
@@ -455,8 +464,7 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, vyrobce: el.vyrobce
-
+        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka
 
 
         })
@@ -464,7 +472,7 @@ copyLine(nRow) {
        }
      })
 
-     await List2MatVyrobce.insert(this.user, {data: Posli, del: aDel })
+     await List2MatSkup.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -476,7 +484,7 @@ copyLine(nRow) {
       var neco = []
 
      try {
-      this.list = (await   List2MatVyrobce.all(this.user,'nic')).data
+      this.list = (await   List2MatSkup.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -554,7 +562,7 @@ copyLine(nRow) {
       const self = this
       this.listNewLine = []
 
-      this.Max = (await List2MatVyrobce.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await List2MatSkup.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -698,12 +706,6 @@ copyLine(nRow) {
             }
 
 
-
-
-
-
-
-
           },100)
          }
 
@@ -764,7 +766,7 @@ copyLine(nRow) {
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev', 'kod','vyrobce','user_insert']
+    var seekStr=['id', 'nazev', 'kod','zkratka','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }
@@ -780,7 +782,7 @@ copyLine(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await List2MatVyrobce.all(this.user,nic)).data
+      this.list = (await List2MatSkup.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -798,13 +800,13 @@ copyLine(nRow) {
        }
         console.log("FORM:", this.form)
       try {
-        await (List2MatVyrobce.insert(this.user, this.form))
+        await (List2MatSkup.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await List2MatVyrobce.all(this.user,'nic')
+      await List2MatSkup.all(this.user,'nic')
       .then(res => {
 
         //this.info= res

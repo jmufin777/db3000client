@@ -17,6 +17,9 @@ export default new Vuex.Store({
     user: null,
     level: null,
     idefix: null,
+    showEdit: false,
+    showModule: null,
+    showModuleTitle: null,
     isUserLoggedIn: false,
     WinDows: [],
     active: null,
@@ -39,6 +42,15 @@ export default new Vuex.Store({
     },
     setIdefix (state, idefix) {
       state.idefix = idefix
+    },
+    setshowEdit (state, showEdit) {
+      state.showEdit = showEdit
+    },
+    setshowModule (state, showModule) {
+      state.showModule = showModule
+    },
+    setshowModuleTitle (state, showModuleTitle) {
+      state.showModuleTitle = showModuleTitle
     },
     TXT (state, textik) {
       state.txt = textik
@@ -108,6 +120,15 @@ export default new Vuex.Store({
     },
     setIdefix ({commit}, idefix) {
       commit('setIdefix', idefix)
+    },
+    setshowEdit ({commit}, showEdit) {
+      commit('setshowEdit', showEdit)
+    },
+    setshowModule ({commit}, showModule) {
+      commit('setshowModule', showModule)
+    },
+    setshowModuleTitle ({commit}, showModuleTitle) {
+      commit('setshowModuleTitle', showModuleTitle)
     },
     setTxt ({commit}, textik) {
       commit('TXT', textik)

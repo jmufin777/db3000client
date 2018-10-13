@@ -76,9 +76,18 @@ export default {
   }
 
 
-
+if (document.getElementById(_obj1)){
     document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
-    document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
+  } else {
+    console.log(_obj1 + ' Neni')
+  }
+
+    if (document.getElementById(_obj2)){
+      document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
+    } else {
+      console.log(_obj2 + ' Neni')
+    }
+
     document.getElementById(_obj3).style.height=Math.round(_h - s3)  + "px"
     document.getElementById(_obj3).addEventListener('keydown', (function(e) {
              self.obsluha(e, e.target)

@@ -23,7 +23,8 @@
 
 <el-form  id="form821" ref="form2" :model="form2" label-width="70px" :label-position="labelPosition" :rules="rules2" class="demo-ruleForm is-success">
    <el-row class="ma-2">
-     <el-col :span="3">Skupina </el-col>
+
+     <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-matskup','Skupina')" style="width:90%">Skupina:</el-button> </el-col>
      <el-col :span="4" >
 
        <el-select v-model="list.data.mat[0].idefix_matskup"
@@ -41,7 +42,8 @@
           </el-option>
        </el-select>
      </el-col>
-     <el-col :span="3">Upresneni</el-col>
+
+     <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-matsubskup','Upresneni')" style="width:90%">Upresneni:</el-button> </el-col>
      <el-col :span="8">
       <el-select v-model="list.data.mat[0].idefix_matsubskup"
        filterable
@@ -98,10 +100,13 @@
     ></el-autocomplete>
      </el-col>
    </el-row>
+   <el-row ><el-col :span="14">
+
 
     <el-row class="ma-2">
-     <el-col :span="3">Vlastnosti: </el-col>
-     <el-col :span="12">
+
+     <el-col :span="5"><el-button size ="mini" @click="edit_vlastnosti('list2-matvlastnosti','Vlastnosti')" style="width:90%">Vlastnosti:</el-button> </el-col>
+      <el-col :span="18">
        <el-select v-model="list.data.vlastnosti" multiple filterable  default-first-option
        @change="changeVlastnosti"
         style="width:100%" size="mini">
@@ -118,9 +123,8 @@
      </el-row>
 
      <el-row class="ma-2">
-     <el-col :span="3" >Barva : </el-col>
-     <el-col :span="4">
-
+     <el-col :span="5"><el-button size ="mini" @click="edit_vlastnosti('list2-matbarva','Barva')" style="width:90%">Barva:</el-button> </el-col>
+     <el-col :span="8">
        <el-select v-model="list.data.barva"  filterable  default-first-option
         @change="changeBarva"
         style="width:100%" size="mini">
@@ -133,12 +137,8 @@
             >{{item9.nazev}} </el-option>
        </el-select>
      </el-col>
-
-
-     <el-col :span="3" >Potisknutelnost : </el-col>
+     <el-col :span="6"><el-button size ="mini" @click="edit_vlastnosti('list2-matpotisknutelnost','Potisknutelnost')" style="width:90%">Potisknutelnost:</el-button> </el-col>
      <el-col :span="4">
-
-
        <el-select v-model="list.data.potisknutelnost"  filterable  default-first-option
         @change="changePotisknutelnost"
         style="width:100%" size="mini">
@@ -150,13 +150,16 @@
 
             >{{item91.nazev}} </el-option>
        </el-select>
+
      </el-col>
 
      </el-row>
 
+
      <el-row class="ma-2">
-     <el-col :span="3">Vyrobce: </el-col>
-     <el-col :span="12">
+
+     <el-col :span="5"><el-button size ="mini" @click="edit_vlastnosti('list2-matvyrobce','Vyrobce')" style="width:90%">Vyrobce:</el-button> </el-col>
+     <el-col :span="18">
 
        <el-select v-model="list.data.mat[0].idefix_vyrobce"  filterable  default-first-option
         @change="changeVyrobce"
@@ -172,8 +175,18 @@
        </el-select>
      </el-col>
      </el-row>
+     </el-col>
+     <el-col :span="5">
+       <div>
+       <!-- <barcode value="1234567890" :options="{ lineColor: '#0275d8', text: 'Scan'}"></barcode> -->
+       <barcode :value="'0000000'+list.data.mat[0].idefix" :options="{ lineColor: '#0275d8', text: 'Scan'}" height="40"></barcode>
+       </div>
+     </el-col>
+   </el-row>
+
      <el-row class="ma-2">
-     <el-col :span="3">Dodavatel: </el-col>
+
+     <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-matdodavatel','Dodavatel')" style="width:90%">Dodavatel:</el-button> </el-col>
      <el-col :span="7">
 
        <el-select v-model="list.data.mat[0].idefix_dodavatel"
@@ -207,10 +220,10 @@
      </el-col>
      </el-row>
     <el-row class="ma-2">
-     <el-col :span="3">Technologie: </el-col>
+
+     <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list-stroj','Stroje')" style="width:90%">Stroje:</el-button> </el-col>
      <el-col :span="12">
        <el-select v-model="list.data.stroj" multiple filterable
-
         default-first-option
         @change="changeStroj"
         style="width:100%" size="mini">
@@ -226,7 +239,7 @@
      </el-row>
 
     <el-row class="ma-2">
-     <el-col :span="3">Kategorie stroju: </el-col>
+     <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-strojskup','Skupiny Stroju')" style="width:90%">Skupiny stroju:</el-button> </el-col>
      <el-col :span="12">
        <el-select v-model="list.data.strojskup" multiple filterable
 
@@ -396,6 +409,20 @@
        ></el-autocomplete>
 
         </el-col>
+        <el-col :span="3">
+          koef_real
+        </el-col>
+        <el-col :span="2"
+
+
+       v-bind:class="{ bad : list.data.mat[0].cena_nakup_m2 * list.data.mat[0].koef_naklad*1 > list.data.mat[0].cena_naklad_m2*1
+        , ok : this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1 <= this.list.data.mat[0].cena_naklad_m2*1 }"
+       >
+       {{     Math.round(list.data.mat[0].nakup_result*1000)/1000        }}
+
+
+
+        </el-col>
      </el-row>
 
      <el-row class="ma-2">
@@ -504,12 +531,14 @@
  </el-row>
 </el-form>
 </div>
+<list2-edit></list2-edit>
 </v-dialog>
 </template>
 <script>
 import { eventBus } from '@/main.js'
 import {mapState} from 'vuex'
 import ListMat from '@/services/ListMatService'
+import List2Edit from  './List2Edit.vue'
 import f from '@/services/fce'
 
 
@@ -519,6 +548,10 @@ import f from '@/services/fce'
 import { setTimeout, clearInterval } from 'timers'
 
 export default {
+  components: {
+    'list2-edit': List2Edit
+
+  },
   props: {
     name: {
       type: String,
@@ -545,11 +578,24 @@ export default {
       vyska_mm: "0",
       sirka_mm_zbytek: "0",
       vyska_mm_zbytek: "0",
+
       enum_matdostupnost: null,
       enums:{
         skup: [],
         subskup: [],
       },
+      value: '',
+        tag: 'svg',
+        options: {
+            lineColor: '#ff7069',
+            fontSize: 32,
+            font: 'Courier',
+            width: 3,
+            height: 60,
+            marginBottom: 60,
+            format: 'MSI',
+            background: '#ccffff'
+        },
       form2: {
 
       },
@@ -566,10 +612,18 @@ export default {
 
   created() {
     const self=this
+    eventBus.$on('edit', ( dlgPar ) => {
+          //var cmodul = $self.$store.state.showModule
+
+          self.getDataEnum()
+        //alert('Vracim parametry' + JSON.stringify(dlgPar))
+    })
     eventBus.$on('dlg821', ( dlgPar ) => {
       //alert('modulik')
       self.IsDialog = true
       self.Akce = dlgPar.Akce
+      self.$store.dispatch('setshowEdit', false)
+
       //alert(JSON.stringify(dlgPar))
 
       self.getData(dlgPar)
@@ -640,11 +694,155 @@ export default {
   },
 
   methods: {
+    async getDataEnum(){
+      const self = this
+            //alert('PRED' + JSON.stringify(self.list.data.enum_matvlastnosti))
+            //ServerKlice = 7 vlastnosti
+            var tmp
+            var tmp2
+            if (self.$store.state.showModule == 'list2-matvlastnosti') {
+              try {
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 7,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis , 7,''))
+                  self.list.data.enum_matvlastnosti = tmp2.data.enum_matvlastnosti
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+                 alert(e)
+              }
+            }
+
+            if (self.$store.state.showModule == 'list2-matvyrobce') {
+              try {
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 6,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis , 6,''))
+                  self.list.data.enum_matvyrobce = tmp2.data.enum_matvyrobce
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+               alert(e)
+              }
+            }
+           if (self.$store.state.showModule == 'list2-matsubskup') {
+              try {
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 5,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis , 5,''))
+                  self.list.data.enum_matsubskup = tmp2.data.enum_matsubskup
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+               alert(e)
+              }
+            }
+
+            if (self.$store.state.showModule == 'list2-matskup') {
+              try {
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 4,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis , 4,''))
+                  self.list.data.enum_matskup = tmp2.data.enum_matskup
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+               alert(e)
+              }
+            }
+           if (self.$store.state.showModule == 'list-stroj') {
+              try {
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 11,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,11,''))
+                  self.list.data.enum_stroj = tmp2.data.enum_stroj
+                  //alert(JSON.stringify(self.list.data.enum_stroj))
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+               alert(e)
+              }
+            }
+
+            if (self.$store.state.showModule == 'list2-matdodavatel') {
+              try {
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 8,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,8,''))
+                  self.list.data.enum_dodavatel = tmp2.data.enum_dodavatel
+                  //alert(JSON.stringify(self.list.data.enum_stroj))
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+               alert(e)
+              }
+            }
+
+            if (self.$store.state.showModule == 'list2-matpotisknutelnost') {
+              try {
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 14,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,14,''))
+                  self.list.data.enum_matpotisknutelnost = tmp2.data.enum_matpotisknutelnost
+                  //alert(JSON.stringify(self.list.data.enum_stroj))
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+               alert(e)
+              }
+            }
+
+            if (self.$store.state.showModule == 'list2-matbarva') {
+              try {
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 12,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,12,''))
+                  self.list.data.enum_matbarva = tmp2.data.enum_matbarva
+                  //alert(JSON.stringify(self.list.data.enum_stroj))
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+               alert(e)
+              }
+            }
+
+            if (self.$store.state.showModule == 'list2-strojskup') {
+              try {
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 10,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,10,''))
+                  self.list.data.enum_strojskup = tmp2.data.enum_strojskup
+                  //alert(JSON.stringify(self.list.data.enum_stroj))
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+               alert(e)
+              }
+            }
+
+
+
+
+
+
+
+    },
     async getData(dlgPar) {
           const self = this
           // alert(JSON.stringify(dlgPar)+ "/" + dlgPar.Id)
           // alert(dlgPar.Idefix)
            self.list = []
+
+
           if (dlgPar.Idefix > 0 ){
             if (dlgPar.Akce=='copy'){
               self.isCopy=true
@@ -698,6 +896,19 @@ export default {
          this.deleteRozmer(zmizik)
          // alert(par.split('~')[0])
       }
+    },
+    edit_vlastnosti(cmodul,ctitle){
+      if ( !this.$store.state.showEdit==true ){
+
+        this.$store.dispatch('setshowEdit', true)
+        this.$store.dispatch('setshowModule', cmodul)
+        this.$store.dispatch('setshowModuleTitle', ctitle)
+        eventBus.$emit('edit_run')
+      } else {
+        // alert("Zahadne Zmiznu")
+        this.$store.dispatch('setshowEdit', false)
+      }
+
     },
     Zmen(par){
       var zmizik = par.split('~')[0]
@@ -835,11 +1046,12 @@ export default {
       var nakup_result = 0
       if (this.list.data.mat[0].cena_naklad_m2*1>0){
         nakup_result = (this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1)/ this.list.data.mat[0].cena_naklad_m2*1
+        this.list.data.mat[0].nakup_result = nakup_result
       }
       if (this.list.data.mat[0].cena_nakup_m2 *1 <= 0 ){
         alert('Cena nakup ! musi byt zadana')
       }
-      if (this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1 >= this.list.data.mat[0].cena_naklad_m2*1){
+      if (this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1 > this.list.data.mat[0].cena_naklad_m2*1){
           alert("Nakup je prislis drahy , zkotrolujte koeficienty nebo podklady zadavaci" + nakup_result)
       }
 
@@ -1058,9 +1270,27 @@ export default {
       'user',
       'level',
       'idefix',
+      'showEdit',
+      'setshowModule',
+      'setshowModuleTitle'
+
+
     ])
 
   }
 }
 
 </script>
+<style>
+.ok {
+  background: #C5E1A5;
+  color:black;
+
+}
+.bad {
+  background: #FFAB40;
+  color:black;
+
+
+}
+</style>

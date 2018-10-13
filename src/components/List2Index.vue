@@ -79,6 +79,7 @@ import List2MatDodavatel from './List2MatDodavatel.vue'
 import List2MatVyrobce from './List2MatVyrobce.vue'
 
 import ListStroj from './ListStroj.vue'
+import ListStrojShort from './ListStrojShort.vue'
 // import ListMat from './ListMat.vue'
 
 export default {
@@ -98,6 +99,7 @@ export default {
   'list2-matvyrobce': List2MatVyrobce,
 
   'list-stroj': ListStroj,
+  'list-strojshort': ListStrojShort,
   // 'list-mat': ListMat,
   'list2-strojlaminace': List2StrojLaminace,
   },
@@ -130,6 +132,7 @@ export default {
 
 
           ['list-stroj','Stroje',100],
+          ['list-strojshort','StrojeShort',100],
 
 
 
