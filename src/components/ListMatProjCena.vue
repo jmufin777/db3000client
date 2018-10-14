@@ -6,7 +6,8 @@
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
     </el-col>
   </el-row>
-  <el-row  :gutter="20">
+  <el-row><el-col :span="24">{{title}} {{textonly1}}</el-col></el-row>
+  <el-row  :gutter="20" v-if="textonly1==false">
   <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" >
   <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
@@ -51,7 +52,7 @@
 <div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId1">
 
 <el-row    style="backgroud: white">
-  <el-col :span="2" class="mth">
+  <el-col :span="2" class="mth" v-if="textonly1==false">
    Akce
  </el-col>
 
@@ -63,13 +64,15 @@
   >
 
         {{col.title}}
+    <span v-if="textonly1==false">
     <i v-if="col.sort && col.sort=='asc'"    @click="sortByKey(col.id,'desc')" class="el-icon-upload2"   ></i>
     <i v-if="!col.sort || col.sort=='desc'"  @click="sortByKey(col.id,'asc')" class="el-icon-download"  ></i>
+    </span>
 
     <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
     <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
       </el-col>
- <el-col :span="2" class="mth">
+ <el-col :span="2" class="mth" v-if="textonly1==false">
    X
  </el-col>
  </el-col>
@@ -85,7 +88,7 @@
   >
 
 
-  <el-col :span="2" >
+  <el-col :span="2" v-if="textonly1==false">
 
 
     <div class='dcell'  style="width::100% ; background:white"
@@ -106,8 +109,10 @@
       v-show="col.props.visible=='yes'"
       >
       <div :id="'d'+ objId2+ '_r_'+irow+'_c_'+icol"  class='dcell' >
-
-        <input type="number" v-if="col.type =='number'"
+        <span v-if="textonly1==false">
+          {{ item[col.id] }}
+        </span>
+        <input type="number" v-else-if="col.type =='number'"
         class=" px-0 cell " :id="'c' + objId2 + '_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
@@ -156,7 +161,7 @@
       </div>
 
     	</el-col>
-     <el-col :span="2" >
+     <el-col :span="2" v-if="textonly1==false">
       <div class='dcell'  style="width::100% ; background:white"
       v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
       >
@@ -231,9 +236,30 @@ import f from '@/services/fce'
 
 
 export default {
-  props: ['visible'],
+  props: {
+        idmat: {
+           type: String,
+           required: false,
+           //default: -1
+
+        },
+        title: {
+            type: String,
+            required: false
+        },
+        textonly: {
+          type: Boolean,
+          required: false,
+          default: false
+        }
+  },
+
+  //props: ['visible'],
+
   data () {
     return {
+      textonly1: this.textonly,
+      idmat1: this.idmat,
       moduleName: 'list-matprojcena',
       saveNow: false,
 
@@ -268,6 +294,7 @@ export default {
       minId: 0, //Pro vklad zaporna ID
   		cols: [
         { id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "kod", title: "Kod", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
         { id: "idefix", title: "IDX", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
         { id: "idefix_mat", title: "Mat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
         { id: "datum", title: "Den", cssClasses: "mtd" ,span:4, isEdit: true, type: "date",props:{visible: 'yes'}},
@@ -298,7 +325,7 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await List2MatSkup.all(this.user,'nic')).data
+      this.list = (await ListMatProjCena.all(this.user,this.idmat1)).data
 
 
       if (!this.list.length || this.list.length == 0){
@@ -472,7 +499,7 @@ copyLine(nRow) {
        }
      })
 
-     await List2MatSkup.insert(this.user, {data: Posli, del: aDel })
+     await ListMatProjCena.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -484,7 +511,7 @@ copyLine(nRow) {
       var neco = []
 
      try {
-      this.list = (await   List2MatSkup.all(this.user,'nic')).data
+      this.list = (await   ListMatProjCena.all(this.user,this.idmat1)).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -560,9 +587,15 @@ copyLine(nRow) {
    async newLine (nRow)  {
      var x
       const self = this
+      if (self.textonly1) {
+
+        return
+      }
+      alert('prd'+ self.textonly1)
       this.listNewLine = []
 
-      this.Max = (await List2MatSkup.all(this.user,'max')).data[0].kod*1 +10
+
+      this.Max = (await ListMatProjCena.all(this.user,self.$store.state.showIdefix)).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -782,7 +815,7 @@ copyLine(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await List2MatSkup.all(this.user,nic)).data
+      this.list = (await ListMatProjCena.all(this.user,this.idmat1)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -800,13 +833,13 @@ copyLine(nRow) {
        }
         console.log("FORM:", this.form)
       try {
-        await (List2MatSkup.insert(this.user, this.form))
+        await (ListMatProjCena.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await List2MatSkup.all(this.user,'nic')
+      await ListMatProjCena.all(this.user,'nic')
       .then(res => {
 
         //this.info= res
@@ -866,9 +899,14 @@ copyLine(nRow) {
     ...mapState([
       'isUserLoggedIn',
       'user',
-      'xMenuMain',
       'level',
       'idefix',
+      'showEdit',
+      'setshowModule',
+      'setshowModuleTitle',
+      'setshowIdefix',
+
+
     ])
 
   }

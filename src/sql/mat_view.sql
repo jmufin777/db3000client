@@ -58,6 +58,15 @@ select * from list_mat_rozmer
  
  select * from list_mat_rozmer
  select * from list2_matsubskup
+ select * from list2_matvlastnosti
+  select kod,* from list_mat_projcena     where idefix_mat = 1869
+  
+  insert into list_mat_projcena (idefix_mat,datum) select * from (select '1869' as idefix_mat,now()::date ) a
+        where not exists (select * from list_mat_projcena b where a.idefix_mat=b.idefix_mat)
+  delete from list_mat_projcena
+  insert into list_mat_projcena (idefix_mat,datum) select * from (select 1869 as idefix_mat,now()::date ) a 
+  where not exists (select * from list_mat_projcena b where a.idefix_mat=b.idefix_mat)
+  alter table list_mat_projcena rename monozstvi  to mnozstvi
 select * from list_mat_strojskup 
 update list_mat set idefix_dodavatel = 631 where idefix = 655
 update list_mat set popis = 'Testovaci popis materialu' where idefix = 655

@@ -35,6 +35,7 @@ import List2MatDostupnost from './List2MatDostupnost.vue'
 import List2MatDodavatel from './List2MatDodavatelShort.vue'
 import List2MatVyrobce from './List2MatVyrobce.vue'
 import ListStroj from './ListStrojShort.vue'
+import ListMatProjCena from './ListMatProjCena.vue'
 import { setTimeout } from 'timers';
 
 export default {
@@ -56,6 +57,7 @@ export default {
   'list-stroj': ListStroj,
   // 'list-mat': ListMat,
   'list2-strojlaminace': List2StrojLaminace,
+  'list-mat-projcena': ListMatProjCena,
 },
   data: ()  =>{
     return {

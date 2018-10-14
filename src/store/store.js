@@ -20,6 +20,7 @@ export default new Vuex.Store({
     showEdit: false,
     showModule: null,
     showModuleTitle: null,
+    showIdefix: null,
     isUserLoggedIn: false,
     WinDows: [],
     active: null,
@@ -48,6 +49,9 @@ export default new Vuex.Store({
     },
     setshowModule (state, showModule) {
       state.showModule = showModule
+    },
+    setshowIdefix (state, showIdefix) {
+      state.showIdefix = showIdefix
     },
     setshowModuleTitle (state, showModuleTitle) {
       state.showModuleTitle = showModuleTitle
@@ -126,6 +130,9 @@ export default new Vuex.Store({
     },
     setshowModule ({commit}, showModule) {
       commit('setshowModule', showModule)
+    },
+    setshowIdefix ({commit}, showIdefix) {
+      commit('setshowIdefix', showIdefix)
     },
     setshowModuleTitle ({commit}, showModuleTitle) {
       commit('setshowModuleTitle', showModuleTitle)

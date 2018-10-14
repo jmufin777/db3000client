@@ -34,7 +34,7 @@ import List2MatPotisknutelnost from './List2MatPotisknutelnost'
 import List2MatVlastnosti from './List2MatVlastnosti.vue'
 import List2MatDostupnost from './List2MatDostupnost.vue'
 import List2MatBarevnost from './List2MatBarevnost'
-import List2MatProjCena from './List2MatProjCena'
+import ListMatProjCena from './ListMatProjCena'
 
 // import ListMat from './ListMat.vue'
 
@@ -48,7 +48,7 @@ export default {
   'list2-matbarva': List2MatBarva,
   'list2-matpotisknutelnost': List2MatPotisknutelnost,
   'list2-matdostupnost': List2MatDostupnost,
-  'list2-matprojcena': List2MatProjCena,
+  'list-matprojcena': ListMatProjCena,
   },
   data: () => {
     return {
@@ -74,7 +74,7 @@ export default {
           ['list2-matpotisknutelnost', "Postisknutelnost",33],
 
           ['list2-matsirka', "Sirka",33],
-          ['list2-matprojcena', "Projektove ceny",100],
+          ['list-matprojcena', "Projektove ceny",100],
 
 
 

@@ -379,6 +379,7 @@
        </table>
      </el-col>
      </el-row>
+     <el-row><el-col :span="15">
      <el-row class="ma-2">
         <el-col :span="3">
           koef_naklad
@@ -517,6 +518,22 @@
 
       </el-row>
 
+      </el-col>
+
+      <el-col :span=5>
+        <el-row><el-col :span="24">
+          <el-button size ="mini" @click="edit_vlastnosti('list-mat-projcena','Projektove ceny')" style="width:90%">Projektove ceny</el-button>
+          </el-col></el-row>
+        <el-row>
+          <el-col :span="24">
+            <div style="height:200px">
+            <list-mat-projcena  :textonly="true" :idmat="idefixThis" title="Zdar"></list-mat-projcena>
+            </div>
+          </el-col>
+          </el-row>
+      </el-col>
+     </el-row>
+
 
 
  <el-row class="mt-4">
@@ -539,6 +556,7 @@ import { eventBus } from '@/main.js'
 import {mapState} from 'vuex'
 import ListMat from '@/services/ListMatService'
 import List2Edit from  './List2Edit.vue'
+import ListMatProjCena from './ListMatProjCena'
 import f from '@/services/fce'
 
 
@@ -549,7 +567,8 @@ import { setTimeout, clearInterval } from 'timers'
 
 export default {
   components: {
-    'list2-edit': List2Edit
+    'list2-edit': List2Edit,
+    'list-mat-projcena': ListMatProjCena
 
   },
   props: {
@@ -623,6 +642,8 @@ export default {
       self.IsDialog = true
       self.Akce = dlgPar.Akce
       self.$store.dispatch('setshowEdit', false)
+      self.$store.dispatch('setshowIdefix', self.idefixThis)
+
 
       //alert(JSON.stringify(dlgPar))
 
@@ -828,6 +849,23 @@ export default {
                alert(e)
               }
             }
+           if (self.$store.state.showModule == 'list-mat-projcena') {
+              try {
+              //  alert('a'+ self.idefixThis)
+              tmp =  ( await ListMat.one(this.user,this.idefixThis , 200,''))
+                try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,200,''))
+                  self.list.data.enum_strojskup = tmp2.data.enum_strojskup
+                  //alert(JSON.stringify(self.list.data.enum_stroj))
+                } catch(e0){
+                  alert(e0)
+                }
+              } catch(e) {
+               alert(e)
+              }
+            }
+
+
 
 
 
@@ -898,10 +936,12 @@ export default {
       }
     },
     edit_vlastnosti(cmodul,ctitle){
+      const self  = this
       if ( !this.$store.state.showEdit==true ){
 
         this.$store.dispatch('setshowEdit', true)
         this.$store.dispatch('setshowModule', cmodul)
+        this.$store.dispatch('setshowIdefix', self.idefixThis)
         this.$store.dispatch('setshowModuleTitle', ctitle)
         eventBus.$emit('edit_run')
       } else {
@@ -1272,8 +1312,8 @@ export default {
       'idefix',
       'showEdit',
       'setshowModule',
-      'setshowModuleTitle'
-
+      'setshowModuleTitle',
+      'setshowIdefix',
 
     ])
 

@@ -3,6 +3,7 @@ import Api from '@/services/Api'
 export default {
   all (user,typ) {
     //console.log('jedou credentials: ')
+
     return Api().get('list-matprojcena',{params: {  user: user,id: typ }})
   },
   delete (user, id ) {
