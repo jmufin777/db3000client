@@ -40,6 +40,7 @@ Vue.component('vue-draggable-resizable',vuedraggableresizable )
 import Panel from '@/components/globals/Panel'
 import Panel2 from '@/components/globals/Panel2'
 import Dialog from '@/components/globals/Dialog'
+import MyTable from '@/components/globals/MyTable'
 
 import WinDow from '@/components/globals/WinDow'
 
@@ -57,6 +58,7 @@ Vue.component('panel', Panel)
 Vue.component('panel2', Panel2)
 Vue.component('win-dow', WinDow)
 Vue.component('dia-log', Dialog)
+Vue.component('my-table', MyTable)
 // Vue.component('ram1', Ram1)
 Vue.component('vue-json-pretty', VueJsonPretty)
 Vue.component('barcode', VueBarcode)

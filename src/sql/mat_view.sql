@@ -1,9 +1,16 @@
+select * from list_mat
 select 
 a.idefix
+,ms.zkratka as mattyp
 ,ms.nazev as skupina ,mss.nazev  as podskupina
 ,a.nazev1,a.nazev2,a.nazev3
+,a.cena_nakup_m2
+,a.sila_mm
 ,mv.nazev
-,*
+,mrs.rozmers,mrs.sirkys,mrs.delkymms,mrs.navins
+,mro.rozmero,mro.sirkyo,mro.delkymmo,mro.navino
+,mv.nazev as vyrobce
+,md.nazev as dodavatel
 --a.*,md.* 
 from list_mat a
 --Enums
@@ -20,13 +27,32 @@ left join
 left join 
 (
 	
-select idefix_mat,b.zkratka,array_agg(distinct sirka_mm::int::text||'x'||vyska_mm::int::text) as rozmer, 
-array_to_string(array_agg(distinct sirka_mm::int),',') as sirky
-				, array_agg(distinct vyska_mm::int) as delky
-from list_mat_rozmer a join list2_matdostupnost b on a.idefix_dostupnost = b.idefix
+select idefix_mat,b.zkratka
+	           ,array_to_string(array_agg(distinct (sirka_mm/1000)::numeric(10,2)::text||'x'||(vyska_mm/1000)::numeric(10,2)::int::text),',') as rozmers 
+			   , array_to_string(array_agg(distinct sirka_mm::int),',') as sirkys
+			   , array_to_string(array_agg(distinct vyska_mm::int),',') as delkymms
+			   , array_to_string(array_agg(distinct vyska_mm/1000::int),',') as navins
+	
+from list_mat_rozmer a join list2_matdostupnost b on a.idefix_dostupnost = b.idefix where b.zkratka='S' and idefix_mat >0
 group by b.zkratka, idefix_mat
 	
-) mr on a.idefix =mr.idefix_mat
+) mrs on a.idefix =mrs.idefix_mat
+
+left join 
+(
+	
+select idefix_mat,b.zkratka
+	           ,array_to_string(array_agg(distinct (sirka_mm/1000)::numeric(10,2)::text||'x'||(vyska_mm/1000)::numeric(10,2)::int::text),',') as rozmero 
+			   , array_to_string(array_agg(distinct sirka_mm::int),',') as sirkyo
+			   , array_to_string(array_agg(distinct vyska_mm::int),',') as delkymmo
+			   , array_to_string(array_agg(distinct vyska_mm/1000::int),',') as navino
+	
+from list_mat_rozmer a join list2_matdostupnost b on a.idefix_dostupnost = b.idefix where b.zkratka='O' and idefix_mat >0
+group by b.zkratka, idefix_mat
+	
+) mro on a.idefix =mro.idefix_mat
+
+
 
 
 --left join (
@@ -55,11 +81,13 @@ from list_mat_rozmer a join list2_matdostupnost b on a.idefix_dostupnost = b.ide
 group by b.zkratka, idefix_mat
 
 select * from list_mat_rozmer
+select * from list_mat_projcena
  
  select * from list_mat_rozmer
  select * from list2_matsubskup
  select * from list2_matvlastnosti
-  select kod,* from list_mat_projcena     where idefix_mat = 1869
+  select kod,* from list_mat_projcena  
+  where idefix_mat = 1869
   
   insert into list_mat_projcena (idefix_mat,datum) select * from (select '1869' as idefix_mat,now()::date ) a
         where not exists (select * from list_mat_projcena b where a.idefix_mat=b.idefix_mat)

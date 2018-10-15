@@ -1,7 +1,10 @@
-
+import moment from 'moment'
 export default {
   hasClass(element, cls) {
     return element.className.split(' ').indexOf(cls) > -1
+  },
+  datum(value) {
+    return moment(String(value)).format('MM/DD/YYYY')
   },
 
   hasClassId(elementId, cls) {

@@ -57,6 +57,7 @@ export default {
         [
 
           // ['list-mat','Materialy',100],
+          ['list-matprojcena', "Projektove ceny",100],
 
           ['list2-matvlastnosti','Vlastnost',50],
 
@@ -74,7 +75,7 @@ export default {
           ['list2-matpotisknutelnost', "Postisknutelnost",33],
 
           ['list2-matsirka', "Sirka",33],
-          ['list-matprojcena', "Projektove ceny",100],
+
 
 
 

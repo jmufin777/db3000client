@@ -11,32 +11,9 @@
   <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
-  <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
-    <el-badge :value="list.length">
-    <el-button  type="warning" icon='el-icon-plus'  size="mini" class="elevation-0"
-        @click="newLine(-1)"
-    ></el-button>
-    </el-badge>
-  </el-col>
 
-  <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
-    <el-badge :value="listEdits.length" v-if="listEdits.length>0">
-    <el-button  v-if="listEdits.length>0"  type="warning" icon='el-icon-back'  size="mini" class="elevation-0"
-        @click="backLines()"
-    ></el-button>
 
-    </el-badge>
-  </el-col>
-  <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
 
-    <el-button  v-if="listEdits.length==0"   size="mini"
-       class="elevation-0 " type="success" icon='el-icon-success'
-        @click="saveLines(0)"
-    ></el-button>
-        <el-button  v-if="listEdits.length>0"   size="mini" class="elevation-0 " type="danger" icon='el-icon-success'
-        @click="saveLines(0)"
-    ></el-button>
-</el-col>
 
 
 
@@ -50,170 +27,107 @@
 
 <div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId1">
 
-<el-row    style="backgroud: white">
-  <el-col :span="2" class="mth">
-   Akce
- </el-col>
 
-
- <el-col :span="22">
-  <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth"
-  v-bind:class="{'green--text': lastSort[0]==col.id }"
-  v-show="col.props.visible=='yes'"
-  >
-
-        {{col.title}}
-    <i v-if="col.sort && col.sort=='asc'"    @click="sortByKey(col.id,'desc')" class="el-icon-upload2"   ></i>
-    <i v-if="!col.sort || col.sort=='desc'"  @click="sortByKey(col.id,'asc')" class="el-icon-download"  ></i>
-
-    <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
-    <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
-      </el-col>
- <el-col :span="2" class="mth">
-   X
- </el-col>
- </el-col>
- </el-row>
-
-<div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId2 ">
-  <form :id="'f' +objId1">
-
-  <el-row v-for="( item, irow ) in list" :key="item.id"
-      v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
-      :id="'d'+objId2 + '_r_'+irow"
-        style="backgroud: white"
-  >
-
-
-  <el-col :span="2" >
-
-
-    <div class='dcell'  style="width::100% ; background:white"
-    v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-    >
-        <el-tooltip  placement="right" effect="light">
-      <div slot="content">{{ item['popis'] }}</div>
-       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="showPopis(irow)" ><i class="el-icon-question" size="mini"></i></button>
-     </el-tooltip>
-
-       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLineToForm(irow)" ><i class="el-icon-document" size="mini"></i></button>
-       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLineToForm(irow)" ><i class="el-icon-edit" size="mini"></i></button>
-
-   </div>
-  </el-col>
-
-
-  <el-col :span="22"
-  >
-    	<el-col v-for="(col,icol) in cols"
-			:key="col.id"
-      :span="col.span"
-      v-show="col.props.visible=='yes'"
-      >
-      <div :id="'d'+ objId2+ '_r_'+irow+'_c_'+icol"  class='dcell' >
-
-        <input type="number" v-if="col.type =='number'"
-        class=" px-0 cell " :id="'c' + objId2 + '_r_'+irow+'_c_'+icol"
-        :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
-        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-       >
-       <select v-else-if="col.type=='selectone'" v-model="list[irow][col.id]"
-              class=" px-0 cell " :id="'c' + objId2+ '_r_'+irow+'_c_'+icol"
-              v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-              style="width:100%;border:none;height:22px;width:100%"
-              readonly
-       >
-          <option
-            v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
-            :value="item2.idefix"
-
-            >
-          </option>
-
-       </select>
-    <el-dropdown v-else-if="col.type=='selectone2'">
-      <span class="el-dropdown-link">
-        {{list[irow][col.id]}}<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-          <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                  v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
-                  :value="item2.idefix"
-              >
-              <el-checkbox>{{item2.nazev}}</el-checkbox>
-              </el-dropdown-item>
-          </el-dropdown-menu>
-    </el-dropdown>
-
-        <input type="text" v-else-if="col.type=='textview'"
-        class=" px-0 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
-        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-        :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly disabled="true"
-
-        >
-
-        <input type="text" v-else-if="col.type=='numberview'"
-        class=" px-0 pr-2 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
-        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-        :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:right" readonly disabled="true"
-
-        >
-
-
-
-        <input type="text" v-else
-        class=" px-0 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
-        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-
-        :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
-
-        >
-
-        <input type="date" v-if="col.type =='datetime-local' && false"
-        class="white px-0 cell seda" :id="'c'+ objId2 +'_r_'+irow+'_c_'+icol"
-        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-        :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
-
-        min="2007-06-01T08:30" max="8120-06-30T16:30"
-        >
-
-      </div>
-
-    	</el-col>
-     <el-col :span="2" >
-      <div class='dcell'  style="width::100% ; background:white"
-      v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
-      >
-         <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow)" ><i class="el-icon-delete" size="mini"></i></button>
-      </div>
-     </el-col>
-  </el-col>
-  </el-row>
-  </form>
 
   <div>
     <br><br>
+<table style="width:100%">
+<thead>
+<th>Akce</th>
+<th style="width:33%">Material</th>
+<th>Sire</th>
+<th>Navin</th>
+<th>Cena za m2</th>
 
- <table>
-      <tr v-for="(i1, idx) in list" :key="i1.idx" v-if="idx==0">
-         <td v-for="(i1 ,idyz) in i1" :key="idyz">{{ idyz }}</td>
-      </tr>
-      <tr v-for="(i1, idx) in list" :key="idx">
+<th>Technologie</th>
+<th>Poznamky</th>
+<th>Vymazat</th>
 
-        <td v-for="(i2 ,idy) in i1" :key="idy">{{ i2 }} </td>
-      </tr>
-    </table>
+</thead>
+<tbody>
+<tr v-for="(item1, irow1) in list" :key="irow1.idefix">
+  <td>
+  <div class='dcell'  style="width::100% ; background:white"
+    v-bind:class="{seda: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
+    >
+        <el-tooltip  placement="left-start" effect="light">
+      <div slot="content">{{ item1['popis'] }}</div>
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
+     </el-tooltip>
+
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
+       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
+
+   </div>
+  </td>
+  <td style='text-align:left' class="px-2">
+     {{item1['nazev1']}} {{item1['nazev2']}} {{item1['nazev3']}}
+  </td>
+
+  <td v-if="item1['mattyp']=='R'">
+    <table >
+      <tr v-if="item1['sirkys']>''"><td>S</td><td>{{item1['sirkys']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O</td><td>{{item1['sirkyo']}}</td></tr>
+    </table></td>
+
+
+
+  <td v-else-if="item1['mattyp']=='D'">
+    <table >
+      <tr v-if="item1['sirkys']>''"><td>S</td><td>{{item1['rozmers']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O</td><td>{{item1['rozmero']}}</td></tr>
+   </table>
+  </td>
+
+   <td v-else-if="item1['mattyp']=='A'">
+    <table >
+      <tr v-if="item1['sirkys']>''"><td>S</td><td>{{item1['rozmers']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O</td><td>{{item1['rozmero']}}</td></tr>
+   </table></td>
+   <td v-else>
+    <table >
+      <tr v-if="item1['sirkys']>''"><td>S</td><td>{{item1['rozmers']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O</td><td>{{item1['rozmero']}}</td></tr>
+   </table></td>
+   <td v-if="item1['mattyp']=='R'">
+     {{ (item1['navins'] >0)?Math.round(item1['navins']) : Math.round(item1['navino']) }} m
+   </td>
+   <td v-else>
+     {{ item1['sila_mm']}} mm
+   </td>
+   <td >
+     {{item1['cena_nakup_m2']}}
+   </td>
+
+   <td>
+     {{ item1['technologie']}}
+   </td>
+
+   <td>
+     {{ item1['popis']}}
+   </td>
+
+
+
+
+
+
+
+
+  <td>
+
+         <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
+
+  </td>
+
+</tr>
+</tbody>
+</table>
+<my-table :list="list"></my-table>
+
+
 <br>
 <list-mat-edit v-if="IsDialog"></list-mat-edit>
-<!-- <table>
-      <tr v-for="(ie1, iedx) in listEdits" :key="ie1.idx" v-if="iedx==0">
-         <td v-for="(ie1 ,iedyz) in ie1" :key="iedyz">{{ iedyz }}</td>
-      </tr>
-      <tr v-for="(ie1, iedx) in listEdits" :key="iedx">
-
-        <td v-for="(ie2 ,iedy) in ie1" :key="iedy">{{ ie2 }} </td>
-      </tr>
-    </table> -->
 
 
   </div>
@@ -263,7 +177,7 @@ import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import ListMat from '@/services/ListMatService'
 import ListMatEdit from './ListMatEdit'
-import List2StrojSkup from '@/services/List2StrojSkupService'
+
 import f from '@/services/fce'
 
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
@@ -286,16 +200,9 @@ export default {
       IsWaiting: false,
       info:'',
 
-      isWrite: false,
-      infoStatus: {
-        isFocus: null,
-        lastkey: 0,
-        blurKey: 0,
-        lastFocus: 0,
-      },
+
       search:'',
-      //event
-      //event
+
       objId1: '821',
       objId2: '822',
       objSearchBar: 'search_821',
@@ -303,7 +210,7 @@ export default {
       aInfo: [],
       total: 0,
       pagination: {},
-      form: {},
+
       //Popisek materialu
       IsShowPopis: false,
       popisInfo: 'Ne',
@@ -314,46 +221,12 @@ export default {
       currentOrigValue: null,
       lastId: '',
       minId: 0, //Pro vklad zaporna ID
-  		cols: [
-        { id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "idefix", title: "Idefix", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
 
 
-
-          { id: "kod" , title: "Kod", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "idefix_matskup" , title: "Typ", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "idefix_matsubskup" , title: "Typ2", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "idefix_vyrobce", title: "Vyrobce", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "nazev1", title: "Nazev1", cssClasses: "mtd" ,span:1, isEdit: true, type: "textview",props:{visible: 'yes'}},
-          { id: "nazev2", title: "Nazev2", cssClasses: "mtd" ,span:1, isEdit: true, type: "textview",props:{visible: 'yes'}},
-          { id: "nazev3", title: "Nazev3", cssClasses: "mtd" ,span:1, isEdit: true, type: "textview",props:{visible: 'yes'}},
-          { id: "popis", title: "popis", cssClasses: "mtd" ,span:1, isEdit: true, type: "textclick",props:{visible: 'yes'}},
-          { id: "idefix_dodavatel", title: "Dod", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "sila_mm", title: "sila", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "vaha_gm2", title: "vaha", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "sirka_mm_zbytek", title: "Z Sirka", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "vyska_mm_zbytek", title: "Z Vyska", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "cena_nakup_m2", title: "Cena Nakup m2", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "koef_naklad", title: "koef Naklad", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "koef_prodej", title: "koef Prodej", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "cena_nakup_kg", title: "Cena nakup Kg", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "cena_nakup_arch", title: "Cena Nakup Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "cena_naklad_arch", title: "Cena Naklad Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "cena_naklad_m2", title: "Cena Naklad m2", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "cena_prodej_m2", title: "Cena Prodej M2", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-          { id: "cena_prodej_arch", title: "Cena Prodej Arch", cssClasses: "mtd" ,span:1, isEdit: true, type: "numberview",props:{visible: 'yes'}},
-
-
-
-
-        //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
-        //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
-      ],
-      idefix_strojskup_values: [],
 
       list: [],
-      listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
-      listEdits: [],   //Prehled zmen s prinakem edit, delete
+
+
       lastSort: ['kod','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
     }
   },
@@ -365,67 +238,11 @@ export default {
       this.list = (await ListMat.all(this.user,'nic')).data
 
 
-      if (!this.list.length || this.list.length == 0){
-        this.list =[{
-          id: -1,
-          kod: 100,
-          nazev1:'Nova'
-        }]
-
-        this.newLine(-1)
         this.IsWaiting = false
         return
 
-
-      }
-
-
-
-      //this.newLine()
-
-
-      this.IsWaiting = false
-
-      //this.aInfo.push=this.list[0]
-      var x
-
-      for(x in this.list[0]) {
-          this.aInfo[x]=''
-
-      }
-          this.aInfo['id']=-1
-//          this.list.unshift(this.aInfo)
-
-      this.idefix_strojskup_values = (await List2StrojSkup.all(this.user,'nic')).data
-      this.cols.forEach((el,i)=>{
-        if (el.id =='idefix_strojskup') {
-          this.idefix_strojskup_values.forEach(e2 => {
-            this.cols[i].values.push({idefix: e2.idefix, nazev: e2.nazev      })
-          })
-        }
-      })
-      //console.log( this.cols)
-
     }
-        var new_id ='c' + this.objId2+ '_r_'+0+'_c_'+1
-              //alert(new_id)
-        setTimeout(function(){
-             var newObal= document.getElementById('d'+new_id.substring(1))
-              this.isWrite =false
-            //  document.getElementById(new_id).focus()
-             // document.getElementById(new_id).click()
-              document.getElementById(new_id).setAttribute('readonly',true)
-              f.removeClass(document.getElementById(new_id),"bila2")
-              if (!document.getElementById(new_id).type== 'number' ) {
-                document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
-              }
 
-            //setTimeout(function(){
-              f.changeClass(newObal,'dcell','dcell_edit')
-              document.getElementById(new_id).focus()
-
-              // self.editLineToForm(4)
-         },50)
   },
 
   created () {
@@ -435,35 +252,15 @@ export default {
 
       })
 
-setTimeout(function(){
-  var tmpObj=''
-  var _obj1 ='m' + self.objId1
-  var _obj2 ='t' + self.objId1
-  var _obj3 ='t' + self.objId2
-  var moduleName= self.moduleName
 
-  f.setUp(_obj1,_obj2,_obj3,self,moduleName)
-
-    // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
-  },100)
   },
   beforeDestroy () {
 
-     if (this.listEdits.length>0) {
-       //alert('beforeDestroy')
-       if (confirm('Ulozit zmeny ?')){
-          this.saveLines(0)
-       }
-     }
+
 
   },
   destroyed () {
-    const self = this
-    if (document.getElementById("t" + self.objId2 )){
-        ///nejde
 
-
-    }
 
   },
   beforeUpdate () {
@@ -471,13 +268,7 @@ setTimeout(function(){
 
   },
   watch: {
-    pagination: {
-      handler () {
-        this.my_data()
-        alert('watch')
-      },
-      deep: true,
-    }
+
   },
 
   methods: {
@@ -492,8 +283,6 @@ editLine(nRow) {
            'cols': self.cols,
            'record': self.list[nRow],
            'nRow': nRow
-
-
 
       })
 
@@ -980,57 +769,7 @@ editLineToForm(nRow) {
         rows.splice(index, 1);
       }
       },
-    async appendRow(index,rows) {
-       alert(index)
-       this.aInfo=rows[index]
-       console.log(rows[0])
-       for (var x in rows[0]){
-         this.form[x] = rows[0][x]
-       }
-        console.log("FORM:", this.form)
-      try {
-        await (ListMat.insert(this.user, this.form))
 
-      } catch (err) {
-        console.log(err)
-      }
-
-      await ListMat.all(this.user,'nic')
-      .then(res => {
-
-        //this.info= res
-        this.list = res.data
-
-
-          var x
-          for(x in this.list[0]) {
-              this.aInfo[x]=''
-          }
-          this.aInfo['id']=-1
-          this.list.unshift(this.aInfo)
-
-      })
-
-    } ,
-     setCurrent(row) {  //Zavolat s cislem radky,treba tlacitkem,ted j nepotrenuju
-        this.$refs.tableColors.setCurrentRow(row);
-      },
-      handleCurrentChange(val) {
-
-         this.currentRow = val;
-         this.aInfo = val
-         if (val) {
-           this.info = val.id
-           this.currId = val.id
-         } else {
-           this.info = 'Del'
-         }
-
-
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
     Alert(txt) {
       alert(txt)
 

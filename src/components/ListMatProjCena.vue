@@ -11,6 +11,7 @@
   <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" >
   <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
+  Kod Mat: {{ $store.state.showIdefix }} / {{ showIdefix }}
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
     <el-badge :value="list.length">
@@ -109,10 +110,8 @@
       v-show="col.props.visible=='yes'"
       >
       <div :id="'d'+ objId2+ '_r_'+irow+'_c_'+icol"  class='dcell' >
-        <span v-if="textonly1==false">
-          {{ item[col.id] }}
-        </span>
-        <input type="number" v-else-if="col.type =='number'"
+
+        <input type="number" v-if="col.type =='number'"
         class=" px-0 cell " :id="'c' + objId2 + '_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
@@ -294,13 +293,15 @@ export default {
       minId: 0, //Pro vklad zaporna ID
   		cols: [
         { id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "kod", title: "Kod", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "idefix", title: "IDX", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "idefix_mat", title: "Mat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-        { id: "datum", title: "Den", cssClasses: "mtd" ,span:4, isEdit: true, type: "date",props:{visible: 'yes'}},
+        { id: "kod", title: "Kod", cssClasses: "mtd" ,span: 2, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "idefix", title: "IDX", cssClasses: "mtd" ,span: 3, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "idefix_mat", title: "Mat", cssClasses: "mtd" ,span: 3, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+        { id: "datum", title: "Den", cssClasses: "mtd" ,span:4, isEdit: true, type: "text",props:{visible: 'yes'}},
         { id: "nabidka", title: "Nabidka", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "zakazka", title: "Zakazka", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "cena_m2", title: "Cena", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "mnozstvi", title: "Mnozstvi", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "faktura", title: "Faktura", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         { id: "popis", title: "Popis", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
 
@@ -325,7 +326,7 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await ListMatProjCena.all(this.user,this.idmat1)).data
+      this.list = (await ListMatProjCena.all(this.user,this.showIdefix)).data
 
 
       if (!this.list.length || this.list.length == 0){
@@ -473,6 +474,7 @@ copyLine(nRow) {
      var  aTmp= {}
      var aDel= []
      var aZmenySend=[]
+     const self = this
 
       this.listEdits.forEach((el)=>{
         //console.log(el[1])
@@ -491,7 +493,18 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka
+        aTmp.push({id: el.id,
+        idefix: el.idefix,
+        idefix_mat: self.showIdefix,
+        kod: el.kod,
+        datum: el.datum,
+
+        nabidka :el.nabidka ,
+        zakazka :el.zakazka ,
+        cena_m2 :el.cena_m2 ,
+        mnozstvi:el.mnozstvi,
+        faktura :el.faktura ,
+        popis   :el.popis
 
 
         })
@@ -511,7 +524,7 @@ copyLine(nRow) {
       var neco = []
 
      try {
-      this.list = (await   ListMatProjCena.all(this.user,this.idmat1)).data
+      this.list = (await   ListMatProjCena.all(this.user,this.showIdefix)).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -591,11 +604,11 @@ copyLine(nRow) {
 
         return
       }
-      alert('prd'+ self.textonly1)
+      //alert('prd'+ self.textonly1)
       this.listNewLine = []
 
 
-      this.Max = (await ListMatProjCena.all(this.user,self.$store.state.showIdefix)).data[0].kod*1 +10
+      this.Max = (await ListMatProjCena.all(this.user,this.showIdefix)).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -815,7 +828,7 @@ copyLine(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await ListMatProjCena.all(this.user,this.idmat1)).data
+      this.list = (await ListMatProjCena.all(this.user,this.showIdefix)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -902,9 +915,9 @@ copyLine(nRow) {
       'level',
       'idefix',
       'showEdit',
-      'setshowModule',
-      'setshowModuleTitle',
-      'setshowIdefix',
+      'showModule',
+      'showModuleTitle',
+      'showIdefix',
 
 
     ])

@@ -29,7 +29,7 @@
 import {mapState} from 'vuex'
 import Old1 from '@/services/Old1Service'
 import virtualList from 'vue-virtual-scroll-list'
-import  g  from '@/funkce/global.js'
+
 
 export default {
   components: {

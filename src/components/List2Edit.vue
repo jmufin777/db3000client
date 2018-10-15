@@ -104,8 +104,8 @@ computed: {
       'idefix',
       'showEdit',
       'setshowModule',
-      'setshowModuleTitle'
-
+      'setshowModuleTitle',
+      'setshowIdefix',
 
     ])
 

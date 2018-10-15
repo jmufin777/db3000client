@@ -207,7 +207,7 @@ import _f from '@/funkce/Desktop_switch.js'
 import { eventBus } from '@/main.js'
 import AuthService from '@/services/AuthService'
 
-import { g } from '@/funkce/global.js'
+
 import hw from './Blank.vue'
 import testy from './_Testy/testy'
 import formFX from './_Testy/formFX'

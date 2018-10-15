@@ -379,12 +379,12 @@
        </table>
      </el-col>
      </el-row>
-     <el-row><el-col :span="15">
+     <el-row><el-col :span="17">
      <el-row class="ma-2">
-        <el-col :span="3">
+        <el-col :span="4">
           koef_naklad
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
            <el-autocomplete
            class="inline-input mr-1"
            v-model="list.data.mat[0].koef_naklad"
@@ -396,10 +396,10 @@
            @blur="cena_naklad()"
          ></el-autocomplete>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           koef_prodej
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
            <el-autocomplete
            class="inline-input mr-1"
            v-model="list.data.mat[0].koef_prodej"
@@ -410,10 +410,10 @@
        ></el-autocomplete>
 
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           koef_real
         </el-col>
-        <el-col :span="2"
+        <el-col :span="3"
 
 
        v-bind:class="{ bad : list.data.mat[0].cena_nakup_m2 * list.data.mat[0].koef_naklad*1 > list.data.mat[0].cena_naklad_m2*1
@@ -427,20 +427,20 @@
      </el-row>
 
      <el-row class="ma-2">
-        <el-col :span="3">
+        <el-col :span="4">
           Tloušťka v mm
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].sila_mm" size="mini"  style="width:100%"></el-input>
         </el-col>
-        <el-col :span="3"> Váha v g/m2</el-col>
-        <el-col :span="2">
+        <el-col :span="4"> Váha v g/m2</el-col>
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].vaha_gm2" size="mini"  style="width:100%"></el-input>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           Nakup kg
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_nakup_kg" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
         </el-col>
       </el-row>
@@ -448,46 +448,46 @@
 
 
       <el-row class="ma-2">
-        <el-col :span="3">
+        <el-col :span="4">
            Nakup m2
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_nakup_m2" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
         </el-col>
 
 
 
-        <el-col :span="3">
+        <el-col :span="4">
           Naklad m2
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_naklad_m2" size="mini"  style="width:100%" @change="cena_naklad()" ></el-input>
         </el-col>
-          <el-col :span="3">
+          <el-col :span="4">
           Prodej m2
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_prodej_m2" size="mini"  style="width:100%" ></el-input>
         </el-col>
 
       </el-row>
       <el-row class="ma-2">
-        <el-col :span="3">
+        <el-col :span="4">
           Nakup arch
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_nakup_arch" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
         </el-col>
 
 
 
-        <el-col :span="3">
+        <el-col :span="4">
           Naklad arch
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_naklad_arch" size="mini"  style="width:100%" ></el-input>
         </el-col>
-         <el-col :span="3">
+         <el-col :span="4">
 
 
         <!--
@@ -511,7 +511,7 @@
 
         </el-col>
 
-        <el-col :span="2">
+        <el-col :span="3">
 
           <el-input v-model="list.data.mat[0].cena_prodej_arch" size="mini"  style="width:100%" ></el-input>
         </el-col>
@@ -520,14 +520,35 @@
 
       </el-col>
 
-      <el-col :span=5>
+      <el-col :span="6">
         <el-row><el-col :span="24">
           <el-button size ="mini" @click="edit_vlastnosti('list-mat-projcena','Projektove ceny')" style="width:90%">Projektove ceny</el-button>
           </el-col></el-row>
         <el-row>
           <el-col :span="24">
             <div style="height:200px">
-            <list-mat-projcena  :textonly="true" :idmat="idefixThis" title="Zdar"></list-mat-projcena>
+
+              <table>
+                <thead>
+                  <th>Datum</th>
+                  <th>Job</th>
+                  <th>Cena/m2</th>
+                  <th>Mnozstvi</th>
+                  <th>FA</th>
+                </thead>
+                <tbody>
+                <tr v-for="(itemCena,iC) in list.data.projcena" :key="iC">
+                  <td>{{ datum(itemCena.datum)}}</td>
+                  <td>{{itemCena.nabidka}}/{{itemCena.zakazka}}</td>
+                  <td>{{itemCena.cena_m2}}</td>
+                  <td>{{itemCena.mnozstvi}}</td>
+                  <td>{{itemCena.faktura}}</td>
+                </tr>
+                </tbody>
+
+
+              </table>
+
             </div>
           </el-col>
           </el-row>
@@ -558,6 +579,8 @@ import ListMat from '@/services/ListMatService'
 import List2Edit from  './List2Edit.vue'
 import ListMatProjCena from './ListMatProjCena'
 import f from '@/services/fce'
+import moment from 'moment'
+
 
 
 //import List2MatSubSkup from '@/services/List2MatSubSkupService'
@@ -1298,7 +1321,11 @@ export default {
       },
       handleSelect(item) {
         console.log(item)
+      },
+      datum(value) {
+        return moment(String(value)).format('MM/DD/YYYY')
       }
+
     //Auto Komplit
   },
   beforeDestroy() {
@@ -1315,7 +1342,12 @@ export default {
       'setshowModuleTitle',
       'setshowIdefix',
 
-    ])
+    ]),
+/*
+    datum(){
+      return Vue.filter('date')(this.value)
+    }
+*/
 
   }
 }
