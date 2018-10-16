@@ -6,37 +6,47 @@
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
     </el-col>
   </el-row>
-  <el-row  :gutter="20">
+  <!-- <el-row  :gutter="20">
+
   <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
+  <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku" @change="addWhere">
   </el-input>
-  </el-col>
+  </el-col> -->
 
 
 
 
 
 
-    <el-col :span="2" :offset="0" style="margin-top:5px;padding-left:10px" >
-        <!-- <el-checkbox v-model="saveNow" label="Ukladat prubezne"  size='mini'></el-checkbox> -->
-  </el-col>
-  </el-row>
+    <!-- <el-col :span="2" :offset="0" style="margin-top:5px;padding-left:10px" > -->
+
+  <!-- </el-col>
+  </el-row> -->
 <div>
 
 </div>
 
 <div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId1">
 
-
+ <!-- <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" > -->
+ <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tab-pane label="Role"  name="R"><el-input prefix-icon="el-icon-search"  style='width:300px' autofocus clearable size="mini" v-model="searchR" placeholder="Prohledat Role" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Desky" name="D"><el-input prefix-icon="el-icon-search"  style='width:300px' autofocus clearable size="mini" v-model="searchD" placeholder="Prohledat Desky" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Archy" name="A"><el-input prefix-icon="el-icon-search"  style='width:300px' autofocus clearable size="mini" v-model="searchA" placeholder="Prohledat Archy" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Vse"   name="V"><el-input prefix-icon="el-icon-search"  style='width:300px' autofocus clearable size="mini" v-model="searchV" placeholder="Prohledat Vse" @change="addWhere"></el-input></el-tab-pane>
+ </el-tabs>
+ <!-- </el-col> -->
 
   <div>
     <br><br>
 <table style="width:100%">
 <thead>
 <th>Akce</th>
-<th style="width:33%">Material</th>
-<th>Sire</th>
-<th>Navin</th>
+<th style="width:23%">Material</th>
+<th v-if="activeName=='R' || activeName=='V'">Sire</th>
+<th v-if="activeName=='D' || activeName=='A'">Rozmer</th>
+<th v-if="activeName=='R' || activeName=='V'">Navin m</th>
+<th v-if="activeName=='D' ">Tloustka mm</th>
 <th>Cena za m2</th>
 
 <th>Technologie</th>
@@ -69,7 +79,6 @@
       <tr v-if="item1['sirkys']>''"><td>S</td><td>{{item1['sirkys']}}</td></tr>
       <tr v-if="item1['sirkyo']>''"><td>O</td><td>{{item1['sirkyo']}}</td></tr>
     </table></td>
-
 
 
   <td v-else-if="item1['mattyp']=='D'">
@@ -199,9 +208,11 @@ export default {
 
       IsWaiting: false,
       info:'',
-
-
       search:'',
+      searchR:'',
+      searchD:'',
+      searchA:'',
+      searchV:'',
 
       objId1: '821',
       objId2: '822',
@@ -210,6 +221,9 @@ export default {
       aInfo: [],
       total: 0,
       pagination: {},
+      activeName:'R',
+      activeNameLast:'',
+      where: 'true' ,
 
       //Popisek materialu
       IsShowPopis: false,
@@ -222,8 +236,6 @@ export default {
       lastId: '',
       minId: 0, //Pro vklad zaporna ID
 
-
-
       list: [],
 
 
@@ -235,12 +247,10 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await ListMat.all(this.user,'nic')).data
-
-
+        this.getWhere()
+      //this.list = (await ListMat.all(this.user,`${self.where}`)).data
         this.IsWaiting = false
         return
-
     }
 
   },
@@ -248,7 +258,8 @@ export default {
   created () {
     var self=this
       eventBus.$on('dlg821rec', ( dlgPar ) => {
-        self.getData()
+        //self.getData()
+                self.getWhere()
 
       })
 
@@ -271,10 +282,58 @@ export default {
 
   },
 
-  methods: {
+
+methods: {
+async    handleClick(tab, event) {
+        const self = this
+      if ((this.activeNameLast == this.activeName) == false) {
+            this.getWhere()
+      }
+
+      //console.log(tab, event);
+    },
+async  addWhere() {
+  const self = this
+  if (self.activeName == 'V') {
+    self.where = 'true'
+  } else {
+   self.where = ` mattyp ='${this.activeName}'`
+  }
+  this.getWhere()
+
+ } ,
+ async getWhere (){
+   const self= this
+   var search = ''
+ if (self.activeName == 'V') {
+    self.where = 'true'
+    search = self.searchV
+  } else {
+   self.where = ` mattyp ='${this.activeName}'`
+   if (self.activeName == 'A') {
+     search = self.searchA
+   }
+   if (self.activeName == 'D') {
+     search = self.searchD
+   }
+   if (self.activeName == 'R') {
+     search = self.searchR
+   }
+
+  }
+  if (search > '') {
+       self.where += ` and (nazev1 ~* '${search}' or nazev2 ~* '${search}' or nazev3 ~* '${search}')`
+  }
+      this.IsWaiting = true
+        this.list = (await ListMat.all(this.user,self.where )).data
+        if (!this.list.length){
+          this.list=[]
+        }
+        this.IsWaiting = false
 
 
-editLine(nRow) {
+ },
+editLine(nRow) {   //Dulezita.bez ni nejdou dialogy v editu
      const self = this
      self.IsDialog = true
      self.Info = nRow
@@ -283,9 +342,7 @@ editLine(nRow) {
            'cols': self.cols,
            'record': self.list[nRow],
            'nRow': nRow
-
       })
-
    },
 
  showPopis(nRow) {
@@ -299,7 +356,7 @@ editLine(nRow) {
    //alert(this.list[nRow].popis)
  },
 
-copyLine(nRow) {
+copyLinex(nRow) {
 
      const self = this
      self.IsDialog = true
@@ -349,6 +406,7 @@ editLineToForm(nRow) {
 
 
    async saveLines(id){
+     return
      this.aInfo=[]
      var Posli=Array()
      var  aTmp= {}
@@ -413,7 +471,8 @@ editLineToForm(nRow) {
       var neco = []
 
      try {
-      this.list = (await   ListMat.all(this.user,'nic')).data
+      //this.list = (await   ListMat.all(this.user,'nic')).data
+        getWhere()
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -460,7 +519,10 @@ editLineToForm(nRow) {
    async getData() {
      // alert('getData')
      try {
-      this.list = (await   ListMat.all(this.user,'nic')).data
+      //this.list = (await   ListMat.all(this.user,'nic')).data
+
+        self.getWhere()
+
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -501,7 +563,7 @@ editLineToForm(nRow) {
 
    },
 
-   async newLine (nRow)  {
+   async newLinex (nRow)  {
      var x
       const self = this
       this.listNewLine = []
@@ -573,10 +635,11 @@ editLineToForm(nRow) {
      */
 
     if (confirm('Vymazat poloku materialu ' + self.list[nRow].nazev1 )) {
+      this.IsWaiting =true
       var prd= (await ListMat.delete(self.user,self.list[nRow].idefix))
-
-
-       self.list = (await ListMat.all(self.user,'nic')).data
+        self.getWhere()
+       //self.list = (await ListMat.all(self.user,` ${where} `)).data
+       this.IsWaiting =false
     }
 
 

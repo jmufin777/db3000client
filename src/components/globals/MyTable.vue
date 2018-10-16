@@ -1,6 +1,6 @@
 <template>
   <div class="text-xs-right">
-  <table >
+  <table v-if="list.length">
      <thead>
       <tr v-for="(i1, idx) in list" :key="i1.idx" v-if="idx==0">
          <th v-for="(i1 ,idyz) in i1" :key="idyz">{{ idyz }}</th>
