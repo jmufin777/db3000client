@@ -383,8 +383,8 @@ if (document.getElementById(_obj1)){
 
          f.changeClass(elObal,'dcell_edit','dcell')
          f.changeClass(newObal,'dcell','dcell_edit')
-         f.removeClass(elObal,'elevation-20')
-         f.addClass(newObal,'elevation-20')
+         f.removeClass(elObal,'elevation-1')
+         f.addClass(newObal,'elevation-1')
 
 
          isPresun = true
@@ -417,8 +417,8 @@ if (document.getElementById(_obj1)){
 
          f.changeClass(elObal,'dcell_edit','dcell')
          f.changeClass(newObal,'dcell','dcell_edit')
-         f.removeClass(elObal,'elevation-20')
-         f.addClass(newObal,'elevation-20')
+         f.removeClass(elObal,'elevation-1')
+         f.addClass(newObal,'elevation-1')
 
 
          isPresun = true
@@ -433,8 +433,8 @@ if (document.getElementById(_obj1)){
          var newObal = document.getElementById(newObalId)
          f.changeClass(newObal,'dcell','dcell_edit')
          f.changeClass(elObal,'dcell_edit','dcell')
-         f.addClass(newObal,'elevation-20')
-         f.removeClass(elObal,'elevation-20')
+         f.addClass(newObal,'elevation-1')
+         f.removeClass(elObal,'elevation-1')
 
          isPresun = true
          document.getElementById(newId).focus()
@@ -449,8 +449,8 @@ if (document.getElementById(_obj1)){
          var newObal = document.getElementById(newObalId)
          f.changeClass(newObal,'dcell','dcell_edit')
          f.changeClass(elObal,'dcell_edit','dcell')
-         f.addClass(newObal,'elevation-20')
-         f.removeClass(elObal,'elevation-20')
+         f.addClass(newObal,'elevation-1')
+         f.removeClass(elObal,'elevation-1')
 
          isPresun = true
          // alert(newId)
@@ -468,8 +468,8 @@ if (document.getElementById(_obj1)){
          var newObal = document.getElementById(newObalId)
          f.changeClass(newObal,'dcell','dcell_edit')
          f.changeClass(elObal,'dcell_edit','dcell')
-         f.addClass(newObal,'elevation-20')
-         f.removeClass(elObal,'elevation-20')
+         f.addClass(newObal,'elevation-1')
+         f.removeClass(elObal,'elevation-1')
          isPresun = true
          // alert(newId)
          document.getElementById(newId).focus()

@@ -6,38 +6,68 @@
       <v-progress-linear :indeterminate="true" v-if="IsWaiting" style="position:absolute;top:-10px"></v-progress-linear>
     </el-col>
   </el-row>
-  <!-- <el-row  :gutter="20">
-
-  <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku" @change="addWhere">
-  </el-input>
-  </el-col> -->
 
 
+<div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2" :id="'t' + objId1">
 
-
-
-
-    <!-- <el-col :span="2" :offset="0" style="margin-top:5px;padding-left:10px" > -->
-
-  <!-- </el-col>
-  </el-row> -->
-<div>
-
-</div>
-
-<div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId1">
+  <el-col :span="6" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
 
  <!-- <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" > -->
+
  <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="Role"  name="R"><el-input prefix-icon="el-icon-search"  style='width:300px' autofocus clearable size="mini" v-model="searchR" placeholder="Prohledat Role" @change="addWhere"></el-input></el-tab-pane>
-    <el-tab-pane label="Desky" name="D"><el-input prefix-icon="el-icon-search"  style='width:300px' autofocus clearable size="mini" v-model="searchD" placeholder="Prohledat Desky" @change="addWhere"></el-input></el-tab-pane>
-    <el-tab-pane label="Archy" name="A"><el-input prefix-icon="el-icon-search"  style='width:300px' autofocus clearable size="mini" v-model="searchA" placeholder="Prohledat Archy" @change="addWhere"></el-input></el-tab-pane>
-    <el-tab-pane label="Vse"   name="V"><el-input prefix-icon="el-icon-search"  style='width:300px' autofocus clearable size="mini" v-model="searchV" placeholder="Prohledat Vse" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Role"  name="R"><el-input class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchR" placeholder="Prohledat Role" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Desky" name="D"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchD" placeholder="Prohledat Desky" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Archy" name="A"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchA" placeholder="Prohledat Archy" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Vse"   name="V"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchV" placeholder="Prohledat Vse" @change="addWhere"></el-input></el-tab-pane>
  </el-tabs>
+ </el-col>
+
+
+<v-spacer></v-spacer><br>
+  <el-col :span="4" class="mx-1 mt-4" style="position:relative;top:9px">
+  <el-select v-model="search_dodavatel"
+            filterable
+            multiple
+
+            default-first-option
+            @change="addWhere"
+            placeholder="Dodavatele"
+
+            style="width:100%;"
+            size="mini">
+            <el-option
+            v-for="item8 in enum_dodavatel"
+            :key="item8.idefix*1"
+            :label="item8.nazev"
+            :value="item8.idefix*1"
+            >{{item8.nazev}} </el-option>
+  </el-select>
+  </el-col>
+  <el-col :span="4" class="mx-1 mt-4" style="position:relative;top:9px">
+   <el-select v-model="search_vyrobce"
+            filterable
+            multiple
+
+            default-first-option
+            @change="addWhere"
+            placeholder="Vyrobci"
+            style="width:100%;"
+            size="mini">
+            <el-option
+            v-for="item6 in enum_vyrobce"
+            :key="item6.idefix*1"
+            :label="item6.nazev"
+            :value="item6.idefix*1"
+
+            >{{item6.nazev}} </el-option>
+  </el-select>
+  </el-col>
+
+
  <!-- </el-col> -->
 
   <div>
+
     <br><br>
 <table style="width:100%">
 <thead>
@@ -50,15 +80,16 @@
 <th>Cena za m2</th>
 
 <th>Technologie</th>
-<th>Poznamky</th>
+<th>Vyrobce</th>
+<th>Dodavatel</th>
 <th>Vymazat</th>
 
 </thead>
 <tbody>
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix">
   <td>
-  <div class='dcell'  style="width::100% ; background:white"
-    v-bind:class="{seda: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
+  <div class='dcellx'  style="width::100% ; background:white"
+    v-bind:class="{bila: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
     >
         <el-tooltip  placement="left-start" effect="light">
       <div slot="content">{{ item1['popis'] }}</div>
@@ -76,27 +107,27 @@
 
   <td v-if="item1['mattyp']=='R'">
     <table >
-      <tr v-if="item1['sirkys']>''"><td>S</td><td>{{item1['sirkys']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O</td><td>{{item1['sirkyo']}}</td></tr>
+      <tr v-if="item1['sirkys']>''"><td style="border:none">S:&nbsp;{{item1['sirkys']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td style="border:none">O:&nbsp;{{item1['sirkyo']}}</td></tr>
     </table></td>
 
 
   <td v-else-if="item1['mattyp']=='D'">
     <table >
-      <tr v-if="item1['sirkys']>''"><td>S</td><td>{{item1['rozmers']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O</td><td>{{item1['rozmero']}}</td></tr>
+      <tr v-if="item1['sirkys']>''"><td>S:&nbsp;{{item1['rozmers']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O:&nbsp;{{item1['rozmero']}}</td></tr>
    </table>
   </td>
 
    <td v-else-if="item1['mattyp']=='A'">
     <table >
-      <tr v-if="item1['sirkys']>''"><td>S</td><td>{{item1['rozmers']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O</td><td>{{item1['rozmero']}}</td></tr>
+      <tr v-if="item1['sirkys']>''"><td>S:&nbsp;{{item1['rozmers']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O:&nbsp;{{item1['rozmero']}}</td></tr>
    </table></td>
    <td v-else>
     <table >
-      <tr v-if="item1['sirkys']>''"><td>S</td><td>{{item1['rozmers']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O</td><td>{{item1['rozmero']}}</td></tr>
+      <tr v-if="item1['sirkys']>''"><td>S:&nbsp;{{item1['rozmers']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O:&nbsp;{{item1['rozmero']}}</td></tr>
    </table></td>
    <td v-if="item1['mattyp']=='R'">
      {{ (item1['navins'] >0)?Math.round(item1['navins']) : Math.round(item1['navino']) }} m
@@ -109,16 +140,23 @@
    </td>
 
    <td>
-     {{ item1['technologie']}}
+     <table>
+        <tr><td style="border-collapse: collapse;border:none">{{ item1['technologie']}}
+        /{{ item1['technologie_skup']}}
+        /{{ item1['technologie_text']}} </td></tr>
+     </table>
    </td>
 
    <td>
-     {{ item1['popis']}}
+     {{ item1['vyrobce']}}
+   </td>
+    <td>
+     {{ item1['dodavatel']}}
    </td>
 
-
-
-
+  <td>
+     {{ item1['podskupina']}}
+   </td>
 
 
 
@@ -132,17 +170,15 @@
 </tr>
 </tbody>
 </table>
-<my-table :list="list"></my-table>
+<!-- <my-table :list="list"></my-table> -->
 
 
 <br>
 <list-mat-edit v-if="IsDialog"></list-mat-edit>
 
-
   </div>
   </div>
-  </div>
-  <dia-log :title="nadpisInfo" :show="IsShowPopis" v-if="IsShowPopis"><div slot="title2">{{popisInfo}}</div>
+    <dia-log :title="nadpisInfo" :show="IsShowPopis" v-if="IsShowPopis"><div slot="title2">{{popisInfo}}</div>
      <v-btn slot="tlacitko"
             color="primary"
             flat
@@ -234,6 +270,11 @@ export default {
       currentRow: null,
       currentOrigValue: null,
       lastId: '',
+      enum_dodavatel: [],
+      search_dodavatel: [],
+      enum_vyrobce: [],
+      search_vyrobce: [],
+      enum_vyrobce: [],
       minId: 0, //Pro vklad zaporna ID
 
       list: [],
@@ -244,10 +285,25 @@ export default {
   },
   async mounted () {
     const self = this
+    var tmp2
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
         this.getWhere()
+              try {
+                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,8,''))
+                  self.enum_dodavatel = tmp2.data.enum_dodavatel
+                  //alert(JSON.stringify(self.enum_dodavatel))
+                } catch(e0){
+                  alert(e0)
+                }
+               try {
+                  var tmp3 =  ( await ListMat.one(this.user,this.idefixThis ,6,''))
+                  self.enum_vyrobce = tmp3.data.enum_matvyrobce
+                  // alert(JSON.stringify(self.enum_vyrobce))
+                } catch(e1){
+                  alert(e1)
+                }
       //this.list = (await ListMat.all(this.user,`${self.where}`)).data
         this.IsWaiting = false
         return
@@ -299,6 +355,7 @@ async  addWhere() {
   } else {
    self.where = ` mattyp ='${this.activeName}'`
   }
+
   this.getWhere()
 
  } ,
@@ -320,6 +377,15 @@ async  addWhere() {
      search = self.searchR
    }
 
+  }
+  var ctmp=''
+  if (self.search_dodavatel.length>0){
+    ctmp=self.search_dodavatel.join(',')
+    self.where += ` and idefix_dodavatel in ( ${ctmp} )`
+  }
+  if (self.search_vyrobce.length>0){
+    ctmp=self.search_vyrobce.join(',')
+    self.where += ` and idefix_vyrobce in ( ${ctmp} )`
   }
   if (search > '') {
        self.where += ` and (nazev1 ~* '${search}' or nazev2 ~* '${search}' or nazev3 ~* '${search}')`

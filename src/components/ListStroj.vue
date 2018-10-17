@@ -104,9 +104,9 @@
 			:key="col.id"
       :span="col.span"
       v-show="col.props.visible=='yes'"
+      style="border-color:black;height:22px"
       >
       <div :id="'d'+ objId2+ '_r_'+irow+'_c_'+icol"  class='dcell' >
-
         <input type="number" v-if="col.type =='number'"
         class=" px-0 cell " :id="'c' + objId2 + '_r_'+irow+'_c_'+icol"
         :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
@@ -274,7 +274,8 @@ export default {
 				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
         { id: "kod", title: "Kod", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "idefix_strojskup", title: "Skupina", cssClasses: "mtd" ,span:3, isEdit: true, type: "selectone" ,values: [] ,selected: 0,props:{visible: 'yes'}},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "nazev_text", title: "Nazev text", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
      { id: "sirka_mat_max_mm", title: "Sirka\nMat", cssClasses: "mtd" ,span: 1, isEdit: true, type: "number"  ,props:{visible: 'yes'}},
      { id: "delka_mat_max_mm", title: "Delka\nMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
@@ -283,11 +284,11 @@ export default {
      { id: "tech_okraj_strana_mm", title: "To\nStr", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
      { id: "tech_okraj_start_mm", title: "To\nStart", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
      { id: "tech_okraj_spacecopy_mm", title: "Space\nCopy", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_spacejobs_mm", title: "Space\nJob", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_end_mm", title: "ToEnd", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "bez_okraj", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "spadavka_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "space_znacky_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+     { id: "tech_okraj_spacejobs_mm", title: "Space\nJob", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+     { id: "tech_okraj_end_mm", title: "ToEnd", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+     { id: "bez_okraj", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+     { id: "spadavka_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+     { id: "space_znacky_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
 
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
@@ -476,7 +477,7 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, idefix_strojskup: el.idefix_strojskup,nazev: el.nazev
+        aTmp.push({id: el.id,kod: el.kod, idefix_strojskup: el.idefix_strojskup,nazev: el.nazev,nazev_text: el.nazev_text
         ,sirka_mat_max_mm: el.sirka_mat_max_mm
         ,delka_mat_max_mm: el.delka_mat_max_mm
         ,sirka_tisk_max_mm: el.sirka_tisk_max_mm
