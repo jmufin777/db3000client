@@ -12,8 +12,9 @@
   <slot name="a1" :sm="8" :md="8" :lg="8" :xl="8"></slot>
 <el-row> <el-col :span="24">
 </el-col></el-row>
-  <panel :title="Akce +' : ' + mastrpis +': ' + isCopy " >
+  <panel :title="((Akce =='edit')?'Zmena':'Nova polozka ') +' ' + list.data.mat[0].nazev1 +' ' + list.data.mat[0].nazev2 +' ' + list.data.mat[0].nazev3  " >
     &nbsp;
+    <!-- Akce +' : ' + mastrpis +': ' + isCopy + ' '+  -->
     <!-- {{list.data.rozmer2}} / {{ idefixThis }} -->
   </panel>
 <!-- <el-row>
@@ -336,8 +337,11 @@
             ></el-autocomplete>
             </td><td>
 
-            <el-button v-if="akceRozmer=='i'" icon="el-icon-plus" type="success" @click="insertRozmer" size="mini"></el-button>
-            <el-button v-if="akceRozmer=='e'" icon="el-icon-edit" type="primary" @click="insertRozmer" size="mini"></el-button></td>
+            <!-- <el-button v-if="akceRozmer=='i' || akceRozmer=='e'" icon="el-icon-plus" type="success" @click="insertRozmer" size="mini"></el-button>
+            <el-button v-if="akceRozmer=='e' || akceRozmer=='i'" icon="el-icon-edit" type="primary" @click="insertRozmer" size="mini"></el-button> -->
+            <button v-if="akceRozmer=='i' || 1==1 "   type="button" style="width:30%;height:8px" class="px-0 " @click="insertRozmer('i')" ><i class="el-icon-plus" size="mini"></i></button>
+            <button v-if="akceRozmer=='e' "   type="button" style="width:30%;height:8px" class="px-0 " @click="insertRozmer('e')" ><i class="el-icon-edit"    size="mini"></i></button>
+            </td>
 
           </tr>
           </tbody>
@@ -357,22 +361,42 @@
            <td >Zbytek</td>
 
          </tr>
+
          <tr v-for="(ie3 ,iedx2 ) in list.data.rozmer2" :key="ie3.idx" >
            <td>{{ie3.zkratka}}</td>
 
-          <td style="text-align:left">
+          <td style="text-align:left" >
             <span v-for="(iX, x) in mySplit(ie3.rozmer)" :key="x"
+              class="mx-2"
             >
-            <el-tag v-if="ie3.zkratka=='S'" closable @close="Zmiz(iX)" type="success" @dblclick.native="Zmen(iX)">
-             {{myZobr(iX)}}
+            
+            <el-tag class="pr-4 mr-0  black--text" v-if="ie3.zkratka=='S'" type="success" size="mini" >
+
+              
+            {{myZobr(iX)}}
+             
+            
+            <button type="button" style="width:30%;height:8px" class="px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button>
+            <button type="button" style="width:30%;height:8px" class="px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit"    size="mini"></i></button>
+            <button type="button" style="width:30%;height:8px" class="px-0 black--text" @click="Zmiz(iX)"   ><i class="el-icon-close"   size="mini"></i></button> 
+
+            
+            
+          
+            
+            
             </el-tag>
-            <el-tag v-else  closable @close="Zmiz(iX)" @dblclick.native="Zmen(iX)" type="warning">
+            <el-tag class="pr-4 mr-0 black--text" v-else   type="warning" size="mini" >
              {{myZobr(iX)}}
+            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button>
+            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
+            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
+            
             </el-tag>
 
             </span>
            </td>
-          <td v-if="mastrpis=='R'" style="text-align:left">{{ myZobrZbytek(ie3.delky) }}</td>
+          <td v-if="mastrpis=='R'" style="text-align:left">{{ myZobrZbytek(ie3.delky)/1000 }}m</td>
           <td >{{myZobrZbytek(ie3.rozmer_zbytek)}}</td>
 
          </tr>
@@ -507,8 +531,6 @@
           Prodej arch
 
 
-
-
         </el-col>
 
         <el-col :span="3">
@@ -517,6 +539,15 @@
         </el-col>
 
       </el-row>
+      <el-row><el-col>
+        <br>
+            <el-button type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
+            >Ulozit - Opravit </el-button>
+            <el-button type="primary" id="btn_user_new_submit821" @click="submitForm('form')" size="mini"
+            >Kopie - Novy </el-button>
+            <el-button v-if="isCopy" @click="resetForm('form')" size="mini">Zrusit</el-button>
+            <el-button v-else @click="resetForm('form')" size="mini">Zavrit</el-button>
+        </el-col></el-row>
 
       </el-col>
 
@@ -527,7 +558,7 @@
         <el-row>
           <el-col :span="24">
             <div style="height:200px">
-
+<!--
               <table>
                 <thead>
                   <th>Datum</th>
@@ -545,32 +576,40 @@
                   <td>{{itemCena.faktura}}</td>
                 </tr>
                 </tbody>
-
-
               </table>
 
+
+//-->
             </div>
           </el-col>
           </el-row>
+
       </el-col>
      </el-row>
 
-
-
  <el-row class="mt-4">
-<el-form-item>
-    <el-button type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
-    >Ulozit - Opravit </el-button>
-    <el-button type="primary" id="btn_user_new_submit821" @click="submitForm('form')" size="mini"
-    >Kopie - Novy </el-button>
-    <el-button v-if="isCopy" @click="resetForm('form')" size="mini">Zrusit</el-button>
-    <el-button v-else @click="resetForm('form')" size="mini">Zavrit</el-button>
-</el-form-item>
+
  </el-row>
 </el-form>
 </div>
 <list2-edit></list2-edit>
+
+<!-- <win-dow :title="'events'" :id="`events`"
+    :x="200"
+    :w="700"
+    :y="100"
+    :z="90"
+    :h="351"
+    :parent="false"
+    :maximize="false"
+    >
+  i: {{ info }}
+
+  </win-dow> 
+-->
+
 </v-dialog>
+
 </template>
 <script>
 import { eventBus } from '@/main.js'
@@ -602,6 +641,7 @@ export default {
   },
   data () {
     return {
+      info: [],
       neco: 0,
       links: [],
       labelPosition: 'right',
@@ -651,7 +691,6 @@ export default {
 
     }
   },
-
   created() {
     const self=this
     eventBus.$on('edit', ( dlgPar ) => {
@@ -737,7 +776,19 @@ export default {
      // alert('M')
   },
 
+
   methods: {
+  
+  Info(ainfo){
+    const self = this
+    self.info=[]
+    self.info =ainfo
+
+
+    // ainfo.foereach(el => {
+    //   self.info.push(el)
+    // })
+  },
     async getDataEnum(){
       const self = this
             //alert('PRED' + JSON.stringify(self.list.data.enum_matvlastnosti))
@@ -933,6 +984,7 @@ export default {
       var neco=(ctxt+'')
       var aPart=neco.split("~")[1]+''
       if (this.mastrpis == 'D' || this.mastrpis == 'A'){
+        
         return aPart
       }
       if (this.mastrpis == 'R' ){
@@ -973,9 +1025,10 @@ export default {
       }
 
     },
-    Zmen(par){
+    Zmen(par, priznak){
       var zmizik = par.split('~')[0]
       const self = this
+      
       if (zmizik*1 > 0) {
          //this.deleteRozmer(zmizik)
          //alert(par.split('~')[0])
@@ -986,9 +1039,15 @@ export default {
                self.sirka_mm_zbytek = el.sirka_mm_zbytek
                self.vyska_mm_zbytek = el.vyska_mm_zbytek
 
-
                self.enum_matdostupnost = el.idefix_dostupnost
-               self.akceRozmer='e'
+               if (priznak == 1){
+                 self.akceRozmer='i'
+               }
+               if (priznak == 0){
+                 self.akceRozmer='e'
+               }
+
+               
                self.akceId = zmizik
              return
            }
@@ -1047,22 +1106,28 @@ export default {
       const self = this
 
       //self.list.data.rozmer2 = []
-      var tmp =  (await ListMat.one(this.user,this.idefixThis , 14,`delete from list_mat_rozmer where idefix=${zmizik}`)).data
-      self.list.data.rozmer2 =tmp.rozmer2
+      var tmp =  (await ListMat.one(this.user,this.idefixThis , 101,`delete from list_mat_rozmer where idefix=${zmizik}`)).data
       self.list.data.rozmer  =tmp.rozmer
+      var tmp2 =  (await ListMat.one(this.user,this.idefixThis , 105,`select 1`)).data
+      //self.list.data.rozmer2 =tmp.rozmer2
+      //self.list.data.rozmer  =tmp.rozmer
+
+      self.list.data.rozmer2 =tmp2.rozmer2
+      
+      
 
 
     },
-    async insertRozmer() {
+    async insertRozmer(akce) {
       const self = this
       //self.list.data.rozmer2 = []
       //enum_matdostupnost
       if (self.sirka_mm > 0 && self.vyska_mm>0 && self.enum_matdostupnost > 0 ){
-        if (self.akceRozmer=='i')  {
+        if (self.akceRozmer=='i' || akce=='i')  {
           var dotaz_insert = `insert into list_mat_rozmer(idefix_mat,sirka_mm,vyska_mm, sirka_mm_zbytek,vyska_mm_zbytek, idefix_dostupnost)
           values ( ${self.idefixThis},${self.sirka_mm},${self.vyska_mm},${self.sirka_mm_zbytek},${self.vyska_mm_zbytek},${self.enum_matdostupnost} )`
         }
-        if (self.akceRozmer=='e')  {
+        if (self.akceRozmer=='e' && akce=='e')   {
           var dotaz_insert = `update list_mat_rozmer set
                sirka_mm = ${self.sirka_mm}
               ,vyska_mm = ${self.vyska_mm}
@@ -1072,12 +1137,12 @@ export default {
             where idefix  = ${self.akceId}  `
         }
 
-
-      var tmp =  (await ListMat.one(this.user,this.idefixThis , 14,`${dotaz_insert}`)).data
-      self.list.data.rozmer2 =tmp.rozmer2
+      self.list.data.rozmer=[]
+      self.list.data.rozmer2=[]
+      var tmp =  (await ListMat.one(this.user,this.idefixThis , 101,`${dotaz_insert}`)).data
       self.list.data.rozmer  =tmp.rozmer
-      self.akceRozmer ='i'
-      self.akceId =0
+      var tmp2 =  (await ListMat.one(this.user,this.idefixThis , 105,`select 1`)).data
+      self.list.data.rozmer2 =tmp2.rozmer2
 
       } else {
         this.$alert('Neni vybrana dostupnost nebo chybi rozmery', 'Chyba pri vlozeni dostupnosti', {

@@ -11,7 +11,7 @@
   <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" >
   <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
-  Kod Mat: {{ $store.state.showIdefix }} 
+  Kod Mat: {{ $store.state.showIdefix }} / {{ showIdefix }}
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
     <el-badge :value="list.length">
@@ -51,10 +51,40 @@
 </div>
 
 <div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId1">
-       <table width="100%">
+
+<el-row    style="backgroud: white">
+  <el-col :span="2" class="mth" v-if="textonly1==false">
+   Akce
+ </el-col>
+
+
+ <el-col :span="22">
+  <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth"
+  v-bind:class="{'green--text': lastSort[0]==col.id }"
+  v-show="col.props.visible=='yes'"
+  >
+
+        {{col.title}}
+    <span v-if="textonly1==false">
+    <i v-if="col.sort && col.sort=='asc'"    @click="sortByKey(col.id,'desc')" class="el-icon-upload2"   ></i>
+    <i v-if="!col.sort || col.sort=='desc'"  @click="sortByKey(col.id,'asc')" class="el-icon-download"  ></i>
+    </span>
+
+    <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
+    <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
+      </el-col>
+ <el-col :span="2" class="mth" v-if="textonly1==false">
+   X
+ </el-col>
+ </el-col>
+ </el-row>
+
+<div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId2 ">
+  <form :id="'f' +objId1">
+    <table width="100%">
       <thead>
         <th>Akce</th>
-  
+        <th>Material</th>
         <th>Den</th>
         <th>Nabidka</th>
         <th>Zakazka</th>
@@ -62,31 +92,97 @@
         <th>Mnozstvi</th>
 
 
-      </thead>
-      <tbody>  
-        <tr v-for="( item, irow ) in list" :key="item.id"
+      </thead>  
+    </table>  
+
+  <el-row v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
       :id="'d'+objId2 + '_r_'+irow"
         style="backgroud: white"
   >
-  <td class="white">
-     <div class='dcell'  style="width::100% ; background:white"
+
+
+  <el-col :span="2" v-if="textonly1==false">
+
+
+    <div class='dcell'  style="width::100% ; background:white"
     v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
 
    </div>
-  </td>  
-  <td>{{datum(item.datum)}}</td>
-
-  </tr>
-     </tbody>  
-    </table>  
+  </el-col>
 
 
+  <el-col :span="22"
+  >
+    	<el-col v-for="(col,icol) in cols"
+			:key="col.id"
+      :span="col.span"
+      v-show="col.props.visible=='yes'"
+      >
+      <div :id="'d'+ objId2+ '_r_'+irow+'_c_'+icol"  class='dcell' >
 
-<div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId2 ">
+        <input type="number" v-if="col.type =='number'"
+        class=" px-0 cell " :id="'c' + objId2 + '_r_'+irow+'_c_'+icol"
+        :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+       >
+       <select v-else-if="col.type=='selectone'" v-model="list[irow][col.id]"
+              class=" px-0 cell " :id="'c' + objId2+ '_r_'+irow+'_c_'+icol"
+              v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+              style="width:100%;border:none;height:22px;width:100%"
+              readonly
+       >
+          <option
+            v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
+            :value="item2.idefix"
+            >
+          </option>
+       </select>
+    <el-dropdown v-else-if="col.type=='selectone2'">
+      <span class="el-dropdown-link">
+        {{list[irow][col.id]}}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+          <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                  v-for="item2 in col.values" :key="item2.idefix" :label="item2.nazev"
+                  :value="item2.idefix"
+              >
+              <el-checkbox>{{item2.nazev}}</el-checkbox>
+              </el-dropdown-item>
+          </el-dropdown-menu>
+    </el-dropdown>
+
+        <input type="text" v-else
+        class=" px-0 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+        :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
+
+        >
+
+        <input type="date" v-if="col.type =='datetime-local' && false"
+        class="white px-0 cell seda" :id="'c'+ objId2 +'_r_'+irow+'_c_'+icol"
+        v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+        :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
+
+        min="2007-06-01T08:30" max="8120-06-30T16:30"
+        >
+
+      </div>
+
+    	</el-col>
+     <el-col :span="2" v-if="textonly1==false">
+      <div class='dcell'  style="width::100% ; background:white"
+      v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+      >
+         <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow)" ><i class="el-icon-delete" size="mini"></i></button>
+      </div>
+     </el-col>
+  </el-col>
+  </el-row>
+  </form>
 
   <div>
     <br><br>
@@ -146,7 +242,6 @@ import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import ListMatProjCena from '@/services/ListMatProjCena'
 import f from '@/services/fce'
-import moment from 'moment'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
 
@@ -213,14 +308,14 @@ export default {
         { id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
         { id: "kod", title: "Kod", cssClasses: "mtd" ,span: 2, isEdit: false, type: "text"  ,props:{visible: 'no'}},
         { id: "idefix", title: "IDX", cssClasses: "mtd" ,span: 3, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "idefix_mat", title: "Mat", cssClasses: "mtd" ,span: 3, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "datum", title: "Den", cssClasses: "mtd" ,span:4, isEdit: true, type: "date",props:{visible: 'yes'}},
+        { id: "idefix_mat", title: "Mat", cssClasses: "mtd" ,span: 3, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+        { id: "datum", title: "Den", cssClasses: "mtd" ,span:4, isEdit: true, type: "text",props:{visible: 'yes'}},
         { id: "nabidka", title: "Nabidka", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "zakazka", title: "Zakazka", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "cena_m2", title: "Cena", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "mnozstvi", title: "Mnozstvi", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "faktura", title: "Faktura", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "popis", title: "Popis", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "faktura", title: "Faktura", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "popis", title: "Popis", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
 
 
@@ -240,7 +335,6 @@ export default {
     }
   },
   async mounted () {
-    
 
 //    return
     if (this.isUserLoggedIn) {
@@ -353,10 +447,7 @@ setTimeout(function(){
   },
 
   methods: {
-datum(value) {
-    //return moment(String(value)).format('MM/DD/YYYY')
-    return moment(String(value)).format('DD.MM.YY')
-  },
+
 
 editLine(nRow) {
      const self = this
@@ -384,8 +475,10 @@ copyLine(nRow) {
 
 
 
-   },
 
+
+
+   },
 
 
    async saveLines(id){

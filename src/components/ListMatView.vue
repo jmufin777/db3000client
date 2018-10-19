@@ -8,7 +8,7 @@
   </el-row>
 
 
-<div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2" :id="'t' + objId1">
+<div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2 white" :id="'t' + objId1">
 
   <el-col :span="6" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
 
@@ -69,111 +69,137 @@
   <div>
 
     <br><br>
-<table style="width:100%">
+
+
+
+
+
+
+
+
+
+<!-- <el-checkbox-group v-model="checkedList" @change="handleCheckedListChange"> -->
+<table slot="activator" style="width:100%">
 <thead>
-<th>Akce</th>
+<th style="width:5%">
+&nbsp;<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox>
+&nbsp;&nbsp;&nbsp;&nbsp;<v-menu
+      v-model="showSubMenu"
+      absolute
+      offset-y
+      style="max-width: 3600px;text-align:left"
+     >
+     <span slot="activator">Akce</span>
+    <v-list>
+        <v-list-tile
+          v-for="(item, index) in SubMemuItems"
+          :key="index"
+          @click="handleSubMenu(item.akce)"
+        >
+      <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+      </v-list-tile>
+    </v-list>
+    </v-menu>
+
+
+</th>
 <th style="width:23%">Material</th>
-<th v-if="activeName=='R' || activeName=='V'">Sire</th>
-<th v-if="activeName=='D' || activeName=='A'">Rozmer</th>
-<th v-if="activeName=='R' || activeName=='V'">Navin m</th>
-<th v-if="activeName=='D' ">Tloustka mm</th>
-<th>Cena za m2</th>
+<th style="width:8%" v-if="activeName=='R' || activeName=='V'">Sire mm</th>
+<th style="width:8%" v-if="activeName=='D' || activeName=='A'">Rozmer m</th>
+<th style="width:5%" v-if="activeName=='R' || activeName=='V'">Navin bm</th>
+<th style="width:5%" v-if="activeName=='D' ">Tloustka mm</th>
+<th style="width:5%">Cena za m2</th>
 
-<th>Technologie</th>
-<th>Vyrobce</th>
-<th>Dodavatel</th>
-<th>Vymazat</th>
-
-</thead>
+<th syle="width:12%">Technologie</th>
+<th >Vyrobce</th>
+<th >Dodavatel</th>
+<th style="width:3%">Vymazat</th>
+</thead >
 <tbody>
+
+
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix">
-  <td>
-  <div class='dcellx'  style="width::100% ; background:white"
+  <td style="width:7%">
+  <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
+  <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']" :value="item1['idefix']" @change="chekListUpdate(irow1)">
+  </div>
+  <div class='dcellx'  style="width:80% ; background:white;float:right"
     v-bind:class="{bila: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
-    >
-        <el-tooltip  placement="left-start" effect="light">
+  >
+     <el-tooltip  placement="left-start" effect="light">
       <div slot="content">{{ item1['popis'] }}</div>
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
      </el-tooltip>
-
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
-
    </div>
+   <!-- <el-checkbox :id="'check2_'+objId1+'_'+item1['idefix']" :label="item1['idefix']">{{item1['idefix']}}</el-checkbox> -->
   </td>
-  <td style='text-align:left' class="px-2">
+  <td style='text-align:left;width:23%' class="px-2">
+    <div style="color:#950008; font-weight:bold;background: #FFFFFF;opacity:0.7;position:relative;top:-4px;left:0px;width:100%" v-if="lastsub(irow1)">{{item1['podskupina']}}</div>
      {{item1['nazev1']}} {{item1['nazev2']}} {{item1['nazev3']}}
   </td>
 
-  <td v-if="item1['mattyp']=='R'">
+  <td v-if="item1['mattyp']=='R'" style="width:8%">
     <table >
       <tr v-if="item1['sirkys']>''"><td style="border:none">S:&nbsp;{{item1['sirkys']}}</td></tr>
       <tr v-if="item1['sirkyo']>''"><td style="border:none">O:&nbsp;{{item1['sirkyo']}}</td></tr>
     </table></td>
-
-
   <td v-else-if="item1['mattyp']=='D'">
     <table >
       <tr v-if="item1['sirkys']>''"><td>S:&nbsp;{{item1['rozmers']}}</td></tr>
       <tr v-if="item1['sirkyo']>''"><td>O:&nbsp;{{item1['rozmero']}}</td></tr>
    </table>
   </td>
-
    <td v-else-if="item1['mattyp']=='A'">
     <table >
       <tr v-if="item1['sirkys']>''"><td>S:&nbsp;{{item1['rozmers']}}</td></tr>
       <tr v-if="item1['sirkyo']>''"><td>O:&nbsp;{{item1['rozmero']}}</td></tr>
    </table></td>
-   <td v-else>
+
+   <td style="width:8%" v-else>
     <table >
       <tr v-if="item1['sirkys']>''"><td>S:&nbsp;{{item1['rozmers']}}</td></tr>
       <tr v-if="item1['sirkyo']>''"><td>O:&nbsp;{{item1['rozmero']}}</td></tr>
    </table></td>
-   <td v-if="item1['mattyp']=='R'">
+   <td style="width:5%" v-if="item1['mattyp']=='R'">
      {{ (item1['navins'] >0)?Math.round(item1['navins']) : Math.round(item1['navino']) }} m
    </td>
-   <td v-else>
+   <td style="width:5%" v-else>
      {{ item1['sila_mm']}} mm
    </td>
    <td >
      {{item1['cena_nakup_m2']}}
    </td>
-
-   <td>
-     <table>
-        <tr><td style="border-collapse: collapse;border:none">{{ item1['technologie']}}
-        /{{ item1['technologie_skup']}}
-        /{{ item1['technologie_text']}} </td></tr>
-     </table>
+   <td >
+     {{ item1['technologie']}} :
+     {{ item1['technologie_skup']}} :
+     {{ item1['technologie_text']}}
    </td>
-
-   <td>
+   <td >
      {{ item1['vyrobce']}}
    </td>
-    <td>
+    <td  >
      {{ item1['dodavatel']}}
    </td>
 
-  <td>
-     {{ item1['podskupina']}}
-   </td>
 
-
-
-
-  <td>
-
-         <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
-
+  <td >
+     <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
   </td>
 
 </tr>
+
+
 </tbody>
 </table>
+
+
+<!-- </el-checkbox-group> -->
 <!-- <my-table :list="list"></my-table> -->
 
 
-<br>
+
 <list-mat-edit v-if="IsDialog"></list-mat-edit>
 
   </div>
@@ -216,6 +242,8 @@
 </template>
 
 <script>
+const listOptions = [4728];
+const self = this
 
 import { mapState } from 'vuex'
 import { eventBus } from '@/main.js'
@@ -269,6 +297,7 @@ export default {
       currId: null,
       currentRow: null,
       currentOrigValue: null,
+      lastSubSkup:'' , // pro vykreslovani - zmena subskup
       lastId: '',
       enum_dodavatel: [],
       search_dodavatel: [],
@@ -278,6 +307,18 @@ export default {
       minId: 0, //Pro vklad zaporna ID
 
       list: [],
+      //ChekBox
+       checkAll: false,
+       checkedList: [],
+       //cities: cityOptions,
+       isIndeterminate: true,
+      //CheckBox
+      //SubMenu
+      showSubMenu: true,
+      SubMemuItems: [
+        { title:'Vymazat oznacene' ,akce: 'del'},
+        { title:'Neco jeste nevim' ,akce: 'nevim'},
+        ],
 
 
       lastSort: ['kod','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
@@ -340,8 +381,99 @@ export default {
 
 
 methods: {
+lastsub(idx)   {
+  var lret = false
+  if (idx == 0) {
+    return true
+  }
+  if (idx > 0 ) {
+    if (this.list[idx]['podskupina'] == this.list[idx-1]['podskupina']) {
+      return false
+    }
+  }
+  return true
+},
+handleCheckAllChange(val) {
+  const self = this
+
+  var neco=''
+
+  this.list.forEach((el,idx) => {
+    neco='check_'+self.objId1+'_'+el['idefix']
+    if (document.getElementById(neco)){
+      if (val){
+        document.getElementById(neco).checked=true
+        self.checkedList.push(document.getElementById(neco).value)
+      } else {
+        document.getElementById(neco).checked=false
+      }
+    }
+  })
+        self.isIndeterminate = false;
+        if (!val){
+          self.checkedList=[];
+        }
+  return true;
+},
+handleUnCheckAllChange() {
+  const self = this
+
+  var neco=''
+
+  this.list.forEach((el,idx) => {
+    neco='check_'+self.objId1+'_'+el['idefix']
+    if (document.getElementById(neco)){
+        document.getElementById(neco).checked=false
+    }
+  })
+  self.isIndeterminate = false;
+  self.checkedList=[];
+
+  return true;
+},
+chekListUpdate(idx) {
+  const self = this
+    //    alert(JSON.stringify(self.checkedList))
+
+    var neco='check_'+self.objId1+'_'+self.list[idx]['idefix']
+    var objneco
+
+    if (document.getElementById(neco)){
+        objneco = document.getElementById(neco)
+        if (objneco.checked){
+          self.checkedList.push(objneco.value)
+        } else {
+
+          self.checkedList.forEach((el, idx2) =>{
+            if (el == self.list[idx]['idefix']){
+              self.checkedList.splice(idx2,1)
+              return
+            }
+          })
+        }
+    }
+
+},
+
+handleCheckedListChange(value) {   //je mi to asi na hovno zda se
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.list.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.list.length;
+},
+handleSubMenu(e) {
+
+  if (e== 'del' && this.checkedList.length>0 ){
+    alert('Vymazu zaznamy ' + JSON.stringify(this.checkedList))
+    //this.checkedList
+    this.deleteLinesSelected()
+  } else {
+    alert("Neni zasrktnutu,nedelam nic")
+  }
+
+},
 async    handleClick(tab, event) {
         const self = this
+        self.handleUnCheckAllChange()
       if ((this.activeNameLast == this.activeName) == false) {
             this.getWhere()
       }
@@ -684,21 +816,8 @@ editLineToForm(nRow) {
    },
    async deleteLine(nRow) {
      const self = this
-     /*
-      this.$confirm('Vymazat zaznam ' + this.list[nRow].idefix+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev1, '',{
-       distinguishCancelAndClose: true,
-       confirmButtonText: 'Ano?',
-       cancelButtonText: 'Ne'
-     })
-     .then(()=>{
-       var eof = false
-       var top = false
-       var next = false
-       self.IsWaiting = true
-       //self.list = ( ListMat.all(self.user,'nic')).data
 
-     })
-     */
+
 
     if (confirm('Vymazat poloku materialu ' + self.list[nRow].nazev1 )) {
       this.IsWaiting =true
@@ -711,6 +830,29 @@ editLineToForm(nRow) {
 
 
    },
+
+   async deleteLinesSelected() {
+     const self = this
+
+    // self.list[nRow].nazev1
+    if (confirm('Vymazat poloky materialu ' )) {
+      this.IsWaiting =true
+      await this.checkedList.forEach(idefix => {
+        var prd= (ListMat.delete(self.user,idefix))
+        self.getWhere()
+      });
+      this.handleUnCheckAllChange()
+
+       this.IsWaiting =false
+
+       //self.list = (await ListMat.all(self.user,` ${where} `)).data
+
+    }
+
+
+
+   },
+
    deleteLinex(nRow) {
      const self = this
     //  if (confirm('Vymazat zaznam? '+nRow + "  id:" +this.list[nRow].id )) {

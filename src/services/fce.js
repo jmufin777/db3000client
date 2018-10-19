@@ -1,5 +1,6 @@
 import moment from 'moment'
 export default {
+  
   hasClass(element, cls) {
     return element.className.split(' ').indexOf(cls) > -1
   },

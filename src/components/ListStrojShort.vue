@@ -7,7 +7,7 @@
     </el-col>
   </el-row>
   <el-row  :gutter="20">
-  <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
+  <el-col :span="8" :offset="0" style="margin-top:5px;padding-left:10px" >
   <el-input prefix-icon="el-icon-search" id="search_8111" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
   </el-col>
@@ -272,9 +272,10 @@ export default {
       minId: 0, //Pro vklad zaporna ID
   		cols: [
 				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "idefix_strojskup", title: "Skupina", cssClasses: "mtd" ,span:8, isEdit: true, type: "selectone" ,values: [] ,selected: 0,props:{visible: 'yes'}},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 8, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "kod", title: "Kod", cssClasses: "mtd" ,span:3, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "idefix_strojskup", title: "Skupina", cssClasses: "mtd" ,span:6, isEdit: true, type: "selectone" ,values: [] ,selected: 0,props:{visible: 'yes'}},
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 6, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "nazev_text", title: "Nazev2", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
      { id: "sirka_mat_max_mm", title: "Sirka\nMat", cssClasses: "mtd" ,span: 1, isEdit: true, type: "number"  ,props:{visible: 'no'}},
      { id: "delka_mat_max_mm", title: "Delka\nMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
@@ -476,7 +477,7 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, idefix_strojskup: el.idefix_strojskup,nazev: el.nazev
+        aTmp.push({id: el.id,kod: el.kod, idefix_strojskup: el.idefix_strojskup,nazev: el.nazev, nazev_text: el.nazev_text
         ,sirka_mat_max_mm: el.sirka_mat_max_mm
         ,delka_mat_max_mm: el.delka_mat_max_mm
         ,sirka_tisk_max_mm: el.sirka_tisk_max_mm
