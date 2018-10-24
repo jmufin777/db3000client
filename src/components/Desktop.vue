@@ -14,32 +14,22 @@
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title class="pa-0 ma-0">
         <v-card class="pa-0 ma-0">
-          <v-card-text class="pa-0 ma-0">
-            DB 3000
+          <v-card-text class="px-1 mx-1 elevation-2" style="background:#f5f5f5">
+            DB 3000&nbsp;&nbsp;&nbsp;&nbsp;
           </v-card-text>
         </v-card>
       </v-toolbar-title>
-  <v-spacer></v-spacer>
+
 
     <!-- <el-checkbox label="Kontejner" v-model="contain" border size="mini" ></el-checkbox>
     <el-checkbox label="MujObal" v-model="mujdiv" border size="mini" ></el-checkbox> -->
      <!-- <el-checkbox label="WinPar" v-model="winpar" border size="mini" ></el-checkbox> -->
-     <div >
-     <span class="ma-2 pa-2 blue"> level: {{ level }} id: {{idefix}} login: {{ $store.state.user }}</span>
-     </div>
 
-     <db-status></db-status>
 
-     <!-- <el-checkbox label="Demo2" v-if="level==3" v-model="demo2" border size="mini" ></el-checkbox> -->
-     <el-checkbox label="MenuAdmin" v-if="level==3"  v-model="demo" border size="mini" ></el-checkbox>
 
-    <v-spacer></v-spacer>
-   <el-radio-group v-model="radio2" size="mini">
-    <!-- <el-radio-button :label="1">Okna</el-radio-button> -->
-    <el-radio-button :label="10">Karty</el-radio-button>
-    <el-radio-button :label="20">Plocha</el-radio-button>
-  </el-radio-group>
-  <el-input-number size="mini" :max="24" :min="-1" v-model="myFlex"></el-input-number>
+
+
+
 
   <!-- <el-radio-group v-if="radio2===20 " v-model="radio3" size="mini">
      <el-radio-button v-for="(compD,i) in compa" :key="'c'+i"
@@ -47,7 +37,8 @@
       >{{compD[0].title}}</el-radio-button>
   </el-radio-group> -->
 
-<el-dropdown v-if="this.compa.length>0" @command="radio3_a" >
+<!-- Original Menu rozbalovaci
+  <el-dropdown v-if="this.compa.length>0" @command="radio3_a" >
     <el-badge :value="compa.length" class="item ">
       <el-button size="small" class="el-icon-upload2">{{radio3}}</el-button>
     </el-badge>
@@ -56,6 +47,18 @@
       <el-dropdown-item v-if="this.compa.length>0" command="CloseAllWin">Zavrit vse</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>
+ EOF Menu original rozbalovaci  -->
+
+
+<div v-if="this.compa.length>0" style="background:f5f5f5;max-width:50%;border:solid 1px;border-color:white" class="ml-4 px-2 elevation-2">
+<el-tabs v-model="radio3t"  @tab-click="radio3_atab" closable @tab-remove="removeCompa"  style="background:f5f5f5">
+
+  <el-tab-pane v-for="(compaE, iE) in compa " :key="iE" :name="compaE[0].modul" :label="compaE[0].title"></el-tab-pane>
+    <!-- <el-tab-pane label="Vse"   :name="'CloseAllWin'"  ></el-tab-pane> -->
+ </el-tabs>
+</div>
+
+
 <v-spacer></v-spacer>
 
 <el-dropdown v-if="this.openWins.length>0" @command="winFocus">
@@ -65,7 +68,7 @@
   <el-dropdown-menu slot="dropdown">
      <el-dropdown-item  command="FindAllWin">Ukazat vse</el-dropdown-item>
      <el-dropdown-item v-for="(openWin, iO) in openWins" :key="iO" :command="openWin">{{openWin.name}}</el-dropdown-item>
-     <el-dropdown-item  command="CloseAllWin">Zavrit vse</el-dropdown-item>
+     <el-dropdown-item  command="CloseAllWin">Zavrit vse 2</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>
 
@@ -77,7 +80,33 @@ Test2:
 <router-link :to="{name: 'desktop', params: {ktery: 'menu-schema'}}">MenuSchema</router-link>
 Moduly:
 <router-link :to="{name: 'desktop', params: {ktery: 'list-modules'}}">Moduly</router-link> -->
-<v-spacer></v-spacer>
+<div class="mx-4"><div class="mx-4">
+ <db-status></db-status>
+
+</div></div>
+<el-tooltip  placement="bottom" effect="light">
+
+      <div slot="content">
+
+
+     <!-- <el-checkbox label="Demo2" v-if="level==3" v-model="demo2" border size="mini" ></el-checkbox> -->
+     <el-checkbox label="MenuAdmin" v-if="level==3"  v-model="demo" border size="mini" ></el-checkbox>
+
+   <el-radio-group v-model="radio2" size="mini" style="background:white">
+    <!-- <el-radio-button :label="1">Okna</el-radio-button> -->
+
+
+    <el-radio-button :label="20" size="mini">Plocha</el-radio-button>
+    <el-radio-button :label="10" size="mini">Karty</el-radio-button>
+  </el-radio-group>
+   <el-input-number v-if="radio2==10" size="mini" :max="24" :min="-1" v-model="myFlex"></el-input-number>
+
+
+
+
+     <span class="ma-2 pa-2 blue"> level: {{ level }} id: {{idefix}} login: {{ $store.state.user }}</span>
+</div>
+
       <v-btn
         v-if="$store.state.isUserLoggedIn"
         class="yellow accent-12 elevation-10"
@@ -92,13 +121,16 @@ Moduly:
       >
      <v-icon>directions_run</v-icon>
       </v-btn>
+
+      </el-tooltip>
+
     </v-toolbar>
 
     <v-content v-if="cont" style="padding-top: 10px">
 
    <v-container grid-list-md >
     <v-layout v-if="lay" row wrap>
-   <div style="position:absolute;top:0px;left:0px;height:100%;width:99%;background-color:#E1F5FE;opacity:1">
+   <div style="position:absolute;top:0px;left:0px;height:100%;width:99%;background-color:#f5f5f5;opacity:1">
 
       <p v-for="(r, i ) in $route.path" :key="'zzz' + i">{{r.name}}</p>
 <!-- :sticks="['tm','bm','ml','mr']
@@ -166,9 +198,9 @@ Moduly:
   </draggable>
  </el-row>
 
-   <el-row   v-if="radio2==20 && this.compa.length>0" :gutter=0 >
+   <el-row   v-if="radio2==20 && this.compa.length>0" :gutter=0 style="background:#FFFFFF">
      <!-- plocha  -->
-      <el-col  :span="23">
+      <el-col  :span="23" >
        <el-button   v-if="radio3>'' && radio2==20" type="error" icon="el-icon-upload2"  size="mini" class="elevation-20"
       @click="moveModuleToWin(radio3,1)"
       > {{ radio3 }}</el-button>
@@ -437,8 +469,9 @@ export default {
       activeName: 'first', // tabs pro el
       isCollapse: true,
       myFlex: -1,
-      radio2: 10,
+      radio2: 20,
       radio3: '',
+      radio3t:'',
       openWins: [],
 
       informace: '',
@@ -497,6 +530,48 @@ export default {
       }
       this.radio3 = a
     },
+
+    radio3_atab: function () {
+    //  alert(this.radio3t)
+      if (this.radio3t === "CloseAllWin" && confirm('Ukoncit vsechny aplikace ?')) {
+        this.compa= []
+      }
+        this.radio3 = this.radio3t
+    },
+    removeCompa( targetName ){
+      let tabs = this.compa
+      let activeName = this.radio3t
+      var idx=-1
+      tabs.forEach((tab, index) =>{
+      //  alert(JSON.stringify(tab))
+        if (tab[0].modul == targetName) {
+          idx = index
+          return
+        }
+      })
+      if (idx > -1){
+        this.compa.splice(idx,1)
+      }
+
+    },
+    removeTab(targetName) {
+        let tabs = this.editableTabs2;
+        let activeName = this.editableTabsValue2;
+        if (activeName === targetName) {
+          tabs.forEach((tab, index) => {
+            if (tab.name === targetName) {
+              let nextTab = tabs[index + 1] || tabs[index - 1];
+              if (nextTab) {
+                activeName = nextTab.name;
+              }
+            }
+          });
+        }
+
+        this.editableTabsValue2 = activeName;
+        this.editableTabs2 = tabs.filter(tab => tab.name !== targetName);
+      },
+
     closeAllWin: function () {
       const res = confirm('Zavrit vsechna externi okna aplikace?')
       if (res === false ) {

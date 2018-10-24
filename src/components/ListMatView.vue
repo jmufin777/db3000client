@@ -89,7 +89,7 @@
       offset-y
       style="max-width: 3600px;text-align:left"
      >
-     <span slot="activator">Akce</span>
+     <span slot="activator" class="blue--text">Akce</span>
     <v-list>
         <v-list-tile
           v-for="(item, index) in SubMemuItems"

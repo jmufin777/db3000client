@@ -369,29 +369,29 @@
             <span v-for="(iX, x) in mySplit(ie3.rozmer)" :key="x"
               class="mx-2"
             >
-            
+
             <el-tag class="pr-4 mr-0  black--text" v-if="ie3.zkratka=='S'" type="success" size="mini" >
 
-              
+
             {{myZobr(iX)}}
-             
-            
+
+
             <button type="button" style="width:30%;height:8px" class="px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button>
             <button type="button" style="width:30%;height:8px" class="px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit"    size="mini"></i></button>
-            <button type="button" style="width:30%;height:8px" class="px-0 black--text" @click="Zmiz(iX)"   ><i class="el-icon-close"   size="mini"></i></button> 
+            <button type="button" style="width:30%;height:8px" class="px-0 black--text" @click="Zmiz(iX)"   ><i class="el-icon-close"   size="mini"></i></button>
 
-            
-            
-          
-            
-            
+
+
+
+
+
             </el-tag>
             <el-tag class="pr-4 mr-0 black--text" v-else   type="warning" size="mini" >
              {{myZobr(iX)}}
             <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button>
             <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
             <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
-            
+
             </el-tag>
 
             </span>
@@ -605,7 +605,7 @@
     >
   i: {{ info }}
 
-  </win-dow> 
+  </win-dow>
 -->
 
 </v-dialog>
@@ -778,7 +778,7 @@ export default {
 
 
   methods: {
-  
+
   Info(ainfo){
     const self = this
     self.info=[]
@@ -984,7 +984,7 @@ export default {
       var neco=(ctxt+'')
       var aPart=neco.split("~")[1]+''
       if (this.mastrpis == 'D' || this.mastrpis == 'A'){
-        
+
         return aPart
       }
       if (this.mastrpis == 'R' ){
@@ -1028,7 +1028,7 @@ export default {
     Zmen(par, priznak){
       var zmizik = par.split('~')[0]
       const self = this
-      
+
       if (zmizik*1 > 0) {
          //this.deleteRozmer(zmizik)
          //alert(par.split('~')[0])
@@ -1047,7 +1047,7 @@ export default {
                  self.akceRozmer='e'
                }
 
-               
+
                self.akceId = zmizik
              return
            }
@@ -1113,8 +1113,8 @@ export default {
       //self.list.data.rozmer  =tmp.rozmer
 
       self.list.data.rozmer2 =tmp2.rozmer2
-      
-      
+
+
 
 
     },
@@ -1224,7 +1224,7 @@ export default {
         if (self.isCopy == true) {
           this.list = []
           this.IsDialog = false
-          //alert(self.idefixThis,)
+          alert(self.idefixThis,)
           //return
           var prd= (await ListMat.delete(self.user,self.idefixThis))
           eventBus.$emit('dlg821rec')
