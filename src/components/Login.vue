@@ -69,7 +69,7 @@ export default {
                 message: 'Prihlaseno, Overuji pristupove urovne',
                 type: 'error',
                 center: true,
-                duration: 1500
+                duration: 500
               })
       this.loginUpdate()
       .then(res => {
@@ -78,7 +78,7 @@ export default {
                 message: 'Uroven overena, cekame, na polozky menu',
                 type: 'success',
                 center: true,
-                duration: 2000
+                duration: 1000
               });
 
       })
@@ -91,10 +91,10 @@ export default {
 
            this.$message({
                 dangerouslyUseHTMLString: true,
-                message: 'Vitejte',
+                message: 'Spusteno',
                 type: 'success',
                 center: true,
-                duration: 5000
+                duration: 1500
               });
 
       })

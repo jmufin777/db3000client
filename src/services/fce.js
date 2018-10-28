@@ -1,8 +1,13 @@
 import moment from 'moment'
 export default {
-  
+
   hasClass(element, cls) {
-    return element.className.split(' ').indexOf(cls) > -1
+    try {
+      return element.className.split(' ').indexOf(cls) > -1
+    } catch(e) {
+      return false
+    }
+
   },
   datum(value) {
     return moment(String(value)).format('MM/DD/YYYY')
@@ -24,10 +29,14 @@ export default {
       element.className = element.className.replace(cls,'')
     }
   },
+  changeClass(element, oldClass, newClass) {
+    try {
+      this.removeClass(element, oldClass)
+      this.addClass(element, newClass)
+    } catch (e) {
+      console.log('Nelze zmeni Class pro ', element)
+    }
 
-  changeClass(element,oldClass,newClass) {
-            this.removeClass(element,oldClass)
-            this.addClass(element,newClass)
   },
   al(txt) {
     alert(txt)

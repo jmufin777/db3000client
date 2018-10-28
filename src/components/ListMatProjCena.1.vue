@@ -92,8 +92,8 @@
         <th>Mnozstvi</th>
 
 
-      </thead>  
-    </table>  
+      </thead>
+    </table>
 
   <el-row v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"

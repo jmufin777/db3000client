@@ -50,9 +50,9 @@
  EOF Menu original rozbalovaci  -->
 
 
-<div v-if="this.compa.length>0" style="background:f5f5f5;max-width:50%;border:solid 1px;border-color:white" class="ml-4 px-2 elevation-2">
-<el-tabs v-model="radio3t"  @tab-click="radio3_atab" closable @tab-remove="removeCompa"  style="background:f5f5f5">
-
+<!-- <div v-if="this.compa.length>0" style="background:f5f5f5;max-width:50%;border:solid 0px;border-color:white" class="ml-4 px-2 elevation-1"> -->
+<div v-if="this.compa.length>0" style="background:f5f5f5;max-width:50%;border:none" class="ml-4 px-2 elevation-0">
+<el-tabs v-model="radio3t"  @tab-click="radio3_atab" closable @tab-remove="removeCompa"  style="background:f5f5f5" lazy>
   <el-tab-pane v-for="(compaE, iE) in compa " :key="iE" :name="compaE[0].modul" :label="compaE[0].title"></el-tab-pane>
     <!-- <el-tab-pane label="Vse"   :name="'CloseAllWin'"  ></el-tab-pane> -->
  </el-tabs>
@@ -551,6 +551,11 @@ export default {
       })
       if (idx > -1){
         this.compa.splice(idx,1)
+        if (this.compa.length>0){
+          this.radio3t = this.compa[0][0].modul;
+          this.radio3  = this.compa[0][0].modul;
+        }
+
       }
 
     },
@@ -926,6 +931,12 @@ export default {
           self.compa.push(el)
         })
       }
+    }
+    if (self.compa.length>0){
+      self.radio3t = self.compa[0][0].modul
+      self.radio3  = self.compa[0][0].modul
+      //alert(self.radio3)
+      // alert(JSON.stringify(self.compa[0][0].modul))
     }
 
 

@@ -13,16 +13,31 @@
 <el-row> <el-col :span="24">
 </el-col></el-row>
   <panel :title="((Akce =='edit')?'Zmena':'Nova polozka ') +' ' + list.data.mat[0].nazev1 +' ' + list.data.mat[0].nazev2 +' ' + list.data.mat[0].nazev3  " >
-    &nbsp;
+
     <!-- Akce +' : ' + mastrpis +': ' + isCopy + ' '+  -->
     <!-- {{list.data.rozmer2}} / {{ idefixThis }} -->
+    <div slot="title2">
+      <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit821" @click="submitForm('formnew')" size="mini"
+            > Novy Upravou</el-button>
+      <el-button v-if="isCopy" type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
+        >Vlozit </el-button>
+       <el-button v-else type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
+        >Ulozit</el-button>
+
+      <el-button v-if="isCopy" @click="resetForm('form')" id="btn_cancel_submit821" size="mini">Zrusit</el-button>
+      <el-button v-else @click="resetForm('form')" id="btn_cancel_submit821" size="mini">Zavrit</el-button>
+    </div>
+    &nbsp;
   </panel>
 <!-- <el-row>
 
   <el-col :span="24">{{ Akce }}  </el-col>
 </el-row> -->
 
-<el-form  id="form821" ref="form2" :model="form2" label-width="70px" :label-position="labelPosition" :rules="rules2" class="demo-ruleForm is-success">
+<el-form  id="form821" ref="form2" :model="form2" label-width="70px" :label-position="labelPosition"
+:rules="rules2" class="demo-ruleForm is-success"
+
+>
    <el-row class="ma-2">
 
      <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-matskup','Skupina')" style="width:90%">Skupina:</el-button> </el-col>
@@ -266,10 +281,10 @@
           <thead>
 
             <th rowspan="1" style="width:15%">Dostupnost</th>
-            <th style="width:18%">Sirka</th>
+            <th style="width:18%">Sirka mm</th>
 
-            <th v-if="mastrpis=='R'" style="width:18%" >Navin</th>
-            <th v-else style="width:18%">Vyska</th>
+            <th v-if="mastrpis=='R'" style="width:18%" >Navin mm</th>
+            <th v-else style="width:18%">Vyska mm</th>
             <th style="width:18%">Sirka Zbytek</th>
             <th style="width:18%">Vyska Zbytek</th>
             <th style="width:5%"></th>
@@ -278,6 +293,7 @@
 
           <td rowspan="1">
           <el-select v-model="enum_matdostupnost"
+            id="id_enum_matdostupnost_821"
 
             default-first-option
             filterable
@@ -302,6 +318,7 @@
               :fetch-suggestions="querySearch21"
               placeholder="Sirka"
               @select="handleSelect"
+
               size="mini"
             ></el-autocomplete>
             </td>
@@ -363,7 +380,7 @@
          </tr>
 
          <tr v-for="(ie3 ,iedx2 ) in list.data.rozmer2" :key="ie3.idx" >
-           <td>{{ie3.zkratka}}</td>
+           <td >{{ ie3.zkratka.replace('X','N')}}</td>
 
           <td style="text-align:left" >
             <span v-for="(iX, x) in mySplit(ie3.rozmer)" :key="x"
@@ -371,28 +388,38 @@
             >
 
             <el-tag class="pr-4 mr-0  black--text" v-if="ie3.zkratka=='S'" type="success" size="mini" >
-
-
             {{myZobr(iX)}}
-
-
-            <button type="button" style="width:30%;height:8px" class="px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button>
+            <!-- <button type="button" style="width:30%;height:8px" class="px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
             <button type="button" style="width:30%;height:8px" class="px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit"    size="mini"></i></button>
             <button type="button" style="width:30%;height:8px" class="px-0 black--text" @click="Zmiz(iX)"   ><i class="el-icon-close"   size="mini"></i></button>
-
-
-
-
-
-
             </el-tag>
-            <el-tag class="pr-4 mr-0 black--text" v-else   type="warning" size="mini" >
+
+            <el-tag class="pr-4 mr-0 black--text" v-else-if="ie3.zkratka=='O'"   type="warning" size="mini" >
              {{myZobr(iX)}}
-            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button>
+            <!-- <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
             <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
             <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
-
             </el-tag>
+
+            <el-tag class="pr-4 mr-0 black--text" v-else-if="ie3.zkratka=='PP'"   type="success" size="mini"  >
+             {{myZobr(iX)}}
+            <!-- <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
+            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
+            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
+            </el-tag>
+            <el-tag class="pr-4 mr-0 black--text" v-else-if="ie3.zkratka=='X'"   type="danger" size="mini"  >
+             {{myZobr(iX)}}
+            <!-- <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
+            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
+            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
+            </el-tag>
+            <el-tag class="pr-4 mr-0 black--text" v-else   size="mini"  >
+             {{myZobr(iX)}}
+            <!-- <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
+            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
+            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
+            </el-tag>
+
 
             </span>
            </td>
@@ -541,12 +568,9 @@
       </el-row>
       <el-row><el-col>
         <br>
-            <el-button type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
-            >Ulozit - Opravit </el-button>
-            <el-button type="primary" id="btn_user_new_submit821" @click="submitForm('form')" size="mini"
-            >Kopie - Novy </el-button>
-            <el-button v-if="isCopy" @click="resetForm('form')" size="mini">Zrusit</el-button>
-            <el-button v-else @click="resetForm('form')" size="mini">Zavrit</el-button>
+
+
+
         </el-col></el-row>
 
       </el-col>
@@ -641,6 +665,7 @@ export default {
   },
   data () {
     return {
+      citac: 0,
       info: [],
       neco: 0,
       links: [],
@@ -694,17 +719,24 @@ export default {
   created() {
     const self=this
     eventBus.$on('edit', ( dlgPar ) => {
+      self.citac++
+
           //var cmodul = $self.$store.state.showModule
+          //alert(dlgPar)
 
           self.getDataEnum()
         //alert('Vracim parametry' + JSON.stringify(dlgPar))
     })
     eventBus.$on('dlg821', ( dlgPar ) => {
+
       //alert('modulik')
+      //alert(JSON.stringify(dlgPar))
       self.IsDialog = true
       self.Akce = dlgPar.Akce
       self.$store.dispatch('setshowEdit', false)
       self.$store.dispatch('setshowIdefix', self.idefixThis)
+      //alert(self.citac)
+
 
 
       //alert(JSON.stringify(dlgPar))
@@ -713,6 +745,7 @@ export default {
       .then (res => {
           if (document.getElementById('start821')){
             setTimeout(function(){
+              //alert(111)
               document.getElementById('start821').focus()
             },200)
           }
@@ -749,8 +782,8 @@ export default {
                e.stopPropagation()
                e.preventDefault()
 
-              //document.getElementById('btn_user_submit').focus()
-              self.cancelForm()
+              document.getElementById('btn_cancel_submit821').focus()
+              //self.cancelForm()
 
               //  self.IsDialog=false;
 
@@ -775,9 +808,25 @@ export default {
     //this.cena_naklad()
      // alert('M')
   },
+  watch: {
+    sirka_mm: function() {
+      this.sirka_mm = this.sirka_mm.replace(/,/,'.')
+    },
+    vyska_mm: function() {
+      this.vyska_mm = this.vyska_mm.replace(/,/,'.')
+    },
+    sirka_mm_zbytek: function() {
+      this.sirka_mm_zbytek = this.sirka_mm_zbytek.replace(/,/,'.')
+    },
+    vyska_mm_zbytek: function() {
+      this.vyska_mm_zbytek = this.vyska_mm_zbytek.replace(/,/,'.')
+    }
 
+
+  } ,
 
   methods: {
+
 
   Info(ainfo){
     const self = this
@@ -789,6 +838,7 @@ export default {
     //   self.info.push(el)
     // })
   },
+
     async getDataEnum(){
       const self = this
             //alert('PRED' + JSON.stringify(self.list.data.enum_matvlastnosti))
@@ -1005,6 +1055,7 @@ export default {
     Zmiz(par){
       var zmizik = par.split('~')[0]
       const self = this
+
       if (zmizik*1 > 0) {
          this.deleteRozmer(zmizik)
          // alert(par.split('~')[0])
@@ -1046,7 +1097,6 @@ export default {
                if (priznak == 0){
                  self.akceRozmer='e'
                }
-
 
                self.akceId = zmizik
              return
@@ -1106,7 +1156,14 @@ export default {
       const self = this
 
       //self.list.data.rozmer2 = []
-      var tmp =  (await ListMat.one(this.user,this.idefixThis , 101,`delete from list_mat_rozmer where idefix=${zmizik}`)).data
+      self.list.data.rozmer=[]
+      self.list.data.rozmer2=[]
+
+      var tmp =  (await ListMat.one(this.user,this.idefixThis , 101,`
+      delete from list_mat_rozmer where idefix=${zmizik} and idefix_dostupnost = (select idefix from list2_matdostupnost where zkratka='X') ;
+      update list_mat_rozmer set idefix_dostupnost = (select idefix from list2_matdostupnost where zkratka='X') where idefix=${zmizik}
+       `)).data
+      //var tmp =  (await ListMat.one(this.user,this.idefixThis , 101,`delete from list_mat_rozmer where idefix=${zmizik} `)).data
       self.list.data.rozmer  =tmp.rozmer
       var tmp2 =  (await ListMat.one(this.user,this.idefixThis , 105,`select 1`)).data
       //self.list.data.rozmer2 =tmp.rozmer2
@@ -1143,6 +1200,11 @@ export default {
       self.list.data.rozmer  =tmp.rozmer
       var tmp2 =  (await ListMat.one(this.user,this.idefixThis , 105,`select 1`)).data
       self.list.data.rozmer2 =tmp2.rozmer2
+      //alert(self.$refs.enum_matdostupnost)
+
+      //self.$refs.enum_matdostupnost.focus()
+      document.getElementById("id_enum_matdostupnost_821").focus();
+//      enum_matdostupnost
 
       } else {
         this.$alert('Neni vybrana dostupnost nebo chybi rozmery', 'Chyba pri vlozeni dostupnosti', {
@@ -1194,6 +1256,18 @@ export default {
 
     async submitForm(formName) {
       const self = this
+      if (formName == 'formnew'){
+        alert(formName+ ' /' + self.idefixThis)
+        eventBus.$emit('dlg821', {
+           'IsDialog': true,
+           'Akce' : 'copy' ,
+           'Idefix' :  self.idefixThis,
+
+      })
+        return
+      }
+
+
       var neco=  (await ListMat.saveone(self.user,self.idefixThis,{
         data: self.list.data.mat[0],
         barva: self.list.data.barva,
@@ -1222,12 +1296,21 @@ export default {
     async resetForm(formName) {
         const self= this
         if (self.isCopy == true) {
-          this.list = []
-          this.IsDialog = false
-          alert(self.idefixThis,)
+
+          //
+          //alert(self.idefixThis,)
           //return
-          var prd= (await ListMat.delete(self.user,self.idefixThis))
-          eventBus.$emit('dlg821rec')
+          if (confirm('Zavrit bez ulozeni ?')) {
+            this.list = []
+            var prd= (await ListMat.delete(self.user,self.idefixThis))
+            this.IsDialog = false
+            eventBus.$emit('dlg821rec')
+          } else {
+            //alert('nedelam')
+            return
+          }
+
+
         } else {
           this.list = []
           this.IsDialog = false
@@ -1237,6 +1320,7 @@ export default {
         // for (x in this.formBackup ) {
         //   this.recData[x] = this.formBackup[x]
         // }
+
 
     },
     async onSubmitSave(){

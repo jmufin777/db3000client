@@ -11,7 +11,7 @@
   <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" >
   <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
   </el-input>
-  Kod Mat: {{ $store.state.showIdefix }} 
+  Kod Mat: {{ $store.state.showIdefix }}
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
     <el-badge :value="list.length">
@@ -54,7 +54,7 @@
        <table width="100%">
       <thead>
         <th>Akce</th>
-  
+
         <th>Den</th>
         <th>Nabidka</th>
         <th>Zakazka</th>
@@ -63,7 +63,7 @@
 
 
       </thead>
-      <tbody>  
+      <tbody>
         <tr v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
       :id="'d'+objId2 + '_r_'+irow"
@@ -77,12 +77,12 @@
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
 
    </div>
-  </td>  
+  </td>
   <td>{{datum(item.datum)}}</td>
 
   </tr>
-     </tbody>  
-    </table>  
+     </tbody>
+    </table>
 
 
 
@@ -240,7 +240,7 @@ export default {
     }
   },
   async mounted () {
-    
+
 
 //    return
     if (this.isUserLoggedIn) {
@@ -292,15 +292,31 @@ export default {
               this.isWrite =false
             //  document.getElementById(new_id).focus()
              // document.getElementById(new_id).click()
-              document.getElementById(new_id).setAttribute('readonly',true)
+             try {
+               document.getElementById(new_id).setAttribute('readonly',true)
+             } catch(e) {
+               console.log('Chyba attribubute pro :', new_id )
+             }
+
+
               f.removeClass(document.getElementById(new_id),"bila2")
+              try{
               if (!document.getElementById(new_id).type== 'number' ) {
                 document.getElementById(new_id).selectionEnd = document.getElementById(new_id).selectionStart
+              }
+              } catch (e) {
+                console.log('Nelze TYPE pro ',new_id)
               }
 
             //setTimeout(function(){
               f.changeClass(newObal,'dcell','dcell_edit')
-              document.getElementById(new_id).focus()
+              try{
+                document.getElementById(new_id).focus()
+              }
+              catch (e) {
+                console.log('Nelze focus pro ', new_id)
+              }
+
          },50)
   },
 
@@ -519,6 +535,7 @@ copyLine(nRow) {
 
    async newLine (nRow)  {
      var x
+     return
       const self = this
       if (self.textonly1) {
 

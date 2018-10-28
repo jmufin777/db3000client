@@ -70,7 +70,7 @@
 
     <br><br>
 
-
+<!-- <el-checkbox-group v-model="checkedList" @change="handleCheckedListChange"> -->
 <table slot="activator" style="width:100%">
 <thead>
 <th style="width:5%">
@@ -99,7 +99,7 @@
 <th style="width:8%" v-if="activeName=='R' || activeName=='V'">Sire mm</th>
 <th style="width:8%" v-if="activeName=='D' || activeName=='A'">Rozmer m</th>
 <th style="width:5%" v-if="activeName=='R' || activeName=='V'">Navin bm</th>
-<th style="width:5%" v-if="activeName=='D' || activeName=='A' ">Tloustka mm</th>
+<th style="width:5%" v-if="activeName=='D' ">Tloustka mm</th>
 <th style="width:5%">Cena za m2</th>
 
 <th syle="width:12%">Technologie</th>
@@ -109,8 +109,9 @@
 </thead >
 <tbody>
 
-<tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup'])">
-  <td style="width:7%" v-if="islastclick(item1['idefix_matsubskup'])">
+
+<tr v-for="(item1, irow1) in list" :key="irow1.idefix">
+  <td style="width:7%">
   <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
   <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']" :value="item1['idefix']" @change="chekListUpdate(irow1)">
   </div>
@@ -125,83 +126,65 @@
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
    </div>
    <!-- <el-checkbox :id="'check2_'+objId1+'_'+item1['idefix']" :label="item1['idefix']">{{item1['idefix']}}</el-checkbox> -->
-  </td><td style="width:7%;border:none" v-else>
-
   </td>
   <td style='text-align:left;width:23%' class="px-2">
-    <a  @click="lastclick(item1['idefix_matsubskup'])">
-    <div style="color:#950008; font-weight:bold;background: #FFFFFF;opacity:0.7;position:relative;top:-4px;left:0px;width:100%" v-if="lastsub(irow1)">{{item1['podskupina']}}
-  </div>
-   </a>
-     {{(islastclick(item1['idefix_matsubskup']))?(item1['nazev1']+' ' +item1['nazev2']+ ' '+ item1['nazev3']):(' ') }}
+    <div style="color:#950008; font-weight:bold;background: #FFFFFF;opacity:0.7;position:relative;top:-4px;left:0px;width:100%" v-if="lastsub(irow1)">{{item1['podskupina']}}</div>
+     {{item1['nazev1']}} {{item1['nazev2']}} {{item1['nazev3']}}
   </td>
-  <td v-if="item1['mattyp']=='R' && islastclick(item1['idefix_matsubskup'])" style="width:8%">
-    <table v-if="islastclick(item1['idefix_matsubskup'])">
-      <tr v-if="item1['sirkys']>''"><td style="border:none">S :&nbsp;{{ (item1['sirkys']) }}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td style="border:none">O :&nbsp;{{item1['sirkyo']}}</td></tr>
-      <tr v-if="item1['sirkypp']>''"><td style="border:none">PP:&nbsp;{{item1['sirkypp']}}</td></tr>
+
+  <td v-if="item1['mattyp']=='R'" style="width:8%">
+    <table >
+      <tr v-if="item1['sirkys']>''"><td style="border:none">S:&nbsp;{{item1['sirkys']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td style="border:none">O:&nbsp;{{item1['sirkyo']}}</td></tr>
     </table></td>
-  <td v-else-if="item1['mattyp']=='D' && islastclick(item1['idefix_matsubskup'])">
-    <table v-if="islastclick(item1['idefix_matsubskup'])">
-      <tr v-if="item1['sirkys']>''"><td>S :&nbsp;{{item1['rozmers']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O :&nbsp;{{item1['rozmero']}}</td></tr>
-      <tr v-if="item1['sirkypp']>''"><td>PP&nbsp;{{item1['rozmerpp']}}</td></tr>
+  <td v-else-if="item1['mattyp']=='D'">
+    <table >
+      <tr v-if="item1['sirkys']>''"><td>S:&nbsp;{{item1['rozmers']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O:&nbsp;{{item1['rozmero']}}</td></tr>
    </table>
   </td>
-   <td v-else-if="item1['mattyp']=='A' && islastclick(item1['idefix_matsubskup'])">
-    <table v-if="islastclick(item1['idefix_matsubskup'])">
-      <tr v-if="item1['sirkys']>''"><td>S :&nbsp;{{item1['rozmers']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O :&nbsp;{{item1['rozmero']}}</td></tr>
-      <tr v-if="item1['sirkypp']>''"><td>PP:&nbsp;{{item1['rozmerpp']}}</td></tr>
+   <td v-else-if="item1['mattyp']=='A'">
+    <table >
+      <tr v-if="item1['sirkys']>''"><td>S:&nbsp;{{item1['rozmers']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O:&nbsp;{{item1['rozmero']}}</td></tr>
    </table></td>
 
-   <td style="width:8%" v-else-if="item1['mattyp']=='X' && islastclick(item1['idefix_matsubskup'])">
-    <table v-if="islastclick(item1['idefix_matsubskup'])">
-      <tr v-if="item1['sirkys']>''"><td>S :&nbsp;{{item1['rozmers']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O :&nbsp;{{item1['rozmero']}}</td></tr>
-      <tr v-if="item1['sirkypp']>''"><td>PP:&nbsp;{{item1['rozmerpp']}}</td></tr>
+   <td style="width:8%" v-else>
+    <table >
+      <tr v-if="item1['sirkys']>''"><td>S:&nbsp;{{item1['rozmers']}}</td></tr>
+      <tr v-if="item1['sirkyo']>''"><td>O:&nbsp;{{item1['rozmero']}}</td></tr>
    </table></td>
-   <td style="border:none;width:8%" v-else></td>
-
-   <td style="width:5%" v-if="item1['mattyp']=='R' && islastclick(item1['idefix_matsubskup'])">
+   <td style="width:5%" v-if="item1['mattyp']=='R'">
      {{ (item1['navins'] >0)?Math.round(item1['navins']) : Math.round(item1['navino']) }} m
    </td>
-
-   <td style="width:5%" v-else-if="islastclick(item1['idefix_matsubskup'])">
+   <td style="width:5%" v-else>
      {{ item1['sila_mm']}} mm
    </td>
-   <td style="border:none;width:5%" v-else></td>
-
-   <td v-if="islastclick(item1['idefix_matsubskup'])">
+   <td >
      {{item1['cena_nakup_m2']}}
    </td>
-   <td style="border:none" v-else></td>
-   <td v-if="islastclick(item1['idefix_matsubskup'])">
-
-      <!-- item1['technologie']: item1['technologie_skup'] -->
+   <td >
+     {{ item1['technologie']}} :
+     {{ item1['technologie_skup']}} :
      {{ item1['technologie_text']}}
    </td>
-   <td style="border:none" v-else></td>
-   <td v-if="islastclick(item1['idefix_matsubskup'])">
+   <td >
      {{ item1['vyrobce']}}
    </td>
-   <td style="border:none" v-else></td>
-    <td  v-if="islastclick(item1['idefix_matsubskup'])">
+    <td  >
      {{ item1['dodavatel']}}
    </td>
-   <td style="border:none" v-else></td>
-  <td v-if="islastclick(item1['idefix_matsubskup'])">
+
+
+  <td >
      <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
   </td>
-  <td style="border:none" v-else></td>
 
 </tr>
 
 
-
 </tbody>
 </table>
-
 
 
 <!-- </el-checkbox-group> -->
@@ -276,7 +259,6 @@ export default {
     return {
       moduleName: 'list-mat',
       saveNow: false,
-      show: true,
 
       IsDialog: true,
 
@@ -287,8 +269,6 @@ export default {
       searchD:'',
       searchA:'',
       searchV:'',
-      lastClick: [],
-      allTrue: false, //pokud se vyplni prohledavaci pole , bude true = tedy skupiny materialu se nebudou omezovat
 
       objId1: '821',
       objId2: '822',
@@ -355,7 +335,7 @@ export default {
                   self.enum_vyrobce = tmp3.data.enum_matvyrobce
                   // alert(JSON.stringify(self.enum_vyrobce))
                 } catch(e1){
-                  alert("Chyba Vyrobce "+ e1)
+                  alert(e1)
                 }
       //this.list = (await ListMat.all(this.user,`${self.where}`)).data
         this.IsWaiting = false
@@ -371,6 +351,7 @@ export default {
                 self.getWhere()
 
       })
+
 
   },
   beforeDestroy () {
@@ -403,43 +384,6 @@ lastsub(idx)   {
     }
   }
   return true
-},
-lastclick(idxsub)   {
-  var lret = false
-  var idx2 = -1
-  const self = this
-  //alert(idxsub)
-
-  self.lastClick.forEach( (el,idx) => {
-    if (el == idxsub){  //skupina
-        lret = true
-        idx2 = idx  ///Index pole
-        return
-    }
-
-  })
-
-  if (!lret){
-        self.lastClick.push(idxsub)   //Vlozi index pskupiny
-
-  } else {
-        self.lastClick.splice(idx2,1) //Vymaze podskupinu dle indexu pole
-  }
-  //alert(JSON.stringify(self.lastClick) + idxsub )
-  return lret
-},
-
-islastclick(idxsub)   {
-  var lret = false
-  const self = this
-  self.lastClick.forEach(el => {
-    if (idxsub == el) {
-      lret = true
-      return
-    }
-  })
-
-  return lret  || self.allTrue
 },
 handleCheckAllChange(val) {
   const self = this
@@ -542,7 +486,6 @@ async  addWhere() {
  async getWhere (){
    const self= this
    var search = ''
-   self.allTrue =false
  if (self.activeName == 'V') {
     self.where = 'true'
     search = self.searchV
@@ -570,9 +513,7 @@ async  addWhere() {
   }
   if (search > '') {
        self.where += ` and (nazev1 ~* '${search}' or nazev2 ~* '${search}' or nazev3 ~* '${search}')`
-       self.allTrue =true
   }
-
       this.IsWaiting = true
         this.list = (await ListMat.all(this.user,self.where )).data
         if (!this.list.length){
@@ -614,6 +555,10 @@ copyLinex(nRow) {
      self.newLine(nRow)
 
 
+
+
+
+
    },
 
 
@@ -623,13 +568,10 @@ copyLineToForm(nRow) {
      self.Info = nRow
      self.IsDialog = true
      self.Info = nRow
-
-
      eventBus.$emit('dlg821', {
            'IsDialog': self.IsDialog,
            'Akce' : 'copy' ,
-           'Idefix' :  self.list[nRow]["idefix"],
-
+           'Idefix' :  self.list[nRow]["idefix"]
       })
 
      //alert(nRow+ self.list[nRow]["id"] + " Copy")
@@ -641,18 +583,17 @@ editLineToForm(nRow) {
      self.Info = nRow
      self.IsDialog = true
      self.Info = nRow
-
      // alert('aaaa')
      eventBus.$emit('dlg821', {
            'IsDialog': self.IsDialog,
            'Akce' : 'edit' ,
-           'Idefix' :  self.list[nRow]["idefix"],
-
+           'Idefix' :  self.list[nRow]["idefix"]
       })
 
      //alert(nRow+ self.list[nRow]["id"] + " Copy")
      //self.newLine(nRow)
    },
+
 
    async saveLines(id){
      return
@@ -1126,5 +1067,5 @@ editLineToForm(nRow) {
 
 
 </script>
-<style >
+<style scoped>
 </style>
