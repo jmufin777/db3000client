@@ -315,6 +315,7 @@
               style="background:yellow"
               class="inline-input mr-1 "
               v-model="sirka_mm"
+              id="id_sirka_mm_821"
               :fetch-suggestions="querySearch21"
               placeholder="Sirka"
               @select="handleSelect"
@@ -1203,7 +1204,9 @@ export default {
       //alert(self.$refs.enum_matdostupnost)
 
       //self.$refs.enum_matdostupnost.focus()
-      document.getElementById("id_enum_matdostupnost_821").focus();
+      //document.getElementById("id_enum_matdostupnost_821").focus();
+      document.getElementById("id_sirka_mm_821").focus()
+      document.getElementById("id_sirka_mm_821").select()
 //      enum_matdostupnost
 
       } else {
@@ -1257,7 +1260,7 @@ export default {
     async submitForm(formName) {
       const self = this
       if (formName == 'formnew'){
-        alert(formName+ ' /' + self.idefixThis)
+    //    alert(formName+ ' /' + self.idefixThis)
         eventBus.$emit('dlg821', {
            'IsDialog': true,
            'Akce' : 'copy' ,
@@ -1265,7 +1268,7 @@ export default {
 
       })
         return
-      }
+      } else {
 
 
       var neco=  (await ListMat.saveone(self.user,self.idefixThis,{
@@ -1278,7 +1281,18 @@ export default {
 
 
           }))
+        this.list = []
+        eventBus.$emit('dlg821rec')
+        eventBus.$emit('dlg821', {
+         'IsDialog': true,
+         'Akce' : 'edit' ,
+         'Idefix' :  self.idefixThis
+        })
 
+        return
+
+
+      }
       //this.IsDialog = false
 
       this.list = []
