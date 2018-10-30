@@ -471,7 +471,7 @@
        v-bind:class="{ bad : list.data.mat[0].cena_nakup_m2 * list.data.mat[0].koef_naklad*1 > list.data.mat[0].cena_naklad_m2*1
         , ok : this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1 <= this.list.data.mat[0].cena_naklad_m2*1 }"
        >
-       {{     Math.round(list.data.mat[0].nakup_result*1000)/1000        }}
+       {{  (Math.round((list.data.mat[0].nakup_result * list.data.mat[0].koef_naklad ) *100)/100)      }}
 
 
 
@@ -989,12 +989,6 @@ export default {
                alert(e)
               }
             }
-
-
-
-
-
-
 
 
 
