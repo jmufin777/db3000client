@@ -140,12 +140,14 @@
       <tr v-if="item1['sirkys']>''"><td style="border:none">S :&nbsp;{{ (item1['sirkys']) }}</td></tr>
       <tr v-if="item1['sirkyo']>''"><td style="border:none">O :&nbsp;{{item1['sirkyo']}}</td></tr>
       <tr v-if="item1['sirkypp']>''"><td style="border:none">PP:&nbsp;{{item1['sirkypp']}}</td></tr>
+      <tr v-if="item1['sirkyx']>''"><td style="border:none">N :&nbsp;{{item1['sirkyx']}}</td></tr>
     </table></td>
   <td v-else-if="item1['mattyp']=='D' && islastclick(item1['idefix_matsubskup'])">
     <table v-if="islastclick(item1['idefix_matsubskup'])">
       <tr v-if="item1['sirkys']>''"><td>S :&nbsp;{{item1['rozmers']}}</td></tr>
       <tr v-if="item1['sirkyo']>''"><td>O :&nbsp;{{item1['rozmero']}}</td></tr>
       <tr v-if="item1['sirkypp']>''"><td>PP&nbsp;{{item1['rozmerpp']}}</td></tr>
+      <tr v-if="item1['sirkyx']>''"><td>N :&nbsp;{{item1['rozmerx']}}</td></tr>
    </table>
   </td>
    <td v-else-if="item1['mattyp']=='A' && islastclick(item1['idefix_matsubskup'])">
@@ -153,6 +155,8 @@
       <tr v-if="item1['sirkys']>''"><td>S :&nbsp;{{item1['rozmers']}}</td></tr>
       <tr v-if="item1['sirkyo']>''"><td>O :&nbsp;{{item1['rozmero']}}</td></tr>
       <tr v-if="item1['sirkypp']>''"><td>PP:&nbsp;{{item1['rozmerpp']}}</td></tr>
+       <tr v-if="item1['sirkyx']>''"><td>N :&nbsp;{{item1['rozmerx']}}</td></tr>
+
    </table></td>
 
    <td style="width:8%" v-else-if="item1['mattyp']=='X' && islastclick(item1['idefix_matsubskup'])">
@@ -160,6 +164,7 @@
       <tr v-if="item1['sirkys']>''"><td>S :&nbsp;{{item1['rozmers']}}</td></tr>
       <tr v-if="item1['sirkyo']>''"><td>O :&nbsp;{{item1['rozmero']}}</td></tr>
       <tr v-if="item1['sirkypp']>''"><td>PP:&nbsp;{{item1['rozmerpp']}}</td></tr>
+      <tr v-if="item1['sirkyx']>''"><td>N :&nbsp;{{item1['rozmerx']}}</td></tr>
    </table></td>
    <td style="border:none;width:8%" v-else></td>
 
