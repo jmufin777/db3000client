@@ -525,6 +525,30 @@
       </el-row>
       <el-row class="ma-2">
         <el-col :span="4">
+           Nakup bm
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="list.data.mat[0].cena_nakup_bm" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
+        </el-col>
+
+
+
+        <el-col :span="4">
+          Naklad bm
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="list.data.mat[0].cena_naklad_bm" size="mini"  style="width:100%" @change="cena_naklad()" ></el-input>
+        </el-col>
+          <el-col :span="4">
+          Prodej bm
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="list.data.mat[0].cena_prodej_bm" size="mini"  style="width:100%" ></el-input>
+        </el-col>
+
+      </el-row>
+      <el-row class="ma-2">
+        <el-col :span="4">
           Nakup arch
         </el-col>
         <el-col :span="3">
