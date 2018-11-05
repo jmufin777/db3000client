@@ -357,8 +357,8 @@
 
             <!-- <el-button v-if="akceRozmer=='i' || akceRozmer=='e'" icon="el-icon-plus" type="success" @click="insertRozmer" size="mini"></el-button>
             <el-button v-if="akceRozmer=='e' || akceRozmer=='i'" icon="el-icon-edit" type="primary" @click="insertRozmer" size="mini"></el-button> -->
-            <button v-if="akceRozmer=='i' || 1==1 "   type="button" style="width:30%;height:8px" class="px-0 " @click="insertRozmer('i')" ><i class="el-icon-plus" size="mini"></i></button>
-            <button v-if="akceRozmer=='e' "   type="button" style="width:30%;height:8px" class="px-0 " @click="insertRozmer('e')" ><i class="el-icon-edit"    size="mini"></i></button>
+            <button v-if="akceRozmer=='i' || 1==1 "   type="button" style="width:30%;height:16px" class="px-0 " @click="insertRozmer('i')" ><i class="el-icon-plus" size="mini"></i></button>
+            <button v-if="akceRozmer=='e' "   type="button" style="width:30%;height:16px" class="px-0 " @click="insertRozmer('e')" ><i class="el-icon-edit"    size="mini"></i></button>
             </td>
 
           </tr>
@@ -390,35 +390,35 @@
 
             <el-tag class="pr-4 mr-0  black--text" v-if="ie3.zkratka=='S'" type="success" size="mini" >
             {{myZobr(iX)}}
-            <!-- <button type="button" style="width:30%;height:8px" class="px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
-            <button type="button" style="width:30%;height:8px" class="px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit"    size="mini"></i></button>
-            <button type="button" style="width:30%;height:8px" class="px-0 black--text" @click="Zmiz(iX)"   ><i class="el-icon-close"   size="mini"></i></button>
+            <!-- <button type="button" style="width:30%;height:16px" class="px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
+            <button type="button" style="width:30%;height:16px" class="px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit"    size="mini"></i></button>
+            <button type="button" style="width:30%;height:16px" class="px-0 black--text" @click="Zmiz(iX)"   ><i class="el-icon-close"   size="mini"></i></button>
             </el-tag>
 
             <el-tag class="pr-4 mr-0 black--text" v-else-if="ie3.zkratka=='O'"   type="warning" size="mini" >
              {{myZobr(iX)}}
-            <!-- <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
-            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
-            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
+            <!-- <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
+            <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
+            <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
             </el-tag>
 
             <el-tag class="pr-4 mr-0 black--text" v-else-if="ie3.zkratka=='PP'"   type="success" size="mini"  >
              {{myZobr(iX)}}
-            <!-- <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
-            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
-            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
+            <!-- <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
+            <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
+            <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
             </el-tag>
             <el-tag class="pr-4 mr-0 black--text" v-else-if="ie3.zkratka=='X'"   type="danger" size="mini"  >
              {{myZobr(iX)}}
-            <!-- <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
-            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
-            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
+            <!-- <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
+            <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
+            <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
             </el-tag>
             <el-tag class="pr-4 mr-0 black--text" v-else   size="mini"  >
              {{myZobr(iX)}}
-            <!-- <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
-            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
-            <button type="button" style="width:30%;height:8px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
+            <!-- <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmen(iX,1)" ><i class="el-icon-document" size="mini"></i></button> -->
+            <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmen(iX,0)" ><i class="el-icon-edit" size="mini"></i></button>
+            <button type="button" style="width:30%;height:16px" class="  px-0 " @click="Zmiz(iX)" ><i class="el-icon-close" size="mini"></i></button>
             </el-tag>
 
 
@@ -702,6 +702,7 @@ export default {
       idRecord: 0,
       idefixThis:0,
       list: [],
+
       akceId: -1,  //Id pro meneny podzaznam
       mastrpis:'X',
       akceRozmer:'i',

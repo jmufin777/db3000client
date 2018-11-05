@@ -1,5 +1,5 @@
 <template>
-<el-row :id="'m'+objId1" style="overflow:scroll"  class="pa-2" >
+<el-row :id="'m'+objId1" style="overflow:scroll;min-height:900px"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -10,58 +10,59 @@
 
 <div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2 white" :id="'t' + objId1">
 
-  <el-col :span="6" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
+  <el-col :span="4" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
 
  <!-- <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" > -->
 
  <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="Role"  name="R"><el-input class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchR" placeholder="Prohledat Role" @change="addWhere"></el-input></el-tab-pane>
-    <el-tab-pane label="Desky" name="D"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchD" placeholder="Prohledat Desky" @change="addWhere"></el-input></el-tab-pane>
-    <el-tab-pane label="Archy" name="A"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchA" placeholder="Prohledat Archy" @change="addWhere"></el-input></el-tab-pane>
-    <el-tab-pane label="Vse"   name="V"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchV" placeholder="Prohledat Vse" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Stroje"  name="S"><el-input class="my-0" prefix-icon="el-icon-search"  style='width:80%' autofocus clearable size="mini" v-model="searchS" placeholder="Stroje" @change="addWhere"></el-input></el-tab-pane>
+
  </el-tabs>
  </el-col>
 
 
 <v-spacer></v-spacer><br>
-  <el-col :span="4" class="mx-1 mt-4" style="position:relative;top:9px">
-  <el-select v-model="search_dodavatel"
+  <el-col :span="7" class="mx-1 mt-4" style="position:relative;top:9px;">
+
+  <el-select v-model="search_nazev_text"
             filterable
             multiple
 
             default-first-option
             @change="addWhere"
-            placeholder="Dodavatele"
+            placeholder="Nazev technologie"
 
-            style="width:100%;"
+            style="width:90%;"
             size="mini">
             <el-option
-            v-for="item8 in enum_dodavatel"
-            :key="item8.idefix*1"
-            :label="item8.nazev"
-            :value="item8.idefix*1"
-            >{{item8.nazev}} </el-option>
+            v-for="item8 in enum_nazev_text"
+            :key="item8.nazev_text"
+            :label="item8.nazev_text"
+            :value="item8.nazev_text"
+            >{{item8.nazev_text}} </el-option>
   </el-select>
   </el-col>
-  <el-col :span="4" class="mx-1 mt-4" style="position:relative;top:9px">
-   <el-select v-model="search_vyrobce"
+
+  <el-col :span="7" class="mx-1 mt-4" style="position:relative;top:9px">
+  <el-select v-model="search_strojskup"
             filterable
             multiple
 
             default-first-option
             @change="addWhere"
-            placeholder="Vyrobci"
-            style="width:100%;"
+            placeholder="Skupina stroju"
+
+            style="width:90%;"
             size="mini">
             <el-option
-            v-for="item6 in enum_vyrobce"
-            :key="item6.idefix*1"
-            :label="item6.nazev"
-            :value="item6.idefix*1"
-
-            >{{item6.nazev}} </el-option>
+            v-for="item9 in enum_strojskup"
+            :key="item9.idefix*1"
+            :label="item9.nazev"
+            :value="item9.idefix*1"
+            >{{item9.nazev}} </el-option>
   </el-select>
   </el-col>
+
 
 
  <!-- </el-col> -->
@@ -73,7 +74,7 @@
 
 <table slot="activator" style="width:100%" class="mx-0 my-4 py-4">
 <thead>
-<th style="width:5%">
+<th style="width:15%">
 &nbsp;<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox>
 &nbsp;&nbsp;&nbsp;&nbsp;<v-menu
       v-model="showSubMenu"
@@ -97,22 +98,41 @@
 <th style="width:23%">
   <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('nazev','asc')" class="el-icon-download"  ></i>
-  Material</th>
-<th style="width:8%" v-if="activeName=='R' || activeName=='V'">Sire mm</th>
-<th style="width:8%" v-if="activeName=='D' || activeName=='A'">Rozmer m</th>
-<th style="width:5%" v-if="activeName=='R' || activeName=='V'">Navin bm</th>
-<th style="width:5%" v-if="activeName=='D' || activeName=='A' ">Tloustka mm</th>
-<th style="width:5%">Cena za m2</th>
 
-<th syle="width:12%">Technologie</th>
-<th >Vyrobce</th>
-<th >Dodavatel</th>
+  Stroj</th>
+<th style="width:23%" >
+  <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
+  Skupina</th>
+<th style="width:6%" >
+  <i  @click="sortByKey('nazev_text','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev_text','asc')" class="el-icon-download"  ></i>
+  Technologie</th>
+<th style="width:6%" >
+  <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
+
+  Kalkulace</th>
+
+
+
+
+<!-- <th style="width:6%" >sirka_mat_max_mm</th>
+<th style="width:6%" >delka_mat_max_mm</th>
+<th style="width:6%" >sirka_tisk_max_mm</th>
+<th style="width:6%" >delka_tisk_max_mm</th>
+<th style="width:6%" >tech_okraj_strana_mm</th>
+<th style="width:6%" >tech_okraj_start_mm</th>
+<th style="width:6%" >tech_okraj_spacecopy_mm</th>
+<th style="width:6%" >tech_okraj_spacejobs_mm</th> -->
+
+
 <th style="width:3%">Vymazat</th>
 </thead >
 <tbody>
 
-<tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup'])">
-  <td style="width:7%" v-if="islastclick(item1['idefix_matsubskup'])">
+<tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true">
+  <td style="width:7%" >
   <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
   <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']" :value="item1['idefix']" @change="chekListUpdate(irow1)">
   </div>
@@ -127,80 +147,25 @@
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
    </div>
    <!-- <el-checkbox :id="'check2_'+objId1+'_'+item1['idefix']" :label="item1['idefix']">{{item1['idefix']}}</el-checkbox> -->
-  </td><td style="width:7%;border:none" v-else>
+  </td>
 
+  <td style='text-align:left;width:23%' class="px-2">
+    {{item1['nazev']}}
   </td>
   <td style='text-align:left;width:23%' class="px-2">
-    <a  @click="lastclick(item1['idefix_matsubskup'])">
-    <div style="color:#950008; font-weight:bold;background: #FFFFFF;opacity:0.7;position:relative;top:-4px;left:0px;width:100%" v-if="lastsub(irow1)">{{item1['podskupina']}}
-  </div>
-   </a>
-     {{(islastclick(item1['idefix_matsubskup']))?(item1['nazev1']+' ' +item1['nazev2']+ ' '+ item1['nazev3']):(' ') }}
+    {{item1['nazev_skup']}}
   </td>
-  <td v-if="item1['mattyp']=='R' && islastclick(item1['idefix_matsubskup'])" style="width:8%">
-    <table v-if="islastclick(item1['idefix_matsubskup'])">
-      <tr v-if="item1['sirkys']>''"><td style="border:none">S :&nbsp;{{ (item1['sirkys']) }}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td style="border:none">O :&nbsp;{{item1['sirkyo']}}</td></tr>
-      <tr v-if="item1['sirkypp']>''"><td style="border:none">PP:&nbsp;{{item1['sirkypp']}}</td></tr>
-      <tr v-if="item1['sirkyx']>''"><td style="border:none">N :&nbsp;{{item1['sirkyx']}}</td></tr>
-    </table></td>
-  <td v-else-if="item1['mattyp']=='D' && islastclick(item1['idefix_matsubskup'])">
-    <table v-if="islastclick(item1['idefix_matsubskup'])">
-      <tr v-if="item1['sirkys']>''"><td>S :&nbsp;{{item1['rozmers']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O :&nbsp;{{item1['rozmero']}}</td></tr>
-      <tr v-if="item1['sirkypp']>''"><td>PP&nbsp;{{item1['rozmerpp']}}</td></tr>
-      <tr v-if="item1['sirkyx']>''"><td>N :&nbsp;{{item1['rozmerx']}}</td></tr>
-   </table>
+  <td style='text-align:left;width:6%' class="px-2">
+    {{item1['nazev_text']}}
   </td>
-   <td v-else-if="item1['mattyp']=='A' && islastclick(item1['idefix_matsubskup'])">
-    <table v-if="islastclick(item1['idefix_matsubskup'])">
-      <tr v-if="item1['sirkys']>''"><td>S :&nbsp;{{item1['rozmers']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O :&nbsp;{{item1['rozmero']}}</td></tr>
-      <tr v-if="item1['sirkypp']>''"><td>PP:&nbsp;{{item1['rozmerpp']}}</td></tr>
-       <tr v-if="item1['sirkyx']>''"><td>N :&nbsp;{{item1['rozmerx']}}</td></tr>
-
-   </table></td>
-
-   <td style="width:8%" v-else-if="item1['mattyp']=='X' && islastclick(item1['idefix_matsubskup'])">
-    <table v-if="islastclick(item1['idefix_matsubskup'])">
-      <tr v-if="item1['sirkys']>''"><td>S :&nbsp;{{item1['rozmers']}}</td></tr>
-      <tr v-if="item1['sirkyo']>''"><td>O :&nbsp;{{item1['rozmero']}}</td></tr>
-      <tr v-if="item1['sirkypp']>''"><td>PP:&nbsp;{{item1['rozmerpp']}}</td></tr>
-      <tr v-if="item1['sirkyx']>''"><td>N :&nbsp;{{item1['rozmerx']}}</td></tr>
-   </table></td>
-   <td style="border:none;width:8%" v-else></td>
-
-   <td style="width:5%" v-if="item1['mattyp']=='R' && islastclick(item1['idefix_matsubskup'])">
-     {{ (item1['navins'] >0)?Math.round(item1['navins']) : Math.round(item1['navino']) }} m
-   </td>
-
-   <td style="width:5%" v-else-if="islastclick(item1['idefix_matsubskup'])">
-     {{ item1['sila_mm']}} mm
-   </td>
-   <td style="border:none;width:5%" v-else></td>
-
-   <td v-if="islastclick(item1['idefix_matsubskup'])">
-     {{item1['cena_nakup_m2']}}
-   </td>
-   <td style="border:none" v-else></td>
-   <td v-if="islastclick(item1['idefix_matsubskup'])">
-
+  <td style='text-align:left;width:6%' class="px-2">
+    {{ item1['typ_kalkulace'] }}
+  </td>
       <!-- item1['technologie']: item1['technologie_skup'] -->
-     {{ item1['technologie_text']}}
-   </td>
-   <td style="border:none" v-else></td>
-   <td v-if="islastclick(item1['idefix_matsubskup'])">
-     {{ item1['vyrobce']}}
-   </td>
-   <td style="border:none" v-else></td>
-    <td  v-if="islastclick(item1['idefix_matsubskup'])">
-     {{ item1['dodavatel']}}
-   </td>
-   <td style="border:none" v-else></td>
-  <td v-if="islastclick(item1['idefix_matsubskup'])">
+  <td >
      <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
   </td>
-  <td style="border:none" v-else></td>
+
 
 </tr>
 
@@ -216,7 +181,7 @@
 
 
 
-<list-mat-edit v-if="IsDialog" ></list-mat-edit>
+<list-stroj-edit  v-if="IsDialog"></list-stroj-edit>
 
   </div>
   </div>
@@ -233,9 +198,7 @@
   <!-- <hr> -->
  <div>
 
-
-   <!--
-  <win-dow :title="'events'" :id="`events`"
+  <!-- <win-dow :title="'events'" :id="`events`"
     :x="200"
     :w="700"
     :y="100"
@@ -244,10 +207,9 @@
     :parent="false"
     :maximize="false"
     >
-  i: {{ cols }}
+  i: {{ list }}
+  </win-dow> -->
 
-  </win-dow>
-  //-->
 
 
 </div>
@@ -264,8 +226,8 @@ const self = this
 import { mapState } from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-import ListMat from '@/services/ListMatService'
-import ListMatEdit from './ListMatEdit'
+import ListStroj from '@/services/ListStrojService'
+import ListStrojEdit from './ListStrojEdit'
 
 import f from '@/services/fce'
 
@@ -277,34 +239,33 @@ import f from '@/services/fce'
 export default {
   props: ['visible'],
   components: {
-    'list-mat-edit': ListMatEdit
+    'list-stroj-edit': ListStrojEdit
   },
   data () {
     return {
-      moduleName: 'list-mat',
+      moduleName: 'list-stroj',
       saveNow: false,
       show: true,
 
-      IsDialog: true,
+      IsDialog: false,
+      SendName: "NIC",
 
       IsWaiting: false,
       info:'',
       search:'',
-      searchR:'',
-      searchD:'',
-      searchA:'',
-      searchV:'',
+      searchS:'',
+
       lastClick: [],
       allTrue: false, //pokud se vyplni prohledavaci pole , bude true = tedy skupiny materialu se nebudou omezovat
 
-      objId1: '821',
-      objId2: '822',
-      objSearchBar: 'search_821',
+      objId1: '8210',
+      objId2: '8220',
+      objSearchBar: 'search_8210',
 
       aInfo: [],
       total: 0,
       pagination: {},
-      activeName:'R',
+      activeName:'S',
       activeNameLast:'',
       where: 'true' ,
 
@@ -318,11 +279,13 @@ export default {
       currentOrigValue: null,
       lastSubSkup:'' , // pro vykreslovani - zmena subskup
       lastId: '',
-      enum_dodavatel: [],
-      search_dodavatel: [],
-      enum_vyrobce: [],
-      search_vyrobce: [],
-      enum_vyrobce: [],
+      enum_strojskup: [],
+      enum_nazev_text: [],
+
+      search_nazev_text: [],
+      search_strojskup: [],
+
+
       minId: 0, //Pro vklad zaporna ID
 
       list: [],
@@ -350,21 +313,24 @@ export default {
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
         this.getWhere()
+         this.getEnums()
+         /*
               try {
-                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,8,''))
-                  self.enum_dodavatel = tmp2.data.enum_dodavatel
-                  //alert(JSON.stringify(self.enum_dodavatel))
+                  tmp2 =  ( await ListStroj.one(this.user,this.idefixThis ,101,''))
+                  self.enum_nazev_text = tmp2.data.enum_nazev_text
+                  //alert(JSON.stringify(self.enum_nazev_text))
                 } catch(e0){
                   alert(e0)
                 }
                try {
-                  var tmp3 =  ( await ListMat.one(this.user,this.idefixThis ,6,''))
-                  self.enum_vyrobce = tmp3.data.enum_matvyrobce
-                  // alert(JSON.stringify(self.enum_vyrobce))
+                  var tmp3 =  ( await ListStroj.one(this.user,this.idefixThis ,10,''))
+                  self.enum_strojskup = tmp3.data.enum_strojskup
+  //                 alert(JSON.stringify(self.enum_strojskup))
                 } catch(e1){
                   alert("Chyba Vyrobce "+ e1)
                 }
-      //this.list = (await ListMat.all(this.user,`${self.where}`)).data
+           */
+      //this.list = (await ListStroj.all(this.user,`${self.where}`)).data
         this.IsWaiting = false
         return
     }
@@ -373,9 +339,9 @@ export default {
 
   created () {
     var self=this
-      eventBus.$on('dlg821rec', ( dlgPar ) => {
+      eventBus.$on('dlg8210rec', ( dlgPar ) => {
         //self.getData()
-                self.getWhere()
+       self.getWhere()
 
       })
 
@@ -399,6 +365,29 @@ export default {
 
 
 methods: {
+
+async getEnums() {
+  const self= this
+  var tmp2, tmp3
+   self.enum_nazev_text = []
+   self.enum_strojskup  = []
+    try {
+       tmp2 =  ( await ListStroj.one(this.user,this.idefixThis ,101,''))
+       self.enum_nazev_text = tmp2.data.enum_nazev_text
+       //alert(JSON.stringify(self.enum_nazev_text))
+    } catch(e0){
+       alert(e0)
+    }
+    try {
+       var tmp3 =  ( await ListStroj.one(this.user,this.idefixThis ,10,''))
+       self.enum_strojskup = tmp3.data.enum_strojskup
+ //         alert(JSON.stringify(self.enum_strojskup))
+    } catch(e1){
+       alert("Chyba Vyrobce "+ e1)
+    }
+
+},
+
 lastsub(idx)   {
   var lret = false
   if (idx == 0) {
@@ -537,10 +526,12 @@ async    handleClick(tab, event) {
     },
 async  addWhere() {
   const self = this
-  if (self.activeName == 'V') {
+
+  if (self.activeName == 'S') {
+
     self.where = 'true'
   } else {
-   self.where = ` mattyp ='${this.activeName}'`
+   alert('Neco jineho')
   }
 
   this.getWhere()
@@ -550,42 +541,43 @@ async  addWhere() {
    const self= this
    var search = ''
    self.allTrue =false
- if (self.activeName == 'V') {
-    self.where = 'true'
-    search = self.searchV
-  } else {
-   self.where = ` mattyp ='${this.activeName}'`
-   if (self.activeName == 'A') {
-     search = self.searchA
-   }
-   if (self.activeName == 'D') {
-     search = self.searchD
-   }
-   if (self.activeName == 'R') {
-     search = self.searchR
-   }
 
-  }
+    self.where = 'true'
+    search = self.searchS
+
+    self.where = ` true`
+
+
+
   var ctmp=''
-  if (self.search_dodavatel.length>0){
-    ctmp=self.search_dodavatel.join(',')
-    self.where += ` and idefix_dodavatel in ( ${ctmp} )`
+  if (self.search_nazev_text.length>0){
+    self.search_nazev_text.forEach(el=>{
+      if (ctmp>'') ctmp+=','
+      ctmp+=`'${el}'`
+    })
+
+//    ctmp=self.search_nazev_text.join(',')
+
+    self.where += ` and nazev_text in ( ${ctmp} )`
+    //alert(self.where)
   }
-  if (self.search_vyrobce.length>0){
-    ctmp=self.search_vyrobce.join(',')
-    self.where += ` and idefix_vyrobce in ( ${ctmp} )`
+  if (self.search_strojskup.length>0){
+    ctmp=self.search_strojskup.join(',')
+    self.where += ` and idefix_strojskup in ( ${ctmp} )`
   }
   if (search > '') {
-       self.where += ` and (nazev1 ~* '${search}' or nazev2 ~* '${search}' or nazev3 ~* '${search}')`
+       self.where += ` and (a.nazev ~* '${search}' )`
        self.allTrue =true
   }
 
       this.IsWaiting = true
-        this.list = (await ListMat.all(this.user,self.where )).data
+
+        this.list = (await ListStroj.all(this.user,self.where )).data
         if (!this.list.length){
           this.list=[]
         }
         this.IsWaiting = false
+        //alert('jsem zde')
 
 
  },
@@ -593,7 +585,8 @@ editLine(nRow) {   //Dulezita.bez ni nejdou dialogy v editu
      const self = this
      self.IsDialog = true
      self.Info = nRow
-     eventBus.$emit('dlg821', {
+
+     eventBus.$emit('dlg8210', {
            'IsDialog': self.IsDialog,
            'cols': self.cols,
            'record': self.list[nRow],
@@ -632,10 +625,11 @@ copyLineToForm(nRow) {
      self.Info = nRow
 
 
-     eventBus.$emit('dlg821', {
+     eventBus.$emit('dlg8210', {
            'IsDialog': self.IsDialog,
            'Akce' : 'copy' ,
            'Idefix' :  self.list[nRow]["idefix"],
+           'typ_kalkulace' :  self.list[nRow]["typ_kalkulace"],
 
       })
 
@@ -648,12 +642,15 @@ editLineToForm(nRow) {
      self.Info = nRow
      self.IsDialog = true
      self.Info = nRow
-
+     //alert(self.IsDialog)
+     //self.SendName="AAAX "+Math.random()
+     //alert(self.list[nRow])
      // alert('aaaa')
-     eventBus.$emit('dlg821', {
+     eventBus.$emit('dlg8210', {
            'IsDialog': self.IsDialog,
            'Akce' : 'edit' ,
            'Idefix' :  self.list[nRow]["idefix"],
+           'typ_kalkulace' :  self.list[nRow]["typ_kalkulace"],
 
       })
 
@@ -715,7 +712,7 @@ editLineToForm(nRow) {
        }
      })
 
-     await ListMat.insert(this.user, {data: Posli, del: aDel })
+     await ListStroj.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -727,7 +724,7 @@ editLineToForm(nRow) {
       var neco = []
 
      try {
-      //this.list = (await   ListMat.all(this.user,'nic')).data
+      //this.list = (await   ListStroj.all(this.user,'nic')).data
         getWhere()
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
@@ -775,7 +772,7 @@ editLineToForm(nRow) {
    async getData() {
      // alert('getData')
      try {
-      //this.list = (await   ListMat.all(this.user,'nic')).data
+      //this.list = (await   ListStroj.all(this.user,'nic')).data
 
         self.getWhere()
 
@@ -793,9 +790,8 @@ editLineToForm(nRow) {
    sortByKey(ckey, ascdesc) {
      //alert('sort'+ ckey)
     if (ascdesc == 'asc') {
-      this.list = _.sortBy(this.list,['podskupina',ckey])
-      //this.list = _.sortBy(this.list,['nazev_skup', ckey])
-      /*
+      this.list = _.sortBy(this.list,['nazev_skup', ckey])
+        /*
         this.cols.forEach((el, k ) => {
           if (el.id==ckey){
             this.cols[k]["sort"]="asc"
@@ -805,13 +801,13 @@ editLineToForm(nRow) {
           }
       })
       */
-
       //this.cols[ckey]['sort']="asc"
     }
     if (ascdesc == 'desc') {
-      this.list = _.sortBy(this.list,['podskupina',ckey]).reverse()
-      /*
-         this.cols.forEach((el, k ) => {
+      //this.list = _.sortBy(this.list,ckey).reverse()
+      this.list = _.sortBy(this.list,['nazev_skup', ckey]).reverse()
+        /*
+        this.cols.forEach((el, k ) => {
           if (el.id==ckey){
             this.cols[k]["sort"]="desc"
             this.lastSort[0] =ckey
@@ -820,6 +816,7 @@ editLineToForm(nRow) {
           }
       })
       */
+
       //this.cols[id]['sort']="desc"
     }
 
@@ -830,7 +827,7 @@ editLineToForm(nRow) {
       const self = this
       this.listNewLine = []
 
-      this.Max = (await ListMat.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await ListStroj.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -883,11 +880,13 @@ editLineToForm(nRow) {
 
 
 
-    if (confirm('Vymazat poloku materialu ' + self.list[nRow].nazev1 )) {
+    if (confirm('Vymazat kompletni stroj ? ' + self.list[nRow].idefix )) {
       this.IsWaiting =true
-      var prd= (await ListMat.delete(self.user,self.list[nRow].idefix))
+
+
+      var prd= (await ListStroj.delete(self.user,self.list[nRow].idefix))
         self.getWhere()
-       //self.list = (await ListMat.all(self.user,` ${where} `)).data
+       //self.list = (await ListStroj.all(self.user,` ${where} `)).data
        this.IsWaiting =false
     }
 
@@ -899,17 +898,17 @@ editLineToForm(nRow) {
      const self = this
 
     // self.list[nRow].nazev1
-    if (confirm('Vymazat poloky materialu ' )) {
+    if (confirm('Vymazat kompletne oznacene stroje ? ' )) {
       this.IsWaiting =true
       await this.checkedList.forEach(idefix => {
-        var prd= (ListMat.delete(self.user,idefix))
+        var prd= (ListStroj.delete(self.user,idefix))
         self.getWhere()
       });
       this.handleUnCheckAllChange()
 
        this.IsWaiting =false
 
-       //self.list = (await ListMat.all(self.user,` ${where} `)).data
+       //self.list = (await ListStroj.all(self.user,` ${where} `)).data
 
     }
 
@@ -1013,12 +1012,6 @@ editLineToForm(nRow) {
             }
 
 
-
-
-
-
-
-
           },100)
          }
 
@@ -1095,7 +1088,7 @@ editLineToForm(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await ListMat.all(this.user,nic)).data
+      this.list = (await ListStroj.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },

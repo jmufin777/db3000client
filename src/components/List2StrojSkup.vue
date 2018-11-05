@@ -272,7 +272,8 @@ export default {
   		cols: [
 				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
 				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:5, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 12, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 8, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "typ_kalkulace", title: "Typ ", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],
@@ -453,7 +454,7 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, vyrobce: el.vyrobce
+        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, typ_kalkulace: el.typ_kalkulace
 
 
 
@@ -762,7 +763,7 @@ copyLine(nRow) {
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev', 'kod','vyrobce','user_insert']
+    var seekStr=['id', 'nazev', 'kod','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }

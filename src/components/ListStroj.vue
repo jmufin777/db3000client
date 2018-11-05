@@ -227,7 +227,7 @@ import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import ListStroj from '@/services/ListStrojService'
-import List2StrojSkup from '@/services/List2StrojSkupService'
+import ListStrojEdit from './ListStrojEdit'
 import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 

@@ -1,5 +1,4 @@
-  <template>
-
+<template>
 <el-row id="m371" style="overflow:scroll"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
@@ -39,8 +38,6 @@
     ></el-button>
 </el-col>
 
-
-
     <el-col :span="2" :offset="0" style="margin-top:5px;padding-left:10px" >
         <!-- <el-checkbox v-model="saveNow" label="Ukladat prubezne"  size='mini'></el-checkbox> -->
   </el-col>
@@ -67,8 +64,8 @@
     <i v-if="col.sort && col.sort=='asc'"    @click="sortByKey(col.id,'desc')" class="el-icon-upload2"   ></i>
     <i v-if="!col.sort || col.sort=='desc'"  @click="sortByKey(col.id,'asc')" class="el-icon-download"  ></i>
 
-    <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
-    <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
+    <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:116px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
+    <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:16px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
       </el-col>
  <el-col :span="2" class="mth">
    X
@@ -92,8 +89,8 @@
     <div class='dcell'  style="width::100% ; background:white"
     v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
-       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
-       <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
+       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
+       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
 
    </div>
   </el-col>
@@ -163,7 +160,7 @@
       <div class='dcell'  style="width::100% ; background:white"
       v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
       >
-         <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow)" ><i class="el-icon-delete" size="mini"></i></button>
+         <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="deleteLine(irow)" ><i class="el-icon-delete" size="mini"></i></button>
       </div>
      </el-col>
   </el-col>

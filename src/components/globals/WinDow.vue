@@ -6,6 +6,7 @@
     :y="y1>=0?y1:y"
     :h="h1>=0?h1:h"
     :w="w1>=0?w1:w"
+    :forget="forget"
 
   :isActive="false" :isResizable="false"
   style="border: 0px solid white;background:white"
@@ -29,6 +30,7 @@
   <el-row  :gutter="0">
   <el-col :span="8" class="slot-a "  >
     <slot name="a1" :sm="8" :md="8" :lg="8" :xl="8"><span v-if="title > ''">&nbsp;</span></slot>
+
   </el-col>
   <el-col v-if="title > ''"  :span="8" class="slot-b " :sm="8" :md="8" :lg="8" :xl="8">
     <slot name="b1">{{title}}&nbsp;</slot>
@@ -157,7 +159,10 @@ export default {
         required: false
       },
 
-      parent:false
+      parent:false,
+      forget:false,   //Zapomene pozici
+      forgetWH:false,  //Zapomene rozmer
+      forgetAll:false  //Zapomene pozici a rozmer a nastavi ji dle parametru
 
     },
   data: ()  => {
@@ -167,6 +172,7 @@ export default {
       w1: this.w,
       x1: this.x,
       y1: this.y,
+      forget1: this.forget,
       old_z: 0,
       info: 'nic',
       idx_test: 0
@@ -175,11 +181,24 @@ export default {
     }
   },
   created () {
+    if (this.forgetAll)  {
+      return
+    }
+    if (this.forget)  {
+      //return
+    } else {
+     this.x1=this.$store.state.WinDows[this.idxx()].x
+     this.y1=this.$store.state.WinDows[this.idxx()].y
+    }
     //pokud neni okno na storu , hlasi konzole chyby
-    this.x1=this.$store.state.WinDows[this.idxx()].x
-    this.y1=this.$store.state.WinDows[this.idxx()].y
-    this.h1=this.$store.state.WinDows[this.idxx()].h
-    this.w1=this.$store.state.WinDows[this.idxx()].w
+
+    if (this.forgetWH) {
+
+    } else {
+      this.h1=this.$store.state.WinDows[this.idxx()].h
+      this.w1=this.$store.state.WinDows[this.idxx()].w
+    }
+
 
   },
   mounted () {

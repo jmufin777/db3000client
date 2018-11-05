@@ -264,8 +264,10 @@ import ListModules from '@/components/ListModules.vue'
 import ListGroups from '@/components/ListGroups.vue'
 
 //Havni seznamy - provoz
-import ListStroj from './ListStroj'
+import ListStrojOld from './ListStroj'
+import ListStroj from './ListStrojView'
 import ListMat from './ListMatView'
+
 
 //Doplnky a seznamy - provoz
 import List2Index from './List2Index'
@@ -348,6 +350,7 @@ export default {
     'list-modules': ListModules,
     'list-groups': ListGroups,
     'list-stroj': ListStroj,
+    'list-stroj-old': ListStrojOld,
     'list-mat': ListMat,
     'list-dodavatel': List2MatDodavatel,
 
