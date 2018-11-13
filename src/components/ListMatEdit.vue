@@ -1,18 +1,35 @@
 <template>
- <v-dialog
+ <!-- <v-dialog
       v-model="IsDialog"
         persistent
         max-width="900px"
         scrollable
         v-if="list && list.data && list.data.mat && list.data.mat.length > 0 "
+  > -->
+  <win-dow :title="''" :id="`events001`"
+
+    :x="xMyska"
+    :w="1044"
+    :y="100"
+    :z="90"
+    :h="820"
+    :parent="false"
+    :maximize="false"
+    :forget="true"
+    :forgetWH="false"
+    :forgetAll="true"
+    v-if="list && list.data && list.data.mat && list.data.mat.length > 0 "
+
     >
-  >
+
 <!-- <div class="white" id="de821" > -->
+
 <div style="opacity:1; background:white;width:100%; " class="white" id="de821" >
   <slot name="a1" :sm="8" :md="8" :lg="8" :xl="8"></slot>
 <el-row> <el-col :span="24">
 </el-col></el-row>
-  <panel :title="((Akce =='edit')?'Zmena':'Nova polozka ') +' ' + list.data.mat[0].nazev1 +' ' + list.data.mat[0].nazev2 +' ' + list.data.mat[0].nazev3  " >
+  <div slot="b1" class="green" style="height:40px;font-size:18px">
+  <panel slot="b1" :title="((Akce =='edit')?'Zmena':'Nova polozka ') +' ' + list.data.mat[0].nazev1 +' ' + list.data.mat[0].nazev2 +' ' + list.data.mat[0].nazev3  " >
 
     <!-- Akce +' : ' + mastrpis +': ' + isCopy + ' '+  -->
     <!-- {{list.data.rozmer2}} / {{ idefixThis }} -->
@@ -29,16 +46,17 @@
     </div>
     &nbsp;
   </panel>
+ </div>
 <!-- <el-row>
 
   <el-col :span="24">{{ Akce }}  </el-col>
 </el-row> -->
 
 <el-form  id="form821" ref="form2" :model="form2" label-width="70px" :label-position="labelPosition"
-:rules="rules2" class="demo-ruleForm is-success"
+:rules="rules2" class="demo-ruleForm is-success mt-4"
 
 >
-   <el-row class="ma-2">
+   <el-row class="ma-2 mt-4">
 
      <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-matskup','Skupina')" style="width:90%">Skupina:</el-button> </el-col>
      <el-col :span="4" >
@@ -132,7 +150,6 @@
             :label="item4.nazev"
             :value="item4.idefix*1"
 
-
             >{{item4.nazev}} </el-option>
        </el-select>
      </el-col>
@@ -220,7 +237,7 @@
             >{{item6.nazev}} </el-option>
        </el-select>
      </el-col>
-     <el-col :span="3">
+     <el-col :span="3" :offset="1">
 
        <el-checkbox v-model="list.data.mat[0].dodavatel_priorita"
           :checked="(list.data.mat[0].dodavatel_priorita==1)?true:false"
@@ -530,9 +547,6 @@
         <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_nakup_bm" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
         </el-col>
-
-
-
         <el-col :span="4">
           Naklad bm
         </el-col>
@@ -547,6 +561,29 @@
         </el-col>
 
       </el-row>
+
+       <el-row class="ma-2">
+        <el-col :span="4">
+           Nakup baleni
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="list.data.mat[0].cena_nakup_baleni" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
+        </el-col>
+        <el-col :span="4">
+          Naklad baleni
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="list.data.mat[0].cena_naklad_baleni" size="mini"  style="width:100%" @change="cena_naklad()" ></el-input>
+        </el-col>
+          <el-col :span="4">
+          Prodej baleni
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="list.data.mat[0].cena_prodej_baleni" size="mini"  style="width:100%" ></el-input>
+        </el-col>
+
+      </el-row>
+
       <el-row class="ma-2">
         <el-col :span="4">
           Nakup arch
@@ -641,7 +678,7 @@
  </el-row>
 </el-form>
 </div>
-<list2-edit></list2-edit>
+<list2c-edit></list2c-edit>
 
 <!-- <win-dow :title="'events'" :id="`events`"
     :x="200"
@@ -656,15 +693,16 @@
 
   </win-dow>
 -->
+</win-dow>
 
-</v-dialog>
+<!-- </v-dialog> -->
 
 </template>
 <script>
 import { eventBus } from '@/main.js'
 import {mapState} from 'vuex'
 import ListMat from '@/services/ListMatService'
-import List2Edit from  './List2Edit.vue'
+import List2Edit from  './List2bEdit.vue'
 import ListMatProjCena from './ListMatProjCena'
 import f from '@/services/fce'
 import moment from 'moment'
@@ -678,7 +716,7 @@ import { setTimeout, clearInterval } from 'timers'
 
 export default {
   components: {
-    'list2-edit': List2Edit,
+    'list2c-edit': List2Edit,
     'list-mat-projcena': ListMatProjCena
 
   },
@@ -696,6 +734,7 @@ export default {
       links: [],
       labelPosition: 'right',
       IsDialog: false,
+      xMyska: 350,
       Akce: 'NICXXX',
       isCopy: -1,
       recData: {},
@@ -993,10 +1032,11 @@ export default {
                   self.list.data.enum_strojskup = tmp2.data.enum_strojskup
                   //alert(JSON.stringify(self.list.data.enum_stroj))
                 } catch(e0){
-                  alert(e0)
+                  alert('Chybka 1 StrojSkupina' + e0)
                 }
               } catch(e) {
-               alert(e)
+                  alert(e)
+                  alert('Chybka 2 StrojSkupina 2' + e)
               }
             }
            if (self.$store.state.showModule == 'list-mat-projcena') {
@@ -1255,19 +1295,42 @@ export default {
     cena_naklad()  {
       //alert((this.list.data.mat[0].cena_nakup_m2*1)+"/" + (this.list.data.mat[0].koef_naklad*1) )
       //this.list.data.mat[0].cena_naklad_m2 = (this.list.data.mat[0].cena_nakup_m2*1) *  (this.list.data.mat[0].koef_naklad*1)
+
       var nakup_result = 0
       if (this.list.data.mat[0].cena_naklad_m2*1>0){
-        nakup_result = (this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1)/ this.list.data.mat[0].cena_naklad_m2*1
+        nakup_result = (this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1) / (this.list.data.mat[0].cena_naklad_m2)*1
+        this.list.data.mat[0].nakup_result = nakup_result
+
+      } else if (this.list.data.mat[0].cena_naklad_bm*1>0){
+        nakup_result = (this.list.data.mat[0].cena_nakup_bm * this.list.data.mat[0].koef_naklad*1)/ this.list.data.mat[0].cena_naklad_bm*1
         this.list.data.mat[0].nakup_result = nakup_result
       }
-      if (this.list.data.mat[0].cena_nakup_m2 *1 <= 0 ){
-        alert('Cena nakup ! musi byt zadana')
+      else if (this.list.data.mat[0].cena_naklad_baleni*1>0){
+        nakup_result = (this.list.data.mat[0].cena_nakup_baleni * this.list.data.mat[0].koef_naklad*1)/ this.list.data.mat[0].cena_naklad_baleni*1
+        this.list.data.mat[0].nakup_result = nakup_result
+      }
+     else if (this.list.data.mat[0].cena_naklad_arch*1>0){
+        nakup_result = (this.list.data.mat[0].cena_nakup_arch * this.list.data.mat[0].koef_naklad*1)/ this.list.data.mat[0].cena_naklad_arch*1
+        this.list.data.mat[0].nakup_result = nakup_result
+      }
+
+      if (this.list.data.mat[0].cena_nakup_m2 *1 <= 0  && this.list.data.mat[0].cena_nakup_bm *1 <= 0 && this.list.data.mat[0].cena_nakup_baleni *1 <= 0  ) {
+          alert('Cena nakup ! musi byt zadana')
       }
       if (this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1 > this.list.data.mat[0].cena_naklad_m2*1){
-          alert("Nakup je prislis drahy , zkotrolujte koeficienty nebo podklady zadavaci" + nakup_result)
+          alert("Nakup je prilis drahy , zkontrolujte koeficienty a ceny " + nakup_result)
+      } else if (this.list.data.mat[0].cena_nakup_bm * this.list.data.mat[0].koef_naklad*1 > this.list.data.mat[0].cena_naklad_bm*1){
+          alert("Nakup je prilis drahy , zkontrolujte koeficienty a ceny " + nakup_result)
+      } else if (this.list.data.mat[0].cena_nakup_baleni * this.list.data.mat[0].koef_naklad*1 > this.list.data.mat[0].cena_naklad_baleni*1){
+          alert("Nakup je prilis drahy , zkontrolujte koeficienty a ceny " + nakup_result)
+      } else if (this.list.data.mat[0].cena_nakup_arch * this.list.data.mat[0].koef_naklad*1 > this.list.data.mat[0].cena_naklad_arch*1){
+          alert("Nakup je prilis drahy , zkontrolujte koeficienty a ceny " + nakup_result)
       }
 
       this.list.data.mat[0].cena_prodej_m2 = (this.list.data.mat[0].cena_naklad_m2*1) *  (this.list.data.mat[0].koef_prodej*1)
+      this.list.data.mat[0].cena_prodej_bm = (this.list.data.mat[0].cena_naklad_bm*1) *  (this.list.data.mat[0].koef_prodej*1)
+      this.list.data.mat[0].cena_prodej_baleni = (this.list.data.mat[0].cena_naklad_baleni*1) *  (this.list.data.mat[0].koef_prodej*1)
+      this.list.data.mat[0].cena_prodej_arch = (this.list.data.mat[0].cena_naklad_arch*1) *  (this.list.data.mat[0].koef_prodej*1)
       //this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_nakup
     } ,
     cena_prodej()  {

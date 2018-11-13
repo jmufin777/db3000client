@@ -1,18 +1,35 @@
 <template>
+ <win-dow :title="$store.state.showModule+'x'" :id="$store.state.showModule+'x'"
 
-<v-dialog v-model="$store.state.showEdit" max-width="500px" scrollable  @keydown.esc="konec2">
+
+    :x="xMyska"
+    :w="600"
+    :y="100"
+    :z="90"
+    :h="510"
+    :parent="false"
+    :maximize="false"
+    :forget="true"
+    :forgetWH="false"
+    :forgetAll="true"
+    v-if="$store.state.showEdit"
+
+
+    >
+<!-- @keydown.esc="konec2" -->
+  <div slot="b1" class="green" style="height:40px;font-size:18px">{{$store.state.showModuleTitle}}</div>
+  <span slot="c1" style="height:40px;font-size:18px">
+                <v-btn slot="action" style="height:40px;font-size:18px"  @click="konec" :id="btn_konec"> Zavrit</v-btn>
+   </span>
+
   <div style="opacity:1; background:white;width:100%; " class="white" id="de821xx" >
-    <panel2 :title="$store.state.showModuleTitle" >
-    <v-spacer></v-spacer>
-                <v-btn slot="action" color="primary" flat @click="konec" :id="btn_konec"> Zavrit</v-btn>
 
-  </panel2>
-          <div  style="float:left;background:white;height:350px;width:500px" :id="$store.state.showModule">
+          <div  style="float:left;background:white;height:510px;width:600px" :id="$store.state.showModule">
             <component v-bind:is="$store.state.showModule"></component>
           </div>
   </div>
 
-      </v-dialog>
+ </win-dow>
 
 
 </template>
@@ -34,8 +51,12 @@ import List2MatBarva from './List2MatBarva.vue'
 import List2MatDostupnost from './List2MatDostupnost.vue'
 import List2MatDodavatel from './List2MatDodavatelShort.vue'
 import List2MatVyrobce from './List2MatVyrobce.vue'
+import List2Prace from './List2Prace.vue'
+import List2Jednotka from './List2Jednotka.vue'
 import ListStroj from './ListStrojShort.vue'
 import ListMatProjCena from './ListMatProjCena.vue'
+
+
 
 import { setTimeout } from 'timers';
 
@@ -54,6 +75,9 @@ export default {
   'list2-matdostupnost': List2MatDostupnost,
   'list2-matdodavatel': List2MatDodavatel,
   'list2-matvyrobce': List2MatVyrobce,
+  'list2-prace': List2Prace,
+  'list2-jednotka': List2Jednotka,
+
 
   'list-stroj': ListStroj,
   // 'list-mat': ListMat,
@@ -64,7 +88,9 @@ export default {
     return {
       dialog: true,
       btn_konec: 'btn_konec',
-      comp:''
+      xMyska: 100,
+      comp:'',
+      status: 0, // 1 = material, 2 = stroj
 
     }
 
@@ -75,16 +101,26 @@ export default {
     eventBus.$on('edit_run', ( dlgPar ) => {
       self.btn_konec = 'btn_konec_'+self.$store.state.showModule
       self.comp = self.$store.state.showModule
-
-
-
+      self.status  = 1
+        //alert('Vracim parametry' + JSON.stringify(dlgPar))
+    })
+    eventBus.$on('edit_run_stroj', ( dlgPar ) => {
+      self.btn_konec = 'btn_konec_'+self.$store.state.showModule
+      self.comp = self.$store.state.showModule
+      self.status  = 2
         //alert('Vracim parametry' + JSON.stringify(dlgPar))
     })
   },
   methods: {
     konec(){
       this.$store.dispatch('setshowEdit', false)
-      eventBus.$emit('edit')
+      if (this.status == 1) {
+          eventBus.$emit('edit')
+      }
+      if (this.status == 2) {
+          eventBus.$emit('edit_stroj')
+      }
+
 
     },
     konec2(){

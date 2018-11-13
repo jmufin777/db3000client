@@ -226,9 +226,9 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-import List2StrojSkup from '@/services/List2StrojSkupService'
+import List2Jednotka from '@/services/List2JednotkaService'
 import f from '@/services/fce'
-// import List2StrojSkupVue from './List2MatSubSkup.vue';
+// import List2JednotkaVue from './List2MatSubSkup.vue';
 
 
 
@@ -237,7 +237,7 @@ export default {
   props: ['visible'],
   data () {
     return {
-      moduleName: 'list2-strojskup',
+      moduleName: 'list2-jednotka',
       saveNow: false,
 
       IsDialog: true,
@@ -255,9 +255,9 @@ export default {
       search:'',
       //event
       //event
-      objId1: '301',
-      objId2: '302',
-      objSearchBar: 'search_301',
+      objId1: '601',
+      objId2: '602',
+      objSearchBar: 'search_601',
 
       aInfo: [],
       total: 0,
@@ -273,7 +273,7 @@ export default {
 				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
 				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:5, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 8, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "typ_kalkulace", title: "Typ ", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "zkratka", title: "Zkratka ", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],
@@ -290,7 +290,7 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-      this.list = (await List2StrojSkup.all(this.user,'nic')).data
+      this.list = (await List2Jednotka.all(this.user,'nic')).data
 
 
       if (!this.list.length || this.list.length == 0){
@@ -449,7 +449,7 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, typ_kalkulace: el.typ_kalkulace
+        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka
 
 
 
@@ -458,7 +458,7 @@ copyLine(nRow) {
        }
      })
 
-     await List2StrojSkup.insert(this.user, {data: Posli, del: aDel })
+     await List2Jednotka.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -470,7 +470,7 @@ copyLine(nRow) {
       var neco = []
 
      try {
-      this.list = (await   List2StrojSkup.all(this.user,'nic')).data
+      this.list = (await   List2Jednotka.all(this.user,'nic')).data
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
            this.list = _.sortBy(this.list,this.lastSort[0]).reverse()
@@ -548,7 +548,7 @@ copyLine(nRow) {
       const self = this
       this.listNewLine = []
 
-      this.Max = (await List2StrojSkup.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await List2Jednotka.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -774,7 +774,7 @@ copyLine(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await List2StrojSkup.all(this.user,nic)).data
+      this.list = (await List2Jednotka.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },
@@ -792,13 +792,13 @@ copyLine(nRow) {
        }
         console.log("FORM:", this.form)
       try {
-        await (List2StrojSkup.insert(this.user, this.form))
+        await (List2Jednotka.insert(this.user, this.form))
 
       } catch (err) {
         console.log(err)
       }
 
-      await List2StrojSkup.all(this.user,'nic')
+      await List2Jednotka.all(this.user,'nic')
       .then(res => {
 
         //this.info= res

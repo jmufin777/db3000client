@@ -67,8 +67,8 @@ Vue.component('barcode', VueBarcode)
 //--format width height text font-options font text-align text-position text-margin font-size background lineColor margin margin-top margin-bottom margin-left margin-right display-value
 // -- format : CODE128 EAN EAN-13 EAN-8 EAN-5 EAN-2 UPC (A) CODE39 ITF-14 MSI Pharmacode Codabar
 
-
-
+import vSelect from 'vue-select'
+Vue.component('v-select', vSelect)
 // main.js
 Vue.config.productionTip = false
 

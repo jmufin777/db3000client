@@ -7,6 +7,9 @@
     :h="h1>=0?h1:h"
     :w="w1>=0?w1:w"
     :forget="forget"
+    :forgetAll="forgetAll"
+    :forgetWH="forgetWH"
+
 
   :isActive="false" :isResizable="false"
   style="border: 0px solid white;background:white"
@@ -19,10 +22,9 @@
   v-on:activated="onActivated"
   :maximize="maximize"
   >
-
     <div class="drag00 elevation-20" :id="id"
       style="padding: 0px; margin: 0px;  border: 0px solid;font-size:14px
-      ;font-family: Arial;background:#4FC3F7;"
+      ;font-family: Arial;background:#FFF;"
       v-on:click.self="w_zindex"
       >
 
@@ -47,6 +49,9 @@
   </el-col>
   <el-col :span="8" class="slot-b " :sm="4" :md="4" :lg="8" :xl="4">
     <slot name="b2"></slot>
+  </el-col>
+  <el-col :span="18" class="slot-b " :offset="3">
+    <slot name="b22"></slot>
   </el-col>
   <el-col :span="8" class="slot-c " :sm="4" :md="4" :lg="8" :xl="4">
     <slot name="c2"></slot>
@@ -73,7 +78,7 @@
   </el-row>
    </div>
 
-       <div class="elevation-20 drag01" style="height:97%;overflow-y:scroll; background:#E8F5E9" >
+       <div class="elevation-20 drag01" style="height:97%;overflow-y:scroll; background:#FFF" >
          <div v-if="demo">
          <h1>H1: {{ h1 }} H:{{ h }}</h1>
          <input type="number" v-model="h1" /> h: <input type="number" v-model="h" />
@@ -109,7 +114,7 @@
 // https://libraries.io/npm/vue-draggable-resizable
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
 
-import { mapState } from 'vuex'
+import { mapState   } from 'vuex'
 import { mapGetters } from 'vuex'
 export default {
 
@@ -159,10 +164,10 @@ export default {
         required: false
       },
 
-      parent:false,
-      forget:false,   //Zapomene pozici
-      forgetWH:false,  //Zapomene rozmer
-      forgetAll:false  //Zapomene pozici a rozmer a nastavi ji dle parametru
+      parent:    false,
+      forget:    false,   //Zapomene pozici
+      forgetWH:  false,  //Zapomene rozmer
+      forgetAll: false  //Zapomene pozici a rozmer a nastavi ji dle parametru
 
     },
   data: ()  => {
@@ -204,7 +209,6 @@ export default {
   mounted () {
      // this.$store.dispatch('setWin', {id: this.id, x: this.x, y: this.y, h: this.h, w: this.w ,z: this.z, z1: this.z1 } )
    },
-
   computed: {
      ...mapGetters([
        'getWinList'
@@ -220,14 +224,12 @@ export default {
     idx: function () {
       return this.idxx()
     }
-
   },
   methods: {
-
     w_zindex: function() {
 //      console.log('Click na tlacitko')
     },
-    idxx: function() {
+  idxx: function() {
 
       var nRet = this.WinDows.findIndex((el) => {
         return  (el.id == this.id)
@@ -235,35 +237,40 @@ export default {
 
       return nRet
     },
-    onResize: function (x1, y1, w1, h1) {
+
+  onResize: function (x1, y1, w1, h1) {
        this.x1 = x1
        this.y1 = y1
        this.h1 = h1
        this.w1 = w1
+       if (this.forgetAll) return
        this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: h1 , w: w1 ,z: this.z, z1: this.z1 } )
        this.z1 = this.zMax
-    },
-    onDrag: function (x1, y1) {
+  },
+  onDrag: function (x1, y1) {
+      if (this.forgetAll) return
       this.info= this.id + "Drag "+ x1 +" " +y1
       this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: this.h1 , w: this.w1 ,z: this.z1, z1: this.z1 } )
 
-    },
-    onActivated: function() {
+  },
+  onActivated: function() {
+        if (this.forgetAll) return
         this.info= this.id + "Activated"
         this.old_z  = this.z
         this.$store.dispatch('setWin', {id: this.id, x: this.x, y: this.y, h: this.h , w: this.w ,z: this.z, z1: this.z1 } )
         this.z1 = this.zMax
-    },
-    onResizestop: function(x1, y1, w1, h1) {
+  },
+  onResizestop: function(x1, y1, w1, h1) {
+        if (this.forgetAll) return
         this.info= this.id + "resizeStop"
-          this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: h1 , w: w1 ,z: this.z, z1: this.z1 } )
-          this.z1 = this.zMax
-    },
-    onDragstop: function(x1, y1) {
+        this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1,h: h1 , w: w1 ,z: this.z, z1: this.z1 } )
+        this.z1 = this.zMax
+  },
+  onDragstop: function(x1, y1) {
         this.info= this.id + "dragStop"
         this.$store.dispatch('setWin', {id: this.id, x: x1, y: y1, h: this.h1 , w: this.w1  ,z: this.z, z1: this.z1 } )
         this.z1 = this.zMax
-    }
+  }
 
     }
   }

@@ -26,6 +26,8 @@ import { eventBus } from '@/main.js'
 import List2StrojSkup from './List2StrojSkup'
 import List2StrojLaminace from './List2StrojLaminace'
 import List2StrojTiskMod from './List2StrojTiskMod'
+import List2Prace from './List2Prace'
+import List2Jednotka from './List2Jednotka'
 
 
 import ListStroj from './ListStroj.vue'
@@ -37,7 +39,8 @@ export default {
   'list2-strojskup': List2StrojSkup,
   'list2-strojlaminace': List2StrojLaminace,
   'list2-strojtiskmod': List2StrojTiskMod,
-  'list2-strojlaminace': List2StrojLaminace,
+  'list2-jednotka': List2Jednotka,
+  'list2-prace': List2Prace,
 
   'list-stroj': ListStroj,
   // 'list-mat': ListMat,
@@ -54,6 +57,8 @@ export default {
           ['list2-strojskup', "Skupina Stroje",33],
           ['list2-strojlaminace', "Stroje - Laminace",33],
           ['list2-strojtiskmod', "Stroje - Tisk Mod",33],
+          ['list2-jednotka', "Jednotky kalkulaci",33],
+          ['list2-prace', "Prace - hlavne stroje",33],
           ['list-stroj','Stroje',100],
 
 

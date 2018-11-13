@@ -10,15 +10,47 @@
 
 <div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2 white" :id="'t' + objId1">
 
-  <el-col :span="6" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
+  <el-col :span="9" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
 
  <!-- <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" > -->
 
  <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="Role"  name="R"><el-input class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchR" placeholder="Prohledat Role" @change="addWhere"></el-input></el-tab-pane>
-    <el-tab-pane label="Desky" name="D"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchD" placeholder="Prohledat Desky" @change="addWhere"></el-input></el-tab-pane>
-    <el-tab-pane label="Archy" name="A"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchA" placeholder="Prohledat Archy" @change="addWhere"></el-input></el-tab-pane>
-    <el-tab-pane label="Vse"   name="V"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchV" placeholder="Prohledat Vse" @change="addWhere"></el-input></el-tab-pane>
+
+    <el-tab-pane  :label="pisNazev('R')"  name="R" ><el-input  v-model="searchR" :placeholder="'Prohledat '+ pisNazev('R') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane  :label="pisNazev('D')"  name="D" ><el-input  v-model="searchD" :placeholder="'Prohledat '+ pisNazev('D') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane  :label="pisNazev('A')"  name="A" ><el-input  v-model="searchA" :placeholder="'Prohledat '+ pisNazev('A') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane  :label="pisNazev('I')"  name="I" ><el-input  v-model="searchI" :placeholder="'Prohledat '+ pisNazev('I') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+
+
+    <el-tab-pane v-if="pisNajdi('B')" :label="pisNazev('B')"  name="B" ><el-input  v-model="searchB" :placeholder="'Prohledat '+ pisNazev('B') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('C')" :label="pisNazev('C')"  name="C" ><el-input  v-model="searchI" :placeholder="'Prohledat '+ pisNazev('C') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('E')" :label="pisNazev('E')"  name="E" ><el-input  v-model="searchE" :placeholder="'Prohledat '+ pisNazev('E') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('F')" :label="pisNazev('F')"  name="F" ><el-input  v-model="searchF" :placeholder="'Prohledat '+ pisNazev('F') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('G')" :label="pisNazev('G')"  name="G" ><el-input  v-model="searchG" :placeholder="'Prohledat '+ pisNazev('G') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('H')" :label="pisNazev('H')"  name="H" ><el-input  v-model="searchH" :placeholder="'Prohledat '+ pisNazev('H') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('J')" :label="pisNazev('J')"  name="J" ><el-input  v-model="searchJ" :placeholder="'Prohledat '+ pisNazev('J') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('K')" :label="pisNazev('K')"  name="K" ><el-input  v-model="searchK" :placeholder="'Prohledat '+ pisNazev('K') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('L')" :label="pisNazev('L')"  name="L" ><el-input  v-model="searchL" :placeholder="'Prohledat '+ pisNazev('L') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+
+    <el-tab-pane v-if="pisNajdi('M')" :label="pisNazev('M')"  name="M" ><el-input  v-model="searchM" :placeholder="'Prohledat '+ pisNazev('M') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('N')" :label="pisNazev('N')"  name="N" ><el-input  v-model="searchN" :placeholder="'Prohledat '+ pisNazev('N') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('O')" :label="pisNazev('O')"  name="O" ><el-input  v-model="searchO" :placeholder="'Prohledat '+ pisNazev('O') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('P')" :label="pisNazev('P')"  name="P" ><el-input  v-model="searchP" :placeholder="'Prohledat '+ pisNazev('P') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('Q')" :label="pisNazev('Q')"  name="Q" ><el-input  v-model="searchQ" :placeholder="'Prohledat '+ pisNazev('Q') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('S')" :label="pisNazev('S')"  name="S" ><el-input  v-model="searchS" :placeholder="'Prohledat '+ pisNazev('S') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+
+    <el-tab-pane v-if="pisNajdi('T')" :label="pisNazev('T')"  name="T" ><el-input  v-model="searchT" :placeholder="'Prohledat '+ pisNazev('T') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('U')" :label="pisNazev('U')"  name="U" ><el-input  v-model="searchU" :placeholder="'Prohledat '+ pisNazev('U') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('W')" :label="pisNazev('W')"  name="W" ><el-input  v-model="searchW" :placeholder="'Prohledat '+ pisNazev('W') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+
+    <el-tab-pane v-if="pisNajdi('X') && false " :label="pisNazev('X')"  name="X" ><el-input  v-model="searchX" :placeholder="'Prohledat '+ pisNazev('X') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('Y')" :label="pisNazev('Y')"  name="Y" ><el-input  v-model="searchY" :placeholder="'Prohledat '+ pisNazev('Y') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+    <el-tab-pane v-if="pisNajdi('Z')" :label="pisNazev('Z')"  name="Z" ><el-input  v-model="searchZ" :placeholder="'Prohledat '+ pisNazev('Z') "  class="my-0" prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" @change="addWhere" ></el-input></el-tab-pane>
+
+    <el-tab-pane  label="Vse"   name="V"><el-input prefix-icon="el-icon-search"  style='width:300px;' autofocus clearable size="mini" v-model="searchV" placeholder="Prohledat Vse" @change="addWhere"></el-input></el-tab-pane>
+
+
+
  </el-tabs>
  </el-col>
 
@@ -66,7 +98,7 @@
 
  <!-- </el-col> -->
 
-  <div>
+  <div style="min-height:900px">
 
     <br><br>
 
@@ -204,17 +236,12 @@
 
 </tr>
 
-
-
 </tbody>
 </table>
 
 
-
 <!-- </el-checkbox-group> -->
 <!-- <my-table :list="list"></my-table> -->
-
-
 
 <list-mat-edit v-if="IsDialog" ></list-mat-edit>
 
@@ -294,6 +321,32 @@ export default {
       searchD:'',
       searchA:'',
       searchV:'',
+      searchB:'',
+      searchC:'',
+      searchE:'',
+      searchF:'',
+      searchG:'',
+      searchH:'',
+      searchI:'',
+      searchJ:'',
+      searchK:'',
+      searchL:'',
+      searchA:'',
+      searchM:'',
+      searchN:'',
+      searchO:'',
+      searchP:'',
+      searchQ:'',
+      searchS:'',
+      searchT:'',
+      searchU:'',
+      searchW:'',
+      searchX:'',
+      searchY:'',
+      searchZ:'',
+
+
+
       lastClick: [],
       allTrue: false, //pokud se vyplni prohledavaci pole , bude true = tedy skupiny materialu se nebudou omezovat
 
@@ -307,11 +360,11 @@ export default {
       activeName:'R',
       activeNameLast:'',
       where: 'true' ,
-
       //Popisek materialu
       IsShowPopis: false,
       popisInfo: 'Ne',
       nadpisInfo: 'Ne',
+
       //Moje tabule a data
       currId: null,
       currentRow: null,
@@ -321,6 +374,7 @@ export default {
       enum_dodavatel: [],
       search_dodavatel: [],
       enum_vyrobce: [],
+      enum_matskup: [],
       search_vyrobce: [],
       enum_vyrobce: [],
       minId: 0, //Pro vklad zaporna ID
@@ -345,25 +399,13 @@ export default {
   },
   async mounted () {
     const self = this
-    var tmp2
+    var tmp2, tmp4, tmp42
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
         this.getWhere()
-              try {
-                  tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,8,''))
-                  self.enum_dodavatel = tmp2.data.enum_dodavatel
-                  //alert(JSON.stringify(self.enum_dodavatel))
-                } catch(e0){
-                  alert(e0)
-                }
-               try {
-                  var tmp3 =  ( await ListMat.one(this.user,this.idefixThis ,6,''))
-                  self.enum_vyrobce = tmp3.data.enum_matvyrobce
-                  // alert(JSON.stringify(self.enum_vyrobce))
-                } catch(e1){
-                  alert("Chyba Vyrobce "+ e1)
-                }
+        this.getEnums()
+
       //this.list = (await ListMat.all(this.user,`${self.where}`)).data
         this.IsWaiting = false
         return
@@ -376,6 +418,7 @@ export default {
       eventBus.$on('dlg821rec', ( dlgPar ) => {
         //self.getData()
                 self.getWhere()
+                self.getEnums()
 
       })
 
@@ -399,6 +442,63 @@ export default {
 
 
 methods: {
+
+ async getEnums() {
+    const self = this
+    var tmp2, tmp4, tmp42
+    try {
+       tmp4 =  ( await ListMat.one(this.user,this.idefixThis , 4,''))
+       try {
+         tmp42 =  ( await ListMat.one(this.user,this.idefixThis , 4,''))
+         self.enum_matskup = tmp42.data.enum_matskup
+         //alert(JSON.stringify(tmp42.data.enum_matskup))
+       } catch(e0){
+         alert(e0)
+       }
+     } catch(e) {
+        alert(e)
+    }
+
+    try {
+         tmp2 =  ( await ListMat.one(this.user,this.idefixThis ,8,''))
+         //alert(JSON.stringify(tmp2))
+         self.enum_dodavatel = tmp2.data.enum_dodavatel
+         // alert(JSON.stringify(self.enum_dodavatel))
+    } catch(e0){
+         alert(e0)
+    }
+    try {
+       var tmp3 =  ( await ListMat.one(this.user,this.idefixThis ,6,''))
+        self.enum_vyrobce = tmp3.data.enum_matvyrobce
+         // alert(JSON.stringify(self.enum_vyrobce))
+    } catch(e1){
+         alert("Chyba Vyrobce "+ e1)
+    }
+
+ },
+pisNajdi(cPis) {
+  var nRet = -1
+  this.enum_matskup.forEach((el,idx)=>{
+    if (el.zkratka== cPis){
+      nRet = idx
+      return
+    }
+  })
+  return nRet > -1
+},
+
+pisNazev(cPis) {
+  var cRet = ''
+  this.enum_matskup.forEach((el,idx)=>{
+    if (el.zkratka== cPis){
+      cRet = el.nazev
+      return
+    }
+  })
+  return cRet
+},
+
+
 lastsub(idx)   {
   var lret = false
   if (idx == 0) {
@@ -423,7 +523,6 @@ lastclick(idxsub)   {
         idx2 = idx  ///Index pole
         return
     }
-
   })
 
   if (!lret){
@@ -531,6 +630,7 @@ async    handleClick(tab, event) {
         self.handleUnCheckAllChange()
       if ((this.activeNameLast == this.activeName) == false) {
             this.getWhere()
+            this.getEnums()
       }
 
       //console.log(tab, event);
@@ -549,6 +649,7 @@ async  addWhere() {
  async getWhere (){
    const self= this
    var search = ''
+   var neco = 'self.search'
    self.allTrue =false
  if (self.activeName == 'V') {
     self.where = 'true'
@@ -558,11 +659,17 @@ async  addWhere() {
    if (self.activeName == 'A') {
      search = self.searchA
    }
-   if (self.activeName == 'D') {
+   else if (self.activeName == 'D') {
      search = self.searchD
    }
-   if (self.activeName == 'R') {
+   else if (self.activeName == 'R') {
      search = self.searchR
+   }
+   else {
+     neco =  'self.search' + self.activeName
+     search = eval(`${neco}`)
+     //  alert(eval(`neco`))
+
    }
 
   }
@@ -705,10 +812,20 @@ editLineToForm(nRow) {
          ,koef_prodej: el.koef_prodej
          ,cena_nakup_kg: el.cena_nakup_kg
          ,cena_nakup_arch: el.cena_nakup_arch
+
          ,cena_naklad_arch: el.cena_naklad_arch
+
          ,cena_naklad_m2: el.cena_naklad_m2
          ,cena_prodej_m2: el.cena_prodej_m2
          ,cena_prodej_arch: el.cena_prodej_arch
+
+         ,cena_nakup_baleni: el.cena_nakup_baleni
+         ,cena_naklad_baleni: el.cena_naklad_baleni
+         ,cena_prodej_baleni: el.cena_prodej_baleni
+
+         , cena_nakup_bm:  el.cena_nakup_bm
+         ,cena_naklad_bm: el.cena_naklad_bm
+         ,cena_prodej_bm: el.cena_prodej_bm
 
         })
         Posli.push(aTmp)

@@ -45,6 +45,7 @@
     "vue-json-pretty": "^1.4.0",
     "vue-router": "^3.0.1",
     "vue-scrolling-table": "^0.2.2",
+    "vue-select": "^2.5.1",
     "vue-tables-2": "^1.4.64",
     "vue-virtual-scroll-list": "^1.2.8",
     "vue-window-modal": "git+https://github.com/ropbla9/vue-window-modal.git",

@@ -605,16 +605,7 @@ editLine(nRow) {   //Dulezita.bez ni nejdou dialogy v editu
    //alert(this.list[nRow].popis)
  },
 
-copyLinex(nRow) {
 
-     const self = this
-     self.IsDialog = true
-     self.Info = nRow
-
-     self.newLine(nRow)
-
-
-   },
 
 
 copyLineToForm(nRow) {
@@ -642,10 +633,14 @@ editLineToForm(nRow) {
      self.Info = nRow
      self.IsDialog = true
      self.Info = nRow
+     //alert('eeeee' + self.IsDialog )
      //alert(self.IsDialog)
      //self.SendName="AAAX "+Math.random()
      //alert(self.list[nRow])
      // alert('aaaa')
+     setTimeout(function() {
+
+
      eventBus.$emit('dlg8210', {
            'IsDialog': self.IsDialog,
            'Akce' : 'edit' ,
@@ -653,6 +648,8 @@ editLineToForm(nRow) {
            'typ_kalkulace' :  self.list[nRow]["typ_kalkulace"],
 
       })
+
+     },100)
 
      //alert(nRow+ self.list[nRow]["id"] + " Copy")
      //self.newLine(nRow)
