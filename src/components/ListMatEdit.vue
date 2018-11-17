@@ -123,7 +123,7 @@
     <el-row class="ma-2">
 
      <el-col :span="5"><el-button size ="mini" @click="edit_vlastnosti('list2-matvlastnosti','Vlastnosti')" style="width:90%">Vlastnosti:</el-button> </el-col>
-      <el-col :span="18">
+      <el-col :span="14">
        <el-select v-model="list.data.vlastnosti" multiple filterable  default-first-option
        @change="changeVlastnosti"
         style="width:100%" size="mini">
@@ -136,6 +136,9 @@
             >{{item4.nazev}} </el-option>
        </el-select>
      </el-col>
+     <el-checkbox v-model="list.data.mat[0].kalkulace" class="mx-1 px-1"
+            size="mini">Kalkulacka
+       </el-checkbox>
      </el-row>
 
      <el-row class="ma-2">
