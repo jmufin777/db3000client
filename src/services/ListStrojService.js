@@ -7,7 +7,10 @@ export default {
   },
   one (user,typ, id_query = -1, string_query = '' ) {
     //console.log('jedou credentials: ')
-     //alert('ONO' + typ )
+     if (string_query == 'copy') {
+//        alert('ONO' + typ )
+     }
+
     return Api().get('list-stroj-one',{ params: {  user: user, id: typ, id_query: id_query, string_query: string_query }})
   },
   delete (user, id ) {

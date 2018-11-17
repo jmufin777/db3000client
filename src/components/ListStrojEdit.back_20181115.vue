@@ -24,7 +24,8 @@
 {{ ((isCopy ==false )?'Zmena':'Nova polozka ') +' ' + list.data.stroj[0].nazev  }}
 </div>
 <div slot="c1" style="height:40px;font-size:18px" class="green elevation-2">
-      <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit8210" @click="submitForm('formnew')" size="mini"> Novy Upravou</el-button>
+      <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit8210" @click="submitForm('formnew')" size="mini"
+            > Novy Upravou</el-button>
       <el-button v-if="isCopy" type="primary" id="btn_user_submit8210" @click="submitForm('form')" size="mini"
         >Vlozit </el-button>
        <el-button v-else type="primary" id="btn_user_submit8210" @click="submitForm('form')" size="mini"
@@ -272,19 +273,16 @@
 
     </el-row>
 
-    <el-row class="ma-1 ml-2 mt-3 mb-0">
-      <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%">Prace</el-button> </el-col>
+    <el-row class="ma-1 ml-4 mt-3 mb-0">
 
-      <el-col style="border:solid 0px" :span="4">Nazev</el-col>
-      <el-col style="border:solid 0px" :span="3">Rozliseni</el-col>
-      <el-col style="border:solid 0px" :span="3" >Rychlost</el-col>
-      <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:90%">Jednotka</el-button> </el-col>
+     <el-col style="border:solid 0px" :span="3">Prace</el-col>
+     <el-col style="border:solid 0px" :span="4">Nazev</el-col>
+     <el-col style="border:solid 0px" :span="4">Rozliseni</el-col>
+     <el-col style="border:solid 0px" :span="3" >Rychlost</el-col>
+     <el-col style="border:solid 0px" :span="2" >Jednotka</el-col>
 
      <el-col style="border:solid 0px" :span="3" >
-      &nbsp;
-     </el-col>
-     <el-col style="border:solid 0px" :span="2" >
-      &nbsp;
+      Akce
      </el-col>
      </el-row>
 
@@ -331,10 +329,10 @@
        <el-input-number v-model="strojmod.rychlost" size="mini"  style="width:100%"></el-input-number>
     </el-col>
 
-     <el-col style="border:solid 0px" :span="3" >
+     <el-col style="border:solid 0px" :span="2" >
       <select v-model="strojmod.idefix_jednotka"
         default-first-option
-        size="mini"  class="pt-1 pl-1 mx-1"
+        size="mini"  class="pt-1 pl-1 ml-2"
         >
             <option
             v-for="item83 in list.data.enum_jednotka"
@@ -345,13 +343,13 @@
        </select>
      </el-col>
 
-     <el-col style="border:solid 0px;position:relative;top:0px;left:20px" :span="3" class="mb-0" >
-       <el-checkbox v-model="strojmod.mod_priorita" class="mx-1 px-1"
+     <el-col style="border:solid 0px;position:relative;top:0px;left:20px" :span="6" class="mb-0" >
+       <el-checkbox v-model="strojmod.mod_priorita"
             size="mini">Prioritni
        </el-checkbox>
      </el-col>
-     <el-col style="border:solid 0px" :span="2" >
-     <button  type="button" style="width:100%;height:26px" class="pl-4" @click="insertMod" ><i class="el-icon-plus" size="mini"></i></button>
+     <el-col style="border:solid 0px" :span="3" >
+     <button  type="button" style="width:30%;height:26px" class="px-0 " @click="insertMod" ><i class="el-icon-plus" size="mini"></i></button>
      </el-col>
     </el-row>
     <el-row   class="ma-0 mt-1">
@@ -385,11 +383,11 @@
  </td>
  <td>2: <select v-model="strojmod.idefix_i2"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
             <option
-            v-for="item91 in list.data.enum_inkoust"
-            :key="item91.idefix*1"
-            :label="item91.nazev"
-            :value="item91.idefix*1"
-            >{{item91.nazev}} </option>
+            v-for="item90 in list.data.enum_inkoust"
+            :key="item90.idefix*1"
+            :label="item90.nazev"
+            :value="item90.idefix*1"
+            >{{item90.nazev}} </option>
        </select>
        <input type="number" v-model="strojmod.i2spotreba"
         class="mb-0 px-0 cell cisla"
@@ -399,11 +397,11 @@
      <td>3:
        <select v-model="strojmod.idefix_i3"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <option
-            v-for="item92 in list.data.enum_inkoust"
-            :key="item92.idefix*1"
-            :label="item92.nazev"
-            :value="item92.idefix*1"
-            >{{item92.nazev}} </option>
+            v-for="item90 in list.data.enum_inkoust"
+            :key="item90.idefix*1"
+            :label="item90.nazev"
+            :value="item90.idefix*1"
+            >{{item90.nazev}} </option>
        </select>
        <input type="number" v-model="strojmod.i3spotreba"
         class="mb-0 px-0 cell cisla"
@@ -414,11 +412,11 @@
        4:
        <select v-model="strojmod.idefix_i4"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <option
-            v-for="item93 in list.data.enum_inkoust"
-            :key="item93.idefix*1"
-            :label="item93.nazev"
-            :value="item93.idefix*1"
-            >{{item93.nazev}} </option>
+            v-for="item90 in list.data.enum_inkoust"
+            :key="item90.idefix*1"
+            :label="item90.nazev"
+            :value="item90.idefix*1"
+            >{{item90.nazev}} </option>
        </select>
        <input type="number" v-model="strojmod.i4spotreba"
         class="mb-0 px-0 cell cisla"
@@ -429,11 +427,11 @@
        5:
        <select v-model="strojmod.idefix_i5"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <option
-            v-for="item94 in list.data.enum_inkoust"
-            :key="item94.idefix*1"
-            :label="item94.nazev"
-            :value="item94.idefix*1"
-            >{{item94.nazev}} </option>
+            v-for="item90 in list.data.enum_inkoust"
+            :key="item90.idefix*1"
+            :label="item90.nazev"
+            :value="item90.idefix*1"
+            >{{item90.nazev}} </option>
        </select>
        <input type="number" v-model="strojmod.i5spotreba"
         class="mb-0 px-0 cell cisla"
@@ -518,13 +516,10 @@
             size="mini">Prioritni
        </el-checkbox>
      </el-col>
-     <el-col style="border:solid 0px" :span="2" @click.native="deleteMod(imod)">
-       <button  type="button" style="width:100%;height:26px;z-index:10000" class="px-0 " @click="deleteMod(imod)" ><i class="el-icon-delete" size="mini"></i></button>
-     </el-col>
 
 <!--- radek s tabulkou //-->
     <el-row   class="ma-0 mt-1">
-    <el-col :span="24" :offset="0" style="position:relative;left:2px">
+    <el-col :span="24" :offset="0" style="position:relative;left:9px">
       <table style="width:100%">
         <thead>
           <tr>
@@ -539,11 +534,11 @@
           style="width:50%"
           >
         <option
-            v-for="item190 in list.data.enum_inkoust"
-            :key="item190.idefix*1"
-            :label="item190.nazev"
-            :value="item190.idefix*1"
-            >{{item190.nazev}} </option>
+            v-for="item90 in list.data.enum_inkoust"
+            :key="item90.idefix*1"
+            :label="item90.nazev"
+            :value="item90.idefix*1"
+            >{{item90.nazev}} </option>
        </select>
        <input type="number" v-model="list.data.strojmod[imod].i1spotreba"
         class="mb-0 px-0 cell cisla"
@@ -554,11 +549,11 @@
  </td>
  <td>2: <select v-model="list.data.strojmod[imod].idefix_i2"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
             <option
-            v-for="item191 in list.data.enum_inkoust"
-            :key="item191.idefix*1"
-            :label="item191.nazev"
-            :value="item191.idefix*1"
-            >{{item191.nazev}} </option>
+            v-for="item90 in list.data.enum_inkoust"
+            :key="item90.idefix*1"
+            :label="item90.nazev"
+            :value="item90.idefix*1"
+            >{{item90.nazev}} </option>
        </select>
        <input type="number" v-model="list.data.strojmod[imod].i2spotreba"
         class="mb-0 px-0 cell cisla"
@@ -568,11 +563,11 @@
      <td>3:
        <select v-model="list.data.strojmod[imod].idefix_i3"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <option
-            v-for="item192 in list.data.enum_inkoust"
-            :key="item192.idefix*1"
-            :label="item192.nazev"
-            :value="item192.idefix*1"
-            >{{item192.nazev}} </option>
+            v-for="item90 in list.data.enum_inkoust"
+            :key="item90.idefix*1"
+            :label="item90.nazev"
+            :value="item90.idefix*1"
+            >{{item90.nazev}} </option>
        </select>
        <input type="number" v-model="list.data.strojmod[imod].i3spotreba"
         class="mb-0 px-0 cell cisla"
@@ -583,11 +578,11 @@
        4:
        <select v-model="list.data.strojmod[imod].idefix_i4"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <option
-            v-for="item193 in list.data.enum_inkoust"
-            :key="item193.idefix*1"
-            :label="item193.nazev"
-            :value="item193.idefix*1"
-            >{{item193.nazev}} </option>
+            v-for="item90 in list.data.enum_inkoust"
+            :key="item90.idefix*1"
+            :label="item90.nazev"
+            :value="item90.idefix*1"
+            >{{item90.nazev}} </option>
        </select>
        <input type="number" v-model="list.data.strojmod[imod].i4spotreba"
         class="mb-0 px-0 cell cisla"
@@ -598,11 +593,11 @@
        5:
        <select v-model="list.data.strojmod[imod].idefix_i5"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <option
-            v-for="item194 in list.data.enum_inkoust"
-            :key="item194.idefix*1"
-            :label="item194.nazev"
-            :value="item194.idefix*1"
-            >{{item194.nazev}} </option>
+            v-for="item90 in list.data.enum_inkoust"
+            :key="item90.idefix*1"
+            :label="item90.nazev"
+            :value="item90.idefix*1"
+            >{{item90.nazev}} </option>
        </select>
        <input type="number" v-model="list.data.strojmod[imod].i5spotreba"
         class="mb-0 px-0 cell cisla"
@@ -618,12 +613,14 @@
 
 
 <el-col :span="24">
- <!-- {{  list.data.strojmod }} -->
+ {{ list.data.strojmod }}
 </el-col>
 
 
 
-
+     <el-col style="border:solid 0px" :span="3" >
+     <button  type="button" style="width:30%;height:26px" class="px-0 " @click="deleteMod(imod)" ><i class="el-icon-delete" size="mini"></i></button>
+     </el-col>
 
 
     </el-row>
@@ -638,141 +635,10 @@
           <el-row class="ma-2">
           <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%" >
 
-            <el-row class="ma-1 ml-2 mt-3 mb-0">
-              <el-col :span="2">Poradi</el-col>
-              <el-col :span="5">Popis</el-col>
-              <el-col :span="3">Stroj Mod</el-col>
-              <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:90%">Jednotka</el-button></el-col>
-              <el-col :span="2">Start</el-col>
-              <el-col :span="2">Stop</el-col>
-              <el-col :span="2">Naklad</el-col>
-              <el-col :span="2">Prodej</el-col>
-              <el-col :span="1">&nbsp;</el-col>
-
-
-
-
-              <!-- <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%">Prace</el-button> </el-col> -->
-            </el-row>
-
       <el-row class="ma-2">
-      <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="strojceny.kod"  class="mb-0 px-0 cell cisla" style="width:100%;">
-       </el-col>
-       <el-col :span="5">
-      <el-autocomplete
-      class="inline-input mr-1"
-      v-model="strojceny.nazev"
-      :fetch-suggestions="querySearch5"
-      placeholder="Popis polozky"
-      @select="handleSelect"
-      size="mini"
-      style="width:90%"
-
-    ></el-autocomplete>
-       </el-col>
-     <el-col :span="3">
-        <select v-model="strojceny.idefix_mod"  size="mini" class="pt-1 pl-1 ml-2"  style="width:100%"  >
-          <option
-            v-for="item290 in list.data.enum_strojmod_this"
-            :key="item290.idefix*1"
-            :label="item290.nazev"
-            :value="item290.idefix*1"
-            >{{item290.nazev}} </option>
-       </select>
-      </el-col>
-      <el-col :span="3" class="mx-1">
-        <select v-model="strojceny.idefix_jednotka"  size="mini" class="pt-1 pl-1 ml-2"  style="width:90%"  >
-          <option
-            v-for="item291 in list.data.enum_jednotka"
-            :key="item291.idefix*1"
-            :label="item291.nazev"
-            :value="item291.idefix*1"
-            >{{item291.nazev}} </option>
-       </select>
-      </el-col>
-      <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="strojceny.start"  class="mb-0 px-0 cell cisla" style="width:90%;">
-       </el-col>
-       <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="strojceny.stop"   class="mb-0 px-0 cell cisla" style="width:90%;">
-       </el-col>
-       <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="strojceny.naklad"  class="mb-0 px-0 cell cisla" style="width:90%;">
-       </el-col>
-       <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="strojceny.prodej"   class="mb-0 px-0 cell cisla" style="width:90%;">
-       </el-col>
-
-     <el-col style="border:solid 0px" :span="1" >
-     <button  type="button" style="width:100%;height:26px" class="pl-4" @click="insertCeny" ><i class="el-icon-plus" size="mini"></i></button>
-     </el-col>
-     </el-row>
-
-      <el-row  v-for="(itemceny, iceny) in list.data.strojceny" :key="itemceny.idefix" class="ma-2 mt-0">
-
-         <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].kod"  class="mb-0 px-0 cell cisla" style="width:100%;">
-       </el-col>
-       <el-col :span="5">
-      <el-autocomplete
-      class="inline-input mr-1"
-      v-model="list.data.strojceny[iceny].nazev"
-      :fetch-suggestions="querySearch5"
-      placeholder="Popis polozky"
-      @select="handleSelect"
-      size="mini"
-      style="width:90%"
-
-    ></el-autocomplete>
-       </el-col>
-     <el-col :span="3">
-        <select v-model="list.data.strojceny[iceny].idefix_mod"  size="mini" class="pt-1 pl-1 ml-2"  style="width:100%"  >
-          <option
-            v-for="item290 in list.data.enum_strojmod_this"
-            :key="item290.idefix*1"
-            :label="item290.nazev"
-            :value="item290.idefix*1"
-            >{{item290.nazev}} </option>
-       </select>
-      </el-col>
-      <el-col :span="3" class="mx-1">
-        <select v-model="list.data.strojceny[iceny].idefix_jednotka"  size="mini" class="pt-1 pl-1 ml-2"  style="width:90%"  >
-          <option
-            v-for="item291 in list.data.enum_jednotka"
-            :key="item291.idefix*1"
-            :label="item291.nazev"
-            :value="item291.idefix*1"
-            >{{item291.nazev}} </option>
-       </select>
-      </el-col>
-      <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].start"  class="mb-0 px-0 cell cisla" style="width:90%;">
-       </el-col>
-       <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].stop"   class="mb-0 px-0 cell cisla" style="width:90%;">
-       </el-col>
-       <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].naklad"  class="mb-0 px-0 cell cisla" style="width:90%;">
-       </el-col>
-       <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].prodej"   class="mb-0 px-0 cell cisla" style="width:90%;">
-       </el-col>
-
-
-     <el-col style="border:solid 0px" :span="1" >
-
-       <button  type="button" style="width:100%;height:26px;z-index:10000" class="px-0 " @click="deleteCeny(iceny)" ><i class="el-icon-delete" size="mini"></i></button>
-
-       &nbsp;
-     <!-- <button  type="button" style="width:100%;height:26px" class="pl-4" @click="insertCeny" ><i class="el-icon-plus" size="mini"></i></button> -->
-     </el-col>
-
-
-
+     <el-col :span="6">Inkousty</el-col>
       </el-row>
                 <div class="pa-3 mt-4 text-xs-center" style="width:100%">
-                   {{ list.data.strojceny}}
             <pre>
             tisk 1 hodina kč - náklad
             tisk čas prvních 20 min - Kč/hod prodej
@@ -815,12 +681,44 @@
           </el-select>
 
       </el-col>
-     </div>
+</div>
       </el-col>
           </el-row>
 
         </v-window-item>
 
+        <!-- <v-window-item :value="4">
+          <div class="pa-3 mt-4 text-xs-center" style="width:100%">
+            <pre>
+              inkoust CMYK 1 m2 - náklad / Prodej / Barevnosti <br>
+              inkoust White 1 m2 - - náklad / Prodej / Barevnosti
+            </pre>
+
+          </div>
+        </v-window-item>
+
+        <v-window-item :value="5">
+          <div class="pa-3 mt-4 text-xs-center" style="width:100%">
+            <pre>
+          práce	stroj	jednotka	cena příprava náklad	cena příprava prodej	cena jednotka náklad	cena jednotka prodej
+          tisk	EFI, ...	hodina	100	150	500	2000
+          laminování velko
+          laminování arch
+          bigování
+          falcování
+          vazba V1	šička V1
+            </pre>
+            <span class="caption grey--text">Thanks for signing up!</span>
+          </div>
+        </v-window-item>
+
+        <v-window-item :value="6">
+          <div class="pa-3 mt-4 text-xs-center" style="width:100%">
+            {{ list }}
+
+            <span class="caption grey--text">Thanks for signing up!</span>
+          </div>
+        </v-window-item> -->
         </el-form>
       </v-window>
 
@@ -933,25 +831,6 @@ export default {
 
 
       },
-      strojceny: {
-        idefix: 0,
-
-        idefix_stroj: 0,
-        idefix_strojmod: 0,
-        idefix_inkoust: 0,
-        idefix_jednotka: 0,
-        nazev: '',
-        kod: 0,
-        pocet_start: 0,
-        pocet_stop: 0,
-        cena_naklad: 0,
-        cena_prodej: 0,
-
-
-
-
-
-      },
 
       strojinkoust: {
         idefix: 0,
@@ -977,10 +856,9 @@ export default {
 // -- 101   enum_nazev_text
 // -- 102   enum_nazev
 
-// enum_strojceny_nazev
+
 // -- 103   enum_strojmod
-// -- 104   enum_strojmod_text
-// -- 109   enum_strojmod_this
+// -- 104   enum_strojmod_tex
 // -- 105   enum_strojinkoust
 // -- 106   enum_prace
 // -- 107   enum_jednotka
@@ -997,7 +875,6 @@ export default {
 
 
   mounted() {
-
 
 
   },
@@ -1050,7 +927,7 @@ export default {
     nazev: function() {
       this.IsDialog1 = true;
       this.RecName='X'
-      //alert('x')
+      alert('x')
     },
 
 
@@ -1117,20 +994,6 @@ export default {
                 try {
                   tmp2 =  ( await ListStroj.one(this.user,this.idefixThis ,107,''))
                   self.list.data.enum_jednotka = tmp2.data.enum_jednotka
-                  //alert(JSON.stringify(self.list.data.enum_stroj))
-                } catch(e0){
-                  alert( "X 1" + e0)
-                }
-              } catch(e) {
-               alert("X 2" + e)
-              }
-            }
-           if (self.$store.state.showModule == 'list2-strojmodthis') {
-              try {
-              tmp =  ( await ListStroj.one(this.user,this.idefixThis , 109,''))
-                try {
-                  tmp2 =  ( await ListStroj.one(this.user,this.idefixThis ,109,''))
-                  self.list.data.enum_strojmod_this = tmp2.data.enum_jednotka
                   //alert(JSON.stringify(self.list.data.enum_stroj))
                 } catch(e0){
                   alert( "X 1" + e0)
@@ -1301,39 +1164,6 @@ export default {
           */
 
 
-        }
-
-      }
-
-    },
-    insertCeny() {
-        var lAdd = true
-
-      // alert('vkladam')
-      if (this.strojceny.nazev > ''){
-        this.strojceny.idefix_stroj =this.idefixThis
-        this.list.data.strojceny.forEach((el,i) =>{
-          if (el.nazev == this.strojceny.nazev) {
-        //    lAdd = false
-           // alert('Nelze pridat stejnou polozku nazvu ke stejnu stroji')
-          }
-        } );
-        if (lAdd == true) {
-          let neco= this.strojceny
-
-  //        alert(this.list.data.strojmod.length)
-          this.strojceny.idefix = (this.list.data.strojceny.length +10)*-1
-
-          if (this.strojceny.kod <=0){
-
-              this.strojceny.kod = this.list.data.strojceny.length +1
-          }
-
-          this.list.data.strojceny.push(neco)
-
-          var newObj = f.cp(this.strojceny)
-          this.strojceny = newObj
-          this.strojceny.kod = 0
 
 
 
@@ -1343,34 +1173,16 @@ export default {
 
     },
     deleteMod(idx) {
-      //alert(JSON.stringify(this.list.data.strojmod[idx]['idefix']))
-      try {
-
-
-      if (this.list.data.strojmod[idx]['idefix'] > 0 ){
+      if (this.list.data.strojmod[idx].idefix > 0 ){
         if (confirm("Smazat tento mod ?")){
             this.list.data.strojmod.splice(idx,1)
         }
       } else {
             this.list.data.strojmod.splice(idx,1)
       }
-      } catch(e) {
-        console.log('jsem chyba',e )
-      }
 
-    },
-    deleteCeny(idx) {
-      try {
-      if (this.list.data.strojceny[idx].idefix > 0 ){
-        if (confirm("Smazat polozku ?")){
-            this.list.data.strojceny.splice(idx,1)
-        }
-      } else {
-            this.list.data.strojceny.splice(idx,1)
-      }
-      } catch(e) {
-        console.log('jsem chyba Ceny',e )
-      }
+
+
 
 
     },
@@ -1445,37 +1257,21 @@ export default {
         var results = queryString ? links.filter(this.createFilter(queryString)) : links;
         cb(results);
       },
-      querySearch5(queryString, cb) {  //Nazev modu tisk
-        var n1 = this.list.data.enum_strojceny_nazev
-        var links = n1
-        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
-        cb(results);
-      },
-      querySearch6(queryString, cb) {  //Nazev modu tisk
-        var n1 = this.list.data.enum_strojmod_text
-        var links = n1
-        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
-        cb(results);
-      },
-      querySearch7(queryString, cb) {  //Nazev modu tisk
-        var n1 = this.list.data.enum_strojmod_text
-        var links = n1
-        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
-        cb(results);
-      },
-      querySearch8(queryString, cb) {  //Nazev modu tisk
-        var n1 = this.list.data.enum_strojmod_text
-        var links = n1
-        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
-        cb(results);
-      },
-
 
      createFilter(queryString) {
+
+
         return (link) => {
           if (link.value == null ) {
             return ''
           }
+
+//          console.log(link)
+          //return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+          //alert(link.value)
+
+
+          //return (link.value.indexOf(queryString) === 0);
           return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
       },
@@ -1527,11 +1323,11 @@ export default {
         case 1: return `Zakladni udaje a rozmery, polozky : ${this.typKalkulace}`
 
 
-        case 2: return 'Priprava, mody'
-        //case 3: return 'Inkousty a barevnosti'
-        //case 4: return 'Rychlosti, prujezdy'
-        case 3: return 'Ceny'
-        //case 6: return 'Hotovo'
+        case 2: return 'Cenove slozky'
+        case 3: return 'Inkousty a barevnosti'
+        case 4: return 'Rychlosti, prujezdy'
+        case 5: return 'Prace ceny'
+        case 6: return 'Hotovo'
 
         default: return 'Hotovo'
       }
@@ -1572,7 +1368,7 @@ select  {
 
 .cisla  {
   opacity: 1;
-  font-size: 15px;
+  font-size: 14px;
 
   height:90%;
   border: solid 1px;

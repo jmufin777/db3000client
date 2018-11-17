@@ -225,7 +225,7 @@ const self = this
 
 import { mapState } from 'vuex'
 import { eventBus } from '@/main.js'
-import { setTimeout, clearInterval } from 'timers'
+import { setTimeout, clearInterval, clearTimeout } from 'timers'
 import ListStroj from '@/services/ListStrojService'
 import ListStrojEdit from './ListStrojEdit'
 
@@ -303,12 +303,16 @@ export default {
         ],
 
 
-      lastSort: ['kod','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      lastSort: ['kod','asc'] , //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      timeout: false,
+
     }
+
   },
   async mounted () {
     const self = this
     var tmp2
+
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
@@ -342,6 +346,7 @@ export default {
       eventBus.$on('dlg8210rec', ( dlgPar ) => {
         //self.getData()
        self.getWhere()
+       self.getEnums()
 
       })
 
@@ -616,13 +621,25 @@ copyLineToForm(nRow) {
      self.Info = nRow
 
 
+    //alert('copy')
+    if (self.timeout) {
+      clearTimeout(self.timeout)
+      self.timeout =false
+
+     // alert('copy bezi')
+      //return
+    }
+
+    self.timeout =  setTimeout(function() {
      eventBus.$emit('dlg8210', {
            'IsDialog': self.IsDialog,
            'Akce' : 'copy' ,
            'Idefix' :  self.list[nRow]["idefix"],
            'typ_kalkulace' :  self.list[nRow]["typ_kalkulace"],
 
+
       })
+    },100)
 
      //alert(nRow+ self.list[nRow]["id"] + " Copy")
      //self.newLine(nRow)
@@ -638,7 +655,14 @@ editLineToForm(nRow) {
      //self.SendName="AAAX "+Math.random()
      //alert(self.list[nRow])
      // alert('aaaa')
-     setTimeout(function() {
+     if (self.timeout) {
+      clearTimeout(self.timeout)
+      self.timeout =false
+
+     // alert('copy bezi')
+      //return
+    }
+     self.timeout = setTimeout(function() {
 
 
      eventBus.$emit('dlg8210', {

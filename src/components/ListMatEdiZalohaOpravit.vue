@@ -1,9 +1,16 @@
 <template>
-   <win-dow :title="'events001'" :id="`events001`"
+ <!-- <v-dialog
+      v-model="IsDialog"
+        persistent
+        max-width="900px"
+        scrollable
+        v-if="list && list.data && list.data.mat && list.data.mat.length > 0 "
+  > -->
+  <win-dow :title="''" :id="`events001`"
     :x="xMyska"
     :w="1044"
     :y="100"
-    :z="1"
+    :z="90"
     :h="820"
     :parent="false"
     :maximize="false"
@@ -13,25 +20,33 @@
     v-if="list && list.data && list.data.mat && list.data.mat.length > 0 "
     >
 
-<div slot="b1" class="green elevation-2" style="height:30px;font-size:18px">
-  {{ ((Akce =='edit')?'Zmena':'Nova polozka ')  }}
+<div slot="b1" class="green elevation-2" style="height:140px;font-size:180px">baaaaaa1</div>
+
+<div slot="a1" style="opacity:1; background:white;width:100%; " class="green" id="de821" >
+  {{ ((Akce =='edit')?'Zmena':'Nova polozka ') +' ' + list.data.mat[0].nazev1 +' ' + list.data.mat[0].nazev2 +' ' + list.data.mat[0].nazev3 + 'x' }}
 </div>
 
-<div slot="a1" style="height:30px;font-size:18px;" class="px-2 green elevation-2" >
-  {{ ((Akce =='edit')?'':'') +' ' + list.data.mat[0].nazev1 +' ' + list.data.mat[0].nazev2 +' ' + list.data.mat[0].nazev3  }}
-</div>
+   <div slot="c1" style="opacity:1;height:40px;font-size:18px" class="green elevation-2">
+      <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit821" @click="submitForm('formnew')" size="mini"
+            > Novy Upravou</el-button>
+      <el-button v-if="isCopy" type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
+        >Vlozit </el-button>
+       <el-button v-else type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
+        >Ulozit</el-button>
 
-<div slot="c1" style="opacity:1;height:30px;font-size:18px" class="green elevation-2">
-   <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit821" @click="submitForm('formnew')" size="mini"
-         > Novy Upravou</el-button>
-   <el-button v-if="isCopy" type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
-     >Vlozit </el-button>
-    <el-button v-else type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
-     >Ulozit</el-button>
-   <el-button v-if="isCopy" @click="resetForm('form')" id="btn_cancel_submit821" size="mini">Zrusit</el-button>
-   <el-button v-else @click="resetForm('form')" id="btn_cancel_submit821" size="mini">Zavrit</el-button>
-</div>
+      <el-button v-if="isCopy" @click="resetForm('form')" id="btn_cancel_submit821" size="mini">Zrusit</el-button>
+      <el-button v-else @click="resetForm('form')" id="btn_cancel_submit821" size="mini">Zavrit</el-button>
+    </div>
 
+ <el-row slot="b22" style="height:20px;font-size:14px;">
+ <el-tabs  class="mx-4">
+        <el-tab-pane label=" Rozmery"  name="1"></el-tab-pane>
+        <el-tab-pane label=" Priprava, mod "  name="2"></el-tab-pane>
+        <el-tab-pane label=" Inkousty "  name="3"></el-tab-pane>
+        <el-tab-pane label=" Ceny "  name="4"></el-tab-pane>
+        <el-tab-pane label=" Prace, ceny "  name="5"></el-tab-pane>
+      </el-tabs>
+  </el-row>
 
 
 
@@ -448,7 +463,7 @@
            @blur="cena_naklad()"
          ></el-autocomplete>
         </el-col>
-        <el-col :span="4" class="pl-1">
+        <el-col :span="4">
           koef_prodej
         </el-col>
         <el-col :span="3">
@@ -462,7 +477,7 @@
        ></el-autocomplete>
 
         </el-col>
-        <el-col :span="4" class="pl-1">
+        <el-col :span="4">
           koef_real
         </el-col>
         <el-col :span="3"
@@ -479,17 +494,17 @@
      </el-row>
 
      <el-row class="ma-2">
-        <el-col :span="4" >
+        <el-col :span="4">
           Tloušťka v mm
         </el-col>
-        <el-col :span="3" >
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].sila_mm" size="mini"  style="width:100%"></el-input>
         </el-col>
-        <el-col :span="4" class="pl-1"> Váha v g/m2</el-col>
+        <el-col :span="4"> Váha v g/m2</el-col>
         <el-col :span="3">
           <el-input v-model="list.data.mat[0].vaha_gm2" size="mini"  style="width:100%"></el-input>
         </el-col>
-        <el-col :span="4" class="pl-1">
+        <el-col :span="4">
           Nakup kg
         </el-col>
         <el-col :span="3">
@@ -500,7 +515,7 @@
 
 
       <el-row class="ma-2">
-        <el-col :span="4" >
+        <el-col :span="4">
            Nakup m2
         </el-col>
         <el-col :span="3">
@@ -509,13 +524,13 @@
 
 
 
-        <el-col :span="4" class="pl-1">
+        <el-col :span="4">
           Naklad m2
         </el-col>
         <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_naklad_m2" size="mini"  style="width:100%" @change="cena_naklad()" ></el-input>
         </el-col>
-          <el-col :span="4" class="pl-1">
+          <el-col :span="4">
           Prodej m2
         </el-col>
         <el-col :span="3">
@@ -524,19 +539,19 @@
 
       </el-row>
       <el-row class="ma-2">
-        <el-col :span="4" >
+        <el-col :span="4">
            Nakup bm
         </el-col>
         <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_nakup_bm" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
         </el-col>
-        <el-col :span="4" class="pl-1">
+        <el-col :span="4">
           Naklad bm
         </el-col>
         <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_naklad_bm" size="mini"  style="width:100%" @change="cena_naklad()" ></el-input>
         </el-col>
-          <el-col :span="4" class="pl-1">
+          <el-col :span="4">
           Prodej bm
         </el-col>
         <el-col :span="3">
@@ -545,7 +560,27 @@
 
       </el-row>
 
+       <el-row class="ma-2">
+        <el-col :span="4">
+           Nakup baleni
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="list.data.mat[0].cena_nakup_baleni" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
+        </el-col>
+        <el-col :span="4">
+          Naklad baleni
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="list.data.mat[0].cena_naklad_baleni" size="mini"  style="width:100%" @change="cena_naklad()" ></el-input>
+        </el-col>
+          <el-col :span="4">
+          Prodej baleni
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="list.data.mat[0].cena_prodej_baleni" size="mini"  style="width:100%" ></el-input>
+        </el-col>
 
+      </el-row>
 
       <el-row class="ma-2">
         <el-col :span="4">
@@ -557,21 +592,35 @@
 
 
 
-        <el-col :span="4" class="pl-1">
+        <el-col :span="4">
           Naklad arch
         </el-col>
-        <el-col :span="3" class="pl-1">
+        <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_naklad_arch" size="mini"  style="width:100%" ></el-input>
         </el-col>
-         <el-col :span="4" class="pl-1">
+         <el-col :span="4">
 
+
+        <!--
+         cena_nakup_m2 numeric(10,2),
+          numeric(10,2),   --//spolecna polozka
+         koef_prodej numeric(10,2),
+
+         cena_nakup_kg numeric(10,2),   --!!!! cena za arch je různá podle gramáží papíru
+         cena_nakup_arch numeric(10,2),  --výpočet z ceny za kg, formátu a gr. v db ponecham, prepoctu po ulozeni, nebo prepocitam aplikaci
+         cena_naklad_arch numeric(10,2),    -- vypočteno nákupní cena x nákladový koeficient  - tedy postupne , podle zadanych hodnot
+         cena_naklad_m2 numeric(10,2),    -- vypočteno nákupní cena x nákladový koeficient  - tedy postupne , podle zadanych hodnot
+
+         cena_prodej_m2 numeric(10,2)   , -- výpočet nákladová cena x prodejní koeficient
+         cena_prodej_arch numeric(10,2)  -- výpočet nákladová cena x prodejní koeficient
+         -->
 
           Prodej arch
 
 
         </el-col>
 
-        <el-col :span="3" class="pl-1">
+        <el-col :span="3">
 
           <el-input v-model="list.data.mat[0].cena_prodej_arch" size="mini"  style="width:100%" ></el-input>
         </el-col>
@@ -592,7 +641,7 @@
           </el-col></el-row>
         <el-row>
           <el-col :span="24">
-            <div style="height:100px">
+            <div style="height:200px">
 <!--
               <table>
                 <thead>
@@ -621,58 +670,6 @@
 
       </el-col>
      </el-row>
-
-       <el-row class="mx-2 mt-0">
-        <el-col :span="3">
-           Nakup baleni
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="list.data.mat[0].cena_nakup_baleni" size="mini"  style="width:100%;left:-10px"     @change="cena_naklad()"></el-input>
-        </el-col>
-        <el-col :span="3">
-          Naklad baleni
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="list.data.mat[0].cena_naklad_baleni" size="mini"  style="width:100%;left:-12px" @change="cena_naklad()" ></el-input>
-        </el-col>
-        <el-col :span="3">
-          Prodej baleni
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="list.data.mat[0].cena_prodej_baleni" size="mini"  style="width:100%;left:-15px" @change="cena_naklad()"  ></el-input>
-        </el-col>
-        <el-col :span="3">
-          Objem baleni
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="list.data.mat[0].objem_baleni" size="mini"  style="width:100%;left:-16px" @change="cena_naklad()" ></el-input>
-        </el-col>
-
-     </el-row>
-       <el-row class="mx-2 mt-1">
-        <el-col :span="3">
-           Nakup 1 L
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="list.data.mat[0].cena_nakup_1l" size="mini"  style="width:100%;left:-10px"     @change="cena_naklad()"></el-input>
-        </el-col>
-        <el-col :span="3">
-          Naklad 1 L
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="list.data.mat[0].cena_naklad_1l " size="mini"  style="width:100%;left:-12px" @change="cena_naklad()" ></el-input>
-        </el-col>
-        <el-col :span="3">
-          Prodej 1 L
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="list.data.mat[0].cena_prodej_1l" size="mini"  style="width:100%;left:-15px" ></el-input>
-        </el-col>
-
-
-     </el-row>
-
-
 
  <el-row class="mt-4">
 
@@ -887,7 +884,6 @@ export default {
     vyska_mm_zbytek: function() {
       this.vyska_mm_zbytek = this.vyska_mm_zbytek.replace(/,/,'.')
     }
-
 
 
   } ,
@@ -1298,40 +1294,6 @@ export default {
       //alert((this.list.data.mat[0].cena_nakup_m2*1)+"/" + (this.list.data.mat[0].koef_naklad*1) )
       //this.list.data.mat[0].cena_naklad_m2 = (this.list.data.mat[0].cena_nakup_m2*1) *  (this.list.data.mat[0].koef_naklad*1)
 
-
-         this.list.data.mat[0].sila_mm            = (this.list.data.mat[0].sila_mm+'').replace(/,/,'.')
-         this.list.data.mat[0].vaha_gm2           = (this.list.data.mat[0].vaha_gm2+'').replace(/,/,'.')
-         this.list.data.mat[0].koef_naklad        = (this.list.data.mat[0].koef_naklad+'').replace(/,/,'.')
-         this.list.data.mat[0].koef_prodej        = (this.list.data.mat[0].koef_prodej+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_nakup_kg      = (this.list.data.mat[0].cena_nakup_kg+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_nakup_arch    = (this.list.data.mat[0].cena_nakup_arch+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_naklad_arch   = (this.list.data.mat[0].cena_naklad_arch+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_nakup_m2      = (this.list.data.mat[0].cena_nakup_m2+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_naklad_m2     = (this.list.data.mat[0].cena_naklad_m2+'').replace(/,/,'.')
-          this.list.data.mat[0].cena_prodej_m2    = (this.list.data.mat[0].cena_prodej_m2+'').replace(/,/,'.')
-          this.list.data.mat[0].cena_prodej_arch  = (this.list.data.mat[0].cena_prodej_arch+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_nakup_bm      = (this.list.data.mat[0].cena_nakup_bm+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_naklad_bm     = (this.list.data.mat[0].cena_naklad_bm+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_prodej_bm     = (this.list.data.mat[0].cena_prodej_bm+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_nakup_baleni  = (this.list.data.mat[0].cena_nakup_baleni+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_naklad_baleni = (this.list.data.mat[0].cena_naklad_baleni+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_prodej_baleni = (this.list.data.mat[0].cena_prodej_baleni+'').replace(/,/,'.')
-         this.list.data.mat[0].objem_baleni       = (this.list.data.mat[0].objem_baleni+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_nakup_1l      = (this.list.data.mat[0].cena_nakup_1l+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_prodej_1l     = (this.list.data.mat[0].cena_prodej_1l+'').replace(/,/,'.')
-         this.list.data.mat[0].cena_naklad_1l     = (this.list.data.mat[0].cena_naklad_1l+'').replace(/,/,'.')
-         if (this.list.data.mat[0].objem_baleni*1 > 0 ) {
-           //alert('aa')
-
-              this.list.data.mat[0].cena_nakup_1l      = this.list.data.mat[0].cena_nakup_baleni  *1 / this.list.data.mat[0].objem_baleni*1
-              this.list.data.mat[0].cena_prodej_1l     = this.list.data.mat[0].cena_prodej_baleni *1 / this.list.data.mat[0].objem_baleni*1
-              this.list.data.mat[0].cena_naklad_1l     = this.list.data.mat[0].cena_naklad_baleni *1 / this.list.data.mat[0].objem_baleni*1
-
-
-
-         }
-
-
       var nakup_result = 0
       if (this.list.data.mat[0].cena_naklad_m2*1>0){
         nakup_result = (this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_naklad*1) / (this.list.data.mat[0].cena_naklad_m2)*1
@@ -1367,8 +1329,6 @@ export default {
       this.list.data.mat[0].cena_prodej_bm = (this.list.data.mat[0].cena_naklad_bm*1) *  (this.list.data.mat[0].koef_prodej*1)
       this.list.data.mat[0].cena_prodej_baleni = (this.list.data.mat[0].cena_naklad_baleni*1) *  (this.list.data.mat[0].koef_prodej*1)
       this.list.data.mat[0].cena_prodej_arch = (this.list.data.mat[0].cena_naklad_arch*1) *  (this.list.data.mat[0].koef_prodej*1)
-
-
       //this.list.data.mat[0].cena_nakup_m2 * this.list.data.mat[0].koef_nakup
     } ,
     cena_prodej()  {
@@ -1401,9 +1361,7 @@ export default {
 
 
           }))
-        //return
         this.list = []
-
         eventBus.$emit('dlg821rec')
         eventBus.$emit('dlg821', {
          'IsDialog': true,
@@ -1597,15 +1555,7 @@ export default {
         var results = queryString ? links.filter(this.createFilter(queryString)) : links;
         cb(results);
       },
-       createFilter(queryString) {
-        return (link) => {
-          if (link.value == null ) {
-            return ''
-          }
-          return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      createFilterSmazat(queryString) {
+      createFilter(queryString) {
         return (link) => {
           console.log(link)
           //return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);

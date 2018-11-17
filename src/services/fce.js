@@ -13,6 +13,19 @@ export default {
     return moment(String(value)).format('MM/DD/YYYY')
   },
 
+  cp(obj){
+    const self = this
+    var nobj = {};
+    for (let key in obj) {
+        if (typeof obj[key] === 'object'){
+            nobj[key] = this.cp(obj[key]);
+        } else {
+            nobj[key] = obj[key];
+        }
+    }
+    return nobj;
+},
+
   hasClassId(elementId, cls) {
     return document.getElementById(elementId).className.split(' ').indexOf(cls) > -1
   },
