@@ -153,7 +153,7 @@
   >
      <el-tooltip  placement="left-start" effect="light">
       <div slot="content">{{ item1['popis'] }}</div>
-       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
+       <button type="button" style="width:30%;height:16px" v-bind:class="{ 'black--text':  item1['kalkulace'], 'blue--text':  ! item1['kalkulace'] }" class="px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
      </el-tooltip>
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>

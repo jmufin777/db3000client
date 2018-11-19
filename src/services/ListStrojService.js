@@ -9,7 +9,7 @@ export default {
     //console.log('jedou credentials: ')
      if (string_query == 'copy') {
 //        alert('ONO' + typ )
-     }
+    }
 
     return Api().get('list-stroj-one',{ params: {  user: user, id: typ, id_query: id_query, string_query: string_query }})
   },
@@ -24,7 +24,7 @@ export default {
     console.log({'Form': form})
     return Api().post('list-stroj',  { form: form ,user: user })
    },
-   saveone (user, idefix, form ) {
+  saveone (user, idefix, form ) {
     console.log({'Form': form})
     return Api().post('list-stroj-save-one',  { form: form ,user: user, idefix: idefix })
    }

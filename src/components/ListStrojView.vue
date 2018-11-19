@@ -36,10 +36,10 @@
             size="mini">
             <el-option
             v-for="item8 in enum_nazev_text"
-            :key="item8.nazev_text"
-            :label="item8.nazev_text"
-            :value="item8.nazev_text"
-            >{{item8.nazev_text}} </el-option>
+            :key="item8.value"
+            :label="item8.value"
+            :value="item8.value"
+            >{{item8.value}} </el-option>
   </el-select>
   </el-col>
 
@@ -284,7 +284,6 @@ export default {
 
       search_nazev_text: [],
       search_strojskup: [],
-
 
       minId: 0, //Pro vklad zaporna ID
 
