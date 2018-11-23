@@ -134,6 +134,15 @@ if (document.getElementById(_obj1)){
 
 
   },
+  wyska (proc = 0.90){
+    return window.innerHeight * proc
+
+  },
+
+ sirka (proc = 0.90){
+    return window.innerWidth * proc
+
+  },
 
   obsluha2 (e, self )  {
 

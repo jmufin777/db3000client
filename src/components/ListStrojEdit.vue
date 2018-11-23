@@ -76,7 +76,7 @@
         >
 
         </v-avatar> -->
-Step: {{step2}} / {{ step }}  /{{ idefixThis }}
+<!-- Step: {{step2}} / {{ step }}  /{{ idefixThis }} -->
 
 
       </v-card-title>
@@ -1493,7 +1493,6 @@ export default {
         strojmod: self.list.data.strojmod,
         strojceny: self.list.data.strojceny,
 
-
           }))
       //    return
         if (formName=='formstep'){
@@ -1502,8 +1501,6 @@ export default {
           this.list = []
           self.rec.Akce ='edit'
           self.getData(self.rec)
-
-
 
           return
 

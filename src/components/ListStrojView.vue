@@ -1,5 +1,5 @@
 <template>
-<el-row :id="'m'+objId1" style="overflow:scroll;min-height:900px"  class="pa-2" >
+<el-row :id="'m'+objId1" :style="'overflow:scroll;min-height:'+thisHeight+'px'"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -234,8 +234,6 @@ import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
 
-
-
 export default {
   props: ['visible'],
   components: {
@@ -254,6 +252,7 @@ export default {
       info:'',
       search:'',
       searchS:'',
+      thisHeight: 800,
 
       lastClick: [],
       allTrue: false, //pokud se vyplni prohledavaci pole , bude true = tedy skupiny materialu se nebudou omezovat
@@ -311,6 +310,9 @@ export default {
   async mounted () {
     const self = this
     var tmp2
+    self.handleResize()
+
+
 
 //    return
     if (this.isUserLoggedIn) {
@@ -348,6 +350,7 @@ export default {
        self.getEnums()
 
       })
+    window.addEventListener('resize', self.handleResize)
 
   },
   beforeDestroy () {
@@ -369,7 +372,9 @@ export default {
 
 
 methods: {
-
+  handleResize () {
+    this.thisHeight = f.wyska(0.88)
+  },
 async getEnums() {
   const self= this
   var tmp2, tmp3

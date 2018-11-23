@@ -28,6 +28,7 @@
     "jsbarcode": "^3.11.0",
     "lodash": "^4.17.11",
     "npm": "^6.4.0",
+    "request": "^2.88.0",
     "sortablejs": "^1.7.0",
     "v-chip": "^0.2.5",
     "v-tooltip": "^2.0.0-rc.33",

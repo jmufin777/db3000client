@@ -1,5 +1,5 @@
 <template>
-<el-row :id="'m'+objId1" style="overflow:scroll"  class="pa-2" >
+<el-row :id="'m'+objId1" :style="'overflow:scroll;min-height:'+thisHeight+'px'"  class="pa-2" >
   <el-col :span="24">
   <el-row  :gutter="100">
     <el-col :span="24" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -311,6 +311,7 @@ export default {
       moduleName: 'list-mat',
       saveNow: false,
       show: true,
+      thisHeight: 800,
 
       IsDialog: true,
 
@@ -400,6 +401,7 @@ export default {
   async mounted () {
     const self = this
     var tmp2, tmp4, tmp42
+    self.handleResize()
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
@@ -421,6 +423,7 @@ export default {
                 self.getEnums()
 
       })
+      window.addEventListener('resize', self.handleResize)
 
   },
   beforeDestroy () {
@@ -442,6 +445,9 @@ export default {
 
 
 methods: {
+  handleResize () {
+    this.thisHeight = f.wyska(0.88)
+  },
 
  async getEnums() {
     const self = this

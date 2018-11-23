@@ -44,6 +44,7 @@
         <!-- <el-checkbox v-model="saveNow" label="Ukladat prubezne"  size='mini'></el-checkbox> -->
   </el-col>
   </el-row>
+  ARES{{ Ares }}
 <div>
 
 </div>
@@ -224,6 +225,8 @@ import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import List2MatDodavatel from '@/services/List2MatDodavatelService'
+import Ico from '@/services/Ico'
+
 import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
@@ -236,6 +239,7 @@ export default {
     return {
       moduleName: 'list2-matdodavatel',
       saveNow: false,
+      Ares: '' ,
 
       IsDialog: true,
 
@@ -271,14 +275,14 @@ export default {
         { id: "kod", title: "Kod", cssClasses: "mtd" ,span:1, isEdit: true, type: "number",props:{visible: 'yes'}},
 
         { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "mat", title: "Material", cssClasses: "mtd", span: 1, isEdit: true, type: "selectone" ,values: [] ,selected: 0,props:{visible: 'yes'}},
-        { id: "ico", title: "ICO", cssClasses: "mtd", span: 1, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "mat",   title: "Material", cssClasses: "mtd", span: 1, isEdit: true, type: "selectone" ,values: [] ,selected: 0,props:{visible: 'yes'}},
+        { id: "ico",   title: "ICO", cssClasses: "mtd", span: 1, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         { id: "ulice", title: "Ulice", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "obec", title: "Obec", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "psc", title: "psc", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "tel", title: "Tel", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "mail", title: "Email", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "dic", title: "DIC", cssClasses: "mtd", span: 1, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "obec",  title: "Obec", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "psc",   title: "psc", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "tel",   title: "Tel", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "mail",  title: "Email", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "dic",   title: "DIC", cssClasses: "mtd", span: 1, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
 
          // dic, ulice, obec,psc, tel, mail
@@ -296,6 +300,19 @@ export default {
     }
   },
   async mounted () {
+    ////
+    //Ares = Ico.all()
+    try {
+      this.Ares =  (await   Ico.all(this.user,'28164130 '))
+      console.log("Ares : ", JSON.stringify(this.Ares.data))
+
+    } catch (e) {
+      console.log(e)
+    }
+
+
+
+
 
 //    return
     if (this.isUserLoggedIn) {
