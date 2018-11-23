@@ -267,6 +267,7 @@ import ListGroups from '@/components/ListGroups.vue'
 import ListStrojOld from './ListStroj'
 import ListStroj from './ListStrojView'
 import ListMat from './ListMatView'
+import ListFirma from './ListFirmaView'
 
 
 //Doplnky a seznamy - provoz
@@ -352,6 +353,7 @@ export default {
     'list-stroj': ListStroj,
     'list-stroj-old': ListStrojOld,
     'list-mat': ListMat,
+    'list-firma': ListFirma,
     'list-dodavatel': List2MatDodavatel,
 
 

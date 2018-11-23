@@ -44,6 +44,7 @@
         <!-- <el-checkbox v-model="saveNow" label="Ukladat prubezne"  size='mini'></el-checkbox> -->
   </el-col>
   </el-row>
+  ARES{{ Ares }}
 <div>
 
 </div>
