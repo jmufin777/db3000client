@@ -15,52 +15,19 @@
  <!-- <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" > -->
 
  <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="Stroje"  name="S"><el-input class="my-0" prefix-icon="el-icon-search"  style='width:80%' autofocus clearable size="mini" v-model="searchS" placeholder="Stroje" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Firmy"  name="F"><el-input class="my-0" prefix-icon="el-icon-search"  style='width:80%' autofocus clearable size="mini" v-model="searchF" placeholder="Vse" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Klienti"  name="K"><el-input class="my-0" prefix-icon="el-icon-search"  style='width:80%' autofocus clearable size="mini" v-model="searchK" placeholder="KLienti" @change="addWhere"></el-input></el-tab-pane>
+    <el-tab-pane label="Dodavatele"  name="D"><el-input class="my-0" prefix-icon="el-icon-search"  style='width:80%' autofocus clearable size="mini" v-model="searchD" placeholder="Dodavatele" @change="addWhere"></el-input></el-tab-pane>
 
  </el-tabs>
  </el-col>
 
 
 <v-spacer></v-spacer><br>
-  <el-col :span="7" class="mx-1 mt-4" style="position:relative;top:9px;">
 
-  <el-select v-model="search_nazev_text"
-            filterable
-            multiple
-
-            default-first-option
-            @change="addWhere"
-            placeholder="Nazev technologie"
-
-            style="width:90%;"
-            size="mini">
-            <el-option
-            v-for="item8 in enum_nazev_text"
-            :key="item8.value"
-            :label="item8.value"
-            :value="item8.value"
-            >{{item8.value}} </el-option>
-  </el-select>
-  </el-col>
 
   <el-col :span="7" class="mx-1 mt-4" style="position:relative;top:9px">
-  <el-select v-model="search_strojskup"
-            filterable
-            multiple
 
-            default-first-option
-            @change="addWhere"
-            placeholder="Skupina stroju"
-
-            style="width:90%;"
-            size="mini">
-            <el-option
-            v-for="item9 in enum_strojskup"
-            :key="item9.idefix*1"
-            :label="item9.nazev"
-            :value="item9.idefix*1"
-            >{{item9.nazev}} </el-option>
-  </el-select>
   </el-col>
 
 
@@ -95,24 +62,32 @@
     </v-menu>
 
 </th>
+<th style="width:6%" >
+  <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
+  Ico</th>
+  <th style="width:8%" >
+  <i  @click="sortByKey('dic','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('dic','asc')" class="el-icon-download"  ></i>
+  DIC</th>
+
 <th style="width:23%">
   <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('nazev','asc')" class="el-icon-download"  ></i>
+  Nazev</th>
 
-  Stroj</th>
 <th style="width:23%" >
-  <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
-  Skupina</th>
-<th style="width:6%" >
   <i  @click="sortByKey('nazev_text','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('nazev_text','asc')" class="el-icon-download"  ></i>
-  Technologie</th>
-<th style="width:6%" >
+  Ulice</th>
+<th style="width:23%" >
   <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
-
-  Kalkulace</th>
+  Obec</th>
+ <th style="width:6%" >
+  <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
+  Psc</th>
 
 
 
@@ -148,18 +123,24 @@
    </div>
    <!-- <el-checkbox :id="'check2_'+objId1+'_'+item1['idefix']" :label="item1['idefix']">{{item1['idefix']}}</el-checkbox> -->
   </td>
-
+  <td style='text-align:left;width:6%' class="px-2">
+    {{item1['ico']}}
+  </td>
+  <td style='text-align:left;width:8%' class="px-2">
+    {{item1['dic']}}
+  </td>
   <td style='text-align:left;width:23%' class="px-2">
     {{item1['nazev']}}
   </td>
+
   <td style='text-align:left;width:23%' class="px-2">
-    {{item1['nazev_skup']}}
+    {{item1['ulice']}}
+  </td>
+  <td style='text-align:left;width:23%' class="px-2">
+    {{item1['obec']}}
   </td>
   <td style='text-align:left;width:6%' class="px-2">
-    {{item1['nazev_text']}}
-  </td>
-  <td style='text-align:left;width:6%' class="px-2">
-    {{ item1['typ_kalkulace'] }}
+    {{ item1['psc'] }}
   </td>
       <!-- item1['technologie']: item1['technologie_skup'] -->
   <td >
@@ -181,7 +162,7 @@
 
 
 
-<list-stroj-edit  v-if="IsDialog"></list-stroj-edit>
+<list-firma-edit  v-if="IsDialog"></list-firma-edit>
 
   </div>
   </div>
@@ -228,10 +209,11 @@ import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval, clearTimeout } from 'timers'
 
 //Tady maji byt seznamy firem - zacit v NEDELI !!!!!!
-import ListStroj from '@/services/ListStrojService'
-import ListStrojEdit from './ListStrojEdit'
+import ListFirma from '@/services/ListFirmaService'
+import ListFirmaEdit from './ListFirmaEdit'
 
 import f from '@/services/fce'
+import { stringify } from 'querystring';
 
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
@@ -239,7 +221,7 @@ import f from '@/services/fce'
 export default {
   props: ['visible'],
   components: {
-    'list-stroj-edit': ListStrojEdit
+    'list-firma-edit': ListFirmaEdit
   },
   data () {
     return {
@@ -253,15 +235,17 @@ export default {
       IsWaiting: false,
       info:'',
       search:'',
-      searchS:'',
+      searchF:'',
+      searchD:'',
+      searchK:'',
       thisHeight: 800,
 
       lastClick: [],
       allTrue: false, //pokud se vyplni prohledavaci pole , bude true = tedy skupiny materialu se nebudou omezovat
 
-      objId1: '8210',
-      objId2: '8220',
-      objSearchBar: 'search_8210',
+      objId1: '8310',
+      objId2: '8320',
+      objSearchBar: 'search_8310',
 
       aInfo: [],
       total: 0,
@@ -323,21 +307,21 @@ export default {
          this.getEnums()
          /*
               try {
-                  tmp2 =  ( await ListStroj.one(this.user,this.idefixThis ,101,''))
+                  tmp2 =  ( await ListFirma.one(this.user,this.idefixThis ,101,''))
                   self.enum_nazev_text = tmp2.data.enum_nazev_text
                   //alert(JSON.stringify(self.enum_nazev_text))
                 } catch(e0){
                   alert(e0)
                 }
                try {
-                  var tmp3 =  ( await ListStroj.one(this.user,this.idefixThis ,10,''))
+                  var tmp3 =  ( await ListFirma.one(this.user,this.idefixThis ,10,''))
                   self.enum_strojskup = tmp3.data.enum_strojskup
   //                 alert(JSON.stringify(self.enum_strojskup))
                 } catch(e1){
                   alert("Chyba Vyrobce "+ e1)
                 }
            */
-      //this.list = (await ListStroj.all(this.user,`${self.where}`)).data
+      //this.list = (await ListFirma.all(this.user,`${self.where}`)).data
         this.IsWaiting = false
         return
     }
@@ -346,7 +330,7 @@ export default {
 
   created () {
     var self=this
-      eventBus.$on('dlg8210rec', ( dlgPar ) => {
+      eventBus.$on('dlg8310rec', ( dlgPar ) => {
         //self.getData()
        self.getWhere()
        self.getEnums()
@@ -383,14 +367,14 @@ async getEnums() {
    self.enum_nazev_text = []
    self.enum_strojskup  = []
     try {
-       tmp2 =  ( await ListStroj.one(this.user,this.idefixThis ,101,''))
+       tmp2 =  ( await ListFirma.one(this.user,this.idefixThis ,101,''))
        self.enum_nazev_text = tmp2.data.enum_nazev_text
        //alert(JSON.stringify(self.enum_nazev_text))
     } catch(e0){
        alert(e0)
     }
     try {
-       var tmp3 =  ( await ListStroj.one(this.user,this.idefixThis ,10,''))
+       var tmp3 =  ( await ListFirma.one(this.user,this.idefixThis ,10,''))
        self.enum_strojskup = tmp3.data.enum_strojskup
  //         alert(JSON.stringify(self.enum_strojskup))
     } catch(e1){
@@ -538,44 +522,43 @@ async    handleClick(tab, event) {
 async  addWhere() {
   const self = this
 
-  if (self.activeName == 'S') {
+  if (self.activeName == 'F') {
 
     self.where = 'true'
   } else {
-   alert('Neco jineho')
+//   alert('Neco jineho')
   }
 
   this.getWhere()
 
  } ,
  async getWhere (){
-   const self= this
+     const self= this
    var search = ''
+   var neco = 'self.search'
    self.allTrue =false
-
+ if (self.activeName == 'F') {
     self.where = 'true'
-    search = self.searchS
+    search = self.searchF
+  } else {
 
-    self.where = ` true`
+   if (self.activeName == 'D') {
+     search = self.searchD
+   }
+   else if (self.activeName == 'K') {
+     search = self.searchK
+   }
 
+   else {
+     neco =  'self.search' + self.activeName
+     search = eval(`${neco}`)
+     //  alert(eval(`neco`))
 
+   }
 
+  }
+  //alert()
   var ctmp=''
-  if (self.search_nazev_text.length>0){
-    self.search_nazev_text.forEach(el=>{
-      if (ctmp>'') ctmp+=','
-      ctmp+=`'${el}'`
-    })
-
-//    ctmp=self.search_nazev_text.join(',')
-
-    self.where += ` and nazev_text in ( ${ctmp} )`
-    //alert(self.where)
-  }
-  if (self.search_strojskup.length>0){
-    ctmp=self.search_strojskup.join(',')
-    self.where += ` and idefix_strojskup in ( ${ctmp} )`
-  }
   if (search > '') {
        self.where += ` and (a.nazev ~* '${search}' )`
        self.allTrue =true
@@ -583,12 +566,12 @@ async  addWhere() {
 
       this.IsWaiting = true
 
-        this.list = (await ListStroj.all(this.user,self.where )).data
+        this.list = (await ListFirma.all(this.user,self.where )).data
         if (!this.list.length){
           this.list=[]
         }
         this.IsWaiting = false
-        //alert('jsem zde')
+       // alert('jsem zde' + JSON.stringify(this.list) )
 
 
  },
@@ -597,7 +580,7 @@ editLine(nRow) {   //Dulezita.bez ni nejdou dialogy v editu
      self.IsDialog = true
      self.Info = nRow
 
-     eventBus.$emit('dlg8210', {
+     eventBus.$emit('dlg8310', {
            'IsDialog': self.IsDialog,
            'cols': self.cols,
            'record': self.list[nRow],
@@ -637,7 +620,7 @@ copyLineToForm(nRow) {
     }
 
     self.timeout =  setTimeout(function() {
-     eventBus.$emit('dlg8210', {
+     eventBus.$emit('dlg8310', {
            'IsDialog': self.IsDialog,
            'Akce' : 'copy' ,
            'Idefix' :  self.list[nRow]["idefix"],
@@ -671,7 +654,7 @@ editLineToForm(nRow) {
      self.timeout = setTimeout(function() {
 
 
-     eventBus.$emit('dlg8210', {
+     eventBus.$emit('dlg8310', {
            'IsDialog': self.IsDialog,
            'Akce' : 'edit' ,
            'Idefix' :  self.list[nRow]["idefix"],
@@ -710,36 +693,26 @@ editLineToForm(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
+         // Doresit
         aTmp.push({id: el.id
          ,kod : el.kod
-         ,idefix_matskup : el.idefix_matskup
-         ,idefix_matsubskup: el.idefix_matsubskup
-         ,idefix_vyrobce: el.idefix_vyrobce
-         ,nazev1: el.nazev1
-         ,nazev2: el.nazev2
-         ,nazev3: el.nazev3
-         ,popis: el.popis
-         ,idefix_dodavatel: el.idefix_dodavatel
-         ,sila_mm: el.sila_mm
-         ,vaha_gm2: el.vaha_gm2
-         ,sirka_mm_zbytek: el.sirka_mm_zbytek
-         ,vyska_mm_zbytek: el.vyska_mm_zbytek
-         ,cena_nakup_m2: el.cena_nakup_m2
-         ,koef_naklad: el.koef_naklad
-         ,koef_prodej: el.koef_prodej
-         ,cena_nakup_kg: el.cena_nakup_kg
-         ,cena_nakup_arch: el.cena_nakup_arch
-         ,cena_naklad_arch: el.cena_naklad_arch
-         ,cena_naklad_m2: el.cena_naklad_m2
-         ,cena_prodej_m2: el.cena_prodej_m2
-         ,cena_prodej_arch: el.cena_prodej_arch
+         ,nazev: nazev
+         ,ulice: ulice
+         ,obec: obec
+         ,ico: ico
+         ,dic: dic
+
+
+
+
+
 
         })
         Posli.push(aTmp)
        }
      })
 
-     await ListStroj.insert(this.user, {data: Posli, del: aDel })
+     await ListFirma.insert(this.user, {data: Posli, del: aDel })
      .then (res => {
 
      })
@@ -751,7 +724,7 @@ editLineToForm(nRow) {
       var neco = []
 
      try {
-      //this.list = (await   ListStroj.all(this.user,'nic')).data
+      //this.list = (await   ListFirma.all(this.user,'nic')).data
         getWhere()
         //alert(this.lastSort[0]+"/"+this.lastSort[1])
         if (this.lastSort[1]=='desc'){
@@ -799,7 +772,7 @@ editLineToForm(nRow) {
    async getData() {
      // alert('getData')
      try {
-      //this.list = (await   ListStroj.all(this.user,'nic')).data
+      //this.list = (await   ListFirma.all(this.user,'nic')).data
 
         self.getWhere()
 
@@ -854,7 +827,7 @@ editLineToForm(nRow) {
       const self = this
       this.listNewLine = []
 
-      this.Max = (await ListStroj.all(this.user,'max')).data[0].kod*1 +10
+      this.Max = (await ListFirma.all(this.user,'max')).data[0].kod*1 +10
 
 
       for(x in this.list[0]) {
@@ -911,9 +884,9 @@ editLineToForm(nRow) {
       this.IsWaiting =true
 
 
-      var prd= (await ListStroj.delete(self.user,self.list[nRow].idefix))
+      var prd= (await ListFirma.delete(self.user,self.list[nRow].idefix))
         self.getWhere()
-       //self.list = (await ListStroj.all(self.user,` ${where} `)).data
+       //self.list = (await ListFirma.all(self.user,` ${where} `)).data
        this.IsWaiting =false
     }
 
@@ -928,14 +901,14 @@ editLineToForm(nRow) {
     if (confirm('Vymazat kompletne oznacene stroje ? ' )) {
       this.IsWaiting =true
       await this.checkedList.forEach(idefix => {
-        var prd= (ListStroj.delete(self.user,idefix))
+        var prd= (ListFirma.delete(self.user,idefix))
         self.getWhere()
       });
       this.handleUnCheckAllChange()
 
        this.IsWaiting =false
 
-       //self.list = (await ListStroj.all(self.user,` ${where} `)).data
+       //self.list = (await ListFirma.all(self.user,` ${where} `)).data
 
     }
 
@@ -1099,7 +1072,7 @@ editLineToForm(nRow) {
     groupFind(element){
     var lRet = false
     var elstr=''
-    var seekStr=['id', 'nazev1', 'nazev2','nazev3','user_insert']
+    var seekStr=['id', 'nazev','user_insert']
     for ( var x  in element){
       if (seekStr.indexOf(x) >-1 )   elstr+= element[x]
     }
@@ -1115,7 +1088,7 @@ editLineToForm(nRow) {
     },
     async my_data () {
       this.IsWaiting = true
-      this.list = (await ListStroj.all(this.user,nic)).data
+      this.list = (await ListFirma.all(this.user,nic)).data
       this.total = this.list.length
       this.IsWaiting = false
     },

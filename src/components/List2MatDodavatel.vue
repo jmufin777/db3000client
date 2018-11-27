@@ -224,7 +224,7 @@ import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import List2MatDodavatel from '@/services/List2MatDodavatelService'
-import Ico from '@/services/Ico'
+import Ico from '@/services/IcoService'
 
 import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
