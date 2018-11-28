@@ -586,7 +586,7 @@ async  addWhere() {
           this.list=[]
         }
         this.IsWaiting = false
-        //alert('jsem zde')
+        // alert('jsem zde'+ list.data.stroj.length)
 
 
  },
@@ -674,9 +674,7 @@ editLineToForm(nRow) {
            'Akce' : 'edit' ,
            'Idefix' :  self.list[nRow]["idefix"],
            'typ_kalkulace' :  self.list[nRow]["typ_kalkulace"],
-
       })
-
      },100)
 
      //alert(nRow+ self.list[nRow]["id"] + " Copy")
