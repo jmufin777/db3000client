@@ -880,7 +880,7 @@ editLineToForm(nRow) {
 
 
 
-    if (confirm('Vymazat kompletni stroj ? ' + self.list[nRow].idefix )) {
+    if (confirm('Vymazat firmu ? ' + self.list[nRow].idefix )) {
       this.IsWaiting =true
 
 

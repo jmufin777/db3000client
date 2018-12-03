@@ -6,7 +6,7 @@ export default {
     return Api().get('list-firma',{params: {  user: user,id: typ }})
   },
   delete (user, id ) {
-    return Api().delete('list-firma', {params: {  user: user,id: id}} )
+    return Api().post('list-firma-delete', {params: {  user: user,id: id}} )
   },
   update (user,  form ) {
     return Api().put('list-firma', { form: form,  user: user})

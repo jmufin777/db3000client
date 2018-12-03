@@ -290,34 +290,27 @@
     </el-row>
 
 
-
     <el-row class="ml-1 mt-3 mb-0 blue-grey lighten-4">
-     <table>
-       <thead>
-         <tr>
-           <th style="border:none" >
-             <el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%;color:yellow" class="info elevation-5">Prace</el-button>
-           </th>
-           <th style="border:none" >
-             Nazev
-           </th>
-           <th style="border:none" >
-             Rozliseni
-           </th>
-           <th style="border:none" >
-             Rychlost
-           </th>
-           <th style="border:none" >
-             <el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:90%;color:yellow" class="info elevation-2"> Jednotka</el-button>
-           </th>
-           <th style="border:none"  >&nbsp;</th>
-           <th style="border:none"  >&nbsp;</th>
-         </tr>
-       </thead>
-      <tbody>
-        <tr>
-          <td style="border:none" >
-            <el-select v-model="strojmod.idefix_prace"
+      <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%">Prace</el-button> </el-col>
+
+      <el-col style="border:solid 0px" :span="4">Nazev</el-col>
+      <el-col style="border:solid 0px" :span="3">Rozliseni</el-col>
+      <el-col style="border:solid 0px" :span="3" >Rychlost</el-col>
+      <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:90%">Jednotka</el-button> </el-col>
+
+     <el-col style="border:solid 0px" :span="3" >
+      &nbsp;
+     </el-col>
+     <el-col style="border:solid 0px" :span="2" >
+      &nbsp;
+     </el-col>
+     </el-row>
+
+    <el-row class="ml-1 mt-1 mb-0 blue-grey lighten-5">
+
+      <el-col style="border:solid 0px" :span="3">
+
+      <el-select v-model="strojmod.idefix_prace"
         default-first-option
         size="mini"  class="pt-0 pl-1"
         >
@@ -328,9 +321,11 @@
             :value="item82.idefix*1"
             >{{item82.nazev}} </el-option>
        </el-select>
-          </td>
-         <td style="border:none" >
-          <el-autocomplete
+      </el-col>
+
+     <el-col style="border:solid 0px" :span="4">
+
+      <el-autocomplete
         class="inline-input mr-1"
         v-model="strojmod.nazev"
         :fetch-suggestions="querySearch3"
@@ -338,10 +333,13 @@
         @select="handleSelect"
         size="mini"
         style="width:90%"
-       ></el-autocomplete>
-        </td>
-        <td style="border:none" >
-          <el-autocomplete
+
+      ></el-autocomplete>
+
+    </el-col>
+    <el-col style="border:solid 0px" :span="3">
+
+     <el-autocomplete
       class="inline-input mr-1 "
       v-model="strojmod.nazev_text"
       :fetch-suggestions="querySearch4"
@@ -351,12 +349,14 @@
       style="width:90%"
      ></el-autocomplete>
 
-        </td>
-       <td style="border:none" >
-         <el-input-number v-model="strojmod.rychlost" size="mini"  style="width:100%"></el-input-number>
-       </td>
-       <td style="border:none" >
-         <el-select v-model="strojmod.idefix_jednotka"
+    </el-col>
+
+     <el-col style="border:solid 0px" :span="3" >
+       <el-input-number v-model="strojmod.rychlost" size="mini"  style="width:100%"></el-input-number>
+    </el-col>
+
+     <el-col style="border:solid 0px" :span="3" >
+      <el-select v-model="strojmod.idefix_jednotka"
         default-first-option
         size="mini"  class="pt-0 pl-1 mx-1"
         >
@@ -367,36 +367,28 @@
             :value="item83.idefix*1"
             >{{item83.nazev}} </el-option>
        </el-select>
+     </el-col>
 
-       </td>
-       <td style="border:none" >
-         <el-checkbox v-model="strojmod.mod_priorita" class="mx-1 px-1 mt-1"
+     <el-col style="border:solid 0px;position:relative;top:0px;left:20px" :span="3" class="mb-0" >
+       <el-checkbox v-model="strojmod.mod_priorita" class="mx-1 px-1 mt-1"
             size="mini">Prioritni
        </el-checkbox>
-       </td>
-       <td style="border:none" >
-          <button  type="button" style="width:100%;height:26px" class="pl-4" @click="insertMod" ><i class="el-icon-plus" size="mini"></i></button>
-       </td>
-
-        </tr>
-
-      </tbody>
-
-     </table>
+     </el-col>
+     <el-col style="border:solid 0px" :span="2" >
+     <button  type="button" style="width:100%;height:26px" class="pl-4" @click="insertMod" ><i class="el-icon-plus" size="mini"></i></button>
+     </el-col>
     </el-row>
-
-
     <el-row   class="ma-0 mt-1">
     <el-col :span="24" :offset="0" style="position:relative;left:9px">
       <table style="width:100%">
-        <!-- <thead >
+        <thead >
           <tr>
           <th colspan="5" class="blue-grey lighten-4">Inkoust / spotreba</th>
           </tr>
-        </thead> -->
+        </thead>
         <tbody>
        <tr class="blue-grey lighten-5"><td style="text-align:left" class="blue-grey lighten-5">
-         i1<el-select v-model="strojmod.idefix_i1"
+         1: <el-select v-model="strojmod.idefix_i1"
           size="mini"
           class="pt-1 pl-1 ml-2"
           style="width:50%"
@@ -415,7 +407,7 @@
 
        >
  </td>
- <td class="blue-grey lighten-4">i2<el-select v-model="strojmod.idefix_i2"  size="mini" class="pt-1 pl-1 ml-2 blue-grey lighten-4"  style="width:50%"  >
+ <td class="blue-grey lighten-5">2: <el-select v-model="strojmod.idefix_i2"  size="mini" class="pt-1 pl-1 ml-2 blue-grey lighten-5"  style="width:50%"  >
             <el-option
             v-for="item91 in list.data.enum_inkoust"
             :key="item91.idefix*1"
@@ -428,7 +420,7 @@
         style="width:30%;"
        >
        </td>
-     <td class="blue-grey lighten-5">i3
+     <td>3:
        <el-select v-model="strojmod.idefix_i3"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <el-option
             v-for="item92 in list.data.enum_inkoust"
@@ -442,8 +434,8 @@
         style="width:30%;"
        >
        </td>
-       <td class="blue-grey lighten-4">
-       i4
+       <td>
+       4:
        <el-select v-model="strojmod.idefix_i4"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <el-option
             v-for="item93 in list.data.enum_inkoust"
@@ -457,9 +449,9 @@
         style="width:30%;"
        >
        </td>
-       <td class="blue-grey lighten-5">
-       i5
-       <el-select v-model="strojmod.idefix_i5"  size="mini" class="pt-1 pl-1 ml-2 blue-grey lighten-5"  style="width:50%"  >
+       <td>
+       5:
+       <el-select v-model="strojmod.idefix_i5"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <el-option
             v-for="item94 in list.data.enum_inkoust"
             :key="item94.idefix*1"
@@ -491,10 +483,10 @@
     <el-row  v-for="(itemmod, imod) in list.data.strojmod" :key="itemmod.idefix" class="ma-2 mt-0 "
       v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
      >
-     <table style="width:100%" border="0" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-       <tr v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-         <el-select v-model="list.data.strojmod[imod].idefix_prace"
+
+      <el-col style="border:solid 0px" :span="3" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+
+      <el-select v-model="list.data.strojmod[imod].idefix_prace"
         default-first-option
         size="mini"  class="pt-1 pl-1"
 
@@ -506,9 +498,10 @@
             :value="item82.idefix*1"
             >{{item82.nazev}} </el-option>
        </el-select>
-       </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-         <el-autocomplete
+      </el-col>
+
+     <el-col style="border:solid 0px" :span="4" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+      <el-autocomplete
         class="inline-input mr-1"
         v-model="list.data.strojmod[imod].nazev"
         :fetch-suggestions="querySearch3"
@@ -518,9 +511,9 @@
         style="width:90%"
         v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
       ></el-autocomplete>
-       </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-      <el-autocomplete
+    </el-col>
+    <el-col style="border:solid 0px" :span="3" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+     <el-autocomplete
       class="inline-input mr-1"
       v-model="list.data.strojmod[imod].nazev_text"
       :fetch-suggestions="querySearch4"
@@ -529,12 +522,15 @@
       size="mini"
       style="width:90%"
      ></el-autocomplete>
-       </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-           <el-input-number v-model="list.data.strojmod[imod].rychlost" size="mini"  style="width:100%"></el-input-number>
-       </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-         <el-select v-model="list.data.strojmod[imod].idefix_jednotka"
+    </el-col>
+
+     <el-col style="border:solid 0px" :span="3" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }" >
+       <el-input-number v-model="list.data.strojmod[imod].rychlost" size="mini"  style="width:100%"></el-input-number>
+    </el-col>
+
+
+     <el-col style="border:solid 0px" :span="2" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+      <el-select v-model="list.data.strojmod[imod].idefix_jednotka"
         default-first-option
         size="mini"  class="pt-1 pl-1 ml-2"
         >
@@ -545,35 +541,32 @@
             :value="item83.idefix*1"
             >{{item83.nazev}} </el-option>
        </el-select>
-       </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-        <el-checkbox v-model="list.data.strojmod[imod].mod_priorita"
+     </el-col>
+
+     <el-col style="border:solid 0px;position:relative;top:0px;left:20px" :span="6" class="mb-0" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       <el-checkbox v-model="list.data.strojmod[imod].mod_priorita"
             size="mini">Prioritni
        </el-checkbox>
-       </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-         <button  type="button" style="width:100%;height:26px;z-index:1900000" class="px-0 " @click="deleteMod(imod)" ><i class="el-icon-delete" size="mini"></i></button>
-       </td>
-      </tr>
-     </table>
-
-
+     </el-col>
+     <el-col style="border:solid 0px" :span="2" @click.native="deleteMod(imod)">
+       <button  type="button" style="width:100%;height:26px;z-index:1900000" class="px-0 " @click="deleteMod(imod)" ><i class="el-icon-delete" size="mini"></i></button>
+     </el-col>
 
 <!--- radek s tabulkou //-->
     <el-row   class="ma-0 mt-1">
     <el-col :span="24" :offset="0" style="position:relative;left:2px">
-      <table style="width:100%;border:none">
-        <!-- <thead>
+      <table style="width:100%">
+        <thead>
           <tr>
           <th colspan="5" v-bind:class="{ 'green lighten-4' : ( imod % 2 == 0) , 'blue lighten-4' : ( imod % 2 != 0)  }" >Inkoust / spotreba</th>
           </tr>
-        </thead> -->
+        </thead>
         <tbody>
        <tr v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
          <td style="text-align:left"
          v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
          >
-         i1<el-select v-model="list.data.strojmod[imod].idefix_i1"
+         1: <el-select v-model="list.data.strojmod[imod].idefix_i1"
           size="mini"
           class="pt-1 pl-1 ml-2"
           style="width:50%"
@@ -596,7 +589,7 @@
  </td>
  <td
  v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
- >i2<el-select v-model="list.data.strojmod[imod].idefix_i2"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
+ >2: <el-select v-model="list.data.strojmod[imod].idefix_i2"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
             <el-option
             v-for="item191 in list.data.enum_inkoust"
             :key="item191.idefix*1"
@@ -610,8 +603,7 @@
         v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
        >
        </td>
-     <td v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-     >i3
+     <td v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">3:
        <el-select v-model="list.data.strojmod[imod].idefix_i3"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <el-option
             v-for="item192 in list.data.enum_inkoust"
@@ -626,8 +618,8 @@
         v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
        >
        </td>
-       <td v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-       >i4
+       <td v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       4:
        <el-select v-model="list.data.strojmod[imod].idefix_i4"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <el-option
             v-for="item193 in list.data.enum_inkoust"
@@ -642,8 +634,8 @@
         v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
        >
        </td>
-       <td v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-       >i5
+       <td v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       5:
        <el-select v-model="list.data.strojmod[imod].idefix_i5"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <el-option
             v-for="item194 in list.data.enum_inkoust"

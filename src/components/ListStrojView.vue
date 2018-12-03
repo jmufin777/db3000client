@@ -97,7 +97,7 @@
 </th>
 <th style="width:23%">
   <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('nazev','asc')" class="el-icon-download"  ></i>
+  <i  @click="sortByKey('nazev','asc')"  class="el-icon-download"  ></i>
 
   Stroj</th>
 <th style="width:23%" >
