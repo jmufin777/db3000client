@@ -928,7 +928,7 @@ export default {
       SendNamne: '',
       RecName: this.name,
       IsDialog1: true,
-      xMyska: 350,
+      xMyska: 50,
       rec: {},
       length: 4,
       window: 0,

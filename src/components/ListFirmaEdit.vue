@@ -26,7 +26,7 @@
       <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit8310" @click="submitForm('formnew')" size="mini"> Novy Upravou</el-button>
       <el-button v-if="isCopy" type="primary" id="btn_user_submit8310" @click="submitForm('form')" size="mini"
         >Vlozit </el-button>
-       <el-button v-else type="primary" id="btn_user_submit8310" @click="submitForm('form')" size="mini"
+       <el-button v-else type="primary" id="btn_user_submit8310" @click="submitForm('formstep0')" size="mini"
         >Ulozit</el-button>
       <el-button v-if="isCopy" @click="resetForm('form')" id="btn_cancel_submit8310" size="mini">Zrusit</el-button>
       <el-button v-else @click="resetForm('form')" id="btn_cancel_submit8310" size="mini">Zavrit</el-button>
@@ -193,51 +193,79 @@
 
     </el-row>
 
+<el-row><el-col :span="14">
+
 <el-row class="ma-2">
        <el-col :span="3" >
          <div class="mini el-input-group__prepend" style="height:28px;background;width:550px">Splatnost</div>
         </el-col>
-        <el-col :span="4" style="text-align:left">
+        <el-col :span="1">&nbsp;</el-col>
+        <el-col :span="3" style="text-align:left">
           <el-input-number v-model="list.data.firma[0].splatnost" size="mini"  controls-position="right"  >
-
           </el-input-number>
         </el-col>
-       <el-col :span="2">
+        <el-col :span="3">&nbsp;</el-col>
+       <el-col :span="4">
          <div class="el-input-group__prepend" style="height:28px;background;width:550px">Hotovost</div>
          </el-col>
 
         <el-col :span="2">
           <input size="mini" style="height:28px;width:28px" type="checkbox" @change="changeHotovost" name="Hotovost" value="1"  :checked="(list.data.firma[0].hotovost==1)?true:false">
         </el-col>
-        <el-col :span="2">
+        <el-col :span="4">
                    <div class="el-input-group__prepend" style="height:28px;background;width:550px">Materialy</div>
           </el-col>
+
         <el-col :span="2">
           <input style="height:28px;width:28px" type="checkbox" @change="changeMat" name="MatDodavatel" value="1"  :checked="(list.data.firma[0].mat==1)?true:false">
         </el-col>
-
 
     </el-row>
     <el-row class="ma-2">
 
 
-        <el-col :span="7" style="text-align:left">
+        <el-col :span="11" style="text-align:left">
           <el-input suffix-icon="el-icon-date" readonly v-model="list.data.firma[0].datum_ares" size="mini" disabled style="width:90%">
              <template slot="prepend">Vypis dne</template>
           </el-input>
         </el-col>
 
-        <el-col :span="8">
+        <el-col :span="11">
             <el-input readonly disabled v-model="list.data.firma[0].aktivni" size="mini"  style="width:100%">
              <template slot="prepend">Stav v registru</template>
 
             </el-input>
         </el-col>
-
-
-
-
     </el-row>
+    </el-col>
+
+    <el-col :span="10" style="text-align:left">Poznamky: {{list.data.firmanotice.length}}<hr></el-col>
+
+
+    <table style="witdh:100%">
+     <thead><th style="width:20%"> Datum</th><th>Text</th><th style="width:20%">Zapsal</th><th style="width:10%;text-align:center">x</th> </thead>
+    <tbody>
+    <tr v-for="(notice,inotice) in list.data.firmanotice" :key="inotice">
+      <td>{{notice.datum}}</td><td>{{notice.txt}}</td><td>{{notice.user_txt}}</td>
+      <td>?</td>
+    </tr>
+
+    <tr>
+      <td>{{ firmanotice.datum }}</td>
+      <td>
+        <el-input type="textarea" v-model="firmanotice.txt" rows="1" autosize>
+        </el-input>
+      </td>
+      <td>{{user}}</td>
+      <td style="width:10%;text-align:left">
+        <button  type="button" style="width:100%;height:26px" class="pl-0 info elevation-3"  @click="insertNotice" ><i class="el-icon-plus" size="mini"></i></button>
+      </td>
+    </tr>
+    </tbody>
+    </table>
+
+
+ </el-row>
 
 
 
@@ -514,7 +542,7 @@ export default {
       SendNamne: '',
       RecName: this.name,
       IsDialog1: true,
-      xMyska: 350,
+      xMyska: 50,
       rec: {},
       length: 4,
       window: 0,
@@ -620,6 +648,15 @@ export default {
         otevreno_do: '18:00'
       },
 
+    firmanotice: {
+        idefix: 0,
+        idefix_firma: 0,
+        txt: '',
+        user_txt: '',
+        datum: f.dnes()
+
+
+      },
 
 
       //
@@ -846,6 +883,58 @@ export default {
 
     },
 
+    async insertNotice() {
+        var lAdd = true
+        const self = this
+
+      if (this.firmanotice.txt > ''){
+
+        this.firmanotice.idefix_firma =this.idefixThis
+        this.list.data.firmanotice.forEach((el,i) =>{
+          if (el.txt == this.firmanotice.txt) {
+            lAdd = false
+            alert('Nemeli by jste pridavat uplne stejnou poznamku ke stejne firme')
+          }
+        } );
+        if (lAdd == true) {
+          let neco= this.firmanotice
+          var neco2=  (await ListFirma.saveNotice(self.user,self.idefixThis,this.firmanotice,101))
+          //return
+
+
+  //        alert(this.list.data.strojmod.length)
+          this.firmanotice.idefix = (this.list.data.firmanotice.length +10)*-1
+          this.firmanotice.kod = (this.list.data.firmanotice.length +1)
+          this.firmanotice.user_txt = this.user
+          // this.firmanotice.datum =
+          // this.strojmod.prio = (this.list.data.strojmod.length +1)
+
+          this.list.data.firmanotice.push(neco)
+          var newObj = f.cp(this.firmanotice)
+          this.firmanotice = newObj
+          this.firmanotice.txt = ''
+          this.firmanotice.datum = this.dnes()
+          var neco3  = (await ListFirma.one(this.user,self.idefixThis, 101,''))
+          self.list.data.firmanotice = []
+          self.list.data.firmanotice =neco3.data.firmanotice
+          self.list.data.firmanotice.forEach(el => {
+            el.datum  = f.datum2(el.datum)
+          })
+
+
+          //alert(JSON.stringify(neco3.data.firmanotice))
+          //alert('aaa')
+
+
+
+
+
+        }
+
+      }
+
+    },
+
     firma_copy(){
       this.list.data.firma[0].ulice2 = this.list.data.firma[0].ulice
       this.list.data.firma[0].obec2  =this.list.data.firma[0].obec
@@ -941,6 +1030,9 @@ export default {
               self.list = (await ListFirma.one(this.user,self.idefixThis, -1,'edit'))
               self.rec.Idefix = self.idefixThis
               self.firmaNazev = self.list.data.firma[0]['nazev']
+              self.list.data.firmanotice.forEach(el => {
+                el.datum  = f.datum2(el.datum)
+              })
 
 
 
@@ -960,17 +1052,15 @@ export default {
                 self.list = (await ListFirma.one(this.user,dlgPar.Idefix, -1,'edit'))
                 self.idefixThis = self.list.data.firma[0].idefix
                 self.firmaNazev = self.list.data.firma[0].nazev
-
+                self.list.data.firmanotice.forEach(el => {
+                  el.datum  = f.datum2(el.datum)
+                })
 
               } catch (e) {
         //      console.log('chybka ' ,  JSON.stringify(self.list.data.stroj[0].idefix ))
         //      alert( self.list.data.stroj[0].idefix )
                 self.idefixThis = self.list.data.firma[0].idefix
                 self.firmaNazev = self.list.data.firma[0].nazev
-
-
-
-
 
               }
             }
@@ -1121,6 +1211,17 @@ export default {
           return
 
         }
+        if (formName=='formstep0'){
+
+          self.step = self.step
+          console.log("REC", self.rec)
+          this.list = []
+
+          self.rec.Akce ='edit'
+
+          self.getData(self.rec)
+          return
+        }
         //return
         this.list = []
         alert('aaa')
@@ -1244,6 +1345,9 @@ export default {
       },
       handleSelect(item) {
         console.log(item)
+      },
+      dnes() {
+        return f.dnes()
       },
       datum(value) {
         return moment(String(value)).format('MM/DD/YYYY')
@@ -1399,6 +1503,10 @@ div[role="region"] {
 
    width: 18px;
  }
+ .el-input-group__prepend {
+    border-right: 1px !important;
+}
+
 
 
 

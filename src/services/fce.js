@@ -12,6 +12,16 @@ export default {
   datum(value) {
     return moment(String(value)).format('MM/DD/YYYY')
   },
+  datum2(value) {
+
+    return moment(String(value)).format('MM.DD.YY hh:mm')
+  },
+  dnes () {
+    var xd = new Date()
+    //alert(xd)
+    return xd.getFullYear()+"."+xd.getMonth()+"."+("0"+""+xd.getDay()+"").slice(-2)
+    // return this.datum(xd)
+  },
 
   cp(obj){
     const self = this
