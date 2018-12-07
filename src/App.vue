@@ -38,6 +38,13 @@ export default {
    display: block;
 
  }
+ .JsemVidetMalo {
+   opacity: 0.8;
+   visibility: visible;
+   background: #E4E7ED;
+   display: block;
+
+ }
  .NejsemVidet {
    opacity: 0.5;
    visibility: hidden;

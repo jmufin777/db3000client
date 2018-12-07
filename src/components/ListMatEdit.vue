@@ -548,8 +548,6 @@
 
       </el-row>
 
-
-
       <el-row class="ma-2">
         <el-col :span="4">
           Nakup arch
@@ -557,8 +555,6 @@
         <el-col :span="3">
           <el-input v-model="list.data.mat[0].cena_nakup_arch" size="mini"  style="width:100%"     @change="cena_naklad()"></el-input>
         </el-col>
-
-
 
         <el-col :span="4" class="pl-1">
           Naklad arch
@@ -738,7 +734,7 @@ export default {
       links: [],
       labelPosition: 'right',
       IsDialog: false,
-      xMyska: 350,
+      xMyska: 50,
       Akce: 'NICXXX',
       isCopy: -1,
       recData: {},

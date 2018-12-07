@@ -31,7 +31,13 @@ export default {
    saveNotice (user, idefix, form ) {
     console.log({'Form': form})
     return Api().post('list-firma-save-one',  { form: form ,user: user, idefix: idefix, id_query: 101 })
+   },
+
+   saveOsoba (user, idefix, form ,id_query) {
+    console.log({'Form': form})
+    return Api().post('list-firma-save-one',  { form: form ,user: user, idefix: idefix, id_query: id_query })
    }
+
 
 
 }

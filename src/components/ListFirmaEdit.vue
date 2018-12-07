@@ -193,7 +193,7 @@
 
     </el-row>
 
-<el-row><el-col :span="14">
+<el-row><el-col :span="24">
 
 <el-row class="ma-2">
        <el-col :span="3" >
@@ -223,11 +223,13 @@
     </el-row>
     <el-row class="ma-2">
 
-
-        <el-col :span="11" style="text-align:left">
-          <el-input suffix-icon="el-icon-date" readonly v-model="list.data.firma[0].datum_ares" size="mini" disabled style="width:90%">
+        <el-col :span="4">
+         <div class="el-input-group__prepend" style="height:28px;background;width:550px">Vypis dne</div>
+         </el-col>
+        <el-col :span="7" style="text-align:left">
+          <el-date-picker format="dd.MM.yyyy" suffix-icon="el-icon-date" readonly v-model="list.data.firma[0].datum_ares" size="mini" disabled style="width:90%">
              <template slot="prepend">Vypis dne</template>
-          </el-input>
+          </el-date-picker>
         </el-col>
 
         <el-col :span="11">
@@ -239,16 +241,21 @@
     </el-row>
     </el-col>
 
-    <el-col :span="10" style="text-align:left">Poznamky: {{list.data.firmanotice.length}}<hr></el-col>
+    <el-col :span="24" style="text-align:left">Poznamky: {{list.data.firmanotice.length}}<hr></el-col>
 
 
     <table style="witdh:100%">
-     <thead><th style="width:20%"> Datum</th><th>Text</th><th style="width:20%">Zapsal</th><th style="width:10%;text-align:center">x</th> </thead>
+     <thead><th style="width:15%"> Datum</th><th >Text</th><th style="width:10%">Zapsal</th>
+     <th style="width:5%;text-align:center" colspan="1">
+       <i class="el-icon-time" size="mini"></i>
+
+     </th>
+     <th style="width:14%;text-align:center">Kdy</th>
+          <th>x</th>
+
+      </thead>
     <tbody>
-    <tr v-for="(notice,inotice) in list.data.firmanotice" :key="inotice">
-      <td>{{notice.datum}}</td><td>{{notice.txt}}</td><td>{{notice.user_txt}}</td>
-      <td>?</td>
-    </tr>
+
 
     <tr>
       <td>{{ firmanotice.datum }}</td>
@@ -257,9 +264,40 @@
         </el-input>
       </td>
       <td>{{user}}</td>
-      <td style="width:10%;text-align:left">
-        <button  type="button" style="width:100%;height:26px" class="pl-0 info elevation-3"  @click="insertNotice" ><i class="el-icon-plus" size="mini"></i></button>
+      <td  >
+        <input size="mini" style="height:20px;width:20px" v-model="firmanotice.pripominka" type="checkbox" @change="changePripominka" name="Pripominka" value="true"  :checked="(firmanotice.pripominka)">
+       </td><td >
+          <el-date-picker
+          format="dd.MM HH:mm"
+          value-format="yyyy-MM-dd HH:mm"
+          v-if="firmanotice.pripominka" v-model="firmanotice.kdy" size="mini"  type="datetime" align="right" style="width:100%" ></el-date-picker>
+          <el-date-picker v-else  v-model="firmanotice.kdy" size="mini"  disabled type="datetime" align="right" style="width:100%" ></el-date-picker>
       </td>
+      <td style="width:5%;text-align:left">
+        <button  type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="insertNotice" ><i class="el-icon-plus" size="mini"></i></button>
+      </td>
+    </tr>
+    <tr v-for="(notice,inotice) in list.data.firmanotice" :key="inotice">
+      <td>{{notice.datum}}</td><td style="text-align:left" class="pl-2">{{notice.txt}}</td><td  style="text-align:left" class="pl-2">{{notice.user_txt}}</td>
+      <td>
+        <input size="mini" style="height:20px;width:20px" v-model="notice.pripominka" type="checkbox" @change="changePripominka" name="Pripominka" value="true"  :checked="(notice.pripominka)">
+      </td><td>
+
+         <el-date-picker
+          format="dd.MM HH:mm"
+          value-format="yyyy-MM-dd HH:mm"
+
+         v-if="notice.pripominka" v-model="notice.kdy" size="mini"  type="datetime" align="right" style="width:100%"></el-date-picker>
+         <el-date-picker
+          format="dd.MM HH:mm"
+          value-format="yyyy-MM-dd HH:mm"
+
+         v-else size="mini" disabled v-model="notice.kdy" type="datetime" align="right" style="width:100%"></el-date-picker>
+      </td>
+       <td style="width:5%;text-align:left">
+        <button  type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="editNotice" ><i class="el-icon-edit" size="mini"></i></button>
+      </td>
+
     </tr>
     </tbody>
     </table>
@@ -280,7 +318,68 @@
      <v-window-item :value="2">
         <v-card v-show="step2=='2'">
           <v-card-text>
-            <el-row class="ma-1">
+            <el-row class="ma-4">
+                 <el-col :span="24">
+                   <el-row class="ma-1">
+                     <!-- @end="chooseItemKontakt" -->
+
+
+                     <table style="width:100%">
+                       <thead>
+                         <th>Jmeno</th><th>Prijmeni</th>
+                         <th style="width:30%" >Mail</th><th>Tel</th>
+                         <th>Funkce</th>
+                         <th>Pocet zakazek</th>
+                         <th>Obrat</th>
+                         <th>
+                           <el-checkbox border v-model="kontaktAktivni" size="mini">Aktivni</el-checkbox>
+                           &nbsp;
+                           <button  type="button" style="width:22px%;height:22px" class="pl-0 info elevation-3"  @click="kontaktEditInsert=!kontaktEditInsert ; kontaktEdit=(kontaktEditInsert)?false:kontaktEdit ;" ><i class="el-icon-plus" size="mini"></i></button>
+
+                         </th>
+                       </thead>
+                     </table>
+                     <table style="width:100%">
+
+                      <tbody  style="width:100%">
+                        <draggable v-model="list.data.firmaosoba"  :options="{group: 'peoplex' }" @start="drag=true"
+                          style="width:100%"
+                        >
+                       <tr v-for="(clovek, i) in list.data.firmaosoba" :key="i"
+                       v-if="clovek.aktivni==true || kontaktAktivni == true "
+
+
+                       >
+                         <td  >{{clovek.jmeno}}</td>
+                         <td> {{clovek.prijmeni}}</td>
+                         <td style="width:30%" >{{clovek.mail}}</td>
+                         <td  >{{clovek.tel}}</td>
+                         <td  >{{clovek.funkce}}</td>
+                         <td>0</td>
+                         <td>0</td>
+
+                         <td
+                         v-bind:class="{'warning': clovek.aktivni==false,'success': clovek.aktivni==true }"
+
+                          style="text-align:center">
+
+                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="editKontakt(clovek)" ><i class="el-icon-edit" size="mini"></i></button>
+                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="deleteKontakt(clovek)" ><i class="el-icon-delete" size="mini"></i></button>
+
+
+                         </td>
+
+                       </tr>
+                       </draggable>
+                      </tbody>
+                     </table>
+
+
+                   </el-row>
+                 </el-col>
+             </el-row>
+
+            <el-row class="ma-1" v-if="kontaktEdit || list.data.firmaosoba.length == 0 || kontaktEditInsert">
               <el-col :span="24" class="pa-3 mt-1 text-xs-center" style="width:100%" >
                 <el-row class="ma-2">
                   <el-col :span="4">
@@ -303,6 +402,11 @@
                       <template slot="prepend">Titul2</template>
                    </el-input>
                   </el-col>
+                 <el-col :span="2" >
+                   <button v-if="kontaktEditInsert" type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="insertKontakt(0)" ><i class="el-icon-plus" size="mini"></i></button>
+                   <button v-if="kontaktEdit" type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="insertKontakt(1)" ><i class="el-icon-edit" size="mini"></i></button>
+                 </el-col>
+
                 </el-row>
                 <el-row class="ma-2">
                   <el-col :span="6">
@@ -371,7 +475,12 @@
                     <div class="el-input-group__prepend" style="height:28px;background;width:550px">Narozeniny</div>
                   </el-col>
                   <el-col :span="4">
-                    <el-date-picker v-model="firmaosoba.narozeniny" size="mini"  type="date" align="right" style="width:100%">
+
+                    <el-date-picker v-model="firmaosoba.narozeniny" size="mini"  type="date" align="right" style="width:100%"
+                         format="dd.MM.yyyy"
+                         value-format="yyyyMMdd"
+
+                    >
                   </el-date-picker>
                   </el-col>
                   <el-col :span="2">
@@ -379,7 +488,7 @@
          </el-col>
 
         <el-col :span="2">
-          <input size="mini" style="height:28px;width:28px" type="checkbox" @change="changeAktivniOsoba" name="Hotovost" value="1"  :checked="list.data.firmaosoba.aktivni">
+          <input size="mini" style="height:28px;width:28px" v-model="firmaosoba.aktivni" type="checkbox" @change="changeAktivniOsoba" name="Hotovost" value="1"  :checked="list.data.firmaosoba.aktivni==true">
         </el-col>
          <el-col :span="3">
                     <div class="el-input-group__prepend" style="height:28px;background;width:550px">Poznamky</div>
@@ -396,25 +505,6 @@
               </el-col>
             </el-row>
 
-                <el-row class="ma-2">
-                 <el-col :span="24">
-                   <el-row class="ma-1">
-                     <!-- @end="chooseItemKontakt" -->
-                     <draggable v-model="firmaosobapomucka"  :options="{group: 'peoplex' }" @start="drag=true"  >
-                     <el-col :span=5 v-for="(it1, i) in firmaosobapomucka" :key="i"
-                      v-bind:class="{ 'green lighten-5' : ( i % 2 == 0) , 'blue lighten-5' : ( i % 2 != 0)  }"
-                      class="mr-1 mt-1 pl-1"
-                     >
-                       {{i+1}}:  {{it1.jmeno}} {{it1.prijmeni}}
-                       <i class="el-icon-edit" size="mini"></i>
-                       <i class="el-icon-delete" size="mini"></i>
-                     </el-col>
-
-                     </draggable>
-                   </el-row>
-                 </el-col>
-                </el-row>
-
 
           </v-card-text>
         </v-card>
@@ -423,7 +513,179 @@
          <v-window-item :value="3">
         <v-card v-show="step2=='3'">
           <v-card-text>
-            {{ stepInfo}}
+            <el-row class="ma-4">
+                 <el-col :span="24">
+                   <el-row class="ma-1">
+                     <!-- @end="chooseItemKontakt" -->
+                     <table style="width:100%">
+                       <thead>
+                         <th>Nazev</th><th>Ulice</th><th>Obec</th><th>Psc</th>
+                         <th>Jmeno</th><th>Prijmeni</th>
+                         <th style="width:20%" >Mail</th><th>Tel</th>
+                         <th>Funkce</th>
+                         <th>
+                           <el-checkbox border v-model="provozovnaAktivni" size="mini">Aktivni</el-checkbox>
+                           &nbsp;
+                           <button  type="button" style="width:22px%;height:22px" class="pl-0 info elevation-3"  @click="provozovnaEditInsert=!provozovnaEditInsert ; provozovnaEdit=(provozovnaEditInsert)?false:provozovnaEdit ;" ><i class="el-icon-plus" size="mini"></i></button>
+
+                         </th>
+                       </thead>
+                     </table>
+                     <table style="width:100%">
+
+                      <tbody  style="width:100%">
+                        <draggable v-model="list.data.firmaprovozovna"  :options="{group: 'peoplex' }" @start="drag=true"
+                          style="width:100%"
+                        >
+                       <tr v-for="(provozovnax, i) in list.data.firmaprovozovna" :key="i"
+                       v-if="provozovnax.aktivni==true || provozovnaAktivni == true "
+
+
+                       >
+                         <td  >{{provozovnax.nazev}}</td>
+                         <td  >{{provozovnax.jmeno}} </td>
+                         <td> {{provozovnax.prijmeni}}</td>
+                         <td> {{provozovnax.ulice}}</td><td> {{provozovnax.obec}}</td><td> {{provozovnax.psc}}</td>
+                         <td style="width:30%" >{{provozovnax.mail}}</td>
+                         <td  >{{provozovnax.tel}}</td>
+                         <td  >{{provozovnax.funkce}}</td>
+                         <td>0</td>
+                         <td>0</td>
+
+                         <td
+                         v-bind:class="{'warning': provozovnax.aktivni==false,'success': provozovnax.aktivni==true }"
+
+                          style="text-align:center">
+
+                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="editKontakt(provozovnax)" ><i class="el-icon-edit" size="mini"></i></button>
+                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="deleteKontakt(provozovnax)" ><i class="el-icon-delete" size="mini"></i></button>
+
+
+                         </td>
+
+                       </tr>
+                       </draggable>
+                      </tbody>
+                     </table>
+
+
+                   </el-row>
+                 </el-col>
+             </el-row>
+
+            <el-row class="ma-1" v-if="provozovnaEdit || list.data.firmaprovozovna.length == 0 || provozovnaEditInsert">
+              <el-col :span="24" class="pa-3 mt-1 text-xs-center" style="width:100%" >
+                <el-row class="ma-2">
+                  <el-col :span="8">
+                    <el-input v-model="firmaprovozovna.nazev" size="mini"  style="width:100%" >
+                      <template slot="prepend">Nazev</template>
+                   </el-input>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-input v-model="firmaprovozovna.jmeno" size="mini"  style="width:95%" >
+                      <template slot="prepend">Jmeno</template>
+                   </el-input>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-input v-model="firmaprovozovna.prijmeni" size="mini"  style="width:95%" suffix-icon="el-icon-phone">
+                      <template slot="prepend">Prijmeni</template>
+                   </el-input>
+                  </el-col>
+                 <!-- <el-col :span="4">
+                    <el-input v-model="firmaprovozovna.titulza" size="mini"  style="width:95%" >
+                      <template slot="prepend">Titul2</template>
+                   </el-input>
+                  </el-col> -->
+                 <el-col :span="2" >
+                   <button v-if="provozovnaEditInsert || list.data.firmaprovozovna.length == 0 " type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="insertKontakt(0)" ><i class="el-icon-plus" size="mini"></i></button>
+                   <button v-if="provozovnaEdit" type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="insertKontakt(1)" ><i class="el-icon-edit" size="mini"></i></button>
+                 </el-col>
+
+                </el-row>
+                <el-row class="ma-2">
+                  <el-col :span="6">
+                    <el-input v-model="firmaprovozovna.oddeleni" size="mini"  style="width:100%" >
+                      <template slot="prepend">Oddeleni</template>
+                   </el-input>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-input v-model="firmaprovozovna.funkce" size="mini"  style="width:95%" >
+                      <template slot="prepend">Funkce</template>
+                   </el-input>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-input v-model="firmaprovozovna.tel" size="mini"  style="width:95%" suffix-icon="el-icon-phone">
+                      <template slot="prepend">Mobil</template>
+                   </el-input>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-input v-model="firmaprovozovna.tel2" size="mini"  style="width:95%" suffix-icon="el-icon-phone">
+                      <template slot="prepend">Tel</template>
+                   </el-input>
+                  </el-col>
+                </el-row>
+
+                <el-row class="ma-2">
+                  <el-col :span="8">
+                    <el-input v-model="firmaprovozovna.mail" size="mini"  style="width:100%" suffix-icon="el-icon-message">
+                      <template slot="prepend">Email</template>
+                   </el-input>
+                  </el-col>
+
+
+
+
+
+                </el-row>
+
+                <el-row class="ma-2">
+                  <el-col :span="8">
+                    <el-input v-model="firmaprovozovna.ulice" size="mini"  style="width:100%" suffix-icon="el-icon-message">
+                      <template slot="prepend" >
+            <b>Kancelar :</b>&nbsp;
+            Ulice
+            </template>
+
+                   </el-input>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="firmaprovozovna.obec" size="mini"  style="width:95%" suffix-icon="el-icon-message">
+                      <template slot="prepend">Obec</template>
+                   </el-input>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-input v-model="firmaprovozovna.psc" size="mini"  style="width:95%" suffix-icon="el-icon-message">
+                      <template slot="prepend">Psc</template>
+                   </el-input>
+                  </el-col>
+
+               </el-row>
+               <el-row class="ma-2">
+
+
+                  <el-col :span="2">
+                  <div class="el-input-group__prepend" style="height:28px;background;width:550px">Aktivni</div>
+         </el-col>
+
+        <el-col :span="2">
+          <input size="mini" style="height:28px;width:28px" v-model="firmaprovozovna.aktivni" type="checkbox" @change="changeAktivniOsoba" name="Hotovost" value="1"  :checked="list.data.firmaprovozovna.aktivni==true">
+        </el-col>
+         <el-col :span="3">
+                    <div class="el-input-group__prepend" style="height:28px;background;width:550px">Poznamky</div>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-input v-model="firmaprovozovna.poznamka" size="mini"  type="textarea" style="width:100%" suffix-icon="el-icon-message">
+                      <template slot="prepend">Poznamky</template>
+                   </el-input>
+                  </el-col>
+
+               </el-row>
+
+
+              </el-col>
+            </el-row>
+
+
           </v-card-text>
         </v-card>
      </v-window-item>
@@ -558,6 +820,14 @@ export default {
       firmaNazev: '',
       firmaAres: [],
 
+      kontaktEdit: false,
+      kontaktEditInsert: false,
+      kontaktAktivni: false,
+
+      provozovnaEdit: false,
+      provozovnaEditInsert: false,
+      provozovnaAktivni: false,
+
       firmaosobapomucka: [
         {jmeno: 'Prvni',prijmeni: 'Clovek'},
         {jmeno: 'Druhy',prijmeni: 'Clovek'},
@@ -617,11 +887,12 @@ export default {
         mail: '',
         www: '',
         poznamka: '',
-        narozeniny: '',
+        narozeniny: null,
         mail_fakt: '',
         psc: '',
         obec: '',
-        ulice: ''
+        ulice: '',
+        aktivni: true
 
 
       },
@@ -638,6 +909,7 @@ export default {
         funkce: '',
         oddeleni: '',
         prioritni: false,
+        aktivni: true,
         tel: '',
         tel2: '',
         tel3: '',
@@ -645,7 +917,14 @@ export default {
         www: '',
         poznamka: '',
         otevreno_od: '08:00',
-        otevreno_do: '18:00'
+        otevreno_do: '18:00',
+        po: true,
+        ut: true,
+        st: true,
+        ct: true,
+        pa: true,
+        so: false,
+        ne: false,
       },
 
     firmanotice: {
@@ -653,7 +932,9 @@ export default {
         idefix_firma: 0,
         txt: '',
         user_txt: '',
-        datum: f.dnes()
+        datum: f.dnes(),
+        kdy: null,
+        pripominka: false
 
 
       },
@@ -800,6 +1081,20 @@ export default {
       //alert(e.target.checked)
     },
 
+
+     changePripominka(e) {
+       return
+      const self = this
+      if (e.target.checked) {
+        self.list.data.firmanotice = 1
+
+      } else {
+        self.list.data.firma[0].mat = 0
+      }
+      //alert(e.target.value)
+      //alert(e.target.checked)
+    },
+
      changeMat(e) {
       const self = this
       if (e.target.checked) {
@@ -883,6 +1178,9 @@ export default {
 
     },
 
+    async editNotice(){
+      return
+    },
     async insertNotice() {
         var lAdd = true
         const self = this
@@ -903,6 +1201,7 @@ export default {
 
 
   //        alert(this.list.data.strojmod.length)
+
           this.firmanotice.idefix = (this.list.data.firmanotice.length +10)*-1
           this.firmanotice.kod = (this.list.data.firmanotice.length +1)
           this.firmanotice.user_txt = this.user
@@ -921,12 +1220,82 @@ export default {
             el.datum  = f.datum2(el.datum)
           })
 
+          //alert(JSON.stringify(neco3.data.firmanotice))
+          //alert('aaa')
+        }
+
+      }
+
+    },
+
+    async deleteKontakt(clovek) {
+        const self = this
+
+          var neco2=  (await ListFirma.saveOsoba(self.user,self.idefixThis,clovek,1022))
+          var neco3  = (await ListFirma.one(this.user,self.idefixThis, 102,''))
+          self.list.data.firmaosoba = []
+          self.list.data.firmaosoba =neco3.data.firmaosoba
+
+    },
+    async insertKontakt(nPar) {
+        var lAdd = true
+        const self = this
+        //alert(this.firmaosoba.idefix)
+        // alert(self.firmaosoba.aktivni)
+        if (this.firmaosoba.prijmeni > ''){
+
+        self.firmaosoba.idefix_firma =this.idefixThis
+        if (nPar == 0){
+        //alert(JSON.stringify(this.list.data.firmaosoba))
+        this.list.data.firmaosoba.forEach((el,i) =>{
+          if (el.prijmeni + el.jmeno == self.firmaosoba.prijmeni + self.firmaosoba.jmeno) {
+            lAdd = false
+            alert('Nemeli by jste pridavat uplne stejnou osobu kontaktni  ke stejne firme')
+          }
+        } );
+        }
+          // alert('iko 2')
+        if (lAdd == true) {
+          let neco= this.firmaosoba
+          if (nPar ==0 ){
+            var neco2=  (await ListFirma.saveOsoba(self.user,self.idefixThis,this.firmaosoba,102))
+          }
+          if (nPar ==1 ){
+            var neco2=  (await ListFirma.saveOsoba(self.user,self.idefixThis,this.firmaosoba,1021))
+          }
+
+
+  //        alert(this.list.data.strojmod.length)
+       if (nPar ==0 ){
+          this.firmaosoba.idefix = (this.list.data.firmaosoba.length +10)*-1
+          this.firmaosoba.kod = (this.list.data.firmaosoba.length +1)
+          this.firmaosoba.user_txt = this.user
+          // this.firmanotice.datum =
+          // this.strojmod.prio = (this.list.data.strojmod.length +1)
+          if (nPar ==0 ){
+            this.list.data.firmaosoba.push(neco)
+          }
+          var newObj = f.cp(this.firmaosoba)
+          this.firmaosoba = newObj
+          this.firmaosoba.prijmeni = ''
+          this.firmaosoba.jmeno = ''
+          this.firmaosoba.mail = ''
+          this.firmaosoba.funkce = ''
+          this.firmaosoba.oddeleni = ''
+          this.firmaosoba.narozeniny = null
+       }
+          var neco3  = (await ListFirma.one(this.user,self.idefixThis, 102,''))
+          self.list.data.firmaosoba = []
+          self.list.data.firmaosoba =neco3.data.firmaosoba
+
+          /*
+          self.list.data.firmanotice.forEach(el => {
+            el.datum  = f.datum2(el.datum)
+          })
+          */
 
           //alert(JSON.stringify(neco3.data.firmanotice))
           //alert('aaa')
-
-
-
 
 
         }
@@ -934,6 +1303,103 @@ export default {
       }
 
     },
+
+    async editKontakt(aPar) {
+      this.firmaosoba = f.cp(aPar)
+      this.kontaktEdit = true
+      this.kontaktEditInsert = false
+
+
+    },
+    //Provozovny
+    async deleteProvozovna(clovek) {
+        const self = this
+
+          var neco2=  (await ListFirma.saveProvozovna(self.user,self.idefixThis,clovek,1032))
+          var neco3  = (await ListFirma.one(this.user,self.idefixThis, 103,''))
+          self.list.data.firmaprovozovna = []
+          self.list.data.firmaprovozovna =neco3.data.firmaprovozovna
+
+    },
+    async insertProvozovna(nPar) {
+        var lAdd = true
+        const self = this
+        //alert(this.firmaprovozovna.idefix)
+        // alert(self.firmaprovozovna.aktivni)
+        if (this.firmaprovozovna.prijmeni > ''){
+
+        self.firmaprovozovna.idefix_firma =this.idefixThis
+        if (nPar == 0){
+        //alert(JSON.stringify(this.list.data.firmaprovozovna))
+        this.list.data.firmaprovozovna.forEach((el,i) =>{
+          if (el.prijmeni + el.jmeno == self.firmaprovozovna.prijmeni + self.firmaprovozovna.jmeno) {
+            lAdd = false
+            alert('Nemeli by jste pridavat uplne stejnou  provozovnu  ke stejne firme')
+          }
+        } );
+        }
+          // alert('iko 2')
+        if (lAdd == true) {
+          let neco= this.firmaprovozovna
+          if (nPar ==0 ){
+            var neco2=  (await ListFirma.saveProvozovna(self.user,self.idefixThis,this.firmaprovozovna,103))
+          }
+          if (nPar ==1 ){
+            var neco2=  (await ListFirma.saveProvozovna(self.user,self.idefixThis,this.firmaprovozovna,1031))
+          }
+
+
+  //        alert(this.list.data.strojmod.length)
+       if (nPar ==0 ){
+          this.firmaprovozovna.idefix = (this.list.data.firmaprovozovna.length +10)*-1
+          this.firmaprovozovna.kod = (this.list.data.firmaprovozovna.length +1)
+          this.firmaprovozovna.user_txt = this.user
+          // this.firmanotice.datum =
+          // this.strojmod.prio = (this.list.data.strojmod.length +1)
+          if (nPar ==0 ){
+            this.list.data.firmaprovozovna.push(neco)
+          }
+          var newObj = f.cp(this.firmaprovozovna)
+          this.firmaprovozovna = newObj
+          this.firmaprovozovna.prijmeni = ''
+          this.firmaprovozovna.jmeno = ''
+          this.firmaprovozovna.mail = ''
+          this.firmaprovozovna.funkce = ''
+          this.firmaprovozovna.oddeleni = ''
+          this.firmaprovozovna.narozeniny = null
+       }
+          var neco3  = (await ListFirma.one(this.user,self.idefixThis, 102,''))
+          self.list.data.firmaprovozovna = []
+          self.list.data.firmaprovozovna =neco3.data.firmaprovozovna
+
+          /*
+          self.list.data.firmanotice.forEach(el => {
+            el.datum  = f.datum2(el.datum)
+          })
+          */
+
+          //alert(JSON.stringify(neco3.data.firmanotice))
+          //alert('aaa')
+
+
+        }
+
+      }
+
+    },
+
+    async editProvozovna(aPar) {
+      this.firmaprovozovna = f.cp(aPar)
+      this.provozovnaEdit = true
+      this.provozovnaEditInsert = false
+
+
+    },
+
+    //Provozovny
+
+
+
 
     firma_copy(){
       this.list.data.firma[0].ulice2 = this.list.data.firma[0].ulice
