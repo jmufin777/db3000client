@@ -60,7 +60,10 @@
 <script>
 import {mapState} from 'vuex'
 import DbStatusService from '@/services/DbStatusService'
-import { setTimeout } from 'timers';
+// import { setTimeout } from 'timers';
+import f from '@/services/fce'
+import { setTimeout, clearInterval } from 'timers'
+import ListFirma from '@/services/ListFirmaService'
 
 
 
@@ -93,6 +96,43 @@ export default {
 
   },
   methods: {
+  async testNotify()   {
+    self =this
+  //  console.log(this.user)
+
+    var neco3  = (await ListFirma.one(this.user,0, 1011,''))
+
+    //console.log("neco3:", neco3.data.firmanoticevalid)
+    //neco3.forEach(element => {
+    let nNic=1000
+    await neco3.data.firmanoticevalid.forEach(el=>{
+      el.zobrazeno = 1
+      var neco2=  (ListFirma.saveNotice(self.user,0,el,1011))
+
+//        console.log(f.datum(el.kdy) + ': ' + el.txt + el.idefix_osoba )
+
+          setTimeout( function(){
+            nNic +=  1000
+            self.$notify( {
+            title: 'Upozorneni pro ( ' + el.firmaosoba+ ' )',
+            message:  el.txt  ,
+            dangerouslyUseHTMLString: true,
+            type: 'warning',
+            offset: 100,
+            onClick: function(){
+
+            },
+            duration: 0
+          })
+          },nNic)
+
+
+    })
+
+
+    //});
+    //var neco2=  (await ListFirma.saveNotice(self.user,self.idefixThis,jPar,1011))
+  },
   async db_who()  {
      const self = this
      await  DbStatusService.who({idefix: this.$store.state.idefix})
@@ -115,7 +155,10 @@ export default {
         this.interval1 = setTimeout(function() {
           self.db_status()
           self.db_who()
-        },2600)
+          self.testNotify()
+
+
+        },1600)
 
       })
       .catch((e) => {
@@ -146,9 +189,23 @@ export default {
     }
    }
   },
+  computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'user',
+      'level',
+      'idefix',
+      'showEdit',
+      'setshowModule',
+      'setshowModuleTitle',
+      'setshowIdefix',
+
+    ]),
+  },
    beforeDestroy () {
        clearInterval(this.interval1)
     }
+
 
 }
 </script>

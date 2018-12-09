@@ -19,19 +19,20 @@
 <span slot="a3">A3</span> -->
 
 
-<div slot="b1" class="green elevation-2" style="height:40px;font-size:18px">{{ stepInfo}}</div>
+<div slot="b1" class="green lighten-4 elevation-2" style="height:40px;font-size:18px">{{ stepInfo}}</div>
 <!-- <span slot="b3">B3</span> -->
-<div slot="a1" style="height:40px;font-size:18px;" class="px-2 green elevation-2" >
+<div slot="a1" style="height:40px;font-size:18px;" class="px-2 green lighten-4 elevation-2" >
 {{ ((isCopy ==false )?'Zmena':'Nova polozka ') +' ' + list.data.stroj[0].nazev  }}
 </div>
-<div slot="c1" style="height:40px;font-size:18px" class="green elevation-2">
+<div slot="c1" style="height:40px;font-size:18px" class="green lighten-4 elevation-2">
       <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit8210" @click="submitForm('formnew')" size="mini"> Novy Upravou</el-button>
       <el-button v-if="isCopy" type="primary" id="btn_user_submit8210" @click="submitForm('form')" size="mini"
         >Vlozit </el-button>
        <el-button v-else type="primary" id="btn_user_submit8210" @click="submitForm('formstep0')" size="mini"
+       class="blue"
         >Ulozit</el-button>
       <el-button v-if="isCopy" @click="resetForm('form')" id="btn_cancel_submit8210" size="mini">Zrusit</el-button>
-      <el-button v-else @click="resetForm('form')" id="btn_cancel_submit8210" size="mini">Zavrit</el-button>
+      <el-button v-else @click="resetForm('form')" id="btn_cancel_submit8210" size="mini" class="blue--text">Zavrit</el-button>
 <!--
         <el-button @click="cancelForm" id="btn_cancel_submit8210" size="mini" style="height:40px;font-size:18px">Zavrit</el-button>
         -->
@@ -230,9 +231,7 @@
 
      </el-col>
     </el-row>
-              <span class="caption grey--text text--darken-1">
-                Polozky stroje zakladni
-              </span>
+
          </v-card-text></v-card>
          </v-window-item>
 
@@ -489,11 +488,11 @@
   <draggable v-model="list.data.strojmod"  :options="{group: 'people' }" @start="drag=true" @end="chooseItemMod" >
 
     <el-row  v-for="(itemmod, imod) in list.data.strojmod" :key="itemmod.idefix" class="ma-2 mt-0 "
-      v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+      v-bind:class="{ 'white lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
      >
-     <table style="width:100%" border="0" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-       <tr v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+     <table style="width:100%" border="0" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       <tr v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
          <el-select v-model="list.data.strojmod[imod].idefix_prace"
         default-first-option
         size="mini"  class="pt-1 pl-1"
@@ -507,7 +506,7 @@
             >{{item82.nazev}} </el-option>
        </el-select>
        </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
          <el-autocomplete
         class="inline-input mr-1"
         v-model="list.data.strojmod[imod].nazev"
@@ -515,11 +514,11 @@
         placeholder="Nazev tisk.modu"
         @select="handleSelect"
         size="mini"
-        style="width:90%"
-        v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+        style="width:100%"
+        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
       ></el-autocomplete>
        </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+      <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
       <el-autocomplete
       class="inline-input mr-1"
       v-model="list.data.strojmod[imod].nazev_text"
@@ -530,10 +529,10 @@
       style="width:90%"
      ></el-autocomplete>
        </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
            <el-input-number v-model="list.data.strojmod[imod].rychlost" size="mini"  style="width:100%"></el-input-number>
        </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
          <el-select v-model="list.data.strojmod[imod].idefix_jednotka"
         default-first-option
         size="mini"  class="pt-1 pl-1 ml-2"
@@ -546,12 +545,12 @@
             >{{item83.nazev}} </el-option>
        </el-select>
        </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
         <el-checkbox v-model="list.data.strojmod[imod].mod_priorita"
             size="mini">Prioritni
        </el-checkbox>
        </td>
-       <td style="border:none" v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
          <button  type="button" style="width:100%;height:26px;z-index:1900000" class="px-0 " @click="deleteMod(imod)" ><i class="el-icon-delete" size="mini"></i></button>
        </td>
       </tr>
@@ -569,9 +568,9 @@
           </tr>
         </thead> -->
         <tbody>
-       <tr v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
+       <tr v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
          <td style="text-align:left"
-         v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+         v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
          >
          i1<el-select v-model="list.data.strojmod[imod].idefix_i1"
           size="mini"
@@ -583,19 +582,19 @@
             :key="item190.idefix*1"
             :label="item190.nazev"
             :value="item190.idefix*1"
-            v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+            v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
             >{{item190.nazev}} </el-option>
        </el-select>
        <input type="number" v-model="list.data.strojmod[imod].i1spotreba"
         class="mb-0 px-0 cell cisla"
         style="width:30%;"
-        v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
 
 
        >
  </td>
  <td
- v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+ v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
  >i2<el-select v-model="list.data.strojmod[imod].idefix_i2"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
             <el-option
             v-for="item191 in list.data.enum_inkoust"
@@ -607,10 +606,10 @@
        <input type="number" v-model="list.data.strojmod[imod].i2spotreba"
         class="mb-0 px-0 cell cisla"
         style="width:30%;"
-        v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
        >
        </td>
-     <td v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+     <td v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
      >i3
        <el-select v-model="list.data.strojmod[imod].idefix_i3"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <el-option
@@ -623,10 +622,10 @@
        <input type="number" v-model="list.data.strojmod[imod].i3spotreba"
         class="mb-0 px-0 cell cisla"
         style="width:30%;"
-        v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
        >
        </td>
-       <td v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+       <td v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
        >i4
        <el-select v-model="list.data.strojmod[imod].idefix_i4"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <el-option
@@ -639,10 +638,10 @@
        <input type="number" v-model="list.data.strojmod[imod].i4spotreba"
         class="mb-0 px-0 cell cisla"
         style="width:30%;"
-        v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
        >
        </td>
-       <td v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+       <td v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
        >i5
        <el-select v-model="list.data.strojmod[imod].idefix_i5"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
           <el-option
@@ -655,7 +654,7 @@
        <input type="number" v-model="list.data.strojmod[imod].i5spotreba"
         class="mb-0 px-0 cell cisla"
         style="width:30%;"
-        v-bind:class="{ 'green lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
+        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
        >
        </td>
       </tr>
@@ -683,15 +682,15 @@
           <el-row class="ma-2 ">
           <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%" >
 
-            <el-row class="mx-0 ml-0 mt-3 mb-0 blue-grey lighten-4">
+            <el-row class="mx-0 ml-0 mt-3 mb-1 blue-grey lighten-4">
               <el-col :span="2">Poradi</el-col>
               <el-col :span="5">Popis</el-col>
               <!-- <el-col :span="3">Stroj Mod</el-col> -->
               <el-col :span="3" class="ml-1"><el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:90%">Jednotka</el-button></el-col>
               <el-col :span="2">Start</el-col>
               <el-col :span="2">Stop</el-col>
-              <el-col :span="2">Naklad</el-col>
-              <el-col :span="2">Prodej</el-col>
+              <el-col :span="2">Naklad/h</el-col>
+              <el-col :span="2">Prodej/h</el-col>
               <el-col :span="1">&nbsp;</el-col>
 
 
@@ -700,7 +699,7 @@
               <!-- <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%">Prace</el-button> </el-col> -->
             </el-row>
 
-      <el-row class="mb-2 blue-grey lighten-5">
+      <el-row class="pt-1 pb-1 mb-2 blue-grey lighten-5">
       <el-col style="border:solid 0px;height:30px" :span="2" >
          <input type="number" v-model="strojceny.kod"  class="mb-0 px-0 cell cisla" style="width:100%;">
        </el-col>
@@ -709,7 +708,7 @@
       class="inline-input mr-1"
       v-model="strojceny.nazev"
       :fetch-suggestions="querySearch5"
-      placeholder="Popis polozky"
+        placeholder="Popis polozky"
       @select="handleSelect"
       size="mini"
       style="width:90%"
@@ -738,7 +737,7 @@
        </el-select>
       </el-col>
       <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="strojceny.pocet_start"  class="mb-0 px-0 cell cisla" style="width:90%;">
+         <input type="number" v-model="strojceny.pocet_start"  class="mb-0 px-0 cell cisla" style="width:90%;position:relative;top:0px">
        </el-col>
        <el-col style="border:solid 0px;height:30px" :span="2" >
          <input type="number" v-model="strojceny.pocet_stop"   class="mb-0 px-0 cell cisla" style="width:90%;">
@@ -756,15 +755,15 @@
      </el-row>
 
   <draggable v-model="list.data.strojceny"  :options="{group: 'peoplex' }" @start="drag=true" @end="chooseItemCeny" >
-      <el-row  v-for="(itemceny, iceny) in list.data.strojceny" :key="itemceny.idefix" class="ma-0 mt-0"
-              v-bind:class="{ 'green lighten-5' : ( iceny % 2 == 0) , 'blue lighten-5' : ( iceny % 2 != 0)  }"
+      <el-row  v-for="(itemceny, iceny) in list.data.strojceny" :key="itemceny.idefix" class="ma-0 mt-0 "
+              v-bind:class="{ 'white' : ( iceny % 1 == 0) , 'blue lighten-5' : ( iceny % 2 != 0)  }"
       >
-   <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].kod"  class="mb-0 px-0 cell cisla" style="width:100%;">
-       </el-col>
-       <el-col :span="5">
+   <el-col style="border:solid 0px;height:30px" :span="2" class="pt-0 nb" >
+         <input type="number" v-model="list.data.strojceny[iceny].kod"  class="mt-2 mb-0 px-0 cell cisla" style="width:100%;">
+   </el-col>
+   <el-col :span="5">
    <el-autocomplete
-      class="inline-input mr-1"
+      class="inline-input mr-1 mt-2 "
       v-model="list.data.strojceny[iceny].nazev"
       :fetch-suggestions="querySearch5"
       placeholder="Popis polozky"
@@ -786,7 +785,7 @@
        </el-select>
       </el-col> -->
       <el-col :span="3" class="mx-1">
-        <el-select v-model="list.data.strojceny[iceny].idefix_jednotka"  size="mini" class="pt-1 pl-1 ml-2"  style="width:90%"  >
+        <el-select v-model="list.data.strojceny[iceny].idefix_jednotka"  size="mini" class="pt-0 pl-1 ml-2 mt-2 "  style="width:90%"  >
           <el-option
             v-for="item291 in list.data.enum_jednotka"
             :key="item291.idefix*1"
@@ -796,22 +795,22 @@
        </el-select>
       </el-col>
       <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].pocet_start"  class="mb-0 px-0 cell cisla" style="width:90%;">
+         <input type="number" v-model="list.data.strojceny[iceny].pocet_start"  class="mb-0 px-0 cell cisla mt-2 " style="width:90%;">
        </el-col>
        <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].pocet_stop"   class="mb-0 px-0 cell cisla" style="width:90%;">
+         <input type="number" v-model="list.data.strojceny[iceny].pocet_stop"   class="mb-0 px-0 cell cisla mt-2 " style="width:90%;">
        </el-col>
        <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].cena_naklad"  class="mb-0 px-0 cell cisla" style="width:90%;">
+         <input type="number" v-model="list.data.strojceny[iceny].cena_naklad"  class="mb-0 px-0 cell cisla mt-2 " style="width:90%;">
        </el-col>
        <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].cena_prodej"   class="mb-0 px-0 cell cisla" style="width:90%;">
+         <input type="number" v-model="list.data.strojceny[iceny].cena_prodej"   class="mb-0 px-0 cell cisla mt-2 " style="width:90%;">
        </el-col>
 
 
      <el-col style="border:solid 0px" :span="1" >
 
-       <button  type="button" style="width:100%;height:26px;z-index:10000" class="px-0 " @click="deleteCeny(iceny)" ><i class="el-icon-delete" size="mini"></i></button>
+       <button  type="button" style="width:100%;height:22px;z-index:10000;position:relative;top:8px" class="px-0 " @click="deleteCeny(iceny)" ><i class="el-icon-delete" size="mini"></i></button>
 
        &nbsp;
      <!-- <button  type="button" style="width:100%;height:26px" class="pl-4" @click="insertCeny" ><i class="el-icon-plus" size="mini"></i></button> -->
@@ -862,9 +861,9 @@
         </form>
       </v-window>
 
-      <v-divider></v-divider>
+      <!-- <v-divider></v-divider> -->
 
-      <v-card-actions>
+      <!-- <v-card-actions>
         <v-btn
           :disabled="step === 1"
           flat
@@ -883,7 +882,7 @@
           Uloz a Dalsi
         </v-btn>
 
-      </v-card-actions>
+      </v-card-actions> -->
     </v-card>
 
 

@@ -13,23 +13,23 @@
     v-if="list && list.data && list.data.mat && list.data.mat.length > 0 "
     >
 
-<div slot="b1" class="green elevation-2" style="height:30px;font-size:18px">
+<div slot="b1" class="green lighten-4  elevation-2" style="height:30px;font-size:18px">
   {{ ((Akce =='edit')?'Zmena':'Nova polozka ')  }}
 </div>
 
-<div slot="a1" style="height:30px;font-size:18px;" class="px-2 green elevation-2" >
+<div slot="a1" style="height:30px;font-size:18px;" class="px-2 green lighten-4  elevation-2" >
   {{ ((Akce =='edit')?'':'') +' ' + list.data.mat[0].nazev1 +' ' + list.data.mat[0].nazev2 +' ' + list.data.mat[0].nazev3  }}
 </div>
 
-<div slot="c1" style="opacity:1;height:30px;font-size:18px" class="green elevation-2">
+<div slot="c1" style="opacity:1;height:30px;font-size:18px" class="green lighten-4  elevation-2">
    <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit821" @click="submitForm('formnew')" size="mini"
          > Novy Upravou</el-button>
    <el-button v-if="isCopy" type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
      >Vlozit </el-button>
     <el-button v-else type="primary" id="btn_user_submit821" @click="submitForm('form')" size="mini"
      >Ulozit</el-button>
-   <el-button v-if="isCopy" @click="resetForm('form')" id="btn_cancel_submit821" size="mini">Zrusit</el-button>
-   <el-button v-else @click="resetForm('form')" id="btn_cancel_submit821" size="mini">Zavrit</el-button>
+   <el-button v-if="isCopy" @click="resetForm('form')" id="btn_cancel_submit821" size="mini" class="blue white--text">Zrusit</el-button>
+   <el-button v-else @click="resetForm('form')" id="btn_cancel_submit821" size="mini" class="blue white--text">Zavrit</el-button>
 </div>
 
 

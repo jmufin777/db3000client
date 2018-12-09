@@ -310,6 +310,14 @@ export default {
     padding: 10px 0;
     background-color: #4FC3F7;
   }
+.handle .handle-mr .handle-tr .handle-br .handle-bm {
+  display: none !important;
+ }
+
+ .vdr .draggable .resizable .active {
+    display: none !important;
+
+}
 </style>
 
 

@@ -96,9 +96,14 @@
       <el-input v-model="form.jmeno" ref="jmeno"  size="mini" placeholder="jmeno" ></el-input>
     </el-form-item>
     </el-col>
-    <el-col :span="11">
+    <el-col :span="7">
     <el-form-item label="Prijmeni">
       <el-input v-model="form.prijmeni" ref="prijmeni"  size="mini" placeholder="Prijmeni" ></el-input>
+    </el-form-item>
+    </el-col>
+    <el-col :span="4">
+   <el-form-item label="Zkratka">
+      <el-input v-model="form.zkratka" ref="zkratka"  size="mini" placeholder="ZKR" ></el-input>
     </el-form-item>
     </el-col>
 </el-col></el-row>
@@ -211,6 +216,7 @@ export default {
         heslo2: '',
         jmeno: '',
         prijmeni: '',
+        zkratka: '',
         ulice: '',
         obec: '',
         psc: '',
@@ -268,6 +274,7 @@ export default {
         this.form.login = dlgPar.form.login
         this.form.jmeno = dlgPar.form.jmeno
         this.form.prijmeni = dlgPar.form.prijmeni
+        this.form.zkratka = dlgPar.form.zkratka
         this.form.plati_od = dlgPar.form.plati_od
         this.form.plati_do = dlgPar.form.plati_do
         this.form.zobraz = (dlgPar.form.zobraz > 0)
@@ -281,6 +288,11 @@ export default {
         this.form.psc = dlgPar.form.psc
         this.form.heslo = ''
         this.form.heslo2 = ''
+        //alert(this.form.zkratka)
+        if ((this.form.zkratka=='' || this.form.zkratka== null ) && this.form.prijmeni>''){
+          this.form.zkratka = (this.form.jmeno.substr(0,1) + this.form.prijmeni.substr(0,1) ) . toUpperCase()
+          // alert('jj'+ this.form.zkratka + " :: " + this.form.jmeno.substr(0,3) + " ::: "+ this.form.prijmeni.substr(0,3)  )
+        }
 
         //this.centerDialogVisible = dlgPar.dlg
         this.centerDialogVisible = true

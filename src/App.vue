@@ -94,7 +94,12 @@ table {
 
 
 th {
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
+  background-color: #f5f7fa;
+  opacity: 0.8;
+  text-align:center;
+
+
 
 }
 td {
@@ -179,6 +184,101 @@ html div {
 .bila2{
   background-color: #E0F7FA !important;
 }
+
+ul {
+  z-index: 1305000 !important;
+}
+li {
+  z-index: 1305000 !important;
+}
+
+.el-select-dropdown {
+  z-index: 1305000 !important;
+}
+.el-popper {
+  z-index: 1305000 !important;
+}
+
+el-autocomplete-suggestion el-popper el-select-dropdown__item{
+  z-index: 1305000 !important;
+}
+
+div[role="region"] {
+    z-index: 3050000 !important; /*for overriding the old css styles */
+    }
+ input[type="text"] {
+    z-index: 3050000 !important; /*for overriding the old css styles */
+   }
+
+ .el-date-table th {
+
+   width: 20px;
+ }
+ .el-year-table td  {
+
+   width: 20px;
+ }
+.el-month-table td   {
+
+   width: 48px;
+ }
+
+ .el-year-table td  .cell {
+
+   width: 18px;
+ }
+ .el-month-table td .cell  {
+
+   width: 18px;
+ }
+ .el-input-group__prepend {
+    border-right: 1px !important;
+    font-size: 12px !important ;
+}
+.h-1 {
+  height:0.1px;
+  font-size:0.1px
+}
+.c-1 {
+  text-align: center;
+}
+.nb {
+  border:none;
+}
+.h-100 {
+  height : 100%;
+}
+.w-100 {
+  width : 100%;
+}
+
+.tdlr {
+  border-left: none;
+  border-right: none;
+}
+.tdline {
+  border-bottom: solid 1px #cccccc;
+  border-left: none;
+  /* border-right: none; */
+  border-right: solid 1px #cccccc;
+}
+.tdn {
+  border-left: none;
+  border-right: none;
+}
+.prvni {
+
+   background: #FFFFFF;
+}
+.druha {
+  background: #E3F2FD;
+}
+.seda {
+  background:#E0E0E0;
+}
+
+
+
 
 
 
