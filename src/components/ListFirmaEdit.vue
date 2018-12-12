@@ -422,6 +422,7 @@
                 <div style="width:100%;max-width:2000px;position:relative">
                   <table style="width:100%;max-width:2000px" class="nb">
                         <thead class="c-1  tdline">
+
                          <th class="tdline" style="width:10%">Jmeno</th>
                          <th class="tdline" style="width:15%">Prijmeni</th>
                          <th class="tdline" style="width:25%" >Mail</th>
@@ -436,6 +437,7 @@
                        </thead>
                      </table>
                 </div>
+
                <div style="width:100%;positon:relative;overflow:auto;height:80%;">
                      <table style="width:100%">
                        <thead class="h-1 " style="height:1px">

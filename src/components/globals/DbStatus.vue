@@ -81,16 +81,22 @@ export default {
       res_for_normal:99,
       vse: [],
       who: [],
-      insterval1:''
+      insterval1:'',
+      tStart: 0
     }
   },
   mounted () {
+      try{
         this.$message({
                 message: 'Status nacten',
                 type: 'success',
                 center: true,
                 duration: 2000
              })
+      } catch (e){
+        //
+        console.log('jebka')
+      }
        this.db_status()
        this.db_who()
 
@@ -155,7 +161,7 @@ export default {
         this.interval1 = setTimeout(function() {
           self.db_status()
           self.db_who()
-          self.testNotify()
+          //self.testNotify()
 
 
         },1600)

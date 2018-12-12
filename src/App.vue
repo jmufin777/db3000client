@@ -6,7 +6,6 @@
   </div>
 </template>
 
-<script>
 
 
 
@@ -238,6 +237,13 @@ div[role="region"] {
 .h-1 {
   height:0.1px;
   font-size:0.1px
+}
+.h-1b {
+  height:0.1px;
+  font-size:0.1px;
+  display: block;
+
+
 }
 .c-1 {
   text-align: center;
