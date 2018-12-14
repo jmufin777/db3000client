@@ -274,6 +274,7 @@ export default {
 				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:5, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 8, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         { id: "zkratka", title: "Zkratka ", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        // { id: "stroj", title: "Stroj", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
 			],

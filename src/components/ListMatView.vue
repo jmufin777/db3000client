@@ -101,8 +101,8 @@
   <div style="min-height:900px">
 
     <br><br>
-  <ta-ble :list="list" :h="'300px'" >
- </ta-ble>
+  <ta-ble :list="list" :h="'200px'" >
+  </ta-ble>
 
 <table slot="activator" style="width:100%" class="mx-0 my-4 py-4">
 <thead>

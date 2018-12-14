@@ -95,7 +95,7 @@ export default {
              })
       } catch (e){
         //
-        console.log('jebka')
+        // console.log('jebka')
       }
        this.db_status()
        this.db_who()
@@ -104,7 +104,7 @@ export default {
   methods: {
   async testNotify()   {
     self =this
-  //  console.log(this.user)
+    console.log(this.user)
 
     var neco3  = (await ListFirma.one(this.user,0, 1011,''))
 
@@ -145,8 +145,6 @@ export default {
      .then(res => {
        this.who = res.data.data
 
-
-
      })
 
   },
@@ -161,8 +159,7 @@ export default {
         this.interval1 = setTimeout(function() {
           self.db_status()
           self.db_who()
-          //self.testNotify()
-
+          self.testNotify()
 
         },1600)
 

@@ -257,10 +257,8 @@
      <el-col :span="5">
      <el-input v-model="list.data.firma[0].dic" size="mini"  style="width:95%">
        <template slot="prepend">DIC</template>
-
      </el-input>
      </el-col>
-
     </el-row>
     <el-row class="ma-2">
         <el-col :span="10">
@@ -268,30 +266,22 @@
             <template slot="prepend">
               <b>Sidlo&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
               Ulice</template>
-
           </el-input>
         </el-col>
-
-
         <el-col :span="7">
           <el-input v-model="list.data.firma[0].obec" size="mini"  style="width:95%">
               <template slot="prepend">Obec</template>
            </el-input>
         </el-col>
-
         <el-col :span="4">
           <el-input v-model="list.data.firma[0].psc" size="mini"  style="width:95%">
               <template slot="prepend">Psc</template>
            </el-input>
-
         </el-col>
         <el-col :span="1">
         <el-button size ="mini" @click="firma_copy" type="primary" class="elevation-15" >= </el-button>
         </el-col>
-
     </el-row>
-
-
 
     <el-row class="ma-2">
       <el-col :span="2" > </el-col>
@@ -660,12 +650,14 @@
                      <!-- @end="chooseItemKontakt" -->
                      <table style="width:100%">
                        <thead>
-                         <th>Nazev</th><th>Ulice</th><th>Obec</th><th>Psc</th>
-                         <th>Jmeno</th><th>Prijmeni</th>
-                         <th style="width:20%" >Mail</th><th>Tel</th>
-                         <th>Funkce</th>
-                         <th>
-                           <el-checkbox border v-model="provozovnaAktivni" size="mini">Aktivni</el-checkbox>
+                         <th style="width:10%">Nazev</th>
+                         <th style="width:20%">Adresa</th>
+                         <th style="width:20%">Jmeno</th>
+                         <th style="width:20%">Mail</th>
+                         <th style="width:10%">Tel</th>
+                         <th style="width:10%">Funkce</th>
+                         <th style="width:5%">
+                           <!-- <el-checkbox border v-model="provozovnaAktivni" size="mini">Aktivni</el-checkbox> -->
                            &nbsp;
                            <button  type="button" style="width:22px%;height:22px" class="pl-0 info elevation-3"  @click="provozovnaEditInsert=!provozovnaEditInsert ; provozovnaEdit=(provozovnaEditInsert)?false:provozovnaEdit ;" ><i class="el-icon-plus" size="mini"></i></button>
 
@@ -679,37 +671,27 @@
                           style="width:100%"
                         >
                        <tr v-for="(provozovnax, i) in list.data.firmaprovozovna" :key="i"
-                       v-if="provozovnax.aktivni==true || provozovnaAktivni == true "
-
+                       v-if="provozovnax.aktivni==true || provozovnaAktivni == false "
 
                        >
-                         <td  >{{provozovnax.nazev}}</td>
-                         <td  >{{provozovnax.jmeno}} </td>
-                         <td> {{provozovnax.prijmeni}}</td>
-                         <td> {{provozovnax.ulice}}</td><td> {{provozovnax.obec}}</td><td> {{provozovnax.psc}}</td>
-                         <td style="width:30%" >{{provozovnax.mail}}</td>
-                         <td  >{{provozovnax.tel}}</td>
-                         <td  >{{provozovnax.funkce}}</td>
-                         <td>0</td>
-                         <td>0</td>
+                         <td style="width:10%">{{provozovnax.nazev}}</td>
+                         <td style="width:20%" >{{provozovnax.ulice + ', '+ provozovnax.psc+ ' ' +provozovnax.obec  }}</td>
 
-                         <td
-                         v-bind:class="{'warning': provozovnax.aktivni==false,'success': provozovnax.aktivni==true }"
+                         <td style="width:20%">{{provozovnax.jmeno + ' '+ provozovnax.prijmeni}} </td>
 
-                          style="text-align:center">
-
-                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="editKontakt(provozovnax)" ><i class="el-icon-edit" size="mini"></i></button>
-                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="deleteKontakt(provozovnax)" ><i class="el-icon-delete" size="mini"></i></button>
-
-
+                         <td style="width:20%">{{provozovnax.mail}}</td>
+                         <td style="width:10%">{{provozovnax.tel}}</td>
+                         <td style="width:10%">{{provozovnax.funkce}}</td>
+                         <td style="width:5%;text-align:center"
+                          v-bind:class="{ 'prvni' : ( provozovnax.aktivni==true && i %2 == 0) , 'prvni' : ( provozovnax.aktivni==true && i %2 != 0) , 'seda' : ( provozovnax.aktivni==false )  }"
+                          >
+                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="editProvozovna(provozovnax)" ><i class="el-icon-edit" size="mini"></i></button>
+                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="deleteProvozovna(provozovnax)" ><i class="el-icon-delete" size="mini"></i></button>
                          </td>
-
                        </tr>
                        </draggable>
                       </tbody>
                      </table>
-
-
                    </el-row>
                  </el-col>
              </el-row>
@@ -738,8 +720,8 @@
                    </el-input>
                   </el-col> -->
                  <el-col :span="2" >
-                   <button v-if="provozovnaEditInsert || list.data.firmaprovozovna.length == 0 " type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="insertKontakt(0)" ><i class="el-icon-plus" size="mini"></i></button>
-                   <button v-if="provozovnaEdit" type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="insertKontakt(1)" ><i class="el-icon-edit" size="mini"></i></button>
+                   <button v-if="provozovnaEditInsert || list.data.firmaprovozovna.length == 0 " type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="insertProvozovna(0)" >A<i class="el-icon-plus" size="mini"></i></button>
+                   <button v-if="provozovnaEdit" type="button" style="width:100%;height:22px" class="pl-0 info elevation-3"  @click="insertProvozovna(1)" ><i class="el-icon-edit" size="mini">B</i></button>
                  </el-col>
 
                 </el-row>
@@ -815,13 +797,69 @@
                     <div class="el-input-group__prepend" style="height:28px;background;width:550px">Poznamky</div>
                   </el-col>
                   <el-col :span="8">
-                    <el-input v-model="firmaprovozovna.poznamka" size="mini"  type="textarea" style="width:100%" suffix-icon="el-icon-message">
+                    <el-input v-model="firmaprovozovna.poznamka" size="mini"  type="textarea" style="width:100%;border:1px" suffix-icon="el-icon-message">
                       <template slot="prepend">Poznamky</template>
                    </el-input>
                   </el-col>
 
                </el-row>
+               <el-row class="ma-2">
+                 <el-col :span="5">
+                    <el-input v-model="firmaprovozovna.otevreno_od " size="mini"  type="text" style="width:100%" suffix-icon="el-icon-time">
+                      <template slot="prepend">Otevreno Od: </template>
+                   </el-input>
+                 </el-col>
+                 <el-col :span="4">
+                    <el-input v-model="firmaprovozovna.otevreno_do " size="mini"  type="text" style="width:100%" suffix-icon="el-icon-time">
+                      <template slot="prepend">Do: </template>
+                   </el-input>
+                 </el-col>
 
+                 <el-col :span="1">
+                    <div  class="prepend2">Po</div>
+                </el-col>
+                <el-col :span="1">
+                  <input size="mini" style="height:28px;width:28px" v-model="firmaprovozovna.po" type="checkbox" @change="changeZbytek" name="Hotovost" value="1"  :checked="list.data.firmaprovozovna.po==true">
+                </el-col>
+                <el-col :span="1">
+                    <div  class="prepend2">Ut</div>
+                </el-col>
+                <el-col :span="1">
+                  <input size="mini" style="height:28px;width:28px" v-model="firmaprovozovna.ut" type="checkbox" @change="changeZbytek" name="Hotovost" value="1"  :checked="list.data.firmaprovozovna.ut==true">
+                </el-col>
+               <el-col :span="1">
+                    <div  class="prepend2">St</div>
+                </el-col>
+                <el-col :span="1">
+                  <input size="mini" style="height:28px;width:28px" v-model="firmaprovozovna.st" type="checkbox" @change="changeZbytek" name="Hotovost" value="1"  :checked="list.data.firmaprovozovna.st==true">
+                </el-col>
+                <el-col :span="1">
+                    <div  class="prepend2">Ct</div>
+                </el-col>
+                <el-col :span="1">
+                  <input size="mini" style="height:28px;width:28px" v-model="firmaprovozovna.ct" type="checkbox" @change="changeZbytek" name="Hotovost" value="1"  :checked="list.data.firmaprovozovna.ct==true">
+                </el-col>
+                <el-col :span="1">
+                    <div  class="prepend2">Pa</div>
+                </el-col>
+                <el-col :span="1">
+                  <input size="mini" style="height:28px;width:28px" v-model="firmaprovozovna.pa" type="checkbox" @change="changeZbytek" name="Hotovost" value="1"  :checked="list.data.firmaprovozovna.pa==true">
+                </el-col>
+                <el-col :span="1">
+                    <div  class="prepend2">So</div>
+                </el-col>
+                <el-col :span="1">
+                  <input size="mini" style="height:28px;width:28px" v-model="firmaprovozovna.so" type="checkbox" @change="changeZbytek" name="Hotovost" value="1"  :checked="list.data.firmaprovozovna.so==true">
+                </el-col>
+                <el-col :span="1">
+                    <div  class="prepend2">Ne</div>
+                </el-col>
+                <el-col :span="1">
+                  <input size="mini" style="height:28px;width:28px" v-model="firmaprovozovna.ne" type="checkbox" @change="changeZbytek" name="Hotovost" value="1"  :checked="list.data.firmaprovozovna.ne==true">
+                </el-col>
+
+
+               </el-row>
 
               </el-col>
             </el-row>
@@ -834,6 +872,9 @@
      <v-window-item :value="4">
         <v-card v-show="step2=='4'">
           <v-card-text>
+            <el-row class="ma-2 mt-4 pt-4">
+             <el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%;color:yellow" class="info elevation-5">Prace</el-button>
+             </el-row>
             <el-row class="ma-2">
               <el-col :span="24">
                 <el-row class="ma-2 mt-4">
@@ -843,6 +884,22 @@
               v-model="value_vzor"
               :data="data_vzor"
               :titles="['Pridelene', 'Prace']"
+              >
+          </el-transfer>
+          {{ firmapracecopy }} /  {{ firmapracecopy.length }} // {{ list.data.enumprace }} :::// {{ firmaenumprace }}
+           <el-transfer
+              v-model="firmapracecopy"
+              :data="list.data.enumprace"
+              :props="{
+                key: 'key',
+                label: 'label'
+              }"
+              filterable
+              :filter-method="filterPrace"
+              filter-placeholder="Nazev"
+              :titles="[ 'Prace','Pridelene']"
+              :render-content="renderFunc"
+              @change="savePrace"
               >
           </el-transfer>
 
@@ -962,6 +1019,7 @@ export default {
       firmaNazev: '',
       firmaAres: [],
 
+
       kontaktEdit: false,
       kontaktEditInsert: false,
       kontaktAktivni: true,
@@ -1046,6 +1104,9 @@ export default {
         nazev: '',
         jmeno: '',
         prijmeni: '',
+        ulice: '',
+        obec: '',
+        psc: '',
         titul: '',
         titulza: '',
         funkce: '',
@@ -1096,8 +1157,15 @@ export default {
 
       //Vzor
 
-        data_vzor: generateData()
-      , value_vzor: [1, 4]
+      //  data_vzor: generateData()
+       value_vzor: [1,2,3,4 ],
+       //data_vzor:  generateData(),
+       data_vzor: [
+         {key: 1, label:'aa'},
+         {key: 2, label:'bb'}
+       ],
+       firmapracecopy: [10359],
+       firmaenumprace: []
 
 
       //Vzor
@@ -1196,6 +1264,12 @@ export default {
   } ,
 
   methods: {
+renderFunc(h, option) {
+          return <span>{ option.key } - { option.label }</span>;
+        },
+    filterPrace(query, item) {
+          return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
+        },
 
     handleClick(tab,x) {
       this.step =   (tab.name * 1)
@@ -1213,7 +1287,11 @@ export default {
       //alert(e.target.value)
       //alert(e.target.checked)
     },
+    changeZbytek(e){
+
+    },
     changeAktivniOsoba(e) {
+
       const self = this
       if (e.target.checked) {
         self.list.data.firma[0].hotovost = true
@@ -1528,20 +1606,105 @@ export default {
 
 
     },
+    async savePrace(value,direction,movedKeys)   {
+        const self = this
+        console.log(value, direction, movedKeys);
+      //alert(JSON.stringify(this.list.data.firmaprace))
+          var neco2  =  ( await ListFirma.savePrace(self.user,self.idefixThis,self.firmapracecopy,104))
+          var neco3  =  ( await ListFirma.one(this.user,self.idefixThis, 104,''))
+          var neco4  =  ( await ListFirma.one(this.user,self.idefixThis, 1041,''))
+          self.list.data.firmaprace = []
+          self.list.data.firmaprace =neco3.data.firmaprace
+          self.list.data.enumprace =neco4.data.enumprace
+          self.firmaenumprace=[]
+          self.list.data.enumprace.forEach(el => {
+            self.firmaenumprace.push({key: el.key*1,label: el.label})
+          })
+          self.firmapracecopy=[]
+          self.list.data.firmaprace.forEach(el => {
+              self.firmapracecopy.push(el.idefix_prace*1)
+          })
+          // self.firmapracecopy = [10156, 10156, 10152, 9015, 10287 ]
+
+    },
     //Provozovny
     async deleteProvozovna(clovek) {
-        const self = this
+          const self = this
 
-          var neco2=  (await ListFirma.saveProvozovna(self.user,self.idefixThis,clovek,1032))
-          var neco3  = (await ListFirma.one(this.user,self.idefixThis, 103,''))
+          var neco2  =  ( await ListFirma.saveProvozovna(self.user,self.idefixThis,clovek,1032))
+          var neco3  =  ( await ListFirma.one(this.user,self.idefixThis, 103,''))
           self.list.data.firmaprovozovna = []
           self.list.data.firmaprovozovna =neco3.data.firmaprovozovna
 
     },
     async insertProvozovna(nPar) {
+          var lAdd = true
+          const self = this
+          if (this.firmaprovozovna.nazev > ''){
+            self.firmaprovozovna.idefix_firma =this.idefixThis
+        if (nPar == 0){
+        //alert(JSON.stringify(this.list.data.firmaprovozovna))
+           this.list.data.firmaprovozovna.forEach((el,i) =>{
+          if (el.nazev + el.prijmeni == self.firmaprovozovna.nazev + self.firmaprovozovna.prijmeni) {
+            lAdd = false
+            alert('Nemeli by jste pridavat uplne stejnou  provozovnu  ke stejne firme')
+          }
+        } );
+        console.log("sefie ",JSON.stringify(self.firmaprovozovna))
+        }
+        var  neco= this.firmaprovozovna
+          if (nPar ==0 ){
+            var neco2=  (await ListFirma.saveProvozovna(self.user,self.idefixThis,this.firmaprovozovna,103))
+          }
+          if (nPar ==1 ){
+            var neco2=  (await ListFirma.saveProvozovna(self.user,self.idefixThis,this.firmaprovozovna,1031))
+          }
+         }
+
+         //KOnec
+         if (nPar ==0 ){
+          this.firmaprovozovna.idefix = (this.list.data.firmaprovozovna.length +10)*-1
+          this.firmaprovozovna.kod = (this.list.data.firmaprovozovna.length +1)
+          this.firmaprovozovna.user_txt = this.user
+          // this.firmanotice.datum =
+          // this.strojmod.prio = (this.list.data.strojmod.length +1)
+          if (nPar ==0 ){
+            this.list.data.firmaprovozovna.push(neco)
+          }
+          var newObj = f.cp(this.firmaprovozovna)
+          this.firmaprovozovna = newObj
+          this.firmaprovozovna.prijmeni = ''
+          this.firmaprovozovna.jmeno = ''
+          this.firmaprovozovna.mail = ''
+          this.firmaprovozovna.funkce = ''
+
+
+       }
+          var neco3  = (await ListFirma.one(this.user,self.idefixThis, 103,''))
+          self.list.data.firmaprovozovna = []
+          self.list.data.firmaprovozovna =neco3.data.firmaprovozovna
+
+          /*
+          self.list.data.firmanotice.forEach(el => {
+            el.datum  = f.datum2(el.datum)
+          })
+          */
+
+          //alert(JSON.stringify(neco3.data.firmanotice))
+          //alert('aaa')
+
+
+
+         //Konec
+          alert(nPar+ lAdd )
+         return
+    },
+    async insertProvozovnaX(nPar) {
         var lAdd = true
         const self = this
-        //alert(this.firmaprovozovna.idefix)
+         alert(nPar)
+         return
+        //alert(this.firmaprovozovna)
         // alert(self.firmaprovozovna.aktivni)
         if (this.firmaprovozovna.prijmeni > ''){
 
@@ -1681,6 +1844,7 @@ export default {
           const self = this
           var nT = new Date()
           var curTime= (nT.getMinutes()*60000)+(nT.getSeconds()*1000) + nT.getMilliseconds()
+          self.firmapracecopy = []
           if (curTime - self.lastTime <100 ) {
             console.log('1 Opacko : ' , curTime )
             // return
@@ -1716,9 +1880,9 @@ export default {
               self.list.data.firmanotice.forEach(el => {
                 el.datum  = f.datum2(el.datum)
               })
-
-
-
+              self.list.data.firmaprace.forEach(el => {
+                self.firmapracecopy.push(el.idefix_prace*1)
+              })
 
               } catch (e2) {
                 alert('error')
@@ -1729,7 +1893,6 @@ export default {
             }
             if (dlgPar.Akce=='edit'){
               self.isCopy=false
-
               try {
                 //alert("2 " + self.idefixThis )
                 self.list = (await ListFirma.one(this.user,dlgPar.Idefix, -1,'edit'))
@@ -1738,12 +1901,18 @@ export default {
                 self.list.data.firmanotice.forEach(el => {
                   el.datum  = f.datum2(el.datum)
                 })
+                self.list.data.firmaprace.forEach(el => {
+                self.firmapracecopy.push(el.idefix_prace*1)
+              })
 
               } catch (e) {
         //      console.log('chybka ' ,  JSON.stringify(self.list.data.stroj[0].idefix ))
         //      alert( self.list.data.stroj[0].idefix )
                 self.idefixThis = self.list.data.firma[0].idefix
                 self.firmaNazev = self.list.data.firma[0].nazev
+                self.list.data.firmaprace.forEach(el => {
+                self.firmapracecopy.push(el.idefix_prace)
+              })
 
               }
             }
@@ -1782,38 +1951,8 @@ export default {
       }
 
     },
-    insertProvozovna() {
-      var lAdd = true
 
-      if (this.firmaprovozovna.nazev > ''){
-        this.firmaprovozovna.idefix_firma =this.idefixThis
-        this.list.data.firmaprovozovna.forEach((el,i) =>{
-          if (el.nazev == this.firmaprovozovna.nazev ) {
-            lAdd = false
-            alert('Nelze pridat 2x stejnou provozovnu ')
-          }
-        } );
-        if (lAdd == true) {
-          let neco= this.firmaosoba
-
-  //        alert(this.list.data.strojmod.length)
-          this.firmaosoba.idefix = (this.list.data.firmaosoba.length +10)*-1
-          this.firmaosoba.kod = (this.list.data.firmaosoba.length +1)
-          // this.strojmod.prio = (this.list.data.strojmod.length +1)
-
-          this.list.data.firmaosoba.push(neco)
-          var newObj = f.cp(this.firmaosoba)
-          this.firmaosoba = newObj
-          this.firmaosoba.prioritni = false
-
-
-
-        }
-
-      }
-
-    },
-    deleteOsoba(idx) {
+    deleteOsobaXX(idx) {
       //alert(JSON.stringify(this.list.data.strojmod[idx]['idefix']))
       try {
 
@@ -1830,7 +1969,7 @@ export default {
       }
 
     },
-    deleteProvozovna(idx) {
+    deleteProvozovnaXX(idx) {
       try {
       if (this.list.data.firmaprovozovna[idx].idefix > 0 ){
         if (confirm("Smazat provozovnu ?")){
@@ -2145,7 +2284,14 @@ select:focus  {
 
   border:none;
 }
-
+.prepend2 {
+  height:28px;
+  background:#f5f7fa;
+  border:1px solid #cccccc;
+  color: #919398;
+  font-size: 13px;
+  padding-top: 2px;
+}
 
 
 </style>

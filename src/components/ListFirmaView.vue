@@ -38,10 +38,9 @@
 
     <br><br>
 
-<ta-ble :list="list" :h="200" >
-  </ta-ble>
-  <ta-ble :list="list" :h="200" >
- </ta-ble>
+<ta-ble :list="list" :h="'150px'" :autosize="true" >
+
+</ta-ble>
 
 
 <table slot="activator" style="width:100%" class="mx-0 my-4 py-4">
