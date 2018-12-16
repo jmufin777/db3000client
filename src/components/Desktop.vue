@@ -457,7 +457,7 @@ export default {
   },
   data: () => {
     return {
-      drawer: true,
+      drawer: false,
       // Zobrazeni - checkboc
       checkDesk: [],
       cont: true,

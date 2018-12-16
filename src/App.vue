@@ -6,16 +6,10 @@
   </div>
 </template>
 
-
-
-
-
-
+<script>
 export default {
-  name: 'App'
-
+ name: 'App'
 }
-
 </script>
 
 <style>
@@ -267,6 +261,12 @@ div[role="region"] {
   border-left: none;
   /* border-right: none; */
   border-right: solid 1px #cccccc;
+}
+.tdl {
+  border-bottom: solid 1px #cccccc;
+  border-left: none;
+   border-right: none;
+
 }
 .tdn {
   border-left: none;

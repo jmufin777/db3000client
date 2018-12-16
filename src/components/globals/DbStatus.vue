@@ -86,7 +86,10 @@ export default {
     }
   },
   mounted () {
+
+
       try{
+        console.log('Status nacten')
         this.$message({
                 message: 'Status nacten',
                 type: 'success',
@@ -95,7 +98,7 @@ export default {
              })
       } catch (e){
         //
-        // console.log('jebka')
+         console.log('Error moutn dbstatus')
       }
        this.db_status()
        this.db_who()
@@ -103,14 +106,19 @@ export default {
   },
   methods: {
   async testNotify()   {
-    self =this
-    console.log(this.user)
+    // return
+    const self =this
+    console.log(this.user,'bb')
 
     var neco3  = (await ListFirma.one(this.user,0, 1011,''))
 
     //console.log("neco3:", neco3.data.firmanoticevalid)
     //neco3.forEach(element => {
+  try {
+
+
     let nNic=1000
+    // alert('aaa')
     await neco3.data.firmanoticevalid.forEach(el=>{
       el.zobrazeno = 1
       var neco2=  (ListFirma.saveNotice(self.user,0,el,1011))
@@ -131,9 +139,15 @@ export default {
             duration: 0
           })
           },nNic)
+          console.log('Notify')
+
 
 
     })
+    } catch(e) {
+      console.log('Chyba notify')
+    }
+
 
 
     //});
@@ -141,6 +155,7 @@ export default {
   },
   async db_who()  {
      const self = this
+      console.log(this.user)
      await  DbStatusService.who({idefix: this.$store.state.idefix})
      .then(res => {
        this.who = res.data.data
@@ -151,6 +166,7 @@ export default {
 
   async   db_status () {
       const self = this
+      //return
    try {
      await  DbStatusService.all({idefix: this.$store.state.idefix})
       .then (res => {
@@ -159,13 +175,16 @@ export default {
         this.interval1 = setTimeout(function() {
           self.db_status()
           self.db_who()
+          //console.log('Notify')
           self.testNotify()
 
-        },1600)
+        },7200)
 
       })
       .catch((e) => {
           this.pouzito =88
+          console.log('DB error')
+    /*
           this.$message({
 
                 message: `Databze Error E1 ${e}`,
@@ -173,10 +192,11 @@ export default {
                 center: true,
                 duration: 2000
              })
+             */
          this.interval1 = setTimeout(function() {
           self.db_status()
           self.db_who()
-        },5600)
+        },7100)
 
       })
     } catch (e2) {
@@ -186,7 +206,7 @@ export default {
           this.interval1 = setTimeout(function() {
           self.db_status()
           self.db_who()
-        },5600)
+        },7100)
 
 
     }

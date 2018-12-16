@@ -857,14 +857,9 @@
                 <el-col :span="1">
                   <input size="mini" style="height:28px;width:28px" v-model="firmaprovozovna.ne" type="checkbox" @change="changeZbytek" name="Hotovost" value="1"  :checked="list.data.firmaprovozovna.ne==true">
                 </el-col>
-
-
                </el-row>
-
               </el-col>
             </el-row>
-
-
           </v-card-text>
         </v-card>
      </v-window-item>
@@ -879,29 +874,97 @@
               <el-col :span="24">
                 <el-row class="ma-2 mt-4">
                   <el-col :span="20">
-
-            <el-transfer
-              v-model="value_vzor"
-              :data="data_vzor"
+            <!-- <el-transfer
+              v-model="value_vzor_prava"
+              :data="data_vzor_leva"
               :titles="['Pridelene', 'Prace']"
               >
-          </el-transfer>
-          {{ firmapracecopy }} /  {{ firmapracecopy.length }} // {{ list.data.enumprace }} :::// {{ firmaenumprace }}
-           <el-transfer
-              v-model="firmapracecopy"
-              :data="list.data.enumprace"
-              :props="{
-                key: 'key',
-                label: 'label'
-              }"
-              filterable
-              :filter-method="filterPrace"
-              filter-placeholder="Nazev"
-              :titles="[ 'Prace','Pridelene']"
-              :render-content="renderFunc"
-              @change="savePrace"
+          </el-transfer> -->
+
+          {{ list.data.firmaprace }} zbytek {{ list.data.enumprace[0] }}
+          {{ checkedLeft }} / {{ checkedRight}}
+          <el-row>
+            <el-col :span="7"> <!-- Table 1 //-->
+             <ta-ble :list="list.data.enumprace" :h="'300px;width:200px'">
+            <thead slot="head" >
+              <tr>
+              <th>
+                <el-checkbox  @change="CheckAllLeft" >
+                </el-checkbox>
+              </th>
+              <th>Prace</th>
+                <th>
+                  {{list.data.enumprace.length}} / {{list.data.firmaprace.length}}
+                </th>
+              </tr>
+                <tr>
+                <th width="100%" colspan="3" style="background:white" class="tdl">
+                  <el-input class="my-0" prefix-icon="el-icon-search"  style='width:80%' autofocus clearable size="mini" v-model="searchLeft" placeholder="Vse" ></el-input>
+                </th>
+                </tr>
+            </thead>
+            <tbody slot="body" >
+              <thead slot="head1" class="h-1" colspan="2"><th width="100%">A</th></thead>
+              <tr v-for="(itemleft,ileft) in list.data.enumprace.filter(word => searchLeft=='' || (word.label+'').match(RegExp(searchLeft,'i')))" :key="ileft"
               >
-          </el-transfer>
+                <td class="tdl" style="width:25%" align="center"
+                >
+                  <input style="height:14px;width:14px" type="checkbox" :id="'check_left_'+itemleft['key']" :value="itemleft['key']" @change="checkLeft(ileft)">
+                </td>
+                <td  class="tdl" style="width:75%"
+                >
+                  {{ itemleft.label}}
+                </td>
+
+              </tr>
+            </tbody>
+          </ta-ble>
+            </el-col>
+           <el-col :span="3" class="mt-4 ml-0">
+             <div class="el-transfer__buttons" style="position:relative;left:-10px">
+              <button  type="button" @click="moveLeft" class="el-button el-button--primary  el-transfer__button"><!----><!----><span><i class="el-icon-arrow-left"></i><!----></span></button>
+              <button  type="button" @click="moveRight" class="el-button el-button--primary  el-transfer__button"><!----><!----><span><i class="el-icon-arrow-right"></i><!----></span></button>
+            </div>
+           </el-col>
+            <el-col :span="7"> <!-- Table 2 //-->
+          <ta-ble :list="list.data.firmaprace" :h="'300px;width:200px'">
+            <thead slot="head" >
+              <tr>
+              <th>
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkRight" @change="CheckAllRight" >
+                </el-checkbox>
+              </th>
+              <th>Prideleno</th>
+                <th>
+                  {{list.data.enumprace.length}}
+                </th>
+              </tr>
+                <tr>
+                <th width="100%" colspan="3" style="background:white" class="tdl">
+                  <el-input class="my-0" prefix-icon="el-icon-search"  style='width:80%' autofocus clearable size="mini" v-model="searchRight" placeholder="Vse" ></el-input>
+                </th>
+                </tr>
+            </thead>
+            <tbody slot="body" >
+              <thead slot="head1" class="h-1" colspan="2"><th width="100%">A</th></thead>
+              <tr v-for="(itemright,iright) in list.data.firmaprace.filter(word => searchRight=='' || (word.label+'').match(RegExp(searchRight,'i')))" :key="iright"
+              >
+                <td class="tdl" style="width:25%" align="center"
+                >
+                  <input style="height:14px;width:14px" type="checkbox" :id="'check_right_'+itemright['key']" :value="itemright['key']" @change="checkRight(iright)">
+                </td>
+                <td  class="tdl" style="width:75%"
+                >
+                  {{ itemright.label}}
+                </td>
+
+              </tr>
+            </tbody>
+          </ta-ble>
+            </el-col>
+          </el-row>
+
+
 
           </el-col>
             </el-row>
@@ -986,19 +1049,28 @@ export default {
   },
   data () {
     const generateData = _ => {
-        const data_vzor = [];
+        const data_vzor_leva = [];
         for (let i = 1; i <= 15; i++) {
-          data_vzor.push({
+          data_vzor_leva.push({
             key: i,
             label: `Option ${ i }`,
             disabled: i % 4 === 0
           });
         }
-        return data_vzor;
+        return data_vzor_leva;
       };
 
     return {
       search: '',
+      isIndeterminate: true,
+      searchLeft:'',
+      searchRight:'',
+      checkedLeft: [],
+      checkedRight: [],
+      checkAll: '',
+
+
+
 
       SendNamne: '',
       RecName: this.name,
@@ -1157,15 +1229,17 @@ export default {
 
       //Vzor
 
-      //  data_vzor: generateData()
-       value_vzor: [1,2,3,4 ],
-       //data_vzor:  generateData(),
-       data_vzor: [
-         {key: 1, label:'aa'},
-         {key: 2, label:'bb'}
-       ],
-       firmapracecopy: [10359],
-       firmaenumprace: []
+      //  data_vzor_leva: generateData()
+       data_vzor_leva:  generateData(),
+       value_vzor_prava: [1,2],
+
+       //data_vzor_leva: ListFirma.one(this.user,this.idefixThis, 104,''),
+      //  data_vzor_leva: [
+      //    {key: 1, label:'aa'},
+      //    {key: 2, label:'bb'}
+      //  ],
+       //firmapracecopy: [10359],
+       //firmaenumprace: []
 
 
       //Vzor
@@ -1197,11 +1271,15 @@ export default {
 
   mounted() {
 
+    //this.generateData()
+    //this.data_vzor_leva=[1,2,3,4,5,6]
+    //this.value_vzor_prava= [1,2,11]
 
 
   },
   created () {
     var self=this
+
     eventBus.$on('edit_stroj', ( dlgPar ) => {
       self.citac++
       self.getDataEnum()
@@ -1226,7 +1304,7 @@ export default {
             self.IsDialog1 = true
             // self.IsDialog1 = !self.IsDialog1
             if (self.IsDialog1 && dlgPar.Idefix > 0) {
-              self.step=0
+              self.step=4
               self.getData(dlgPar)
 
             }
@@ -1260,11 +1338,112 @@ export default {
 
 
 
-
   } ,
 
   methods: {
+
+
+    checkLeft(ir) {
+      const self  = this
+      var neco =''
+      var nVal= self.list.data.enumprace[ir]['key']
+      var objneco
+      neco='check_left_'+self.list.data.enumprace[ir]['key']
+      if (document.getElementById(neco)){
+        objneco = document.getElementById(neco)
+        if (objneco.checked){
+          self.checkedLeft.push(objneco.value)
+        } else {
+
+          self.checkedLeft.forEach((el, idx2) =>{
+            if (el == nVal ){
+              self.checkedLeft.splice(idx2,1)
+              console.log('Left', self.checkedLeft)
+              return
+            }
+          })
+        }
+    }
+       console.log(self.checkedLeft)
+
+
+
+      //id="'check_left_'+itemleft['idefix']"
+
+    },
+
+    checkRight(irow) {
+
+    },
+
+    moveLeft(irow){
+    alert('doleva')
+
+
+    },
+
+    moveRight(){
+    alert('doprava')
+    },
+
+
+    CheckAllLeft(val) {
+      const self = this
+
+      var neco=''
+
+      self.list.data.enumprace.forEach((el,idx) => {
+        neco='check_left_'+el['key']
+        console.log(neco)
+        if (document.getElementById(neco)){
+          if (val){
+            document.getElementById(neco).checked=true
+            self.checkedLeft.push(document.getElementById(neco).value)
+            console.log(self.checkedLeft.length)
+          } else {
+            document.getElementById(neco).checked=false
+          }
+        }
+      })
+        //self.isIndeterminate = false;
+        if (!val){
+          self.checkedLeft=[];
+        }
+  return true;
+},
+
+CheckAllRight(val) {
+      const self = this
+
+      var neco=''
+
+      self.list.data.firmaprace.forEach((el,idx) => {
+        neco='check_right_'+el['key']
+        console.log(neco)
+        if (document.getElementById(neco)){
+          if (val){
+            document.getElementById(neco).checked=true
+            self.checkedRight.push(document.getElementById(neco).value)
+          } else {
+            document.getElementById(neco).checked=false
+          }
+        }
+      })
+        //self.isIndeterminate = false;
+        if (!val){
+          self.checkedRight=[];
+        }
+  return true;
+},
+
+
+    e_prace() {
+      return [10437]
+    },
+
 renderFunc(h, option) {
+  const self = this
+
           return <span>{ option.key } - { option.label }</span>;
         },
     filterPrace(query, item) {
@@ -1308,6 +1487,8 @@ renderFunc(h, option) {
      },
      changePripominka(e) {
        // alert(e.isedit)
+       return
+
        const self = this
 
        if (e.isedit == true) {
@@ -1318,25 +1499,25 @@ renderFunc(h, option) {
        }
        if (e.isedit == false) {
          if (e.pripominka == true) {
+
+         try {
           this.$notify( {
             title: 'Upozorneni',
             message: 'Nelze aktivovat pripominku, jenz jiz vyprsela ',
             type: 'warning',
             offset: 100
 
-
-
-
-
-
-
             // duration: 0
           })
           e.pripominka =  !e.pripominka
+          }  catch(e) {
+            console.log('Error pripominka')
+          }
           return
          }
 
           //Prompt
+
           this.$prompt('Prosim doplnte vysvetleni', '', {
           confirmButtonText: 'OK',
           cancelButtonText: 'Zrusit',
@@ -1361,6 +1542,7 @@ renderFunc(h, option) {
 
           });
         });
+
           //Prompt
 
          //
@@ -1452,11 +1634,10 @@ renderFunc(h, option) {
         this.list.data.firma[0].datum_ares = this.firmaAres.data.datumvypisu
       }
 
-
     },
 
     async editNotice(jPar){
-
+      // return
       jPar.zobrazeno = 0
       const self = this
       var neco2 =  (await ListFirma.saveNotice(self.user,self.idefixThis,jPar,1011))
@@ -1609,21 +1790,18 @@ renderFunc(h, option) {
     async savePrace(value,direction,movedKeys)   {
         const self = this
         console.log(value, direction, movedKeys);
-      //alert(JSON.stringify(this.list.data.firmaprace))
-          var neco2  =  ( await ListFirma.savePrace(self.user,self.idefixThis,self.firmapracecopy,104))
-          var neco3  =  ( await ListFirma.one(this.user,self.idefixThis, 104,''))
-          var neco4  =  ( await ListFirma.one(this.user,self.idefixThis, 1041,''))
-          self.list.data.firmaprace = []
-          self.list.data.firmaprace =neco3.data.firmaprace
-          self.list.data.enumprace =neco4.data.enumprace
-          self.firmaenumprace=[]
-          self.list.data.enumprace.forEach(el => {
-            self.firmaenumprace.push({key: el.key*1,label: el.label})
-          })
-          self.firmapracecopy=[]
-          self.list.data.firmaprace.forEach(el => {
-              self.firmapracecopy.push(el.idefix_prace*1)
-          })
+      alert(JSON.stringify(self.list.data.firmaprace))
+          var neco2  =  ( await ListFirma.savePrace(self.user,self.idefixThis,self.list.data.firmaprace,104))
+
+          var neco3  =  ( await ListFirma.one(this.user,self.idefixThis, 1041,''))
+
+          self.list.data.firmaprace =neco2.data.firmaprace
+          self.list.data.enumprace =neco3.data.enumprace
+
+          alert('ahoj'+JSON.stringify(self.firmaprace))
+
+
+
           // self.firmapracecopy = [10156, 10156, 10152, 9015, 10287 ]
 
     },
@@ -1814,7 +1992,7 @@ renderFunc(h, option) {
               tmp =  ( await ListFirma.one(this.user,this.idefixThis , 106,''))
                 try {
                   tmp2 =  ( await ListFirma.one(this.user,this.idefixThis ,106,''))
-                  self.list.data.enum_prace = tmp2.data.enum_prace
+                  self.list.data.enumprace = tmp2.data.enumprace
                   //alert(JSON.stringify(self.list.data.enum_stroj))
                 } catch(e0){
                   alert( "X 1" + e0)
@@ -1844,7 +2022,7 @@ renderFunc(h, option) {
           const self = this
           var nT = new Date()
           var curTime= (nT.getMinutes()*60000)+(nT.getSeconds()*1000) + nT.getMilliseconds()
-          self.firmapracecopy = []
+
           if (curTime - self.lastTime <100 ) {
             console.log('1 Opacko : ' , curTime )
             // return
@@ -1880,9 +2058,7 @@ renderFunc(h, option) {
               self.list.data.firmanotice.forEach(el => {
                 el.datum  = f.datum2(el.datum)
               })
-              self.list.data.firmaprace.forEach(el => {
-                self.firmapracecopy.push(el.idefix_prace*1)
-              })
+
 
               } catch (e2) {
                 alert('error')
@@ -1901,18 +2077,14 @@ renderFunc(h, option) {
                 self.list.data.firmanotice.forEach(el => {
                   el.datum  = f.datum2(el.datum)
                 })
-                self.list.data.firmaprace.forEach(el => {
-                self.firmapracecopy.push(el.idefix_prace*1)
-              })
+
 
               } catch (e) {
         //      console.log('chybka ' ,  JSON.stringify(self.list.data.stroj[0].idefix ))
         //      alert( self.list.data.stroj[0].idefix )
                 self.idefixThis = self.list.data.firma[0].idefix
                 self.firmaNazev = self.list.data.firma[0].nazev
-                self.list.data.firmaprace.forEach(el => {
-                self.firmapracecopy.push(el.idefix_prace)
-              })
+
 
               }
             }

@@ -309,23 +309,8 @@ export default {
       this.IsWaiting = true
         this.getWhere()
          this.getEnums()
-         /*
-              try {
-                  tmp2 =  ( await ListFirma.one(this.user,this.idefixThis ,101,''))
-                  self.enum_nazev_text = tmp2.data.enum_nazev_text
-                  //alert(JSON.stringify(self.enum_nazev_text))
-                } catch(e0){
-                  alert(e0)
-                }
-               try {
-                  var tmp3 =  ( await ListFirma.one(this.user,this.idefixThis ,10,''))
-                  self.enum_strojskup = tmp3.data.enum_strojskup
-  //                 alert(JSON.stringify(self.enum_strojskup))
-                } catch(e1){
-                  alert("Chyba Vyrobce "+ e1)
-                }
-           */
-      //this.list = (await ListFirma.all(this.user,`${self.where}`)).data
+
+
         this.IsWaiting = false
         return
     }

@@ -1,8 +1,8 @@
 <template>
-<div :style="'width:100%;max-width:2500px;position:relative;height:'+h"  ref="obal" >
-   <div :style="'width:100%;max-width:2500px;;overflow:auto;'" ref="d1"  v-on:scroll="syncA">
+<div :style="'width:100%;max-width:2500px;position:relative;border:solid 1px #cccccc;background:white;height:'+h"  ref="obal" >
+   <div :style="'width:100%;max-width:2500px;background:white;overflow:auto;'" ref="d1"  v-on:scroll="syncA">
     <slot name="nadpis"></slot>
-  <table v-if="list.length" style="width:100%">
+  <table v-if="(list && list.length) || true " :style="'width:100%;'+stylet1">
     <slot name="head">
      <thead >
          <tr v-for="(i1, idx) in list" :key="i1.idx" v-if="idx==0">
@@ -17,8 +17,8 @@
     </slot>
   </table>
 </div>
-<div style="width:100%;positon:relative;overflow:auto;height:80%;"  ref="d2" v-on:scroll="syncB">
-   <table style="width:100%">
+<div :style="'width:100%;positon:relative;overflow:auto;background:white;height:80%;'+stylet2"  ref="d2" v-on:scroll="syncB">
+   <table v-if="list && list.length" style="width:100%;background:white;">
       <thead class="h-1" >
         <slot name="head1">
         <tr v-for="(i1, idx) in list" :key="i1.idx" v-if="idx==0">
@@ -26,7 +26,7 @@
         </tr>
        </slot>
     </thead>
-    <tbody >
+    <tbody style="width:100%background:white;">
      <slot name="body">
      <tr v-for="(i1, idx) in list" :key="idx">
        <td v-for="(i2 ,idy) in i1" :key="idy">{{ i2 }} </td>
@@ -49,6 +49,17 @@ import { setTimeout, clearTimeout } from 'timers';
       },
 
        h: {
+         type: String,
+         required: false
+
+       },
+        stylet1: {
+         type: String,
+         required: false
+
+       }
+       ,
+       stylet2: {
          type: String,
          required: false
 
