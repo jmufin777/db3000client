@@ -272,6 +272,14 @@ div[role="region"] {
   border-left: none;
   border-right: none;
 }
+.tdln {
+  border-left: none;
+
+}
+.tdrn {
+  border-right: none;
+
+}
 .prvni {
 
    background: #FFFFFF;

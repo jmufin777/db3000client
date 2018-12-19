@@ -867,81 +867,87 @@
      <v-window-item :value="4">
         <v-card v-show="step2=='4'">
           <v-card-text>
-            <el-row class="ma-2 mt-4 pt-4">
+            <v-spacer></v-spacer>
+            <!-- <el-row class="ma-2 mt-4 pt-4">
              <el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%;color:yellow" class="info elevation-5">Prace</el-button>
-             </el-row>
+             </el-row> -->
             <el-row class="ma-2">
               <el-col :span="24">
                 <el-row class="ma-2 mt-4">
                   <el-col :span="20">
-            <!-- <el-transfer
-              v-model="value_vzor_prava"
-              :data="data_vzor_leva"
-              :titles="['Pridelene', 'Prace']"
-              >
-          </el-transfer> -->
 
-          {{ list.data.firmaprace }} zbytek {{ list.data.enumprace[0] }}
-          {{ checkedLeft }} / {{ checkedRight}}
+          <!-- {{ list.data.firmaprace }} zbytek {{ list.data.enumprace[0] }}
+          {{ checkedLeft }} / {{ checkedRight}} -->
           <el-row>
+            <el-col :span="24">&nbsp;</el-col>
+            <el-col :span="4">&nbsp;</el-col>
             <el-col :span="7"> <!-- Table 1 //-->
-             <ta-ble :list="list.data.enumprace" :h="'300px;width:200px'">
+             <ta-ble :list="list.data.enumprace" :h="'360px;width:200px'">
             <thead slot="head" >
               <tr>
-              <th>
+              <th class="tdrn">
                 <el-checkbox  @change="CheckAllLeft" >
                 </el-checkbox>
               </th>
-              <th>Prace</th>
-                <th>
-                  {{list.data.enumprace.length}} / {{list.data.firmaprace.length}}
-                </th>
+              <th border="0" class="tdln tdrn">
+                <el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%;color:yellow" class="info elevation-5">Prace</el-button>
+              </th>
+              <th class="tdln">
+                   {{ checkedLeft.length }}/{{ list.data.enumprace.length }}
+              </th>
               </tr>
-                <tr>
-                <th width="100%" colspan="3" style="background:white" class="tdl">
-                  <el-input class="my-0" prefix-icon="el-icon-search"  style='width:80%' autofocus clearable size="mini" v-model="searchLeft" placeholder="Vse" ></el-input>
-                </th>
-                </tr>
-            </thead>
-            <tbody slot="body" >
+              <tr>
+               <th width="100%" colspan="3" style="background:white" class="tdl">
+                 <el-input class="my-0" prefix-icon="el-icon-search"  style='width:100%; border:none' autofocus clearable size="mini" v-model="searchLeft" placeholder="Vse" ></el-input>
+              </th>
+              </tr>
+          </thead>
+          <tbody slot="body" >
               <thead slot="head1" class="h-1" colspan="2"><th width="100%">A</th></thead>
               <tr v-for="(itemleft,ileft) in list.data.enumprace.filter(word => searchLeft=='' || (word.label+'').match(RegExp(searchLeft,'i')))" :key="ileft"
               >
                 <td class="tdl" style="width:25%" align="center"
                 >
-                  <input style="height:14px;width:14px" type="checkbox" :id="'check_left_'+itemleft['key']" :value="itemleft['key']" @change="checkLeft(ileft)">
+                <input style="height:14px;width:14px" :ref="'l_' + itemleft['key']" type="checkbox" :id="'check_left_'+itemleft['key']" :value="itemleft['key']"
+                  @change="checkLeft('l_' + itemleft['key'],0)">
                 </td>
                 <td  class="tdl" style="width:75%"
+                  @click="checkLeft('l_' + itemleft['key'],1)"
+
                 >
-                  {{ itemleft.label}}
+                 <a> {{ itemleft.label}}</a>
                 </td>
 
               </tr>
-            </tbody>
+          </tbody>
           </ta-ble>
             </el-col>
            <el-col :span="3" class="mt-4 ml-0">
              <div class="el-transfer__buttons" style="position:relative;left:-10px">
-              <button  type="button" @click="moveLeft" class="el-button el-button--primary  el-transfer__button"><!----><!----><span><i class="el-icon-arrow-left"></i><!----></span></button>
-              <button  type="button" @click="moveRight" class="el-button el-button--primary  el-transfer__button"><!----><!----><span><i class="el-icon-arrow-right"></i><!----></span></button>
+              <button  v-if="checkedRight.length==0" disabled="disabled" type="button" @click="moveLeft(list.data.enumprace,list.data.firmaprace)" class="el-button is-disabled el-button--primary  el-transfer__button"><!----><!----><span><i class="el-icon-arrow-left"></i><!----></span></button>
+              <button  v-else  type="button" @click="moveLeft(list.data.enumprace,list.data.firmaprace)" class="el-button  el-button--primary  el-transfer__button"><!----><!----><span><i class="el-icon-arrow-left"></i><!----></span></button>
+
+              <button  v-if="checkedLeft.length==0"  disabled="disabled" type="button" @click="moveRight(list.data.enumprace,list.data.firmaprace)" class="el-button is-disabled el-button--primary  el-transfer__button"><!----><!----><span><i class="el-icon-arrow-right"></i><!----></span></button>
+              <button  v-else type="button" @click="moveRight(list.data.enumprace,list.data.firmaprace)" class="el-button el-button--primary  el-transfer__button"><!----><!----><span><i class="el-icon-arrow-right"></i><!----></span></button>
             </div>
            </el-col>
             <el-col :span="7"> <!-- Table 2 //-->
-          <ta-ble :list="list.data.firmaprace" :h="'300px;width:200px'">
+
+          <ta-ble v-if="list.data.firmaprace.length>0 " :list="list.data.firmaprace" :h="'360px;width:200px'">
             <thead slot="head" >
               <tr>
-              <th>
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkRight" @change="CheckAllRight" >
+                <th class="tdrn">
+                <el-checkbox  @change="CheckAllRight" >
                 </el-checkbox>
               </th>
-              <th>Prideleno</th>
-                <th>
-                  {{list.data.enumprace.length}}
+              <th    class="tdrn tdln">Prideleno</th>
+                <th class="tdln">
+                  {{ checkedRight.length }}/{{ list.data.firmaprace.length }}
                 </th>
               </tr>
                 <tr>
-                <th width="100%" colspan="3" style="background:white" class="tdl">
-                  <el-input class="my-0" prefix-icon="el-icon-search"  style='width:80%' autofocus clearable size="mini" v-model="searchRight" placeholder="Vse" ></el-input>
+                <th width="100%" colspan="3" style="background:white" class="tdln">
+                  <el-input class="my-0" prefix-icon="el-icon-search"  style='width:100%' autofocus clearable size="mini" v-model="searchRight" placeholder="Vse" ></el-input>
                 </th>
                 </tr>
             </thead>
@@ -951,11 +957,14 @@
               >
                 <td class="tdl" style="width:25%" align="center"
                 >
-                  <input style="height:14px;width:14px" type="checkbox" :id="'check_right_'+itemright['key']" :value="itemright['key']" @change="checkRight(iright)">
+                  <input style="height:14px;width:14px" :ref="'r_' + itemright['key']" type="checkbox" :id="'check_right_'+itemright['key']" :value="itemright['key']"
+                  @change="checkRight('r_' + itemright['key'],0)">
+
                 </td>
                 <td  class="tdl" style="width:75%"
-                >
-                  {{ itemright.label}}
+                  @click="checkRight('r_' + itemright['key'],1)">
+
+                  <a>{{ itemright.label}}</a>
                 </td>
 
               </tr>
@@ -1342,19 +1351,19 @@ export default {
 
   methods: {
 
+checkLeft(ir, bclick = 0) {
+  const self  = this
+  if (!this.$refs[''+ir]) {
+    return
+  }
+  var nVal = this.$refs[''+ir][0].value
+  if (bclick == 1) {
+    this.$refs[''+ir][0].checked = !this.$refs[''+ir][0].checked
+  }
 
-    checkLeft(ir) {
-      const self  = this
-      var neco =''
-      var nVal= self.list.data.enumprace[ir]['key']
-      var objneco
-      neco='check_left_'+self.list.data.enumprace[ir]['key']
-      if (document.getElementById(neco)){
-        objneco = document.getElementById(neco)
-        if (objneco.checked){
-          self.checkedLeft.push(objneco.value)
+    if (this.$refs[''+ir][0].checked ){
+          self.checkedLeft.push(nVal)
         } else {
-
           self.checkedLeft.forEach((el, idx2) =>{
             if (el == nVal ){
               self.checkedLeft.splice(idx2,1)
@@ -1362,46 +1371,107 @@ export default {
               return
             }
           })
-        }
-    }
-       console.log(self.checkedLeft)
+  }
+
+  console.log(this.$refs[''+ir][0].checked  )
+  //console.log(this.$refs.l_10153)
+},
+
+  checkRight(ir, bclick = 0) {
+  const self  = this
+
+  if (!this.$refs[''+ir]) {
+    return
+  }
+  var nVal = this.$refs[''+ir][0].value
+  if (bclick == 1) {
+    this.$refs[''+ir][0].checked = !this.$refs[''+ir][0].checked
+  }
+
+    if (this.$refs[''+ir][0].checked ){
+          self.checkedRight.push(nVal)
+        } else {
+          self.checkedRight.forEach((el, idx2) =>{
+            if (el == nVal ){
+              self.checkedRight.splice(idx2,1)
+              console.log('Left', self.checkedRight)
+              return
+            }
+          })
+  }
+
+  console.log(this.$refs[''+ir][0].checked  )
+  //console.log(this.$refs.l_10153)
+},
 
 
 
-      //id="'check_left_'+itemleft['idefix']"
+    async moveRight(arrLeft, arrRight){
+
+      const self = this
+      var idxLeft = -1
+      self.checkedLeft.forEach(el => {
+        arrLeft.forEach((el2,i2)=>{
+          if (el2.key == el) {
+            self.$refs['l_'+el][0].checked = false
+            arrRight.push(el2)
+//            el2.key=-1
+  //          el2.label='xxx'
+            self.$refs['l_'+el][0].checked = false
+            console.log('l_'+el)
+            arrLeft.splice(i2,1)
+            return
+          }
+
+        })
+      })
+        self.checkedLeft = []
+         arrRight = _.sortBy(arrRight,'label')
+        // arrRight = _.orderBy([arrRight => neco.label.toLowerCase()],['desc'])
+        var neco2 =  (await ListFirma.savePrace(self.user,self.idefixThis,arrRight,104))
+
 
     },
 
-    checkRight(irow) {
+    async moveLeft(arrLeft, arrRight){
+      const self = this
+      var idxLeft = -1
+      self.checkedRight.forEach(el => {
+        arrRight.forEach((el2,i2)=>{
+          if (el2.key == el) {
+            self.$refs['r_'+el][0].checked = false
+            arrLeft.push(el2)
+//            el2.key=-1
+  //          el2.label='xxx'
+            self.$refs['r_'+el][0].checked = false
+            console.log('r_'+el)
+            arrRight.splice(i2,1)
+            return
+          }
 
-    },
-
-    moveLeft(irow){
-    alert('doleva')
-
-
-    },
-
-    moveRight(){
-    alert('doprava')
+        })
+      })
+        self.checkedRight = []
+        arrLeft = _.sortBy(arrLeft,'label')
+        var neco2 =  (await ListFirma.savePrace(self.user,self.idefixThis,arrRight,104))
     },
 
 
     CheckAllLeft(val) {
       const self = this
-
       var neco=''
 
       self.list.data.enumprace.forEach((el,idx) => {
-        neco='check_left_'+el['key']
+        neco='l_'+el['key']
         console.log(neco)
-        if (document.getElementById(neco)){
+        if (self.$refs[neco] && self.$refs[neco][0] ){
           if (val){
-            document.getElementById(neco).checked=true
-            self.checkedLeft.push(document.getElementById(neco).value)
+            self.$refs[neco][0].checked=true
+
+            self.checkedLeft.push(self.$refs[neco][0].value)
             console.log(self.checkedLeft.length)
           } else {
-            document.getElementById(neco).checked=false
+            self.$refs[neco][0].checked=false
           }
         }
       })
@@ -1412,20 +1482,24 @@ export default {
   return true;
 },
 
-CheckAllRight(val) {
-      const self = this
 
+
+
+  CheckAllRight(val) {
+      const self = this
       var neco=''
 
       self.list.data.firmaprace.forEach((el,idx) => {
-        neco='check_right_'+el['key']
+        neco='r_'+el['key']
         console.log(neco)
-        if (document.getElementById(neco)){
+        if (self.$refs[neco] && self.$refs[neco][0] ){
           if (val){
-            document.getElementById(neco).checked=true
-            self.checkedRight.push(document.getElementById(neco).value)
+            self.$refs[neco][0].checked=true
+
+            self.checkedRight.push(self.$refs[neco][0].value)
+            console.log(self.checkedRight.length)
           } else {
-            document.getElementById(neco).checked=false
+            self.$refs[neco][0].checked=false
           }
         }
       })
@@ -1437,9 +1511,7 @@ CheckAllRight(val) {
 },
 
 
-    e_prace() {
-      return [10437]
-    },
+
 
 renderFunc(h, option) {
   const self = this
@@ -1989,9 +2061,10 @@ renderFunc(h, option) {
 
             if (self.$store.state.showModule == 'list2-prace') {
               try {
-              tmp =  ( await ListFirma.one(this.user,this.idefixThis , 106,''))
+              //tmp =  ( await ListFirma.one(this.user,this.idefixThis , 106,''))
+              tmp =  ( await ListFirma.one(this.user,this.idefixThis , 1041,''))
                 try {
-                  tmp2 =  ( await ListFirma.one(this.user,this.idefixThis ,106,''))
+                  tmp2 =  ( await ListFirma.one(this.user,this.idefixThis ,1041,''))
                   self.list.data.enumprace = tmp2.data.enumprace
                   //alert(JSON.stringify(self.list.data.enum_stroj))
                 } catch(e0){
@@ -2398,7 +2471,40 @@ renderFunc(h, option) {
         default: return 'Hotovo'
       }
 
+    },
+    checkLeftx(ir, bclick = 0) {
+      const self  = this
+      var neco =''
+      var nVal= self.list.data.enumprace[ir]['key']
+      var objneco
+      neco='check_left_'+self.list.data.enumprace[ir]['key']
+      alert(neco)
+      //alert(ir+ "/ "+ bclick)
+      if (document.getElementById(neco)){
+
+        objneco = document.getElementById(neco)
+        if ( bclick==1)  objneco.checked = !objneco.checked
+        if (objneco.checked){
+          self.checkedLeft.push(objneco.value)
+        } else {
+
+          self.checkedLeft.forEach((el, idx2) =>{
+            if (el == nVal ){
+              self.checkedLeft.splice(idx2,1)
+              console.log('Left', self.checkedLeft)
+              return
+            }
+          })
+        }
     }
+       console.log(self.checkedLeft)
+
+
+
+      //id="'check_left_'+itemleft['idefix']"
+
+    }
+
 
 /*
     datum(){
