@@ -345,6 +345,7 @@ export default {
   },
 
 created () {
+  eventBus.$off('UsedInMenu')
   eventBus.$on('UsedInMenu', ( id ) => {
     if (id > 0 ){
       this.onRecieveFromMenu (id)

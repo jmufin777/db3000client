@@ -25,7 +25,8 @@ import Old1 from '@/components/dev/Old_1.vue'
 
 import MenuSchema from '@/components/MenuSchema.vue'
 import ListModules from '@/components/ListModules.vue'
-import MenuAdminIndex from '@/components/MenuAdminIndex.vue'
+import MenuAdminIndex from '../components/MenuAdminIndex.vue'
+import Calc from '../components/Calc/CalcIndex.vue'
 
 Vue.use(Router)
 
@@ -136,7 +137,14 @@ export default new Router({
       path: '/set/list-users',
       name: 'list-users',
       component: ListUsers
+    },
+    {
+      path: '/calc',
+      name: 'Calc',
+      component: Calc
     }
+
+
 
 
 

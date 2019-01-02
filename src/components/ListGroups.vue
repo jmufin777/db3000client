@@ -241,6 +241,9 @@ export default {
   },
 
   created () {
+    eventBus.$off('Modules')
+    eventBus.$off('Menus')
+
     eventBus.$on('Modules', (list) => {
       this.Modul = list
     })

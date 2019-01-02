@@ -406,6 +406,12 @@ export default {
     }
    } ,
   created () {
+    eventBus.$off('Groups')
+    eventBus.$off('Menus')
+    eventBus.$off('showUsers')
+    eventBus.$off('setUsers')
+    eventBus.$off('UserOk')
+
     eventBus.$on('Groups', (list) => {
 
        this.Group = list

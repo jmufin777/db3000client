@@ -97,6 +97,8 @@ export default {
   },
   created() {
     const self = this
+    eventBus.$off('edit_run')
+    eventBus.$off('edit_run_stroj')
 
     eventBus.$on('edit_run', ( dlgPar ) => {
       self.btn_konec = 'btn_konec_'+self.$store.state.showModule

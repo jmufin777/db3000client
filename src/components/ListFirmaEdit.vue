@@ -13,7 +13,7 @@
     v-if="IsDialog1 && list && list.data && list.data.firma && list.data.firma[0]"
     >
 
-<div slot="b1" class="green lighten-4 elevation-2" style="height:40px;font-size:18px">{{ stepInfo}}</div>
+<div slot="b1" class="green lighten-4 elevation-2" style="height:40px;font-size:18px">{{ stepInfo}} : {{idefixThis}}</div>
 
 <div slot="a1" style="height:40px;font-size:18px;" class="px-2 green lighten-4 elevation-2" >
 {{ ((isCopy ==false )?'Zmena':'Nova polozka ') +' ' + list.data.firma[0].nazev  }}
@@ -384,6 +384,7 @@
             </el-input>
         </el-col>
     </el-row>
+
     </el-col>
 
 
@@ -394,7 +395,14 @@
 
 
 
+
+
      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="20">
+        Prevod: {{ list.data.firma[0].poznamka }}
+      </el-col>
     </el-row>
 
     </v-card-text></v-card>
@@ -575,17 +583,12 @@
                       <template slot="prepend">Fakturacni</template>
                    </el-input>
                   </el-col>
-
-
-
-
                 </el-row>
 
                 <el-row class="ma-2">
                   <el-col :span="8">
                     <el-input v-model="firmaosoba.ulice" size="mini"  style="width:100%" suffix-icon="el-icon-message">
                       <template slot="prepend" >
-
             Ulice:
             </template>
 
@@ -1294,6 +1297,7 @@ export default {
       self.getDataEnum()
 
     })
+      eventBus.$off('dlg8310')
       eventBus.$on('dlg8310', ( dlgPar ) => {
         // alert('EVENT' + JSON.stringify(dlgPar ))
             self.rec = dlgPar
@@ -1313,7 +1317,44 @@ export default {
             self.IsDialog1 = true
             // self.IsDialog1 = !self.IsDialog1
             if (self.IsDialog1 && dlgPar.Idefix > 0) {
-              self.step=4
+              //self.step=0
+              //self.step=4
+              // alert(self.firmaosoba.idefix_firma)
+              if (self.idefixThis != self.firmaosoba.idefix_firma) {
+                  self.kontaktEdit = false
+                  self.kontaktEditInsert = true
+
+                //alert('Zmena firmy' + JSON.stringify(self.firmaosoba))
+/*
+                self.firmaosoba = {}
+                self.firmaosoba = {
+                      idefix: 0,
+                      idefix_firma: 0,
+                      kod: 0,
+                      jmeno: '',
+                      prijmeni: '',
+                      titul: '',
+                      titulza: '',
+                      funkce: '',
+                      oddeleni: '',
+                      prioritni: false,
+                      tel: '',
+                      tel2: '',
+                      tel3: '',
+                      mail: '',
+                      www: '',
+                      poznamka: '',
+                      narozeniny: null,
+                      mail_fakt: '',
+                      psc: '',
+                      obec: '',
+                      ulice: '',
+                      aktivni: true
+              }
+              */
+
+       // alert('Zmena firmy' + JSON.stringify(self.firmaosoba))
+              }
               self.getData(dlgPar)
 
             }
@@ -1853,9 +1894,12 @@ renderFunc(h, option) {
     },
 
     async editKontakt(aPar) {
+
       this.firmaosoba = f.cp(aPar)
+
       this.kontaktEdit = true
       this.kontaktEditInsert = false
+      return
 
 
     },
@@ -2162,6 +2206,31 @@ renderFunc(h, option) {
               }
             }
             }
+                self.firmaosoba = {}
+                self.firmaosoba = {
+                      idefix: 0,
+                      idefix_firma: 0,
+                      kod: 0,
+                      jmeno: '',
+                      prijmeni: '',
+                      titul: '',
+                      titulza: '',
+                      funkce: '',
+                      oddeleni: '',
+                      prioritni: false,
+                      tel: '',
+                      tel2: '',
+                      tel3: '',
+                      mail: '',
+                      www: '',
+                      poznamka: '',
+                      narozeniny: null,
+                      mail_fakt: '',
+                      psc: '',
+                      obec: '',
+                      ulice: '',
+                      aktivni: true
+              }
 
           },
 

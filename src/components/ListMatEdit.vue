@@ -776,22 +776,22 @@ export default {
       },
       cols: {},
       rules2:   {
-
       }
 
     }
   },
   created() {
     const self=this
+    eventBus.$off('edit')
+    eventBus.$off('dlg821')
     eventBus.$on('edit', ( dlgPar ) => {
       self.citac++
-
           //var cmodul = $self.$store.state.showModule
           //alert(dlgPar)
-
           self.getDataEnum()
         //alert('Vracim parametry' + JSON.stringify(dlgPar))
     })
+
     eventBus.$on('dlg821', ( dlgPar ) => {
 
       //alert('modulik')

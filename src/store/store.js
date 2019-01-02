@@ -28,7 +28,8 @@ export default new Vuex.Store({
     txt: null,
     xMenuz: [],
     compaStore: null,
-    xMenuMain: []
+    xMenuMain: [],
+    seekFirma: null
   },
   mutations: {
     setToken (state, token) {
@@ -109,7 +110,11 @@ export default new Vuex.Store({
     },
     DROPALLWIN (state) {
       state.WinDows = []
-    }
+    },
+    SETSEEKFIRMA (state, seekFirma  ) {
+      state.seekFirma = seekFirma
+      //state.xMenuMain = JSON.parse(JSON.stringify(xMenuMain))
+   },
 
   },
   actions: {
@@ -162,6 +167,9 @@ export default new Vuex.Store({
     },
     addCompaStore({commit}, compaStore) {
       commit('ADDCOMPASTORE', compaStore)
+    },
+    seekFirma({commit}, seekFirma) {
+      commit('SETSEEKFIRMA', seekFirma)
     }
 
   },

@@ -10,7 +10,7 @@
 
 <div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2 white" :id="'t' + objId1">
 
-  <el-col :span="4" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
+  <el-col :span="12" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
 
  <!-- <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" > -->
 
@@ -30,21 +30,131 @@
 
   </el-col>
 
-
-
  <!-- </el-col> -->
 
-  <div>
+  <div >
 
     <br><br>
 
-<ta-ble :list="list" :h="'150px'" :autosize="true" >
+    <br><br>
+<ta-ble v-if="false" :list="list" :h="'650px;width:100%'" :stylet1="'width:800px'" :stylet2="'width:100%'" :autosize="true" >
+ <thead slot="head" >
+<th style="text-align:left">
+ <div style="width:150px; text-align:center">
+&nbsp;<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox>
+&nbsp;&nbsp;&nbsp;&nbsp;<v-menu
+      v-model="showSubMenu"
+      absolute
+      offset-y
+      style="max-width: 3600px;text-align:left"
+     >
+     <span slot="activator" class="blue--text">Akce</span>
+    <v-list>
+        <v-list-tile
+          v-for="(item, index) in SubMemuItems"
+          :key="index"
+          @click="handleSubMenu(item.akce)"
+        >
+      <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+      </v-list-tile>
+    </v-list>
+    </v-menu>
+  </div>
+</th>
+<th  >
+   <div style="width:130px; text-align:center">
+  <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
+  Ico
+   </div>
+  </th>
+  <th >
+  <i  @click="sortByKey('dic','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('dic','asc')" class="el-icon-download"  ></i>
+  DIC</th>
 
+<th >
+  <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev','asc')" class="el-icon-download"  ></i>
+  Nazev</th>
+
+<th  >
+  <i  @click="sortByKey('nazev_text','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev_text','asc')" class="el-icon-download"  ></i>
+  Ulice</th>
+<th  >
+  <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
+  Obec</th>
+ <th  >
+  <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
+  Psc</th>
+
+<th >Vymazat</th>
+</thead >
+<tbody slot="body" >
+
+  <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="true || lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true">
+        <thead slot="head1" class="h-1" colspan="2"><th width="100%">A</th></thead>
+ <td >
+
+   <div style="width:120px; text-align:left">
+  <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
+  <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']" :value="item1['idefix']" @change="chekListUpdate(irow1)">
+  </div>
+  <div class='dcellx'  style="width:80% ; background:white;float:right"
+    v-bind:class="{bila: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
+  >
+     <el-tooltip  placement="left-start" effect="light">
+      <div slot="content">{{ item1['popis'] }}</div>
+       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
+     </el-tooltip>
+       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
+       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
+   </div>
+
+   </div>
+  </td>
+  <td style='text-align:left;width:130px' class="px-2">
+    <div style="width:130px; text-align:center">
+    {{item1['ico']}}
+    </div>
+  </td>
+  <td style='text-align:left;width:130px' class="px-2">
+    <div style="width:130px; text-align:center">
+    {{item1['dic']}}
+    </div>
+  </td>
+  <td style='text-align:' class="px-2">
+    <div style="width:430px; text-align:left">
+    {{item1['nazev']}}
+    </div>
+  </td>
+
+  <td style='text-align:left' class="px-2">
+    {{item1['ulice']}}
+  </td>
+  <td style='text-align:left' class="px-2">
+    {{item1['obec']}}
+  </td>
+  <td style='text-align:left' class="px-2">
+    {{ item1['psc'] }}
+  </td>
+
+  <td style="">
+     <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
+  </td>
+
+  </tr>
+
+</tbody>
 </ta-ble>
 
+<div style="width:100%;height:550px;overflow:auto">
+ <table slot="activator" style="width:100%" class="mx-0 my-4 py-4">
 
-<table slot="activator" style="width:100%" class="mx-0 my-4 py-4">
-<thead>
+  <thead slot="head" >
 <th style="width:15%">
 &nbsp;<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox>
 &nbsp;&nbsp;&nbsp;&nbsp;<v-menu
@@ -69,11 +179,11 @@
 <th style="width:6%" >
   <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
-  Ico</th>
+  Ico</t>
   <th style="width:8%" >
   <i  @click="sortByKey('dic','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('dic','asc')" class="el-icon-download"  ></i>
-  DIC</th>
+  DIC</td>
 
 <th style="width:23%">
   <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
@@ -96,19 +206,11 @@
 
 
 
-<!-- <th style="width:6%" >sirka_mat_max_mm</th>
-<th style="width:6%" >delka_mat_max_mm</th>
-<th style="width:6%" >sirka_tisk_max_mm</th>
-<th style="width:6%" >delka_tisk_max_mm</th>
-<th style="width:6%" >tech_okraj_strana_mm</th>
-<th style="width:6%" >tech_okraj_start_mm</th>
-<th style="width:6%" >tech_okraj_spacecopy_mm</th>
-<th style="width:6%" >tech_okraj_spacejobs_mm</th> -->
-
-
 <th style="width:3%">Vymazat</th>
 </thead >
-<tbody>
+
+ <tbody slot="body" >
+   <thead slot="head1" class="h-1" colspan="2"><th width="100%">A</th></thead>
 
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true">
   <td style="width:7%" >
@@ -125,7 +227,7 @@
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
    </div>
-   <!-- <el-checkbox :id="'check2_'+objId1+'_'+item1['idefix']" :label="item1['idefix']">{{item1['idefix']}}</el-checkbox> -->
+
   </td>
   <td style='text-align:left;width:6%' class="px-2">
     {{item1['ico']}}
@@ -146,7 +248,6 @@
   <td style='text-align:left;width:6%' class="px-2">
     {{ item1['psc'] }}
   </td>
-      <!-- item1['technologie']: item1['technologie_skup'] -->
   <td >
      <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
   </td>
@@ -154,10 +255,9 @@
 
 </tr>
 
-
-
 </tbody>
 </table>
+</div>
 
 
 
@@ -238,8 +338,8 @@ export default {
 
       IsWaiting: false,
       info:'',
-      search:'',
-      searchF:'',
+      search:'se',
+      searchF:'se',
       searchD:'',
       searchK:'',
       thisHeight: 800,
@@ -254,7 +354,7 @@ export default {
       aInfo: [],
       total: 0,
       pagination: {},
-      activeName:'S',
+      activeName:'F',
       activeNameLast:'',
       where: 'true' ,
 
@@ -293,8 +393,10 @@ export default {
 
       lastSort: ['kod','asc'] , //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
       timeout: false,
+      citac: 0
 
     }
+
 
   },
   async mounted () {
@@ -319,6 +421,7 @@ export default {
 
   created () {
     var self=this
+      eventBus.$off('dlg8310rec')
       eventBus.$on('dlg8310rec', ( dlgPar ) => {
         //self.getData()
        self.getWhere()
@@ -522,34 +625,80 @@ async  addWhere() {
 
  } ,
  async getWhere (){
-     const self= this
+
+   const self= this
    var search = ''
    var neco = 'self.search'
+   self.citac ++
    self.allTrue =false
- if (self.activeName == 'F') {
-    self.where = 'true'
-    search = self.searchF
-  } else {
+   switch(self.citac) {
+     case 1:
+      search = self.$store.state.seekFirma
+      console.log(search)
+      self.searchF = search
+      self.getWhere()
+      break;
 
-   if (self.activeName == 'D') {
-     search = self.searchD
-   }
-   else if (self.activeName == 'K') {
-     search = self.searchK
-   }
 
-   else {
-     neco =  'self.search' + self.activeName
-     search = eval(`${neco}`)
-     //  alert(eval(`neco`))
+     default:
 
-   }
+      if (self.activeName == 'F') {
+          self.where = 'true'
+          search = self.searchF
+        } else {
 
-  }
+      if (self.activeName == 'D') {
+        search = self.searchD
+      }
+      else if (self.activeName == 'K') {
+        search = self.searchK
+      }
+
+      else {
+        neco =  'self.search' + self.activeName
+        search = eval(`${neco}`)
+        //  alert(eval(`neco`))
+
+      }
+
+      }
+ }
   //alert()
   var ctmp=''
+  /*
+setTimeout( function(){
+  //if ( self.$store.seekFirma >''  ) {
+    console.log( search)
+      search = self.$store.state.seekFirma
+      self.searchF = search
+      console.log("SEARCH FI", self.$store.state.seekFirma, "Citac: "  , self.citac )
+      return
+  //}
+
+},200)
+*/
+
+      console.log("SEARCH FI 2", self.$store.state.seekFirma)
+      //return
+
+
+     // console.log("SEEKFI2:", self.$store.state.seekFirma)
+
+
   if (search > '') {
-       self.where += ` and (a.nazev ~* '${search}' )`
+       //self.where += ` and (a.nazev ~* '${search}'  )`
+       var atmp = search.split(',')
+       ctmp =''
+       atmp.forEach(ee => {
+         if (ctmp>'') ctmp+=','
+         ctmp +=`'%${ee}%'`
+
+       })
+
+       console.log("Hledam ", ctmp)
+       self.where += ` and (a.nazev ilike any(array[${ctmp}]) or a.ico ilike any(array[${ctmp}]) or idefix::text  ilike any(array[${ctmp}]))
+        or a.idefix in (select idefix_firma from list_firmaosoba b where prijmeni ilike any(array[${ctmp}]) or jmeno ilike any(array[${ctmp}]) )
+        `
        self.allTrue =true
   }
 
@@ -558,6 +707,8 @@ async  addWhere() {
         this.list = (await ListFirma.all(this.user,self.where )).data
         if (!this.list.length){
           this.list=[]
+        } else {
+          this.$store.dispatch('seekFirma', search)
         }
         this.IsWaiting = false
        // alert('jsem zde' + JSON.stringify(this.list) )
@@ -1114,6 +1265,7 @@ editLineToForm(nRow) {
       'xMenuMain',
       'level',
       'idefix',
+      'seekFirma'
     ])
 
   }

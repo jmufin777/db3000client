@@ -26,13 +26,13 @@
         </tr>
        </slot>
     </thead>
+    <slot name="body">
     <tbody style="width:100%background:white;">
-     <slot name="body">
      <tr v-for="(i1, idx) in list" :key="idx">
        <td v-for="(i2 ,idy) in i1" :key="idy">{{ i2 }} </td>
      </tr>
-     </slot>
     </tbody>
+   </slot>
    </table>
   </div>
 </div>

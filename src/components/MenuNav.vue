@@ -201,7 +201,7 @@ export default {
 
   },
   created () {
-
+    eventBus.$off('Menuf')
     eventBus.$on('Menuf', (pole) => {
     // alert('Emil prisel ???'+ pole )
       this.xmenu2 = []

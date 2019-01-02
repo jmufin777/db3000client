@@ -71,7 +71,7 @@ export default {
   },
   created() {
     const self = this
-
+    eventBus.$off('edit_run')
     eventBus.$on('edit_run', ( dlgPar ) => {
       self.btn_konec = 'btn_konec_'+self.$store.state.showModule
       self.comp = self.$store.state.showModule

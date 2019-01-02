@@ -344,6 +344,7 @@ export default {
 
   created () {
     var self=this
+      eventBus.$off('dlg8210rec')
       eventBus.$on('dlg8210rec', ( dlgPar ) => {
         //self.getData()
        self.getWhere()

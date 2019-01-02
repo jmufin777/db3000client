@@ -249,9 +249,9 @@ import DevDocUITab from './dev/DevDocUITab'
 import DevPP from './dev/DevPP'
 import DevPPKalc from './dev/DevPPKalc'
 import old1 from './dev/Old_1'
-import testPet from './dev/testPet'
+import testPet from './dev/testPet.vue'
 
-import TestMenu from './_Testy/TestMenu'
+import TestMenu from './_Testy/TestMenu.vue'
 
 import MenuNav from './MenuNav'
 import MenuSchema from './MenuSchema'
@@ -299,6 +299,8 @@ import vuedraggableresizable from 'vue-draggable-resizable'
 
 //Kontrola a sprava
 import DbStatus from  '@/components/globals//DbStatus'
+
+import Calc from '../components/Calc/CalcIndex.vue'
 
 
 // import {ServerTable, ClientTable, Event} from 'vue-tables-2'
@@ -362,7 +364,10 @@ export default {
     'form-fx': formFX,
     'old-1': old1,
     'draggable': draggable,
-    'vue-draggable-resizable': vuedraggableresizable
+    'vue-draggable-resizable': vuedraggableresizable,
+
+
+    'calc': Calc
   },
 
   computed: {
@@ -950,6 +955,11 @@ export default {
 
   },
   created () {
+    eventBus.$off('menu_switch')
+    eventBus.$off('logout')
+    eventBus.$off('appCheck')
+    eventBus.$off('Alert')
+    eventBus.$off('myzole')
     eventBus.$on('menu_switch', (server) => {
        this.menu_switch(server)
        // alert("jsme tu")

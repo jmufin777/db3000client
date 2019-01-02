@@ -1044,11 +1044,13 @@ export default {
 
 
     var self=this
+    eventBus.$off('edit_stroj')
     eventBus.$on('edit_stroj', ( dlgPar ) => {
       self.citac++
       self.getDataEnum()
 
     })
+      eventBus.$off('dlg8210')
       eventBus.$on('dlg8210', ( dlgPar ) => {
             self.rec = dlgPar
              // alert(JSON.stringify(dlgPar))

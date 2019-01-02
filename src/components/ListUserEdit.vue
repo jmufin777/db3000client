@@ -266,6 +266,7 @@ export default {
   },
 
   created() {
+    eventBus.$off('dlg')
     eventBus.$on('dlg', ( dlgPar ) => {
         // alert('b')
       if (dlgPar.form.idefix !==0 ){

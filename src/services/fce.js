@@ -26,14 +26,35 @@ export default {
   cp(obj){
     const self = this
     var nobj = {};
-    for (let key in obj) {
+      try {
+        for (let key in obj) {
+                 nobj[key] = obj[key];
+              //alert(nobj[key])
+
+      }
+      } catch (e) {
+        console.log(e)
+      }
+    return nobj;
+},
+
+cp2(obj){
+  const self = this
+  var nobj = {};
+    try {
+      for (let key in obj) {
         if (typeof obj[key] === 'object'){
             nobj[key] = this.cp(obj[key]);
+
         } else {
             nobj[key] = obj[key];
+            //alert(nobj[key])
         }
     }
-    return nobj;
+    } catch (e) {
+      console.log(e)
+    }
+  return nobj;
 },
 
   hasClassId(elementId, cls) {
