@@ -3,7 +3,7 @@
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
       <div style="font-size:100%; height:100%" class="white lighten-5 pt-0 " >
         <slot name="obsah">
-          <table width="100%" style="border:none"><tr><td style="width:15%;border:none">
+          <table width="100%" style="border:none"><tr><td style="width:30%;border:none">
            <v-btn small
             outline
            color="green"
@@ -19,7 +19,7 @@
            </td>
 
 
-           <td style="width:70%;border:none" >
+           <td style="width:55%;border:none" >
            <v-btn
            outline
            small
@@ -32,7 +32,7 @@
              {{ item.value }}
              </v-btn>
             </td>
-            <td style="width:15%;border:none">
+            <td style="width:15%;border:none;text-align:right">
 
 
 
