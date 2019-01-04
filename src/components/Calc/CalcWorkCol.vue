@@ -1,47 +1,52 @@
 <template>
-  <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
+  <!-- <tr style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
      <div style="font-size:100%; min-height:120px" class="white lighten-5 pt-0 px-0 " >
      <table cols="20">
        <tr><td v-for="n in 20" :key="n" style="font-size:1px">&nbsp;</td></tr>
        <tr>
-<td colspan="2">
-   <slot name="akce">
+    <td colspan="2" style="border-left: solid 1px">
+    <slot name="akce">
       Slota akce
-   <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
-   </slot>
-</td>
+    <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
+    </slot>
+    </td>
 
-         <td colspan="18" >
-
+      <td colspan="18" class="pl-1 sloupec" style="border-right: solid 1px silver;" >
 
      <v-overflow-btn slot="obsah"
-      :items="MenuLeft"
+      :items="enum_up"
       hide-details
       class="px-1"
       overflow
-      @change="MenuRet"
-      @blur="MenuRet"
-      @click="form.MenuRet =0"
-      @click.native="form.MenuRet =0"
+      @change="ShowMod"
+
+
       value=""
       editable
-    ></v-overflow-btn>
-    </td></tr>
-    <tr v-if="form.MenuRet > 0"><td colspan="20">
 
-    <v-overflow-btn slot="obsah"
-      :items="Format"
-      hide-details
-      class="pa-0 px-1"
-      overflow
-      @change="SetFormat"
-      value="A4"
-      editable
-      placeholder="Format"
+
     ></v-overflow-btn>
+      </td>
+    </tr>
+    <tr ><td colspan="20" class="pl-1  pa-1">
+      <table width="100%" >
+        <tr class="mt-1 green" v-for="(item, i) in enum_mod_full.filter(el => form.stroj == el.stroj) " :key="i">
+          <td >
+          <a >
+           <v-card class="silver ">
+             <v-card-text style="font-size:80%" >
+             {{ item['nazev']+' '+item['nazev_text'] }}
+           </v-card-text>
+           </v-card>
+          </a>
+          </td>
+        </tr>
+      </table>
+
+
     </td></tr>
     <tr v-if="form.MenuRet > 0" >
-     <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Sirka:</td>
+     <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-2">Sirka:</td>
      <td colspan="7">
    <input type="text"   v-model="form.sirka" style="text-align:right" class="pr-2 pt-3 pb-3">
      </td>
@@ -51,12 +56,12 @@
    </td>
    </tr>
     <tr v-if="form.MenuRet > 0">
-    <td colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Naklad&nbsp;ks:</td>
+    <td  colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Naklad&nbsp;ks:</td>
     <td colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid;border-right:1px solid">
     <input type="text"   v-model="form.nakladks" style="text-align:right" class="pr-2 py-3">
     </td>
     </tr>
-    <tr v-if="form.MenuRet > 0"><td colspan="20">
+    <tr v-if="form.MenuRet > 0"><td colspan="20" class="pl-1">
       <!-- upload-demo -->
       <el-upload
   class="el-upload-dragger1 upload-demo"
@@ -74,8 +79,9 @@
   <div slot="tip" class="el-upload__tip " >Prilohy</div>
 </el-upload>
       </td></tr>
-      <tr><td colspan="20" style="border-bottom: dotted 1px silver" >&nbsp;</td></tr>
 
+
+<tr><td colspan="20" style="border-bottom: dotted 1px silver" >&nbsp;</td></tr>
     </table>
 
         <slot name="obsah">
@@ -90,12 +96,16 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
+import ListStroj from '../../services/ListStrojService'
+//enum_strojmod_text
 
 export default {
   props: {
 
+
   },
  data () {
+
    return {
      //soubory:
         dialogImageUrl: '',
@@ -148,6 +158,11 @@ export default {
       {key: 230 , text: "Big Board"          ,sirka: 360.00 ,vyska: 960.00 },
       {key: 999 , text: "Vlastni"             ,sirka:   0.00 ,vyska:   0.00 }
       ],
+      enum_up: [],
+      enum_mod:[],
+      enum_mod_full:[],
+
+
 
 
 
@@ -159,16 +174,15 @@ export default {
        vyska: 0,
        Format: '',
        nakladks: 0,
-       filelist:[]
+       filelist:[],
 
-
-
+       stroj: ''
      }
+
 
 
    }
  },
-
  mounted () {
    const self = this
    self.FormatJoin.forEach(element => {
@@ -178,8 +192,47 @@ export default {
     self.MenuLeftJoin.forEach(element => {
      self.MenuLeft.push({text: element.text})
    });
+   this.strojmod();
+
  },
  methods: {
+   async strojmod() {
+     const self = this
+     var atmp=[]
+     var found = true
+     atmp=(await ListStroj.one(this.user,-1,1041)).data.enum_strojmod_full
+     self.enum_mod_full = atmp
+     if (!atmp.length || atmp.length == 0)  return
+     //self.enum_up=atmp
+     //console.log(atmp.length)
+     //return
+
+
+     atmp.forEach(el => {
+       //console.log(el)
+       found = self.enum_up.find( el2=>{
+          return el2.text == el.stroj
+       })
+
+      if (!found) {
+
+        self.enum_up.push({'text': el.stroj})
+      }
+
+
+     })
+
+
+      //self.enum_up=atmp
+     //if (atmp.
+     //this.enum_up
+   //  alert(enum_up)
+   },
+   ShowMod(a,b) {
+     const self = this
+     console.log(a,b)
+     self.form.stroj = a
+   },
    MenuRet(a,b) {
      const self = this
      console.log("a",a)
@@ -228,10 +281,6 @@ export default {
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
       }
-      /*
-      var el = this.$el.getElementsByClassName("actual-month")[0];
-  el.scrollIntoView()
-  */
 
    //Soubory
 
@@ -256,7 +305,9 @@ textarea:focus, input:focus{
 }
 </style>
 <style scoped>
-
+.sloupec {
+  vertical-align: text-top;
+}
 
 table tr td {
   border:none;

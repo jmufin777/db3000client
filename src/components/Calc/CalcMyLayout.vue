@@ -14,7 +14,7 @@
 
            <tr>
              <td colspan="100">
-               <div  class="green lighten-5 pt-0 px-0 mt-0" style="height:250px;overflow:auto">
+               <div  class="green lighten-5 pt-0 px-0 mt-0 ml-2" style="height:350px;overflow:scroll">
                <slot name="kalkulace">Slot kalkulace</slot>
                </div>
                </td>
@@ -24,7 +24,7 @@
            </tr>
           <tr>
              <td colspan="100">
-               <div  class="orange lighten-5 pt-0 px-0 mt-0" style="height:250px;overflow:auto">
+               <div  class="orange lighten-5 pt-0 px-0 mt-0" style="height:350px;overflow:auto">
                <slot name="prehled">Prehled</slot>
                </div>
                </td>

@@ -897,7 +897,7 @@
 
 import { eventBus } from '@/main.js'
 import {mapState} from 'vuex'
-import ListStroj from '@/services/ListStrojService'
+import ListStroj from '../services/ListStrojService'
 import List2bEdit from  './List2bEdit.vue'
 
 import f from '@/services/fce'

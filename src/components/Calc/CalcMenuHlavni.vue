@@ -3,6 +3,23 @@
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
       <div style="font-size:100%; height:100%" class="white lighten-5 pt-0 " >
         <slot name="obsah">
+          <table width="100%" style="border:none"><tr><td style="width:15%;border:none">
+           <v-btn small
+            outline
+           color="green"
+           class="green lighten-3" @click="send(777)"> Ulozit </v-btn>
+
+           <v-btn small
+           outline
+           color="orange"
+           class="orange lighten-3" @click="send(666)"> Vycistit </v-btn>
+           <slot name="odkazy">Navigace</slot>
+
+
+           </td>
+
+
+           <td style="width:70%;border:none" >
            <v-btn
            outline
            small
@@ -14,6 +31,11 @@
            >
              {{ item.value }}
              </v-btn>
+            </td>
+            <td style="width:15%;border:none">
+
+
+
              <v-btn
            outline
            small
@@ -24,6 +46,9 @@
            >
              <v-icon>fa-plus</v-icon>
              </v-btn>
+            </td>
+            </tr>
+          </table>
        </slot>
       </div>
 
@@ -53,11 +78,12 @@ export default {
    send(key) {
      const self = this
 
-     if (key > 0 && key < 11 ) {
+     if (key > 0  ) {
        self.lastSend = key
        // console.log('tag', '')
        eventBus.$emit('MenuHlavni', {key: key })
-     } else if ( key == 11) {
+     }
+     if ( key == 11) {
        self.lastSend = 0
      }
 
