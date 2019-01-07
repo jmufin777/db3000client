@@ -27,6 +27,7 @@ import MenuSchema from '@/components/MenuSchema.vue'
 import ListModules from '@/components/ListModules.vue'
 import MenuAdminIndex from '../components/MenuAdminIndex.vue'
 import Calc from '../components/Calc/CalcIndex.vue'
+import CalcCol from '../components/Calc/CalcWorkCol.vue'
 
 Vue.use(Router)
 
@@ -36,6 +37,7 @@ export default new Router({
       path: '*',
       redirect: 'login'
     },
+
     {
       path: '/login',
       name: 'login',
@@ -52,6 +54,12 @@ export default new Router({
       name: 'desktop',
       component: Desktop
     },
+    {
+      path: '/col/:id',
+      name: 'col',
+      component: CalcCol
+    },
+
     {
       path: '/old/1',
       name: 'old-1',

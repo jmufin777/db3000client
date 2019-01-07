@@ -19,8 +19,16 @@
                </div>
                </td>
            </tr>
-           <tr>
-             <td v-for="n in 100" :key="n" style="font-size:5px">&nbsp;</td>
+           <tr >
+
+              <td colspan="100" style="font-size:10px;text-align:left;" class="pl-4">
+                <slot name="odkazy">
+                &nbsp;
+               </slot>
+              </td>
+              <!-- <td v-for="n in 100" :key="n" style="font-size:5px">&nbsp;</td> -->
+
+
            </tr>
           <tr>
              <td colspan="100">

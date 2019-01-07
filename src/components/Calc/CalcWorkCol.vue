@@ -1,6 +1,7 @@
 <template>
   <!-- <tr style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
      <div style="font-size:100%; min-height:120px" class="white lighten-5 pt-0 px-0 " >
+    <form>
      <table cols="20">
        <tr><td v-for="n in 20" :key="n" style="font-size:1px">&nbsp;</td></tr>
        <tr>
@@ -10,22 +11,18 @@
     <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
     </slot>
     </td>
-
       <td colspan="18" class="pl-1 sloupec" style="border-right: solid 1px silver;" >
-
      <v-overflow-btn slot="obsah"
       :items="enum_up"
       hide-details
       class="px-1"
       overflow
       @change="ShowMod"
-
-
       value=""
       editable
 
-
     ></v-overflow-btn>
+    {{ kalkulaceid}} / {{sloupecid}} / {{ neco }}
       </td>
     </tr>
     <tr ><td colspan="20" class="pl-1  pa-1">
@@ -34,8 +31,9 @@
           <td >
           <a >
            <v-card class="silver ">
-             <v-card-text style="font-size:80%" >
+             <v-card-text style="font-size:80%;text-align:left" >
              {{ item['nazev']+' '+item['nazev_text'] }}
+
            </v-card-text>
            </v-card>
           </a>
@@ -43,42 +41,7 @@
         </tr>
       </table>
 
-
     </td></tr>
-    <tr v-if="form.MenuRet > 0" >
-     <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-2">Sirka:</td>
-     <td colspan="7">
-   <input type="text"   v-model="form.sirka" style="text-align:right" class="pr-2 pt-3 pb-3">
-     </td>
-  <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Vyska:</td>
-    <td colspan="7">
-   <input type="text"   v-model="form.vyska" style="text-align:right" class="pr-2 py-3">
-   </td>
-   </tr>
-    <tr v-if="form.MenuRet > 0">
-    <td  colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Naklad&nbsp;ks:</td>
-    <td colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid;border-right:1px solid">
-    <input type="text"   v-model="form.nakladks" style="text-align:right" class="pr-2 py-3">
-    </td>
-    </tr>
-    <tr v-if="form.MenuRet > 0"><td colspan="20" class="pl-1">
-      <!-- upload-demo -->
-      <el-upload
-  class="el-upload-dragger1 upload-demo"
-  action="https://jsonplaceholder.typicode.com/posts/"
-  :on-preview="handlePreview"
-  :on-remove="handleRemove"
-  :before-remove="beforeRemove"
-  drag
-  multiple
-  :limit="3"
-  :on-exceed="handleExceed"
-  :file-list="form.filelist">
-
-  <el-button size="small" type="primary" style="position:relative;left:-30%;top:10%">Data</el-button>
-  <div slot="tip" class="el-upload__tip " >Prilohy</div>
-</el-upload>
-      </td></tr>
 
 
 <tr><td colspan="20" style="border-bottom: dotted 1px silver" >&nbsp;</td></tr>
@@ -87,6 +50,7 @@
         <slot name="obsah">
          <!-- Slot Menu Leve -->
        </slot>
+       </form>
       </div>
 
   <!-- </div> -->
@@ -100,8 +64,24 @@ import ListStroj from '../../services/ListStrojService'
 //enum_strojmod_text
 
 export default {
-  props: {
+    props: {
 
+    kalkulaceid: {
+      type : Number,
+      required: true
+    } ,
+    sloupecid: {
+      type : Number,
+      required: true
+    },
+    typid: {
+      type : Number,
+      required: true
+    },
+    neco: {
+      type : Number,
+      required: false
+    }
 
   },
  data () {
@@ -192,6 +172,7 @@ export default {
     self.MenuLeftJoin.forEach(element => {
      self.MenuLeft.push({text: element.text})
    });
+   console.log('COL')
    this.strojmod();
 
  },
@@ -228,9 +209,9 @@ export default {
      //this.enum_up
    //  alert(enum_up)
    },
-   ShowMod(a,b) {
+   ShowMod(a) {
      const self = this
-     console.log(a,b)
+     console.log(a)
      self.form.stroj = a
    },
    MenuRet(a,b) {

@@ -13,7 +13,7 @@
            outline
            color="orange"
            class="orange lighten-3" @click="send(666)"> Vycistit </v-btn>
-           <slot name="odkazy">Navigace</slot>
+
 
 
            </td>
@@ -34,9 +34,7 @@
             </td>
             <td style="width:15%;border:none;text-align:right">
 
-
-
-             <v-btn
+           <v-btn
            outline
            small
            color="indigo"

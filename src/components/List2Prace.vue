@@ -270,10 +270,16 @@ export default {
       lastId: '',
       minId: 0, //Pro vklad zaporna ID
   		cols: [
-				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 4, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:5, isEdit: true, type: "number",props:{visible: 'yes'}},
-        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 8, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+        { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         { id: "zkratka", title: "Zkratka ", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "kalk_sloupec_v", title: "Por. Velkoploch ", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "kalk_sloupec_arch", title: "Arch ", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "kalk_sloupec_bt", title: "Bez tisku ", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+
+
+
         // { id: "stroj", title: "Stroj", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
@@ -409,8 +415,6 @@ editLine(nRow) {
            'record': self.list[nRow],
            'nRow': nRow
 
-
-
       })
 
    },
@@ -450,11 +454,13 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka
-
-
+        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka,
+        kalk_sloupec_v: el.kalk_sloupec_v,
+        kalk_sloupec_arch: el.kalk_sloupec_arch,
+        kalk_sloupec_bt: el.kalk_sloupec_bt
 
         })
+
         Posli.push(aTmp)
        }
      })

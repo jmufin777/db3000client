@@ -60,9 +60,18 @@ import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 
+import WorkLeft from './CalcWorkLeft.vue'       // Pracovni cast nahore
+import WorkCol from './CalcWorkCol.vue' // Prehledova dole
+
+
 
 
 export default {
+   components: {
+    'work-left': WorkLeft,
+    'work-col': WorkCol,
+
+ },
   props: {
 
 

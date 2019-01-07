@@ -80,6 +80,7 @@ Test2:
 <router-link :to="{name: 'desktop', params: {ktery: 'menu-schema'}}">MenuSchema</router-link>
 Moduly:
 <router-link :to="{name: 'desktop', params: {ktery: 'list-modules'}}">Moduly</router-link> -->
+
 <div class="mx-4"><div class="mx-4">
  <db-status></db-status>
 

@@ -90,9 +90,20 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
+import ListStroj from '../../services/ListStrojService'
 
 export default {
   props: {
+
+    kalkulaceid: {
+      type : Number,
+      required: true
+    } ,
+
+    typid: {
+      type : Number,
+      required: true
+    }
 
   },
  data () {

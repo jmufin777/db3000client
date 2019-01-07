@@ -319,6 +319,8 @@
             <el-select v-model="strojmod.idefix_prace"
         default-first-option
         size="mini"  class="pt-0 pl-1"
+        filterable
+
         >
             <el-option
             v-for="item82 in list.data.enum_prace"
@@ -358,6 +360,7 @@
          <el-select v-model="strojmod.idefix_jednotka"
         default-first-option
         size="mini"  class="pt-0 pl-1 mx-1"
+        filterable
         >
             <el-option
             v-for="item83 in list.data.enum_jednotka"
@@ -496,6 +499,7 @@
          <el-select v-model="list.data.strojmod[imod].idefix_prace"
         default-first-option
         size="mini"  class="pt-1 pl-1"
+        filterable
 
         >
             <el-option
@@ -536,6 +540,7 @@
          <el-select v-model="list.data.strojmod[imod].idefix_jednotka"
         default-first-option
         size="mini"  class="pt-1 pl-1 ml-2"
+        filterable
         >
             <el-option
             v-for="item83 in list.data.enum_jednotka"
@@ -727,7 +732,9 @@
        </el-select>
       </el-col> -->
       <el-col :span="3" class="mx-1">
-        <el-select v-model="strojceny.idefix_jednotka"  size="mini" class="pt-1 pl-1 ml-2"  style="width:90%"  >
+        <el-select v-model="strojceny.idefix_jednotka"  size="mini" class="pt-1 pl-1 ml-2"  style="width:90%"
+        filterable
+        >
           <el-option
             v-for="item291 in list.data.enum_jednotka"
             :key="item291.idefix*1"
@@ -785,7 +792,9 @@
        </el-select>
       </el-col> -->
       <el-col :span="3" class="mx-1">
-        <el-select v-model="list.data.strojceny[iceny].idefix_jednotka"  size="mini" class="pt-0 pl-1 ml-2 mt-2 "  style="width:90%"  >
+        <el-select v-model="list.data.strojceny[iceny].idefix_jednotka"  size="mini" class="pt-0 pl-1 ml-2 mt-2 "  style="width:90%"
+        filterable
+         >
           <el-option
             v-for="item291 in list.data.enum_jednotka"
             :key="item291.idefix*1"
@@ -1177,6 +1186,7 @@ export default {
                   //alert(JSON.stringify(self.list.data.enum_stroj))
                 } catch(e0){
                   alert( "X 1" + e0)
+
                 }
               } catch(e) {
                alert("X 2" + e)

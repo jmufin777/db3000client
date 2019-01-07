@@ -29,7 +29,8 @@ export default new Vuex.Store({
     xMenuz: [],
     compaStore: null,
     xMenuMain: [],
-    seekFirma: null
+    seekFirma: null,
+    Kalkulace: []
   },
   mutations: {
     setToken (state, token) {
@@ -61,7 +62,7 @@ export default new Vuex.Store({
       state.txt = textik
     },
     SETMENU (state, xMenuz) {
-       state.xMenuz = xMenuz
+      state.xMenuz = xMenuz
     },
     SETCOMPASTORE (state, compaStore) {
       state.compaStore = compaStore
@@ -75,15 +76,15 @@ export default new Vuex.Store({
     SETMENUMAIN (state, xMenuMain  ) {
       state.xMenuMain = xMenuMain
       //state.xMenuMain = JSON.parse(JSON.stringify(xMenuMain))
-   },
+    },
     SETWIN (state, newWin) {
-       // state.WinDows = []
+      // state.WinDows = []
       var nasel = state.WinDows.findIndex( (el) => {
         return el.id === newWin.id
       })
 
-      // console.log("Nasel : ", nasel )
-      if (nasel>=0) {
+      // console.log('Nasel : ', nasel )
+      if (nasel >= 0) {
         // newWin.z = newWin.z +7
         state.WinDows[nasel] =  newWin
         state.active = nasel
@@ -93,31 +94,101 @@ export default new Vuex.Store({
         //
       }
       state.WinDows.forEach((el, ind) => {
-        if (ind==nasel) {
-          state.zMax = state.zMax+1
+        if (ind === nasel) {
+          state.zMax = state.zMax + 1
           state.WinDows[ind].z1 = state.zMax
-
         } else {
           state.WinDows[ind].z1 = 999
         }
       })
-
     },
     DROPWIN (state, oldWin) {
-      state.WinDows=state.WinDows.filter(function (el){
-         return el.id !== oldWin
+      state.WinDows = state.WinDows.filter(function (el) {
+        return el.id !== oldWin
       })
     },
     DROPALLWIN (state) {
       state.WinDows = []
     },
-    SETSEEKFIRMA (state, seekFirma  ) {
-      state.seekFirma = seekFirma
-      //state.xMenuMain = JSON.parse(JSON.stringify(xMenuMain))
-   },
 
+    SETSEEKFIRMA (state, seekFirma) {
+      state.seekFirma = seekFirma
+      // state.xMenuMain = JSON.parse(JSON.stringify(xMenuMain))
+    },
+
+    DROPKALKULACE (state) {
+      state.Kalkulace = []
+    },
+    addKalk (state, kalkulace) {
+      console.log('A :', JSON.stringify(kalkulace))
+      if (state.Kalkulace == null) {
+        state.Kalkulace = []
+      }
+      state.Kalkulace.push(kalkulace)
+    },
+    addKalkCol (state, kalkulaceid) {
+      console.log('A :', JSON.stringify(kalkulaceid))
+      var newId = -1
+      var idK = -1
+
+
+      state.Kalkulace.forEach((el, idxk) => {
+        if (el.kalkulaceid === kalkulaceid) {
+          idK = idxk
+          if (el.sloupecid.length === 0) {
+            newId = el.sloupecid.length + 1
+          } else {
+            newId = el.sloupecid.length + 1
+            el.sloupecid.forEach(eSl => {
+              if (eSl.id >= newId) {
+                newId = eSl.id + 1
+
+              }
+            })
+          }
+          return 0
+        }
+      })
+      if (newId > 0)  {
+        console.log('Add : ', state.Kalkulace[idK])
+        state.Kalkulace[idK].sloupecid.push({id: newId, data: []})
+      }
+    },
+    removeKalk (state, kalkulaceid) {
+      console.log('Remov ', kalkulaceid)
+      state.Kalkulace = state.Kalkulace.filter(function (el) {
+        return el.kalkulaceid !== kalkulaceid
+      })
+    },
+    removeKalkCol (state, pole) {
+      var kalkulaceid = pole.kalkulaceid
+      var sloupecid = pole.sloupecid
+      var idk = -1
+      var ids = -1
+      console.log('A :', JSON.stringify(kalkulaceid, sloupecid))
+      state.Kalkulace.forEach((el, idxk) => {
+        if (el.kalkulaceid === kalkulaceid) {
+          console.log('C', sloupecid)
+          idk = idxk
+
+          el.sloupecid.forEach((el2, idx) => {
+            if (el2.id === sloupecid.id) {
+              ids = idx
+            }
+          })
+        }
+      })
+      if (idk > -1 && ids > -1 ) {
+        state.Kalkulace[idk].sloupecid.splice(ids, 1)
+      }
+    },
+    cleanKalk (state) {
+      state.Kalkulace = []
+    }
   },
+
   actions: {
+
     setToken ({commit}, token) {
       commit('setToken', token)
     },
@@ -149,31 +220,49 @@ export default new Vuex.Store({
       // console.log('Actions- setWin -Dispatch', newWin)
       commit('SETWIN', newWin)
     },
-    dropWin({commit}, oldWind ) {
+    dropWin ({commit}, oldWind) {
       commit('DROPWIN', oldWind)
     },
-    dropAllWin({commit} ) {
-      commit('DROPALLWIN' )
+    dropAllWin ({commit}) {
+      commit('DROPALLWIN')
     },
-
-    setMenu({commit}, xMenuy1) {
+    setMenu ({commit}, xMenuy1) {
       commit('SETMENU', xMenuy1)
     },
-    setMenuMain({commit}, xMenuMain) {
+    setMenuMain ({commit}, xMenuMain) {
       commit('SETMENUMAIN', xMenuMain)
     },
-    setCompaStore({commit}, compaStore) {
+    setCompaStore ({commit}, compaStore) {
       commit('SETCOMPASTORE', compaStore)
     },
-    addCompaStore({commit}, compaStore) {
+    addCompaStore ({commit}, compaStore) {
       commit('ADDCOMPASTORE', compaStore)
     },
-    seekFirma({commit}, seekFirma) {
+    seekFirma ({commit}, seekFirma) {
       commit('SETSEEKFIRMA', seekFirma)
+    },
+    cleanKalk ({commit}) {
+      // console.log('Actions- setWin -Dispatch', newWin)
+      commit('cleanKalk')
+    },
+    addKalk ({commit}, kalkulaceid) {
+      // console.log('Actions- setWin -Dispatch', newWin)
+      commit('addKalk', kalkulaceid)
+    },
+    removeKalk ({commit}, kalkulaceid) {
+      // console.log('Actions- removeKalk ', kalkulaceid)
+      // return
+      commit('removeKalk', kalkulaceid)
+    },
+    addKalkCol ({commit}, kalkulaceid) {
+      console.log('Actions- addKalkCol -Dispatch', kalkulaceid)
+      commit('addKalkCol', kalkulaceid)
+    },
+    removeKalkCol ({commit}, pole) {
+      console.log('Actions- setWin -Dispatch', pole)
+      commit('removeKalkCol', pole)
     }
-
   },
-
   getters: {
     infoTxt: state => {
       return state.txt
@@ -181,7 +270,5 @@ export default new Vuex.Store({
     getWinList: state => {
       return state.WinDows
     }
-
-
   }
 })
