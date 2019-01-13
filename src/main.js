@@ -10,10 +10,13 @@ import vuetify from 'vuetify'
 import { sync } from 'vuex-router-sync'
 import store from '@/store/store'
 
+
 // main.js
 import 'material-design-icons-iconfont/dist/material-design-icons.css' //
 import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
 import 'vuetify/dist/vuetify.min.css'
+//Material asi na nic
+// import "@material/select/mdc-select";
 
 import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-loade
 
@@ -42,6 +45,8 @@ import Panel2 from '@/components/globals/Panel2'
 import Dialog from '@/components/globals/Dialog'
 import MyTable from '@/components/globals/MyTable'
 import TaBle from '@/components/globals/TaBle'
+import TaBle2 from '@/components/globals/TaBle_v2'
+import TaBle3 from '@/components/globals/TabLe_3leftfix'
 
 import WinDow from '@/components/globals/WinDow'
 
@@ -61,6 +66,9 @@ Vue.component('win-dow', WinDow)
 Vue.component('dia-log', Dialog)
 Vue.component('my-table', MyTable)
 Vue.component('ta-ble', TaBle)
+Vue.component('ta-ble2', TaBle2)
+Vue.component('ta-ble3', TaBle3)
+
 // Vue.component('ram1', Ram1)
 Vue.component('vue-json-pretty', VueJsonPretty)
 Vue.component('barcode', VueBarcode)

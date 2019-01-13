@@ -30,7 +30,8 @@ export default new Vuex.Store({
     compaStore: null,
     xMenuMain: [],
     seekFirma: null,
-    Kalkulace: []
+    Kalkulace: [],
+    KalkulaceThis: -1
   },
   mutations: {
     setToken (state, token) {
@@ -119,13 +120,14 @@ export default new Vuex.Store({
     DROPKALKULACE (state) {
       state.Kalkulace = []
     },
-    addKalk (state, kalkulace) {
+    addKalk (state, kalkulace) { //Vlozi celou definic
       console.log('A :', JSON.stringify(kalkulace))
       if (state.Kalkulace == null) {
         state.Kalkulace = []
       }
       state.Kalkulace.push(kalkulace)
     },
+
     addKalkCol (state, kalkulaceid) {
       console.log('A :', JSON.stringify(kalkulaceid))
       var newId = -1
@@ -150,8 +152,8 @@ export default new Vuex.Store({
         }
       })
       if (newId > 0)  {
-        console.log('Add : ', state.Kalkulace[idK])
-        state.Kalkulace[idK].sloupecid.push({id: newId, data: []})
+        //console.log('Add : ', state.Kalkulace[idK])
+        state.Kalkulace[idK].sloupecid.push({id: newId, data: {}})
       }
     },
     removeKalk (state, kalkulaceid) {
@@ -159,6 +161,16 @@ export default new Vuex.Store({
       state.Kalkulace = state.Kalkulace.filter(function (el) {
         return el.kalkulaceid !== kalkulaceid
       })
+    },
+    setKalk (state, kalkulaceid) {
+      console.log('Set ', kalkulaceid)
+      state.KalkulaceThis = kalkulaceid
+    },
+    editKalk (state, kalkulaceidKeyValue) {
+      console.log('Edit:  ', kalkulaceidKeyValue)
+      // state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[`'${kalkulaceidKeyValue.key}'`] = kalkulaceidKeyValue[kalkulaceidKeyValue.value]
+      state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data['Menu1Value'] = kalkulaceidKeyValue.value
+      console.log('Edit 2', state.Kalkulace[kalkulaceidKeyValue.kalkulaceid])
     },
     removeKalkCol (state, pole) {
       var kalkulaceid = pole.kalkulaceid
@@ -249,6 +261,16 @@ export default new Vuex.Store({
       // console.log('Actions- setWin -Dispatch', newWin)
       commit('addKalk', kalkulaceid)
     },
+    setKalk ({commit}, kalkulaceid) {
+      // console.log('Actions- setWin -Dispatch', newWin)
+      commit('setKalk', kalkulaceid)
+    },
+
+    editKalk ({commit}, kalkulaceidKeyValue) {
+      // console.log('Actions- removeKalk ', kalkulaceid)
+      // return
+      commit('editKalk', kalkulaceidKeyValue)
+    },
     removeKalk ({commit}, kalkulaceid) {
       // console.log('Actions- removeKalk ', kalkulaceid)
       // return
@@ -269,6 +291,21 @@ export default new Vuex.Store({
     },
     getWinList: state => {
       return state.WinDows
+    },
+    getKalk: state => {
+      return state.KalkulaceThis
+    },
+    //getId - index kalkulace pro dane id Kalulace
+    getId: state => (id) => {
+      var idx = 0
+      state.Kalkulace.forEach((el, idxk) => {
+        if (el.kalkulaceid === id) {
+          idx = idxk
+          return idx
+        }
+      })
+      return idx
     }
+
   }
 })

@@ -19,7 +19,7 @@
 <span slot="a3">A3</span> -->
 
 
-<div slot="b1" class="green lighten-4 elevation-2" style="height:40px;font-size:18px">{{ stepInfo}} </div>
+<div slot="b1" class="green lighten-4 elevation-2" style="height:40px;font-size:18px">{{ stepInfo}}</div>
 <!-- <span slot="b3">B3</span> -->
 <div slot="a1" style="height:40px;font-size:18px;" class="px-2 green lighten-4 elevation-2" >
 {{ ((isCopy ==false )?'Zmena':'Nova polozka ') +' ' + list.data.stroj[0].nazev  }}
@@ -44,6 +44,9 @@
         <el-tab-pane label=" Rozmery"  name="1"></el-tab-pane>
         <el-tab-pane label=" Priprava, mod "  name="2"></el-tab-pane>
         <el-tab-pane label=" Ceny"  name="3" ></el-tab-pane>
+        <!-- <el-tab-pane label=" Inkousty "  name="3"></el-tab-pane> -->
+
+        <!-- <el-tab-pane label=" Prace, ceny "  name="5"></el-tab-pane> -->
       </el-tabs>
   </el-row>
   <span slot="a2" style="height:20px;font-size:18px">
@@ -240,153 +243,95 @@
 
      <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%" >
 
+      <el-row class="ma-2">
+
+     <el-col :span="5">Priprava stroje - minuty</el-col>
+     <el-col :span="3">
+
+     <el-input-number v-model="list.data.stroj[0].priprava_cas_minuta" size="mini"  style="width:100%"></el-input-number>
+     </el-col>
+     <el-col :span="4">Naklad</el-col>
+     <el-col :span="3">
+     <el-input-number v-model="list.data.stroj[0].priprava_celkem_naklad" size="mini"  style="width:100%"></el-input-number>
+     </el-col>
+     <el-col :span="4">Prodej</el-col>
+     <el-col :span="3">
+     <el-input-number v-model="list.data.stroj[0].priprava_celkem_prodej" size="mini"  style="width:100%"></el-input-number>
+     </el-col>
+
+      </el-row>
+      <el-row class="ma-2">
+     <!-- <el-col :span="6">Priprava minuta - Naklad</el-col>
+     <el-col :span="3">
+     <el-input-number v-model="list.data.stroj[0].priprava_minuta_naklad" size="mini"  style="width:100%"></el-input-number>
+     </el-col>
+
+     <el-col :span="6">Priprava minuta - Prodej</el-col>
+     <el-col :span="3">
+     <el-input-number v-model="list.data.stroj[0].priprava_minuta_prodej" size="mini"  style="width:100%"></el-input-number>
+     </el-col> -->
+
+     </el-row>
+      <el-row class="ma-2">
 
 
-      <el-row class="ma-2" >
-        <div  ref="seznam"  class=grid-content >
-        <ta-ble3  :h="'360px;width:100%'" :Sirka="1000" :Leva="'20%'" :Prava="'10%'" :Stred="'70%'" >
-         <table slot="head" :style="pof(Sirka*0.9,100)">
-            <thead  >
-              <tr>
-              <th :style="pof(Sirka*0.9,22)+';color:red'">Prace</th>
-              <th :style="pof(Sirka*0.9,15)">Rozliseni</th>
-              <th :style="pof(Sirka*0.9,15)">Rychlost</th>
-              <th :style="pof(Sirka*0.9,15)">Jednotka</th>
-              <th :style="pof(Sirka*0.9,10)">Prioritni</th>
-              <th :style="pof(Sirka*0.9,25)">Zbytek</th>
-              </tr>
-            </thead>
-        </table>
-
-        <table slot="body" :style="pof(Sirka*0.9,100)">
-        <tbody  >
-
-              <tr v-for="(itemFull, iFull) in list.data.strojmod" :key="iFull" class="tdline nb tdlr"
-              :id="'RadekS_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''"
-              :ref="'RadekS_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +'')" >
-              <td :style="pof(Sirka*0.9,22)"   class="leva pl-2">{{ePrace(itemFull.idefix_prace)}}</td>
-
-<!-- <td :style="pof(Sirka*0.75,12)"  class="pl-2 leva">{{itemFull.nazev}}</td> -->
-              <td :style="pof(Sirka*0.9,15)"   class="pl-2 leva">{{itemFull.nazev_text}}</td>
-              <td :style="pof(Sirka*0.9,15)"   class="stred">{{itemFull.rychlost}}</td>
-              <td :style="pof(Sirka*0.9,15)"   class="stred">{{eJednotka(itemFull.idefix_jednotka)}}</td>
-              <td :style="pof(Sirka*0.9,10)"   class="stred"><input size="mini" style="height:28px;width:28px" v-model="itemFull.mod_priorita" type="checkbox" @change="editPriorita(iFull)" name="Hotovost" value="1"  :checked="itemFull.mod_priorita==true"></td>
-              <td :style="pof(Sirka*0.9,25)" > ZB: {{itemFull.nazev}}</td>
-              </tr>
-
-        </tbody>
-        </table>
-
-        <table slot="headl" :style="pof(Sirka*0.2,100)">
-            <thead  >
-              <tr>
-              <th :style="pof(Sirka*0.2,100)">Nazev</th>
-
-              </tr>
-            </thead>
-        </table>
-
-        <table slot="bodyl" :style="pof(Sirka*0.2,100)">
-        <tbody  >
-           <draggable v-model="list.data.strojmod"  :options="{group: 'people' }" @start="drag=true" @end="chooseItemMod"  class="ma-0 pa-0">
-              <tr v-for="(itemFull, iFull) in list.data.strojmod" :key="iFull" class="tdline nb tdlr"
-
-              :id="'RadekL_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''"
-              :ref="'RadekL_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +'')"
-              >
-              <td :style="pof(Sirka*0.1,100) + ';cursor:pointer'" class="prava pr-1">{{iFull + 1}}</td>
-
-              <td :style="pof(Sirka*0.3,100) + ';cursor:pointer'"  class="pl-2 leva">{{itemFull.nazev}}</td>
-
-
-              </tr>
-           </draggable>
-        </tbody>
-        </table>
-
-        <table slot="headr" :style="pof(Sirka*0.1,100)">
-            <thead  >
-              <tr >
-                    <th class="tdline" :style="pof(Sirka*0.1,100)">
-                    <button  type="button" style="width:22px;height:22px; font-color:black" class="pl-0 info elevation-3"
-                      @click="setInsertMod"
-                     ><i class="el-icon-plus" size="mini"></i>
-                     </button>
-              </th>
-
-              </tr>
-            </thead>
-        </table>
-
-        <table slot="bodyr" :style="pof(Sirka*0.10,100)">
-        <tbody  >
-              <tr v-for="(itemFull, iFull) in list.data.strojmod" :key="iFull" class="tdline nb tdlr"
-               :id="'RadekR_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''"
-               :ref="'RadekR_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +'')"
-               >
-                <td :style="pof(Sirka*0.10,100)"  class="pl-0 stred">
-
-                    <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="setEditMod(iFull)" ><i class="el-icon-edit" size="mini"></i></button>
-                    <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="deleteMod(iFull)" ><i class="el-icon-delete" size="mini"></i></button>
-                    <!-- <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="false" ><i class="el-icon-delete" size="mini"></i></button> -->
-                     <!-- <button  type="button" style="width:100%;height:26px;z-index:1900000" class="px-0 " @click="deleteMod(iFull)" ><i class="el-icon-delete" size="mini"></i></button> -->
-                  </td>
-            </tr>
-
-        </tbody>
-        </table>
-
-        </ta-ble3>
-        {{(false)?list.data.strojmod : ''}}
-
-        </div>
+     <!-- <el-col :span="6">Priprava Celkem - Naklad</el-col>
+     <el-col :span="3">
+     <el-input-number v-model="list.data.stroj[0].priprava_celkem_naklad" size="mini"  style="width:100%"></el-input-number>
+     </el-col>
+     <el-col :span="6">Priprava Celkem - Prodej</el-col>
+     <el-col :span="3">
+     <el-input-number v-model="list.data.stroj[0].priprava_celkem_prodej" size="mini"  style="width:100%"></el-input-number>
+     </el-col> -->
 
 
 
     </el-row>
 
-<!-- <vue-draggable-resizable :style="pof(Sirka*0.9,100)+';position:absolute;top:40%;left:30%;height:90%;background:#fff;z-index:50;border:solid 2px silver'"   :parent="false" v-if> -->
 
-<!-- <div :style="pof(Sirka*0.9,100)" class="elevation-5" v-if="addMod == true || editMod == true" > -->
-<div :style="pof(Sirka*0.9,100)+';position:absolute;top:40%;left:30%;height:90%;background:#fff;z-index:50;border:solid 2px silver'" class="elevation-5" v-if="addMod == true || editMod == true " >
-<el-row class="ml-3 mt-3 mb-0  " v-if="true" >
-<el-col :span="14" class="elevation-2">
-  <el-row>
-    <el-col :span="23" class="elevation-3 pa-1 my-2 green--text"><b>Zakladni vlastnosti</b></el-col>
-  </el-row>
-  <!--1 Prace //-->
-  <el-row>
-    <el-col :span="6" ><el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:100%;" class=" elevation-5">Prace</el-button></el-col>
-    <el-col :span="10">
-        <el-select
-                  v-model="strojmod.idefix_prace"
-                  default-first-option
-                  size="mini"
-                  class="pt-0 pl-1"
-                  filterable
-                  style="width:90%"
-            >
-                <el-option
-                v-for="item82 in list.data.enum_prace"
-                :key="item82.idefix*1"
-                :label="item82.nazev"
-                :value="item82.idefix*1"
-                >{{item82.nazev}} </el-option>
-          </el-select>
-      </el-col>
-      <el-col :span="6" class="elevation-1 py-1" >Prioritni</el-col>
 
-     <el-col :span="2">
-       <el-checkbox v-model="strojmod.mod_priorita" class="mx-1 px-1 mt-1"
-            size="mini">
-       </el-checkbox>
-     </el-col>
-  </el-row>
-<!--2 Nazev //-->
-  <el-row class="my-2" >
-    <el-col :span="6" class="elevation-1 py-1" >Nazev</el-col>
-    <el-col :span="17">
-         <el-autocomplete
+    <el-row class="ml-1 mt-3 mb-0 blue-grey lighten-4">
+     <table>
+       <thead>
+         <tr>
+           <th style="border:none" >
+             <el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%;color:yellow" class="info elevation-5">Prace</el-button>
+           </th>
+           <th style="border:none" >
+             Nazev A
+           </th>
+           <th style="border:none" >
+             Rozliseni
+           </th>
+           <th style="border:none" >
+             Rychlost
+           </th>
+           <th style="border:none" >
+             <el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:90%;color:yellow" class="info elevation-2"> Jednotka</el-button>
+           </th>
+           <th style="border:none"  >&nbsp;</th>
+           <th style="border:none"  >&nbsp;</th>
+         </tr>
+       </thead>
+      <tbody>
+        <tr>
+          <td style="border:none" >
+            <el-select v-model="strojmod.idefix_prace"
+        default-first-option
+        size="mini"  class="pt-0 pl-1"
+        filterable
+
+        >
+            <el-option
+            v-for="item82 in list.data.enum_prace"
+            :key="item82.idefix*1"
+            :label="item82.nazev"
+            :value="item82.idefix*1"
+            >{{item82.nazev}} </el-option>
+       </el-select>
+          </td>
+         <td style="border:none" >
+          <el-autocomplete
         class="inline-input mr-1"
         v-model="strojmod.nazev"
         :fetch-suggestions="querySearch3"
@@ -395,14 +340,9 @@
         size="mini"
         style="width:90%"
        ></el-autocomplete>
-    </el-col>
-  </el-row>
-
-  <!--3 Rozliseni - nazev_text //-->
-  <el-row class="my-2" >
-    <el-col :span="6" class="elevation-1 py-1" >Rozliseni</el-col>
-    <el-col :span="18">
-      <el-autocomplete
+        </td>
+        <td style="border:none" >
+          <el-autocomplete
       class="inline-input mr-1 "
       v-model="strojmod.nazev_text"
       :fetch-suggestions="querySearch4"
@@ -411,23 +351,16 @@
       size="mini"
       style="width:90%"
      ></el-autocomplete>
-    </el-col>
-  </el-row>
 
-  <!--4 Rychlost //-->
-  <el-row class="my-2" >
-    <el-col :span="6" class="elevation-1 py-1" >Rychlost</el-col>
-    <el-col :span="6" class="pl-2">
-        <el-input-number v-model="strojmod.rychlost" size="mini"  style="width:90%"></el-input-number>
-    </el-col>
-
-        <el-col :span="4" ><el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:100%;" class=" elevation-5">Jednotka</el-button></el-col>
-        <el-col :span="7" class="pr-2 pl-0">
-       <el-select v-model="strojmod.idefix_jednotka"
+        </td>
+       <td style="border:none" >
+         <el-input-number v-model="strojmod.rychlost" size="mini"  style="width:100%"></el-input-number>
+       </td>
+       <td style="border:none" >
+         <el-select v-model="strojmod.idefix_jednotka"
         default-first-option
         size="mini"  class="pt-0 pl-1 mx-1"
         filterable
-        style="width:90%"
         >
             <el-option
             v-for="item83 in list.data.enum_jednotka"
@@ -436,26 +369,39 @@
             :value="item83.idefix*1"
             >{{item83.nazev}} </el-option>
        </el-select>
-      </el-col>
 
-  </el-row>
+       </td>
+       <td style="border:none" >
+         <el-checkbox v-model="strojmod.mod_priorita" class="mx-1 px-1 mt-1"
+            size="mini">Prioritni
+       </el-checkbox>
+       </td>
+       <td style="border:none" >
+          <button  type="button" style="width:100%;height:26px" class="pl-4" @click="insertMod" ><i class="el-icon-plus" size="mini"></i></button>
+       </td>
 
-</el-col>
+        </tr>
 
-<el-col :span="9" class="elevation-1 ml-1">
+      </tbody>
+
+     </table>
+    </el-row>
 
 
-  <el-row class="elevation-0 pa-1 my-1 green--text">
-    <el-col :span="14" class="py-0 elevation-1" >Inkoust</el-col>
-    <el-col :span="10" class="py-0 elevation-1">Spotreba</el-col>
-  </el-row>
-  <el-row >
-      <el-col :span="2" class="elevation-1 py-1">1</el-col>
-      <el-col :span="12" class="elevation-1">
-        <el-select v-model="strojmod.idefix_i1"
+    <el-row   class="ma-0 mt-1">
+    <el-col :span="24" :offset="0" style="position:relative;left:9px">
+      <table style="width:100%">
+        <!-- <thead >
+          <tr>
+          <th colspan="5" class="blue-grey lighten-4">Inkoust / spotreba</th>
+          </tr>
+        </thead> -->
+        <tbody>
+       <tr class="blue-grey lighten-5"><td style="text-align:left" class="blue-grey lighten-5">
+         i1<el-select v-model="strojmod.idefix_i1"
           size="mini"
-          class="pt-0 pl-1 mx-1"
-          style="width:90%"
+          class="pt-1 pl-1 ml-2"
+          style="width:50%"
           >
         <el-option
             v-for="item90 in list.data.enum_inkoust"
@@ -464,131 +410,85 @@
             :value="item90.idefix*1"
             >{{item90.nazev}} </el-option>
        </el-select>
+       <input type="number" v-model="strojmod.i1spotreba"
+        class="mb-0 px-0 cell cisla"
+        style="width:30%;"
 
-      </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i1spotreba" size="mini"  style="width:90%"></el-input-number>
-      </el-col>
-  </el-row>
-<!--2--//-->
-  <el-row >
-      <el-col :span="2" class="elevation-1 py-1">2</el-col>
-      <el-col :span="12" class="elevation-1">
-        <el-select v-model="strojmod.idefix_i2"
-          size="mini"
-          class="pt-0 pl-1 mx-1"
-          style="width:90%"
-          >
-        <el-option
+
+       >
+ </td>
+ <td class="blue-grey lighten-4">i2<el-select v-model="strojmod.idefix_i2"  size="mini" class="pt-1 pl-1 ml-2 blue-grey lighten-4"  style="width:50%"  >
+            <el-option
             v-for="item91 in list.data.enum_inkoust"
             :key="item91.idefix*1"
             :label="item91.nazev"
             :value="item91.idefix*1"
             >{{item91.nazev}} </el-option>
        </el-select>
-
-      </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i2spotreba" size="mini"  style="width:90%"></el-input-number>
-      </el-col>
-  </el-row>
-<!--2 EOF //-->
-<!--3--//-->
-  <el-row >
-      <el-col :span="2" class="elevation-1 py-1">3</el-col>
-      <el-col :span="12" class="elevation-1">
-        <el-select v-model="strojmod.idefix_i3"
-          size="mini"
-          class="pt-0 pl-1 mx-1"
-          style="width:90%"
-          >
-        <el-option
+       <input type="number" v-model="strojmod.i2spotreba"
+        class="mb-0 px-0 cell cisla"
+        style="width:30%;"
+       >
+       </td>
+     <td class="blue-grey lighten-5">i3
+       <el-select v-model="strojmod.idefix_i3"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
+          <el-option
             v-for="item92 in list.data.enum_inkoust"
             :key="item92.idefix*1"
             :label="item92.nazev"
             :value="item92.idefix*1"
             >{{item92.nazev}} </el-option>
        </el-select>
-
-      </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i3spotreba" size="mini"  style="width:90%"></el-input-number>
-      </el-col>
-  </el-row>
-<!--3 EOF //-->
-<!--4--//-->
-  <el-row >
-      <el-col :span="2" class="elevation-1 py-1">4</el-col>
-      <el-col :span="12" class="elevation-1">
-        <el-select v-model="strojmod.idefix_i4"
-          size="mini"
-          class="pt-0 pl-1 mx-1"
-          style="width:90%"
-          >
-        <el-option
+       <input type="number" v-model="strojmod.i3spotreba"
+        class="mb-0 px-0 cell cisla"
+        style="width:30%;"
+       >
+       </td>
+       <td class="blue-grey lighten-4">
+       i4
+       <el-select v-model="strojmod.idefix_i4"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
+          <el-option
             v-for="item93 in list.data.enum_inkoust"
             :key="item93.idefix*1"
             :label="item93.nazev"
             :value="item93.idefix*1"
             >{{item93.nazev}} </el-option>
        </el-select>
-
-      </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i4spotreba" size="mini"  style="width:90%"></el-input-number>
-      </el-col>
-  </el-row>
-<!--4 EOF //-->
-
-<!--5--//-->
-  <el-row >
-      <el-col :span="2" class="elevation-1 py-1">5</el-col>
-      <el-col :span="12" class="elevation-1">
-        <el-select v-model="strojmod.idefix_i5"
-          size="mini"
-          class="pt-0 pl-1 mx-1"
-          style="width:90%"
-          >
-        <el-option
+       <input type="number" v-model="strojmod.i4spotreba"
+        class="mb-0 px-0 cell cisla"
+        style="width:30%;"
+       >
+       </td>
+       <td class="blue-grey lighten-5">
+       i5
+       <el-select v-model="strojmod.idefix_i5"  size="mini" class="pt-1 pl-1 ml-2 blue-grey lighten-5"  style="width:50%"  >
+          <el-option
             v-for="item94 in list.data.enum_inkoust"
             :key="item94.idefix*1"
             :label="item94.nazev"
             :value="item94.idefix*1"
             >{{item94.nazev}} </el-option>
        </el-select>
+       <input type="number" v-model="strojmod.i5spotreba"
+        class="mb-0 px-0 cell cisla"
+        style="width:30%;"
+       >
+       </td>
+      </tr>
+    </tbody></table>
 
-      </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i5spotreba" size="mini"  style="width:90%"></el-input-number>
-      </el-col>
-  </el-row>
-<!--5 EOF //-->
-
-
-
-
-</el-col>
-
-  </el-row>
+<!--- radek s tabulkou EOF //-->
 
 
-<!-- Radek s inkousty !-->
 
-
-    <el-row >
-      <el-col :span="24">
-        <v-btn v-if="addMod==true" @click="insertMod" small> Vlozit </v-btn>
-        <v-btn v-if="editMod==true" @click="saveMod(strojmod)"  small> Zmena </v-btn>
-        <v-btn @click="closeMod" small> Zavrit </v-btn>
-      </el-col>
+    </el-col>
     </el-row>
 
-</div>
-<!-- </vue-draggable-resizable> -->
+
 
 
 <!-- <draggable v-model="list.data.strojmod"  :options="{group: 'people' }" @start="drag=true" @end="drag=false" :move="chooseItemMod"> -->
-  <draggable v-model="list.data.strojmod"  :options="{group: 'people' }" @start="drag=true" @end="chooseItemMod"  v-if="false">
+  <draggable v-model="list.data.strojmod"  :options="{group: 'people' }" @start="drag=true" @end="chooseItemMod" >
 
     <el-row  v-for="(itemmod, imod) in list.data.strojmod" :key="itemmod.idefix" class="ma-2 mt-0 "
       v-bind:class="{ 'white lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
@@ -786,23 +686,6 @@
          <v-card v-show="step2=='3'"><v-card-text>
           <el-row class="ma-2 ">
           <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%" >
-             <el-row class="ma-2">
-
-              <el-col :span="5">Priprava stroje - minuty</el-col>
-              <el-col :span="3">
-
-              <el-input-number v-model="list.data.stroj[0].priprava_cas_minuta" size="mini"  style="width:100%"></el-input-number>
-              </el-col>
-              <el-col :span="4">Naklad</el-col>
-              <el-col :span="3">
-              <el-input-number v-model="list.data.stroj[0].priprava_celkem_naklad" size="mini"  style="width:100%"></el-input-number>
-              </el-col>
-              <el-col :span="4">Prodej</el-col>
-              <el-col :span="3">
-              <el-input-number v-model="list.data.stroj[0].priprava_celkem_prodej" size="mini"  style="width:100%"></el-input-number>
-              </el-col>
-
-      </el-row>
 
             <el-row class="mx-0 ml-0 mt-3 mb-1 blue-grey lighten-4">
               <el-col :span="2">Poradi</el-col>
@@ -1028,19 +911,17 @@ import List2bEdit from  './List2bEdit.vue'
 
 import f from '@/services/fce'
 import moment from 'moment'
-import FreeTransform from 'vue-free-transform'
 
 
 
 //import List2StrojSubSkup from '@/services/List2StrojSubSkupService'
 // import List2StrojSkup from '@/services/List2StrojSkupService'
 
-import { setTimeout, clearInterval, setInterval } from 'timers'
+import { setTimeout, clearInterval } from 'timers'
 
 export default {
   components: {
     'list2b-edit': List2bEdit,
-    'FreeTransform': FreeTransform
   },
   props: {
     name: {
@@ -1050,14 +931,8 @@ export default {
   },
   data () {
     return {
-
-       offsetX: 0,
-        offsetY: 0,
-
       search: '',
       barevnostNazev: [],
-      addMod: false,
-      editMod: false,
       SendNamne: '',
       RecName: this.name,
       IsDialog1: true,
@@ -1065,8 +940,8 @@ export default {
       rec: {},
       length: 4,
       window: 0,
-      step: 2,
-      step2: "2",
+      step: 6,
+      step2: "1",
       Akce: '',
       //stepInfo: 'Resim co jako',
       idefixThis: 0,
@@ -1076,34 +951,7 @@ export default {
       labelPosition: 'right',
       strojNazev: '',
 
-    strojmodDefault: {
-        idefix: 0,
-        idefix_stroj: 0,
-        kod: 0,
-        idefix_prace: 0,
-        nazev: '',
-        nazev_text: '',
-        rychlost: 0,
-        idefix_jednotka: 0,
 
-        idefix_i1: 0 ,
-        i1spotreba: 0 ,
-        idefix_i2: 0 ,
-        i2spotreba: 0 ,
-        idefix_i3: 0 ,
-        i3spotreba: 0 ,
-        idefix_i4: 0 ,
-        i4spotreba: 0 ,
-        idefix_i5: 0 ,
-        i5spotreba: 0 ,
-        mod_priorita: false,
-
-        strojmodbarevnost: [],
-        rychlost_minuta_m2: 0,
-        rychlost_minuta_pocet: 0,
-
-
-      },
       strojmod: {
         idefix: 0,
         idefix_stroj: 0,
@@ -1170,7 +1018,6 @@ export default {
 
       },
       lastTime: 0, //posledni cas prichozi udalosti v int
-      Sirka: 0
 
 
 // --  10   enum_strojskup
@@ -1194,33 +1041,24 @@ export default {
 // -- 204   dotaz_list_strojceny
 
     }
-
   },
 
 
   mounted() {
 
-    // this.analyze()
+
 
   },
-
-
   created () {
 
 
     var self=this
-    var interv =setInterval(function() {
-       self.sirka("seznam")
-       //alert(self.Sirka)
-    },500)
     eventBus.$off('edit_stroj')
     eventBus.$on('edit_stroj', ( dlgPar ) => {
       self.citac++
       self.getDataEnum()
 
     })
-
-
       eventBus.$off('dlg8210')
       eventBus.$on('dlg8210', ( dlgPar ) => {
             self.rec = dlgPar
@@ -1240,11 +1078,16 @@ export default {
             self.IsDialog1 = true
             // self.IsDialog1 = !self.IsDialog1
             if (self.IsDialog1 && dlgPar.Idefix > 0) {
-              self.step=2
+              self.step=1
 
               self.getData(dlgPar)
 
+
+
             }
+
+
+          //}
 
 
         }
@@ -1265,118 +1108,19 @@ export default {
     step: function(){
       this.step2 = this.step+''
       if (this.step>3) {
-        this.step=2
+        this.step=1
       }
       if (this.step<1) {
-        this.step=2
+        this.step=3
       }
-    },
-    strojmod: function () {
-       this.sirka("seznam")
-
     }
+
+
+
 
   } ,
 
   methods: {
-
-
-    _max(iporadi) {
-      const self = this
-      var neco1 = document.getElementById('RadekS_'+iporadi+'')
-      var neco2 = document.getElementById('RadekL_'+iporadi+'')
-      var neco3 = document.getElementById('RadekR_'+iporadi+'')
-      var newH = ''
-
-
-
-    setTimeout(function(){
-
-
-      try {
-        if (neco1 ) {
-        newH = ''+Math.max(neco1.offsetHeight,neco2.offsetHeight,neco3.offsetHeight)+'px'
-
-        neco1.style.height = newH
-        neco2.style.height = newH
-        neco3.style.height = newH
-        }
-
-        //neco2.style.height='12px'
-        //neco3.style.height='12px'
-      } catch (e) {
-        console.log('Chybka','Poradi', iporadi,e)
-        setTimeout(function() {
-          self._max(iporadi)
-        },500)
-        //neco1.style.height='12px'
-        //neco2.style.height='12px'
-        //neco3.style.height='12px'
-
-      }
-
-      //console.log(self.$refs.d2r.offsetHeight)
-
-      if (iporadi > 0 ) {
-        //console.log('RadekS_' + iporadi ,r1.offsetHeight , JSON.stringify(r1 ))
-
-
-      }
-      },100)
-
-      //Math.max()
-      return 47
-
-    },
-    pof(max, proc) {
-      var neco = Math.round(max* proc/100) +''
-      neco = `width:${neco}px`
-      return neco
-
-      //alert(neco)
-    },
-    _rand(iporadi) {
-      var neco = iporadi + '_' +( Math.round(Math.random() *Math.random() * 100000000)) + ''
-      return neco
-      //console.log(neco)
-    },
-    sirka(ref) {
-      const self= this
-      var nret = 0
-      //alert(ref)
-       setTimeout(function() {
-        //alert(self.$refs[ref].clientWidth)
-        try {
-          nret = self.$refs[ref].clientWidth
-          self.Sirka = nret
-          //alert(nret)
-        } catch(e) {
-          return 11
-        }
-
-        //alert(nret)
-        //alert(self.$refs.seznam)
-      }, 100)
-
-      return nret
-    },
-
-    //Enums
-    ePrace(idefix) {
-      var ifx = _.findIndex(this.list.data.enum_prace, function(o) { return o.idefix == idefix; });
-      return this.list.data.enum_prace[ifx].nazev
-    },
-    eJednotka(idefix) {
-
-      var ifx = _.findIndex(this.list.data.enum_jednotka, function(o) { return o.idefix == idefix; });
-      if (ifx > -1) {
-        return this.list.data.enum_jednotka[ifx].nazev
-      } else {
-        return ''
-      }
-
-    },
-
 
     handleClick(tab,x) {
       this.step =   (tab.name * 1)
@@ -1393,18 +1137,6 @@ export default {
       }
       //alert(e.target.value)
       //alert(e.target.checked)
-    },
-    editPriorita( a) {
-      if (this.list.data.strojmod[a].mod_priorita == true ) {
-        this.list.data.strojmod.forEach((el,idx) => {
-          if (idx !== a)  {
-            if (el.mod_priorita == true ) {
-              el.mod_priorita = false
-            }
-          }
-        })
-      }
-      console.log( a, this.list.data.strojmod[a].mod_priorita)
     },
     chooseItemMod: function (event, bEvent) {
 //      console.log('Choos item: ', event.draggedRect, 'B', bEvent)
@@ -1498,7 +1230,7 @@ export default {
             console.log('1 Opacko : ' , curTime )
             // return
           }
-        //   console.log('2 Pracuji : ' , curTime , ": " , self.lastTime ," rozdil :", (curTime - self.lastTime))
+           console.log('2 Pracuji : ' , curTime , ": " , self.lastTime ," rozdil :", (curTime - self.lastTime))
            self.lastTime = curTime
 
            // return
@@ -1602,84 +1334,9 @@ export default {
             }
 
           },
-    closeMod() {
-      const self = this
-      self.editMod = false
-      self.addMod  = false
-      var newObj = f.cp(self.strojmodDefault)
-      self.strojmod = newObj
-    } ,
-    setInsertMod() {
-
-      const self = this
-
-      var prace = self.strojmod.idefix_prace
-      var jednotka = self.strojmod.idefix_jednotka
-
-      var newObj = f.cp(self.strojmodDefault)
-      self.strojmod = newObj
-      self.strojmod.idefix_jednotka = jednotka
-      self.strojmod.idefix_prace = prace
-      self.editMod = false
-      self.addMod  = true
-
-      //self.strojmod.nazev = 'hovno prdel sracka'
-    } ,
-    setEditMod(i) {
-      const self = this
-      self.editMod = true
-      self.addMod  = false
-      var newObj = f.cp(self.list.data.strojmod[i])
-      self.strojmod = newObj
-      //self.strojmod.nazev = 'hovno prdel sracka'
-
-
-
-    } ,
-    saveMod(aItem) {
-      const self = this
-      var ifx = _.findIndex(this.list.data.strojmod, function(o) { return o.idefix == aItem.idefix; });
-
-      if (ifx > -1 ){
-
-        self.list.data.strojmod[ifx] = self.strojmod
-        var newObj = f.cp(this.strojmod)
-        this.strojmod = newObj
-
-       if (this.list.data.strojmod[ifx].mod_priorita == true ) {
-        this.list.data.strojmod.forEach((el,idx) => {
-          if (idx !== ifx)  {
-            if (el.mod_priorita == true ) {
-              el.mod_priorita = false
-            }
-          }
-        })
-      }
-
-
-
-      }
-      //var newObj = f.cp(self.strojmodDefault)
-      console.log(aItem.idefix + '::' + ifx )
-
-
-    },
 
     insertMod() {
-       const self = this
         var lAdd = true
-
-        self.editMod = false
-        alert('i')
-         alert( self.strojmod.mod_priorita )
-      if (self.strojmod.mod_priorita === true ) {
-        self.list.data.strojmod.forEach((el,idx) => {
-            if (el.mod_priorita == true ) {
-               el.mod_priorita = false
-            }
-        })
-      }
-
 
       if (this.strojmod.nazev > ''){
         this.strojmod.idefix_stroj =this.idefixThis
@@ -1702,10 +1359,62 @@ export default {
           this.strojmod = newObj
           this.strojmod.mod_priorita = false
 
-          console.log(newObj)
-          this.list.data.strojmod.forEach((el, idx) => {
-            el.kod=idx +1
-          })
+//        console.log(newObj)
+/*
+        this.strojmod =  {
+
+          idefix: 0,
+          idefix_stroj: 0,
+          idefix_prace: 0,
+          nazev: '',
+          nazev_text: '',
+          rychlost: 0,
+          idefix_jednotka: 0,
+
+          idefix_i1: 0 ,
+          i1spotreba: 0 ,
+          idefix_i2: 0 ,
+          i2spotreba: 0 ,
+          idefix_i3: 0 ,
+          i3spotreba: 0 ,
+          idefix_i4: 0 ,
+          i4spotreba: 0 ,
+          idefix_i5: 0 ,
+          i5spotreba: 0 ,
+          mod_priorita: false,
+
+          strojmodbarevnost: [],
+          rychlost_minuta_m2: 0,
+          rychlost_minuta_pocet: 0,
+
+      }
+      */
+
+
+        /*
+          this.strojmod.idefix =  0
+          this.strojmod.idefix_stroj =  0
+          this.strojmod.idefix_prace =  0
+          this.strojmod.nazev =  ''
+          this.strojmod.nazev_text =  ''
+          this.strojmod.rychlost =  0
+          this.strojmod.idefix_jednotka =  0
+          this.strojmod.idefix_i1 =  0
+          this.strojmod.i1spotreba =  0
+          this.strojmod.idefix_i2 =  0
+          this.strojmod.i2spotreba =  0
+          this.strojmod.idefix_i3 =  0
+          this.strojmod.i3spotreba =  0
+          this.strojmod.idefix_i4 =  0
+          this.strojmod.i4spotreba =  0
+          this.strojmod.idefix_i5 =  0
+          this.strojmod.i5spotreba =  0
+          this.strojmod.mod_priorita =  false
+          this.strojmod.strojmodbarevnost =  []
+          this.strojmod.rychlost_minuta_m2 =  0
+          this.strojmod.rychlost_minuta_pocet =  0
+          */
+
 
         }
 
@@ -1991,7 +1700,6 @@ export default {
       'setshowIdefix',
 
     ]),
-
     currentTitle () {
       switch (this.step) {
         case 1:   return 'Sign-up'
@@ -2026,18 +1734,7 @@ export default {
 }
 
 </script>
-<style scoped>
-  tr td {
-    height: 32px;
-    font-size:12px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-
-  }
-</style>
 <style>
-
 .ok {
   background: #C5E1A5;
   color:black;
@@ -2102,9 +1799,6 @@ div[role="region"] {
  input[type="text"] {
     z-index: 3050000 !important; /*for overriding the old css styles */
    }
-
-
-
 
 
 </style>

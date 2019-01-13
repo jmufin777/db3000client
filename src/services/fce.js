@@ -85,6 +85,9 @@ cp2(obj){
   al(txt) {
     alert(txt)
   },
+  txt(txt) {
+    return txt
+  },
   spl(ctxt,x) {
     return ctxt.split(x)
   },

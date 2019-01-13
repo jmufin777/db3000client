@@ -5,6 +5,7 @@
     <my-layout>
 
     <div slot="hlavni">
+      {{ KalkulaceThis}} {{ this.$store.state.KalkulaceThis }}
       <menu-hlavni>
 
       </menu-hlavni>
@@ -25,14 +26,19 @@
           </work-left>
 
         </span>
+       <!-- <draggable  v-model="iKalk.sloupecid"  :options="{group:{ name:'sloupce' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" > -->
+        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'">
 
-        <div v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)" :ref="iSloupec" :style="'backgroundcolor:blue;display:block'">
-         <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id" >
-            <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i></button>
-        </work-col>
+            <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id" >
+                <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i></button>
+            </work-col>
+
         </div>
+       <!-- </draggable> -->
+
 
      </work>
+
 
 
       <prehled slot="prehled" v-for="(itemP, iP) in aKalkulace" :key="iP">
@@ -69,15 +75,17 @@
       next-icon="mdi-menu-right"
 
     ></v-pagination> -->
+    <draggable  v-model="aKalkulace"  :options="{group:{ name:'Kalkulace' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
       <span  v-for="(iKalk0 ,iK0) in aKalkulace" :key="iK0">
 
-      <a :href="'#'+iKalk0.kalkulaceid" @click="KalkulaceThis=iKalk0.kalkulaceid" :ref="'ref_'+iKalk0.kalkulaceid">
+      <a :href="'#'+iKalk0.kalkulaceid" @click="setKalk(iKalk0.kalkulaceid)" :ref="'ref_'+iKalk0.kalkulaceid">
 
         &nbsp;{{iKalk0.kalkulaceid}}
 
         </a> &nbsp;
 
       </span>
+     </draggable>
       <div :ref="'neco11'"></div>
      </div>
     </my-layout>
@@ -88,6 +96,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import {getters} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import MyLayout from './CalcMyLayout.vue'
@@ -97,7 +106,8 @@ import MenuLeft from './CalcMenuLeft.vue'
 import Work from './CalcWork.vue'       // Pracovni cast nahore, obshahuje levou cast a sloupce
 import WorkLeft from './CalcWorkLeft.vue'       // Pracovni cast nahore
 import WorkCol from './CalcWorkCol.vue' // Prehledova dole
-
+import ListStroj from '../../services/ListStrojService'
+//10411
 
 
 import Prehled from './CalcPrehled.vue' // Prehledova dole
@@ -123,7 +133,7 @@ export default {
      Hlavni: 0,
      Left: 0,
      aKalkulace: [],
-     KalkulaceThis: - 1,
+//     KalkulaceThis: - 1,
      CalcCount: 0,
      ColCount: 0,
      showPrehled: 0
@@ -141,7 +151,7 @@ export default {
   }
  },
 
- created () {
+ async created () {
       const self = this
 //      alert('Tvorim')
      eventBus.$off('MenuHlavni')
@@ -164,13 +174,21 @@ export default {
       }
 
       if (server.key < 11) {
-         self.addKalk()
+
+        self.addKalk(server.key)
+
       }
       if (server.key == 11) {
+
         self.addKalkCol()
+
+
         //addNew(11)
         //self.aKalkulace.push({kalkulaceid: self.aKalkulace.length+1})
       }
+      setTimeout(function(){
+            eventBus.$emit('enable')
+        },500)
       //alert(self.Hlavni)
 
     })
@@ -185,8 +203,9 @@ export default {
  },
  mounted () {
    this.aKalkulace = this.$store.state.Kalkulace
-   if (this.aKalkulace.length > 0 ) {
-     this.KalkulaceThis = this.aKalkulace[0].kalkulaceid
+   if (this.aKalkulace.length > 0 && this.aKalkulace[0].kalkulaceid ) {
+     this.$store.dispatch('setKalk',this.aKalkulace[0].kalkulaceid)
+     this.KalkulaceThis = this.$store.getters.getKalk
 
    }
  },
@@ -194,14 +213,74 @@ export default {
  //  this.$destroy()
  },
  methods: {
-
-   addKalk () {
+    async strojmod(type) {
      const self = this
-     var newId = self.aKalkulace.length+1
+     var atmp=[]
+     var found = true
+     var id_query = -0
+//     return
+     if ( type == 1 ){ id_query=10411 } //Velkoploch
+     if ( type == 2 ){ id_query=10410 } //Archovy
+    try {
+      atmp=[]
+      atmp=(await ListStroj.one(this.user,-1, id_query)).data.enum_strojmod_full
+    //  alert(atmp[0].stroj+ ' '+ id_query )
+      return atmp
+      //console.log(JSON.stringify(atmp))
+    } catch (e) {
+      alert('Error' )
+      console.log( e)
+    }
+    return 0
+  //return
+
+   },
+
+   async addKalk (KalkType) {
+     const self = this
+     var newId = 1
+     var tmpData = []
+     let oData = {}
+     var nTmp = -1
+     if (self.aKalkulace.length > 0){
+       self.aKalkulace.forEach(el => {
+         if (el.kalkulaceid >= newId) {
+           newId = el.kalkulaceid + 1
+          }
+       })
+     }
+     try{
+       tmpData = (await (self.strojmod(KalkType)))
+       oData.Menu2 =  tmpData
+       oData.Menu1 = []
+       oData.Menu1Value=''
+
+
+       tmpData.forEach((el,idx) => {
+        nTmp =  _.findIndex(oData.Menu1, function (o) { return o.text == el.stroj})
+        if (nTmp == -1 ) oData.Menu1.push({'text': el.stroj})
+        if (idx == 0) oData.Menu1Value = el.stroj
+
+        // oData.Menu1.push({'text': el.stroj})
+
+       // console.log(nTmp, oData.Menu1 )
+
+
+
+       })
+
+       self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
+       self.aKalkulace = self.$store.state.Kalkulace
+       self.setKalk(newId)
+       //self.KalkulaceThis = newId
+
+     } catch (e) {
+       console.log(e)
+     }
+
+
+     console.log("tmpData ", tmpData  )
      //self.aKalkulace.push({kalkulaceid: newId,sloupecid:[]})
-     self.$store.dispatch('addKalk', {kalkulaceid: newId,sloupecid:[]})
-     self.aKalkulace = self.$store.state.Kalkulace
-     self.KalkulaceThis = newId
 
    },
    removeKalk (kalkulaceid) {
@@ -210,7 +289,8 @@ export default {
       self.$store.dispatch('removeKalk', kalkulaceid )
       self.aKalkulace = self.$store.state.Kalkulace
       if (self.aKalkulace.length > 0 ) {
-        self.KalkulaceThis = self.aKalkulace[0].kalkulaceid
+        self.setKalk(self.aKalkulace[0].kalkulaceid)
+        //self.KalkulaceThis = self.aKalkulace[0].kalkulaceid
       }
 
    },
@@ -220,24 +300,10 @@ export default {
      self.aKalkulace = self.$store.state.Kalkulace
 
 
-
      return
 
         var newKalkColId = -1
-        if (self.aKalkulace.length && self.aKalkulace.length > 0)  {
-          var tmpx=self.aKalkulace.length -1
-          self.aKalkulace[tmpx].kalkulaceid  = tmpx+1
-          if (!self.aKalkulace[tmpx].sloupecid) {
-            self.aKalkulace[tmpx].sloupecid = Array()
 
-          } else {
-
-          }
-
-          self.aKalkulace[tmpx].sloupecid.push((self.aKalkulace[tmpx].sloupecid.length+1)  )
-          //self.aKalkulace[tmpx].sloupecid.push((self.aKalkulace[tmpx].sloupecid.length+1) +Math.round(Math.random()*100000) )
-        }
-        //self.$store.dispatch()
         self.CalcCount++
    },
    removeKalkCol(kalkulaceid,sloupecid) {
@@ -245,7 +311,8 @@ export default {
      console.log('Mazu', JSON.stringify(sloupecid) )
      const self= this
      self.$store.dispatch('removeKalkCol', {kalkulaceid: kalkulaceid, sloupecid: sloupecid} )
-     self.KalkulaceThis = kalkulaceid
+     //self.KalkulaceThis = kalkulaceid
+     self.setKalk(kalkulaceid)
 
 
 
@@ -260,9 +327,6 @@ export default {
             }
        });
    },
-
-
-
 
 
    dropCol(kalkulaceid, sloupecid) {
@@ -285,11 +349,22 @@ export default {
      });
      //alert("drop" )
 
-   }
+   },
+   setKalk(idK) {
+          this.$store.dispatch('setKalk',idK)
+          console.log('setKalk',idK)
+
+   },
+   getKalk() {
+     return this.$store.getters('getKalk')
+   },
+
+   chooseItem: function (event, bEvent) {
+      console.log('Choos item: ', event.draggedRect, 'B', bEvent)
+      // alert(Object.keys(bEvent))
+    },
  },
  computed: {
-
-
     ...mapState([
       'isUserLoggedIn',
       'xMenuMain',
@@ -297,6 +372,7 @@ export default {
       'idefix',
       'compaStore',
       'Kalkulace',
+      'KalkulaceThis'
 
 
     ]),

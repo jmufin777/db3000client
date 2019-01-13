@@ -1,6 +1,8 @@
 <template>
   <!-- <tr style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-     <div style="font-size:100%; min-height:120px" class="white lighten-5 pt-0 px-0 " >
+     <div style="font-size:100%; min-height:120px" class="white lighten-5 pt-0 px-0 "
+     @click="setKalk(kalkulaceid)"
+     >
     <form>
      <table cols="20">
        <tr><td v-for="n in 20" :key="n" style="font-size:1px">&nbsp;</td></tr>
@@ -165,17 +167,20 @@ export default {
  },
  mounted () {
    const self = this
+   return
    self.FormatJoin.forEach(element => {
      self.Format.push({text: element.text})
    });
 
-    self.MenuLeftJoin.forEach(element => {
+     self.MenuLeftJoin.forEach(element => {
      self.MenuLeft.push({text: element.text})
    });
+
    console.log('COL')
    this.strojmod();
 
  },
+
  methods: {
    async strojmod() {
      const self = this
@@ -200,15 +205,13 @@ export default {
         self.enum_up.push({'text': el.stroj})
       }
 
-
      })
-
-
       //self.enum_up=atmp
      //if (atmp.
      //this.enum_up
    //  alert(enum_up)
    },
+
    ShowMod(a) {
      const self = this
      console.log(a)
@@ -242,6 +245,9 @@ export default {
        }
      })
    },
+   setKalk(idK) {
+            this.$store.dispatch('setKalk',idK)
+    },
    //Soubory
       handleRemove(file, fileList) {
         console.log(file, fileList);

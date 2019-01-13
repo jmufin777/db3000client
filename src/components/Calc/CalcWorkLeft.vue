@@ -1,6 +1,15 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-     <div style="font-size:100%; min-height:120px" class="white lighten-5 pt-0 px-0 " >
+    <!-- <v-hover> -->
+     <div style="font-size:100%; min-height:120px"
+
+     class="white lighten-5 pt-0 px-0 " v-if="$store.state.Kalkulace && $store.state.Kalkulace.length >0 "
+     v-on:mouseover="active=true" v-bind:class="{'JsemVidet': active, 'JsemVidetMalo': !active }"
+     v-on:mouseout="active=false"
+     @click="setKalk(kalkulaceid)"
+
+
+     >
      <table cols="20">
        <tr><td v-for="n in 20" :key="n" style="font-size:1px">&nbsp;</td></tr>
        <tr>
@@ -14,18 +23,27 @@
          <td colspan="18" >
 
 
+
      <v-overflow-btn slot="obsah"
-      :items="MenuLeft"
+      :items="$store.state.Kalkulace[k_id()].data.Menu1"
       hide-details
       class="px-1"
       overflow
-      @change="MenuRet"
-      @blur="MenuRet"
-      @click="form.MenuRet =0"
-      @click.native="form.MenuRet =0"
-      value=""
+      @change="setMenu1Value"
+      @mouseover="neco"
+      label="'aaa'"
+
+
+
+      :value="$store.state.Kalkulace[k_id()].data.Menu1Value"
       editable
-    ></v-overflow-btn>
+    >
+
+
+
+
+    </v-overflow-btn>
+
     </td></tr>
     <tr v-if="form.MenuRet > 0"><td colspan="20">
 
@@ -40,7 +58,7 @@
       placeholder="Format"
     ></v-overflow-btn>
     </td></tr>
-    <tr v-if="form.MenuRet > 0" >
+    <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value >''" >
      <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Sirka:</td>
      <td colspan="7">
    <input type="text"   v-model="form.sirka" style="text-align:right" class="pr-2 pt-3 pb-3">
@@ -50,13 +68,13 @@
    <input type="text"   v-model="form.vyska" style="text-align:right" class="pr-2 py-3">
    </td>
    </tr>
-    <tr v-if="form.MenuRet > 0">
+    <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''">
     <td colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Naklad&nbsp;ks:</td>
     <td colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid;border-right:1px solid">
     <input type="text"   v-model="form.nakladks" style="text-align:right" class="pr-2 py-3">
     </td>
     </tr>
-    <tr v-if="form.MenuRet > 0"><td colspan="20">
+    <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''"><td colspan="20">
       <!-- upload-demo -->
       <el-upload
   class="el-upload-dragger1 upload-demo"
@@ -82,15 +100,16 @@
          <!-- Slot Menu Leve -->
        </slot>
       </div>
-
+<!-- </v-hover> -->
   <!-- </div> -->
 </template>
 
 <script>
 import {mapState} from 'vuex'
+import {getters} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
-import ListStroj from '../../services/ListStrojService'
+
 
 export default {
   props: {
@@ -109,6 +128,7 @@ export default {
  data () {
    return {
      //soubory:
+        active: false ,
         dialogImageUrl: '',
         dialogVisible: false,
      //soubory
@@ -160,9 +180,7 @@ export default {
       {key: 999 , text: "Vlastni"             ,sirka:   0.00 ,vyska:   0.00 }
       ],
 
-
-
-     //
+     aKalk: {},   //
 
      form: {
        MenuRet :0,
@@ -172,8 +190,6 @@ export default {
        nakladks: 0,
        filelist:[]
 
-
-
      }
 
 
@@ -182,6 +198,8 @@ export default {
 
  mounted () {
    const self = this
+   self.k_id()
+   return
    self.FormatJoin.forEach(element => {
      self.Format.push({text: element.text})
    });
@@ -191,9 +209,27 @@ export default {
    });
  },
  methods: {
-   MenuRet(a,b) {
+   onoff() {
+     this.active = !this.active
+   //  alert(this.active)
+   },
+   setMenu1Value (a, b) {
+      const self = this
+      var idK = this.k_id()
+      self.setKalk(idK)
+      console.log("a",a)
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Menu1Value' , value: a })
+     //this.Kalkulace = []
+     //this.$store.state.Kalkulace[this.k_id()].data.Menu1Value = a
+
+   },
+   neco(a,b) {
+     console.log("neco A:" , a,"B:",b,"C:",a.target)
+   },
+   MenuRet (a,b) {
      const self = this
      console.log("a",a)
+     //alert(1)
      self.MenuLeftJoin.forEach(el => {
        if (el.text == a) {
          self.form.MenuRet = el.key
@@ -237,18 +273,48 @@ export default {
         this.$message.warning(`The limit is 3, you selected ${files.length} files this time, add up to ${files.length + fileList.length} totally`);
       },
       beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
-      }
+        return this.$confirm(`pred presunem souboru ${ file.name }？`);
+      },
+
       /*
       var el = this.$el.getElementsByClassName("actual-month")[0];
   el.scrollIntoView()
   */
 
    //Soubory
+ //store a indexy
+ k_id() {
+  var kRet=   this.$store.getters.getId(this.kalkulaceid)
+  return kRet
 
 
 
+
+ },
+  setKalk(idK) {
+          this.$store.dispatch('setKalk',idK)
+          console.log('setKalk',idK)
+
+  },
+ //--Values
+ Menu1 () {
+   return this.$store.Kalulace[this.k_id()].data.Menu1
  }
+
+
+ },
+  computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'xMenuMain',
+      'level',
+      'idefix',
+      'compaStore',
+      'Kalkulace',
+
+
+    ]),
+  },
 }
 
 </script>

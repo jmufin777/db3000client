@@ -251,7 +251,17 @@ div[role="region"] {
 .w-100 {
   width : 100%;
 }
+.leva {
+  text-align:left;
 
+}
+.stred {
+  text-align:center;
+}
+.prava {
+  text-align:right;
+
+}
 .tdlr {
   border-left: none;
   border-right: none;

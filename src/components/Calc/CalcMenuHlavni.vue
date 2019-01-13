@@ -7,11 +7,15 @@
            <v-btn small
             outline
            color="green"
+           :disabled="disabled"
+
            class="green lighten-3" @click="send(777)"> Ulozit </v-btn>
+
 
            <v-btn small
            outline
            color="orange"
+           :disabled="disabled"
            class="orange lighten-3" @click="send(666)"> Vycistit </v-btn>
 
 
@@ -25,7 +29,7 @@
            small
            color="indigo"
            v-for="(item , n ) in aHlavni" :key="n"
-           :disabled="item.key == lastSend"
+           :disabled="disabled"
            @click="send(item.key)"
            v-bind:class="{'elevation-5': item.key !== lastSend }"
            >
@@ -41,6 +45,7 @@
            flat
            @click="send(11)"
            class="elevation-5"
+           :disabled="false"
            >
              <v-icon>fa-plus</v-icon>
              </v-btn>
@@ -69,12 +74,22 @@ export default {
        {key: 2 , value: 'Archovy'},
        {key: 3 , value: 'Jine'},
      ],
-     lastSend: 0
+     lastSend: 0,
+     disabled: false
+
    }
+ },
+ created() {
+   const self  = this
+    eventBus.$off('enable')
+    eventBus.$on('enable',() => {
+     self.disabled = false
+   })
  },
  methods: {
    send(key) {
      const self = this
+      self.disabled = true
 
      if (key > 0  ) {
        self.lastSend = key

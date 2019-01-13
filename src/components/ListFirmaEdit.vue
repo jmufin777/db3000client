@@ -428,8 +428,7 @@
                          <th class="tdline" style="width:15%">Funkce</th>
                          <th class="tdline" style="width:7%">Obrat</th>
                          <th class="tdline" style="width:7%">Zakazky</th>
-                         <th class="tdline" tyle="width:5%">
-                           <!-- <el-checkbox border v-model="kontaktAktivni" size="mini">Aktivni</el-checkbox> -->
+                         <th class="tdline" style="width:5%">
                            <button  type="button" style="width:22px;height:22px; font-color:black" class="pl-0 info elevation-3"  @click="kontaktEditInsert=!kontaktEditInsert ; kontaktEdit=(kontaktEditInsert)?false:kontaktEdit ;" ><i class="el-icon-plus" size="mini"></i></button>
                          </th>
                        </thead>
