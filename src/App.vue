@@ -302,7 +302,16 @@ div[role="region"] {
 }
 
 
-
+.handle {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+   }
+   .handle-bm {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+   }
 
 
 

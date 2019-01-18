@@ -113,7 +113,6 @@
   <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
 
   Kalkulace</th>
-  <th>Tisk</th>
 
 
 
@@ -162,9 +161,7 @@
   <td style='text-align:left;width:6%' class="px-2">
     {{ item1['typ_kalkulace'] }}
   </td>
-  <td class="stred">
-        {{item1['tisk']?'Ano':'Ne'}}
-  </td>
+  <td>aaaa</td>
       <!-- item1['technologie']: item1['technologie_skup'] -->
   <td >
      <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
@@ -230,7 +227,7 @@ const self = this
 import { mapState } from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval, clearTimeout } from 'timers'
-import ListStroj from '../services/ListStrojService'
+import ListStroj from '@/services/ListStrojService'
 import ListStrojEdit from './ListStrojEdit'
 
 import f from '@/services/fce'
@@ -300,10 +297,8 @@ export default {
       //SubMenu
       showSubMenu: true,
       SubMemuItems: [
-        { title:'Oznacit jako tiskove' ,akce: 'T1'},
-        { title:'Zrusit jako tiskove' ,akce: 'T2'},
         { title:'Vymazat oznacene' ,akce: 'del'},
-
+        { title:'Neco jeste nevim' ,akce: 'nevim'},
         ],
 
 
@@ -357,14 +352,8 @@ export default {
     var self=this
       eventBus.$off('dlg8210rec')
       eventBus.$on('dlg8210rec', ( dlgPar ) => {
-
         //self.getData()
-       setTimeout(function() {
-         self.getWhere()
-         //alert('a')
-       },1000)
-
-
+       self.getWhere()
        self.getEnums()
 
       })
@@ -401,14 +390,14 @@ async getEnums() {
     try {
        tmp2 =  ( await ListStroj.one(this.user,this.idefixThis ,101,''))
        self.enum_nazev_text = tmp2.data.enum_nazev_text
-
+       //alert(JSON.stringify(self.enum_nazev_text))
     } catch(e0){
        alert(e0)
     }
     try {
        var tmp3 =  ( await ListStroj.one(this.user,this.idefixThis ,10,''))
        self.enum_strojskup = tmp3.data.enum_strojskup
-
+ //         alert(JSON.stringify(self.enum_strojskup))
     } catch(e1){
        alert("Chyba Vyrobce "+ e1)
     }
@@ -448,7 +437,7 @@ lastclick(idxsub)   {
   } else {
         self.lastClick.splice(idx2,1) //Vymaze podskupinu dle indexu pole
   }
-
+  //alert(JSON.stringify(self.lastClick) + idxsub )
   return lret
 },
 
@@ -504,7 +493,7 @@ handleUnCheckAllChange() {
 },
 chekListUpdate(idx) {
   const self = this
-
+    //    alert(JSON.stringify(self.checkedList))
 
     var neco='check_'+self.objId1+'_'+self.list[idx]['idefix']
     var objneco
@@ -531,61 +520,17 @@ handleCheckedListChange(value) {   //je mi to asi na hovno zda se
         this.checkAll = checkedCount === this.list.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.list.length;
 },
-async handleSubMenu(e) {
-  const self = this
+handleSubMenu(e) {
 
-  if (e== 'del' && this.checkedList.length>0  && confirm('Vymazat oznacena zaznamy ?') ){
-
+  if (e== 'del' && this.checkedList.length>0 ){
+    alert('Vymazu zaznamy ' + JSON.stringify(this.checkedList))
     //this.checkedList
     this.deleteLinesSelected()
-  }  else if (e== 'T1') {
-       if (confirm('Oznacit jako Tisk ?' )) {
-      this.IsWaiting =true
-      try {
-      await this.checkedList.forEach(idefix => {
-        var prd= (ListStroj.setTisk(self.user,idefix,'A'))
-
-
-      });
-      this.handleUnCheckAllChange()
-      } catch (e) {
-        console.log(e)
-      }
-      setTimeout(function() {
-        self.getWhere()
-        this.IsWaiting =false
-      },1000)
-
-
-    }
-    //setTisk
-  } else if (e== 'T2') {
-      if (confirm('Zrusit oznaceni Tisk ?' )) {
-      this.IsWaiting =true
-      try {
-      await this.checkedList.forEach(idefix => {
-        var prd= (ListStroj.setTisk(self.user,idefix,'N'))
-        self.getWhere()
-      });
-      this.handleUnCheckAllChange()
-      } catch (e) {
-        console.log(e)
-      }
-      setTimeout(function() {
-        self.getWhere()
-        this.IsWaiting =false
-      },1000)
-
-    }
-    //setTisk
-  }
-
-  else {
-   // alert("Neni zasrktnutu,nedelam nic")
+  } else {
+    alert("Neni zasrktnutu,nedelam nic")
   }
 
 },
-
 async    handleClick(tab, event) {
         const self = this
         self.handleUnCheckAllChange()

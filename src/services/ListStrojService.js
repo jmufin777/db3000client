@@ -14,9 +14,12 @@ export default {
     return Api().get('list-stroj-one',{ params: {  user: user, id: typ, id_query: id_query, string_query: string_query }})
   },
   delete (user, id ) {
-
     return Api().post('list-stroj-delete', { params: {  user: user,id: id}} )
   },
+  setTisk (user, id, anone = true) {
+    return Api().post('list-stroj-settisk', { params: {  user: user,id: id, anone: anone }} )
+  },
+
   update (user,  form ) {
     return Api().put('list-stroj', { form: form,  user: user})
    },
@@ -28,5 +31,6 @@ export default {
     console.log({'Form': form})
     return Api().post('list-stroj-save-one',  { form: form ,user: user, idefix: idefix })
    }
+
 }
 

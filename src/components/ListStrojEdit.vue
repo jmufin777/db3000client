@@ -8,9 +8,9 @@
     :h="510"
     :parent="false"
     :maximize="false"
-    :forget="true"
-    :forgetWH="true"
-    :forgetAll="true"
+    :forget="false"
+    :forgetWH="false"
+    :forgetAll="false"
     v-if="IsDialog1 && list && list.data && list.data.stroj && list.data.stroj[0]"
 
     >
@@ -346,9 +346,26 @@
     </el-row>
 
 <!-- <vue-draggable-resizable :style="pof(Sirka*0.9,100)+';position:absolute;top:40%;left:30%;height:90%;background:#fff;z-index:50;border:solid 2px silver'"   :parent="false" v-if> -->
+   <!-- <win-dow-male :title="''" :id="`events`"
 
+    :x="20"
+    :w="Sirka*0.9"
+    :y="100"
+    :z="5000"
+    :h="510"
+    :parent="false"
+    :maximize="false"
+    :forget="false"
+    :forgetWH="true"
+    :forgetAll="true"
+     v-if="addMod == true || editMod == true "
+
+    > -->
+
+<vue-draggable-resizable :handles="[]"    :isActive="true" :isResizable="true" :z="4999" :style="pof(Sirka*0.91,100)+';background:white;position;absolute;height:90%;'"   class="elevation-1" v-if="addMod == true || editMod == true "  >
 <!-- <div :style="pof(Sirka*0.9,100)" class="elevation-5" v-if="addMod == true || editMod == true" > -->
-<div :style="pof(Sirka*0.9,100)+';position:absolute;top:40%;left:30%;height:90%;background:#fff;z-index:50;border:solid 2px silver'" class="elevation-5" v-if="addMod == true || editMod == true " >
+<div :style="pof(Sirka*0.9,100)+';position:absolute;top:5px;left:5px;height:90%;background:#fff;z-index:5000;border:solid 2px silver'" class="elevation-5" v-if="addMod == true || editMod == true " >
+<!-- <div :style="pof(Sirka*0.9,100)+';position:absolute;top:40%;left:30%;height:90%;background:#fff;z-index:50;border:solid 2px silver'" class="elevation-5" v-if="addMod == true || editMod == true " > -->
 <el-row class="ml-3 mt-3 mb-0  " v-if="true" >
 <el-col :span="14" class="elevation-2">
   <el-row>
@@ -584,194 +601,18 @@
     </el-row>
 
 </div>
-<!-- </vue-draggable-resizable> -->
+</vue-draggable-resizable>
+   <!-- </win-dow-male> -->
 
 
 <!-- <draggable v-model="list.data.strojmod"  :options="{group: 'people' }" @start="drag=true" @end="drag=false" :move="chooseItemMod"> -->
-  <draggable v-model="list.data.strojmod"  :options="{group: 'people' }" @start="drag=true" @end="chooseItemMod"  v-if="false">
-
-    <el-row  v-for="(itemmod, imod) in list.data.strojmod" :key="itemmod.idefix" class="ma-2 mt-0 "
-      v-bind:class="{ 'white lighten-5' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-     >
-     <table style="width:100%" border="0" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-       <tr v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-         <el-select v-model="list.data.strojmod[imod].idefix_prace"
-        default-first-option
-        size="mini"  class="pt-1 pl-1"
-        filterable
-
-        >
-            <el-option
-            v-for="item82 in list.data.enum_prace"
-            :key="item82.idefix*1"
-            :label="item82.nazev"
-            :value="item82.idefix*1"
-            >{{item82.nazev}} </el-option>
-       </el-select>
-       </td>
-       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-         <el-autocomplete
-        class="inline-input mr-1"
-        v-model="list.data.strojmod[imod].nazev"
-        :fetch-suggestions="querySearch3"
-        placeholder="Nazev tisk.modu"
-        @select="handleSelect"
-        size="mini"
-        style="width:100%"
-        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-      ></el-autocomplete>
-       </td>
-      <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-      <el-autocomplete
-      class="inline-input mr-1"
-      v-model="list.data.strojmod[imod].nazev_text"
-      :fetch-suggestions="querySearch4"
-      placeholder="Popis modu "
-      @select="handleSelect"
-      size="mini"
-      style="width:90%"
-     ></el-autocomplete>
-       </td>
-       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-           <el-input-number v-model="list.data.strojmod[imod].rychlost" size="mini"  style="width:100%"></el-input-number>
-       </td>
-       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-         <el-select v-model="list.data.strojmod[imod].idefix_jednotka"
-        default-first-option
-        size="mini"  class="pt-1 pl-1 ml-2"
-        filterable
-        >
-            <el-option
-            v-for="item83 in list.data.enum_jednotka"
-            :key="item83.idefix*1"
-            :label="item83.nazev"
-            :value="item83.idefix*1"
-            >{{item83.nazev}} </el-option>
-       </el-select>
-       </td>
-       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-        <el-checkbox v-model="list.data.strojmod[imod].mod_priorita"
-            size="mini">Prioritni
-       </el-checkbox>
-       </td>
-       <td style="border:none" v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-         <button  type="button" style="width:100%;height:26px;z-index:1900000" class="px-0 " @click="deleteMod(imod)" ><i class="el-icon-delete" size="mini"></i></button>
-       </td>
-      </tr>
-     </table>
-
-
-
-<!--- radek s tabulkou //-->
-    <el-row   class="ma-0 mt-1">
-    <el-col :span="24" :offset="0" style="position:relative;left:2px">
-      <table style="width:100%;border:none">
-        <!-- <thead>
-          <tr>
-          <th colspan="5" v-bind:class="{ 'green lighten-4' : ( imod % 2 == 0) , 'blue lighten-4' : ( imod % 2 != 0)  }" >Inkoust / spotreba</th>
-          </tr>
-        </thead> -->
-        <tbody>
-       <tr v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }">
-         <td style="text-align:left"
-         v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-         >
-         i1<el-select v-model="list.data.strojmod[imod].idefix_i1"
-          size="mini"
-          class="pt-1 pl-1 ml-2"
-          style="width:50%"
-          >
-        <el-option
-            v-for="item190 in list.data.enum_inkoust"
-            :key="item190.idefix*1"
-            :label="item190.nazev"
-            :value="item190.idefix*1"
-            v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-            >{{item190.nazev}} </el-option>
-       </el-select>
-       <input type="number" v-model="list.data.strojmod[imod].i1spotreba"
-        class="mb-0 px-0 cell cisla"
-        style="width:30%;"
-        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-
-
-       >
- </td>
- <td
- v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
- >i2<el-select v-model="list.data.strojmod[imod].idefix_i2"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
-            <el-option
-            v-for="item191 in list.data.enum_inkoust"
-            :key="item191.idefix*1"
-            :label="item191.nazev"
-            :value="item191.idefix*1"
-            >{{item191.nazev}} </el-option>
-       </el-select>
-       <input type="number" v-model="list.data.strojmod[imod].i2spotreba"
-        class="mb-0 px-0 cell cisla"
-        style="width:30%;"
-        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-       >
-       </td>
-     <td v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-     >i3
-       <el-select v-model="list.data.strojmod[imod].idefix_i3"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
-          <el-option
-            v-for="item192 in list.data.enum_inkoust"
-            :key="item192.idefix*1"
-            :label="item192.nazev"
-            :value="item192.idefix*1"
-            >{{item192.nazev}} </el-option>
-       </el-select>
-       <input type="number" v-model="list.data.strojmod[imod].i3spotreba"
-        class="mb-0 px-0 cell cisla"
-        style="width:30%;"
-        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-       >
-       </td>
-       <td v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-       >i4
-       <el-select v-model="list.data.strojmod[imod].idefix_i4"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
-          <el-option
-            v-for="item193 in list.data.enum_inkoust"
-            :key="item193.idefix*1"
-            :label="item193.nazev"
-            :value="item193.idefix*1"
-            >{{item193.nazev}} </el-option>
-       </el-select>
-       <input type="number" v-model="list.data.strojmod[imod].i4spotreba"
-        class="mb-0 px-0 cell cisla"
-        style="width:30%;"
-        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-       >
-       </td>
-       <td v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-       >i5
-       <el-select v-model="list.data.strojmod[imod].idefix_i5"  size="mini" class="pt-1 pl-1 ml-2"  style="width:50%"  >
-          <el-option
-            v-for="item194 in list.data.enum_inkoust"
-            :key="item194.idefix*1"
-            :label="item194.nazev"
-            :value="item194.idefix*1"
-            >{{item194.nazev}} </el-option>
-       </el-select>
-       <input type="number" v-model="list.data.strojmod[imod].i5spotreba"
-        class="mb-0 px-0 cell cisla"
-        style="width:30%;"
-        v-bind:class="{ 'white' : ( imod % 2 == 0) , 'blue lighten-5' : ( imod % 2 != 0)  }"
-       >
-       </td>
-      </tr>
-    </tbody></table>
-<!--- radek s tabulkou EOF //-->
-
-    </el-col>
-    </el-row>
-   </el-row>
-</draggable>
    <el-col :span="24">
- <!--// {{  list.data.strojmod }} -->
+
+
+
+
+
+
 </el-col>
 
     </el-col>
@@ -1028,7 +869,7 @@ import List2bEdit from  './List2bEdit.vue'
 
 import f from '@/services/fce'
 import moment from 'moment'
-import FreeTransform from 'vue-free-transform'
+
 
 
 
@@ -1040,7 +881,7 @@ import { setTimeout, clearInterval, setInterval } from 'timers'
 export default {
   components: {
     'list2b-edit': List2bEdit,
-    'FreeTransform': FreeTransform
+
   },
   props: {
     name: {
@@ -1051,8 +892,7 @@ export default {
   data () {
     return {
 
-       offsetX: 0,
-        offsetY: 0,
+
 
       search: '',
       barevnostNazev: [],
@@ -1072,6 +912,7 @@ export default {
       idefixThis: 0,
       typKalkulace: 'N',
       list:[],
+      list_backup: [],
       list0:{},
       labelPosition: 'right',
       strojNazev: '',
@@ -1170,7 +1011,7 @@ export default {
 
       },
       lastTime: 0, //posledni cas prichozi udalosti v int
-      Sirka: 0
+      Sirka: 0,
 
 
 // --  10   enum_strojskup
@@ -1193,15 +1034,14 @@ export default {
 // -- 203   dotaz_list_strojinkoustbarevnost
 // -- 204   dotaz_list_strojceny
 
-    }
 
+    }
   },
 
-
   mounted() {
+    const self = this
 
     // this.analyze()
-
   },
 
 
@@ -1217,6 +1057,8 @@ export default {
     eventBus.$on('edit_stroj', ( dlgPar ) => {
       self.citac++
       self.getDataEnum()
+
+
 
     })
 
@@ -1241,8 +1083,19 @@ export default {
             // self.IsDialog1 = !self.IsDialog1
             if (self.IsDialog1 && dlgPar.Idefix > 0) {
               self.step=2
+              try {
+                self.getData(dlgPar)
+              setTimeout(() => {
+                var newObj = f.cp(self.list)
+                self.list_backup = newObj
+               //console.log( JSON.stringify(self.list_backup).substr(0,20000) == JSON.stringify(self.list).substr(0,20000), JSON.stringify(self.list).substr(0,20000))
 
-              self.getData(dlgPar)
+              }, 1000);
+              } catch(e) {
+
+              }
+
+
 
             }
 
@@ -1656,8 +1509,6 @@ export default {
         })
       }
 
-
-
       }
       //var newObj = f.cp(self.strojmodDefault)
       console.log(aItem.idefix + '::' + ifx )
@@ -1792,7 +1643,7 @@ export default {
        this.list = []
     },
 
-    async submitForm(formName) {
+    async submitForm(formName, znovu = 1) {
       const self = this
       if (formName == 'formnew'){
         // alert(formName+ ' /' + self.idefixThis)
@@ -1815,6 +1666,9 @@ export default {
         strojceny: self.list.data.strojceny,
 
           }))
+          if (znovu == 0) {
+            return
+          }
       //    return
         if (formName=='formstep'){
           self.step++
@@ -1882,8 +1736,19 @@ export default {
 
 
         } else {
-          this.list = []
-          this.IsDialog = false
+          self.addMod = false
+          self.editMod =false
+          //alert(JSON.stringify(self.list_backup.data.strojmod))
+
+           if (confirm('Ulozit data ?')) {
+            self.submitForm(formName, 0)
+            eventBus.$emit('dlg8210rec')
+          }
+
+          self.list = []
+
+
+
 
         }
         // var x
@@ -1947,8 +1812,7 @@ export default {
         cb(results);
       },
 
-
-     createFilter(queryString) {
+ createFilter(queryString) {
         return (link) => {
           if (link.value == null ) {
             return ''
@@ -1977,6 +1841,7 @@ export default {
         this.$store.dispatch('setshowEdit', false)
       }
     },
+
   },
 
   computed: {
@@ -1992,13 +1857,7 @@ export default {
 
     ]),
 
-    currentTitle () {
-      switch (this.step) {
-        case 1:   return 'Sign-up'
-        case 2:   return 'Create a password'
-        default:  return 'Account created'
-      }
-    },
+
     stepInfo () {
       switch (this.step) {
         //case 1: return `Zakladni udaje a rozmery, polozky : ${this.list.data.stroj[0]['typ_kalkulace']}`

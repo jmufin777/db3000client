@@ -49,6 +49,7 @@ import TaBle2 from '@/components/globals/TaBle_v2'
 import TaBle3 from '@/components/globals/TabLe_3leftfix'
 
 import WinDow from '@/components/globals/WinDow'
+import WinDowMale from '@/components/globals/WinDowMale'
 
 import VueJsonPretty from 'vue-json-pretty'
 
@@ -63,6 +64,7 @@ import VueBarcode from 'vue-barcode'
 Vue.component('panel', Panel)
 Vue.component('panel2', Panel2)
 Vue.component('win-dow', WinDow)
+Vue.component('win-dow-male', WinDowMale)
 Vue.component('dia-log', Dialog)
 Vue.component('my-table', MyTable)
 Vue.component('ta-ble', TaBle)

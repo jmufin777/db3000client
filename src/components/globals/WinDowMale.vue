@@ -11,15 +11,9 @@
     :forgetWH="forgetWH"
     :handles="handles1>[]?handles1:['tl']"
 
-  :isActive="false" :isResizable="false"
+  :isActive="true" :isResizable="false"
   style="border: 0px solid white;background:white"
-  :drag-handle="'.drag00'"
-  :drag-cancel="'.drag01'"
-  v-on:dragging="onDrag"
-  v-on:dragstop="onDragstop"
-  v-on:resizing="onResize"
-  v-on:resizestop="onResizestop"
-  v-on:activated="onActivated"
+
   :maximize="maximize"
   >
     <div class="drag00 elevation-20" :id="id"
@@ -29,7 +23,7 @@
       >
 
 
-  <el-row  :gutter="0">
+  <el-row  :gutter="0" v-if="false">
   <el-col :span="8" class="slot-a "  >
     <slot name="a1" :sm="8" :md="8" :lg="8" :xl="8"><span v-if="title > ''">&nbsp;</span></slot>
 
