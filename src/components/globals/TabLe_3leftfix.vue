@@ -2,13 +2,13 @@
 <template>
 <div :style="'width:100%;max-width:2500px;position:relative;border:solid 1px #cccccc;background:white;height:'+h"  ref="obal" >
 
-<div :style="'position:absolute;left:0px;top:0px;width:'+Leva+';max-width:2500px;background:white;overflow:auto;'" ref="d1l"  v-on:scroll="syncALeft">
+<div :style="'position:absolute;left:0px;top:0px;width:'+Leva+';max-width:2500px;background:white;overflow:auto;'+';'+TopB" ref="d1l"  v-on:scroll="syncALeft">
 
     <slot name="headl">
       LH
     </slot>
 </div>
-<div :style="'position:absolute;top:31px;width:'+Leva+';positon:relative;overflow:auto;background:white;height:80%;'+stylet2"  ref="d2l" v-on:scroll="syncBLeft">
+<div :style="'position:absolute;top:31px;width:'+Leva+';positon:relative;overflow:auto;background:white;height:80%;'+stylet2+';'+TopA "  ref="d2l" v-on:scroll="syncBLeft">
     <slot name="bodyl">
       BH
    </slot>
@@ -19,7 +19,7 @@
   RHead
     </slot>
 </div>
-<div :style="'position:absolute;z-index:10;right:0px;top:31px;width:'+Prava+';overflow:auto;background:white;height:80%;'+stylet2"  ref="d2r" v-on:scroll="syncBRight">
+<div :style="'position:absolute;z-index:10;right:0px;top:31px;width:'+Prava+';overflow:auto;background:white;height:80%;'+stylet2+';'+TopA "  ref="d2r" v-on:scroll="syncBRight">
     <slot name="bodyr">
       BH
    </slot>
@@ -30,8 +30,8 @@
     <slot name="head">
     </slot>
 </div>
-<div :style="'position:absolute;left:'+Leva+';top:31px;width:'+Stred+';positon:relative;overflow:auto;background:white;height:80%;'+stylet2"  ref="d2" v-on:scroll="syncB">
-    <slot name="body">
+<div :style="'position:absolute;left:'+Leva+';top:'+ 31  +'px;width:'+Stred+';positon:relative;overflow:auto;background:white;height:80%;'+stylet2+';'+TopA "  ref="d2" v-on:scroll="syncB">
+  <slot name="body">
    </slot>
   </div>
 </div>
@@ -91,9 +91,19 @@ import { StringDecoder } from 'string_decoder';
        StredPosun: {
          type: String,
          required: false
-       }
+       },
+       TopA: {
+         type: String,
+         required: false
+       },
+       TopB: {   //Sirka hlavicky  - musi byt plny styl height: stejny jako topA
+         type: String,
+         required: false
+       },
 
-       ,autosize: true
+
+
+       autosize: true
     },
     data () {
       return {
@@ -105,6 +115,9 @@ import { StringDecoder } from 'string_decoder';
         tOut3: false,
         autosize1: this.autosize,
         cols: [],
+        Top1: 32,
+        Top0: this.TopA
+
 
       }
     },

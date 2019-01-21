@@ -11,7 +11,7 @@
 <div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2 white" :id="'t' + objId1" ref="sirka">
 
   <el-col :span="4" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
-
+    {{Sirka}} / {{ TestovaciCislo }}
 
  <!-- <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" > -->
 
@@ -67,19 +67,18 @@
  <!-- </el-col> -->
 
   <div>
-        <!-- <div  ref="seznam"  class="grid-content" style="height:500px"> -->
-<!-- <ta-ble3  :h="pof(Sirka,99)" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'"> -->
-<ta-ble3  :h="'660px;'+pof(Sirka,99)+';top:100px'" style="height:690px" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'">
-   <table slot="head" :style="pof(Sirka*SirkaStred,140)">
+        <div  ref="seznam"  class=grid-content >
+<ta-ble3  :h="'260px;'+pof(Sirka,99)+';top:100px'" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'">
+   <table slot="head" :style="pof(Sirka*SirkaStred,110)">
         <thead  style="height:50px" >
 
 
-<th :style="pof(Sirka*SirkaStred,15)">
+<th :style="pof(Sirka*SirkaStred,20)">
   <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('nazev','asc')"  class="el-icon-download"  ></i>
 
   Stroj</th>
-<th :style="pof(Sirka*SirkaStred,15)">
+<th :style="pof(Sirka*SirkaStred,20)">
   <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
   Skupina</th>
@@ -87,29 +86,24 @@
   <i  @click="sortByKey('nazev_text','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('nazev_text','asc')" class="el-icon-download"  ></i>
   Technologie</th>
-<th :style="pof(Sirka*SirkaStred,6)">
+<th :style="pof(Sirka*SirkaStred,3)">
   <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
 
   Kalkulace</th>
-  <th :style="pof(Sirka*SirkaStred,5)">Tisk</th>
+  <th :style="pof(Sirka*SirkaStred,3)">Tisk</th>
 
 
 
 
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">sirka mat max mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">delka mat max mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">sirka tisk max mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">delka tisk max mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj strana mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj start mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj spacecopy mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj spacejobs mm</th>
-
-
-<!-- <th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</th> -->
-
+<th :style="pof(Sirka*SirkaStred,3)" >sirka mat max mm</th>
+<th :style="pof(Sirka*SirkaStred,3)" >delka mat max mm</th>
+<th :style="pof(Sirka*SirkaStred,3)" >sirka tisk max mm</th>
+<th :style="pof(Sirka*SirkaStred,3)" >delka tisk max mm</th>
+<th :style="pof(Sirka*SirkaStred,3)" >tech okraj strana mm</th>
+<th :style="pof(Sirka*SirkaStred,3)" >tech okraj start mm</th>
+<th :style="pof(Sirka*SirkaStred,3)" >tech okraj spacecopy mm</th>
+<th :style="pof(Sirka*SirkaStred,3)" >tech okraj spacejobs mm</th>
 
 
 
@@ -117,7 +111,7 @@
   </thead>
 </table>
 
-<table slot="body" :style="pof(Sirka*SirkaStred,140)">
+<table slot="body" :style="pof(Sirka*SirkaStred,110)">
 
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true"
 
@@ -126,33 +120,31 @@
 >
 
 
-  <td  :style="pof(Sirka*SirkaStred,15)" class="px-2">
+  <td  :style="pof(Sirka*SirkaStred,23)" class="px-2">
     {{item1['nazev']}}
   </td>
-  <td  :style="pof(Sirka*SirkaStred,15)+';text-align:left'" class="px-2">
+  <td  :style="pof(Sirka*SirkaStred,23)+';text-align:left'" class="px-2">
     {{item1['nazev_skup']}}
   </td>
-    <td  :style="pof(Sirka*SirkaStred,10)+';text-align:left'" class="px-2">
+    <td  :style="pof(Sirka*SirkaStred,6)+';text-align:left'" class="px-2">
     {{item1['nazev_text']}}
   </td>
     <td  :style="pof(Sirka*SirkaStred,6)+';text-align:left'" class="px-2">
     {{ item1['typ_kalkulace'] }}
   </td>
-  <td :style="pof(Sirka*SirkaStred,5)" class="stred">
+  <td :style="pof(Sirka*SirkaStred,6)" class="stred">
         {{item1['tisk']?'Ano':'Ne'}}
   </td>
 
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['sirka_mat_max_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['delka_mat_max_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['sirka_tisk_max_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['delka_tisk_max_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_strana_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_start_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_spacecopy_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_spacejobs_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,3)" >{{ item1['sirka_mat_max_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,3)" >{{ item1['delka_mat_max_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,3)" >{{ item1['sirka_tisk_max_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,3)" >{{ item1['delka_tisk_max_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,3)" >{{ item1['tech_okraj_strana_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,3)" >{{ item1['tech_okraj_start_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,3)" >{{ item1['tech_okraj_spacecopy_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,3)" >{{ item1['tech_okraj_spacejobs_mm'] }} </td>
       <!-- item1['technologie']: item1['technologie_skup'] -->
- <!-- <td :style="pof(sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</td>
-  <td :style="pof(sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</td> -->
 
 
 </tr>
@@ -247,9 +239,111 @@
 </table>
 
 </ta-ble3>
- <!-- </div> -->
+ </div>
+
+<table slot="activator" style="width:100%" class="mx-0 my-4 py-4">
+<thead>
+<th style="width:15%">
+&nbsp;<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox>
+&nbsp;&nbsp;&nbsp;&nbsp;<v-menu
+      v-model="showSubMenu"
+      absolute
+      offset-y
+      style="max-width: 3600px;text-align:left"
+     >
+     <span slot="activator" class="blue--text">Akce</span>
+    <v-list>
+        <v-list-tile
+          v-for="(item, index) in SubMemuItems"
+          :key="index"
+          @click="handleSubMenu(item.akce)"
+        >
+      <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+      </v-list-tile>
+    </v-list>
+    </v-menu>
+
+</th>
+<th style="width:23%">
+  <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev','asc')"  class="el-icon-download"  ></i>
+
+  Stroj</th>
+<th style="width:23%" >
+  <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
+  Skupina</td>
+<th style="width:6%" >
+  <i  @click="sortByKey('nazev_text','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev_text','asc')" class="el-icon-download"  ></i>
+  Technologie</th>
+<th style="width:6%" >
+  <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
+
+  Kalkulace</th>
+  <th>Tisk</th>
 
 
+
+
+<!-- <th style="width:6%" >sirka_mat_max_mm</th>
+<th style="width:6%" >delka_mat_max_mm</th>
+<th style="width:6%" >sirka_tisk_max_mm</th>
+<th style="width:6%" >delka_tisk_max_mm</th>
+<th style="width:6%" >tech_okraj_strana_mm</th>
+<th style="width:6%" >tech_okraj_start_mm</th>
+<th style="width:6%" >tech_okraj_spacecopy_mm</th>
+<th style="width:6%" >tech_okraj_spacejobs_mm</th> -->
+
+
+<th style="width:3%">Vymazat</th>
+</thead >
+<tbody>
+
+<tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true">
+  <td style="width:7%" >
+  <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
+  <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']" :value="item1['idefix']" @change="chekListUpdate(irow1)">
+  </div>
+  <div class='dcellx'  style="width:80% ; background:white;float:right"
+    v-bind:class="{bila: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
+  >
+     <el-tooltip  placement="left-start" effect="light">
+      <div slot="content">{{ item1['popis'] }}</div>
+       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
+     </el-tooltip>
+       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
+       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
+   </div>
+   <!-- <el-checkbox :id="'check2_'+objId1+'_'+item1['idefix']" :label="item1['idefix']">{{item1['idefix']}}</el-checkbox> -->
+  </td>
+
+  <td style='text-align:left;width:23%' class="px-2">
+    {{item1['nazev']}}
+  </td>
+  <td style='text-align:left;width:23%' class="px-2">
+    {{item1['nazev_skup']}}
+  </td>
+  <td style='text-align:left;width:6%' class="px-2">
+    {{item1['nazev_text']}}
+  </td>
+  <td style='text-align:left;width:6%' class="px-2">
+    {{ item1['typ_kalkulace'] }}
+  </td>
+  <td class="stred">
+        {{item1['tisk']?'Ano':'Ne'}}
+  </td>
+      <!-- item1['technologie']: item1['technologie_skup'] -->
+  <td >
+     <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
+  </td>
+
+
+</tr>
+
+</tbody>
+</table>
 
 
 
@@ -1396,8 +1490,5 @@ editLineToForm(nRow) {
 
 
 </script>
-<style scoped >
-th {
-  height:51px;
-}
+<style >
 </style>
