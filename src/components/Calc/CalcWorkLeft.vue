@@ -1,62 +1,125 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
     <!-- <v-hover> -->
-     <div style="font-size:100%; min-height:120px"
-
+     <div style="font-size:100%; min-height:120px;widht:100%;border: solid 20px black"
      class="white lighten-5 pt-0 px-0 " v-if="$store.state.Kalkulace && $store.state.Kalkulace.length >0 "
      v-on:mouseover="active=true" v-bind:class="{'JsemVidet': active, 'JsemVidetMalo': !active }"
      v-on:mouseout="active=false"
      @click="setKalk(kalkulaceid)"
-
-
      >
      <table cols="20">
        <tr><td v-for="n in 20" :key="n" style="font-size:1px">&nbsp;</td></tr>
        <tr>
 <td colspan="2">
-   <slot name="akce">
+     <slot name="akce">
       Slota akce
    <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
    </slot>
 </td>
 
-         <td colspan="18" >
+<td colspan="18" >
 
+<!-- Vychozi - Mody stroju //-->
 
+   <div v-if="!MenuShow || true" style="width:100%;text-align:left" ref="menu1main" id="menu1main">
+     <table style="width:100%" cols=2><tr>
+       <td style="width:80%">
+         <span @click="MenuShow1(MenuShow, $event )" style="width:80%;border:20px">
+      {{ getStrojMod() }}
+     </span>
+       </td>
+      <td style="width:20%">
+        <span @click="MenuShow1(MenuShow, $event )">
+    <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light"></i>
+    </span>
+       </td>
+     </tr>
+    </table>
 
-     <v-overflow-btn slot="obsah"
-      :items="$store.state.Kalkulace[k_id()].data.Menu1"
-      hide-details
-      class="px-1"
-      overflow
-      @change="setMenu1Value"
-      @mouseover="neco"
-      label="'aaa'"
-
-
-
-      :value="$store.state.Kalkulace[k_id()].data.Menu1Value"
-      editable
-    >
-
-
-
-
-    </v-overflow-btn>
+ <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menu1" id="menu1"  class="neco">
+     <tr v-if="MenuShow" ><td colspan="2">
+   <ta-ble3  :h="'350px'" :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'"       v-if="MenuShow" >
+         <table slot="body" style="width:100%">
+            <thead  >
+              <tr v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Menu2" :key="i1">
+              <td class="leva pl-2" @click="setMenu1Value(m1.idefix_mod)" >
+                <button v-if="$store.state.Kalkulace[k_id()].data.Menu1Value == m1.idefix_mod" ref="menu1focus"  id="menu1focus" class="leva  elevation-1" style="width:90%;"
+                v-on:keyup.27="MenuShow1(MenuShow,$event)"
+                >
+                 {{m1.stroj +' ' + m1.nazev }}
+                </button >
+                <button v-else  style="width:90%" class=" leva "
+                v-on:keyup.27="MenuShow1(MenuShow,$event)">
+                 {{m1.stroj +' ' + m1.nazev }}
+                </button >
+                 </td>
+              </tr>
+            </thead>
+         </table>
+   </ta-ble3>
+   </td></tr>
+ </table>
+    <!-- {{ $store.state.Kalkulace[k_id()].data.Menu1Value}} -->
+    </div>
 
     </td></tr>
-    <tr v-if="form.MenuRet > 0"><td colspan="20">
+    <tr v-if="form.MenuRet > 0 ||  true "><td colspan="20">
 
-    <v-overflow-btn slot="obsah"
-      :items="Format"
-      hide-details
-      class="pa-0 px-1"
-      overflow
-      @change="SetFormat"
-      value="A4"
-      editable
-      placeholder="Format"
-    ></v-overflow-btn>
+<!--Formaty -->
+<div v-if="true" style="width:95%;text-align:left" ref="menuformat1main" id="menuformat1main" class="ml-4">
+     <table style="width:100%" cols=2><tr>
+       <td style="width:80%">
+         <span @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:80%;border:20px">
+      {{ getFormat() }}
+     </span>
+       </td>
+      <td style="width:20%">
+        <span @click="MenuFormatShow1(MenuFormatShow, $event )">
+    <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light"></i>
+    </span>
+       </td>
+     </tr>
+    </table>
+
+ <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menuformat1" id="menuformat1"  class="neco">
+<tr v-if="MenuFormatShow" ><td colspan="2">
+   <ta-ble3  :h="'350px'" :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'"   >
+         <table slot="head" style="width:100%">
+            <thead  >
+              <th style="width:60%"> Format</th><th style="width:20%">Sirka</th><th style="width:20%">Vyska</th>
+            </thead>
+         </table>
+         <table slot="body" style="width:100%">
+            <thead  >
+              <tr v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Format" :key="i1" >
+              <td style="width:60%" class="leva pl-2" @click="setMenuFormat1Value(m1.idefix)" >
+                <button v-if="$store.state.Kalkulace[k_id()].data.FormatValue == m1.idefix" ref="menuformat1focus"  id="menuformat1focus" class="leva  elevation-1" style="width:90%;"
+                v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)"
+                >
+                 {{m1.nazev }}
+                </button >
+                <button v-else  style="width:90%" class=" leva "
+                v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)">
+                 {{ m1.nazev }}
+                </button >
+                 </td >
+                 <td style="width:20%">{{m1.sirka}}</td><td style="width:20%">{{m1.vyska}}</td>
+              </tr>
+            </thead>
+         </table>
+   </ta-ble3>
+   </td></tr>
+ </table>
+     <!-- {{ $store.state.Kalkulace[k_id()].data.Menu1Value}} -->
+ </div>
+
+<!--Formaty -->
+
+
+
+
+
+
     </td></tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value >''" >
      <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Sirka:</td>
@@ -76,7 +139,7 @@
     </tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''"><td colspan="20">
       <!-- upload-demo -->
-      <el-upload
+     <el-upload
   class="el-upload-dragger1 upload-demo"
   action="https://jsonplaceholder.typicode.com/posts/"
   :on-preview="handlePreview"
@@ -88,7 +151,7 @@
   :on-exceed="handleExceed"
   :file-list="form.filelist">
 
-  <el-button size="small" type="primary" style="position:relative;left:-30%;top:10%">Data</el-button>
+  <el-button size="small" type="primary" style="position:relative;left:-0%;top:10%">Data</el-button>
   <div slot="tip" class="el-upload__tip " >Prilohy</div>
 </el-upload>
       </td></tr>
@@ -177,10 +240,12 @@ export default {
       {key: 210 , text: "Billboard AVENIR"   ,sirka: 300.00 ,vyska: 400.00 },
       {key: 220 , text: "Billboard EASTWEST" ,sirka: 320.00 ,vyska: 480.00 },
       {key: 230 , text: "Big Board"          ,sirka: 360.00 ,vyska: 960.00 },
-      {key: 999 , text: "Vlastni"             ,sirka:   0.00 ,vyska:   0.00 }
+      {key: 999 , text: "Vlastni"            ,sirka:   0.00 ,vyska:   0.00 }
       ],
 
      aKalk: {},   //
+     MenuShow: false,
+     MenuFormatShow: false,
 
      form: {
        MenuRet :0,
@@ -191,7 +256,6 @@ export default {
        filelist:[]
 
      }
-
 
    }
  },
@@ -213,22 +277,138 @@ export default {
      this.active = !this.active
    //  alert(this.active)
    },
+   MenuShow1(yesno,e) {
+
+    const self = this
+
+     if (yesno== 0) {
+       this.MenuShow = true
+       this.$refs.menu1.style.left =(e.clientX - 300) +'px'
+       this.$refs.menu1.style.top  =(e.clientY + 0) +'px'
+       self.MenuFormatShow = false;
+
+       //console.log("OOFFF", this.$refs.menu1focus.offsetWidth)
+
+       //this.$nextTick(() => this.$refs.menu1focus.focus())
+
+      //document.getElementById("menu1focus").focus()
+       this.$nextTick(() => {
+        //this.$refs['menu1focus'].focus()
+        })
+        setTimeout(function() {
+          //this.$refs.menu1.style.left = (e.clientX - document.getElementById("menu1focus").offsetWidth ) +'px'
+          console.log("F!",document.getElementById("menu1main").offsetWidth, document.getElementById("menu1") )
+          document.getElementById("menu1").style.width = document.getElementById("menu1main").offsetWidth +'px'
+          document.getElementById("menu1").style.top = document.getElementById("menu1main").style.top
+          document.getElementById("menu1").style.left = (document.getElementById("menu1main").offsetLeft + 100) + 'px'
+          //self.$refs.menu1focus.focus()
+          document.getElementById("menu1focus").focus()
+
+        },200)
+
+
+     }
+     if (yesno==1) {
+       this.MenuShow = false
+     }
+
+
+   },
+
+ MenuFormatShow1(yesno,e) {
+
+    const self = this
+
+
+
+     if (yesno== 0) {
+       this.MenuFormatShow = true
+       this.$refs.menuformat1.style.left = (e.clientX - 300) +'px'
+       this.$refs.menuformat1.style.top  = (e.clientY +   0) +'px'
+       self.MenuShow = false;
+
+       //console.log("OOFFF", this.$refs.menu1focus.offsetWidth)
+
+       //this.$nextTick(() => this.$refs.menu1focus.focus())
+
+      //document.getElementById("menu1focus").focus()
+       this.$nextTick(() => {
+        //this.$refs['menu1focus'].focus()
+        })
+        setTimeout(function() {
+          //this.$refs.menu1.style.left = (e.clientX - document.getElementById("menu1focus").offsetWidth ) +'px'
+          console.log("F!",document.getElementById("menu1main").offsetWidth, document.getElementById("menuformat1") )
+          document.getElementById("menuformat1").style.width = document.getElementById("menuformat1main").offsetWidth +'px'
+          document.getElementById("menuformat1").style.top = document.getElementById("menuformat1main").style.top
+          document.getElementById("menuformat1").style.left = (document.getElementById("menuformat1main").offsetLeft + 100) + 'px'
+          //self.$refs.menu1focus.focus()
+          document.getElementById("menuformat1focus").focus()
+
+        },200)
+
+     }
+     if (yesno==1) {
+       this.MenuFormatShow = false
+     }
+
+
+   },
    setMenu1Value (a, b) {
       const self = this
       var idK = this.k_id()
       self.setKalk(idK)
       console.log("a",a)
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Menu1Value' , value: a })
+      self.MenuShow1(1,0)
      //this.Kalkulace = []
      //this.$store.state.Kalkulace[this.k_id()].data.Menu1Value = a
 
    },
+  setMenuFormat1Value (a, b) {
+
+      const self = this
+      var idK = this.k_id()
+      self.setKalk(idK)
+      // console.log("FORMAT VALUE ", a , idK, this.$store.state.Kalkulace[this.k_id()].data.FormatValue )
+      // return
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatValue' , value: a })
+      // var thisItem = self.$store.state.Kalkulace[this.k_id()].data.Menu1Value
+      var thisItem = a
+
+      self.$store.state.Kalkulace[self.k_id()].data.Format.forEach((el, idx) =>{
+       if (idx == 0) {
+
+         //self.form.sirka = el.sirka
+         //self.form.vyska = el.vyska
+
+       }
+      if (el.idefix == thisItem) {
+          //console.log(el.nazev, el.idefix_mod)
+
+          self.form.sirka = el.sirka
+          self.form.vyska = el.vyska
+          return
+      }
+    })
+
+
+
+
+      // console.log("FORMAT VALUE ", a , idK, this.$store.state.Kalkulace[this.k_id()].data.FormatValue )
+      self.MenuFormatShow1(1,0)
+     //this.Kalkulace = []
+     //this.$store.state.Kalkulace[this.k_id()].data.Menu1Value = a
+
+   },
+
+
    neco(a,b) {
      console.log("neco A:" , a,"B:",b,"C:",a.target)
    },
    MenuRet (a,b) {
      const self = this
      console.log("a",a)
+
      //alert(1)
      self.MenuLeftJoin.forEach(el => {
        if (el.text == a) {
@@ -237,9 +417,9 @@ export default {
          return
        }
      })
+
      //eventBus.$emit('WorkLeft',{key: self.nRet })
      //console.log(a ,"::: ", self.nRet)
-
 
    },
    SetFormat(a,b) {
@@ -296,6 +476,49 @@ export default {
           console.log('setKalk',idK)
 
   },
+  getStrojMod() {
+    //return 'ahoj'
+    const self = this
+    var thisItem = self.$store.state.Kalkulace[this.k_id()].data.Menu1Value
+    var cRet =''
+    var cDefRet =''
+    self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach((el, idx) =>{
+       if (idx == 0) {
+         cDefRet = el.stroj +' ' + el.nazev
+       }
+      if (el.idefix_mod == thisItem) {
+          //console.log(el.nazev, el.idefix_mod)
+          cRet = el.stroj +' ' + el.nazev
+      }
+    })
+
+    return (cRet>'')?cRet:cDefRet
+    //return this.$store.state.Kalkulace[this.k_id()].data.Menu1Value
+  },
+
+    getFormat() {
+    //return 'ahoj'
+    const self = this
+    var thisItem = self.$store.state.Kalkulace[this.k_id()].data.FormatValue
+    var cRet =''
+    var cDefRet =''
+    self.$store.state.Kalkulace[self.k_id()].data.Format.forEach((el, idx) =>{
+       if (idx == 0) {
+         cDefRet =  el.nazev + 'ahoj' + thisItem
+         self.form.sirka = el.sirka
+         self.form.vyska = el.vyska
+       }
+      if (el.idefix == thisItem) {
+          //console.log(el.nazev, el.idefix_mod)
+          cRet =  el.nazev
+          self.form.sirka = el.sirka
+          self.form.vyska = el.vyska
+      }
+    })
+
+    return (cRet>'')?cRet:cDefRet
+    //return this.$store.state.Kalkulace[this.k_id()].data.Menu1Value
+  },
  //--Values
  Menu1 () {
    return this.$store.Kalulace[this.k_id()].data.Menu1
@@ -331,6 +554,9 @@ textarea:focus, input:focus{
 
 
 }
+td th {
+  font-size: 12px;
+}
 </style>
 <style scoped>
 
@@ -354,6 +580,14 @@ input {
     text-align: left;
     position: relative;
     overflow: hidden;
+}
+button:focus, input:focus{
+    outline: none;
+    color: green;
+}
+.neco {
+  transition: left .5s cubic-bezier(.42,-0.3,.78,1.25),
+                top .5s cubic-bezier(.42,-0.3,.78,1.25);
 }
 
 

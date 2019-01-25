@@ -7,8 +7,8 @@
      <table cols="20">
        <tr><td v-for="n in 20" :key="n" style="font-size:1px">&nbsp;</td></tr>
        <tr>
-    <td colspan="2" style="border-left: solid 1px">
-    <slot name="akce">
+    <td colspan="2" style="border-left: solid 1px;">
+    <slot name="akce" >
       Slota akce
     <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
     </slot>
@@ -60,6 +60,8 @@
 
 <script>
 import {mapState} from 'vuex'
+import {getters} from 'vuex'
+
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import ListStroj from '../../services/ListStrojService'
@@ -302,6 +304,7 @@ table tr td {
 
 input {
   border:none;
+
 }
 
 .el-upload-dragger1 {

@@ -92,8 +92,16 @@
   <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
 
   Kalkulace</th>
-  <th :style="pof(Sirka*SirkaStred,5)">Tisk</th>
+  <th :style="pof(Sirka*SirkaStred,5)">
+  <i  @click="sortByKey('tisk','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('tisk','asc')" class="el-icon-download"  ></i>
 
+    Tisk</th>
+<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">priprava cas minuta</th>
+<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">
+
+  Priprava celkem naklad</th>
+<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">priprava celkem prodej</th>
 
 
 
@@ -105,6 +113,7 @@
 <th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj start mm</th>
 <th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj spacecopy mm</th>
 <th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj spacejobs mm</th>
+<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</th>
 
 
 <!-- <th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</th>
@@ -141,6 +150,9 @@
   <td :style="pof(Sirka*SirkaStred,5)" class="stred">
         {{item1['tisk']?'Ano':'Ne'}}
   </td>
+<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['priprava_cas_minuta']}}</td>
+<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['priprava_celkem_naklad']}}</td>
+<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['priprava_celkem_prodej']}}</td>
 
 <td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['sirka_mat_max_mm'] }} </td>
 <td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['delka_mat_max_mm'] }} </td>
@@ -150,6 +162,7 @@
 <td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_start_mm'] }} </td>
 <td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_spacecopy_mm'] }} </td>
 <td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_spacejobs_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">&nbsp;</td>
       <!-- item1['technologie']: item1['technologie_skup'] -->
  <!-- <td :style="pof(sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</td>
   <td :style="pof(sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</td> -->
@@ -389,6 +402,8 @@ export default {
       SirkaLeva : 0.1,
       SirkaStred : 1,
       SirkaPrava : 0.05,
+      LastColHeight: '',
+      CitacHeight: 0,
       TestovaciCislo: 0 ,
 
     }
@@ -423,13 +438,11 @@ export default {
                 }
            */
       //this.list = (await ListStroj.all(this.user,`${self.where}`)).data
-        this.IsWaiting = false
+      this.IsWaiting = false
         if (false) {
         setTimeout(() => {
           self.editLineToForm(6)
         }, 1600);
-
-
 
         }
         console.log("Interval")
@@ -439,10 +452,19 @@ export default {
 //       alert(self.Sirka)
     },500)
 
+    // return
+    var objlist = []
 
+  setTimeout(function(){
+      self.searchS="xxx"
+      self.getWhere()
+      setTimeout(function() {
+         self.searchS=""
+         self.getWhere()
+      },20)
+    },350)
         return
     }
-
   },
 
   created () {
@@ -561,8 +583,9 @@ handleCheckAllChange(val) {
   const self = this
 
   var neco=''
-
-  this.list.forEach((el,idx) => {
+//console.log(self.list)
+//return
+  self.list.forEach((el,idx) => {
     neco='check_'+self.objId1+'_'+el['idefix']
     if (document.getElementById(neco)){
       if (val){
@@ -648,7 +671,6 @@ async handleSubMenu(e) {
         self.getWhere()
         this.IsWaiting =false
       },1000)
-
 
     }
     //setTisk
@@ -1311,19 +1333,46 @@ editLineToForm(nRow) {
       try {
         if (neco1 ) {
         newH = ''+Math.max(neco1.offsetHeight,neco2.offsetHeight,neco3.offsetHeight)+'px'
+        if ( newH == self.LastColHeight) {
+          console.log('Stejne')
+          return
+        } else {
 
-        neco1.style.height = newH
-        neco2.style.height = newH
-        neco3.style.height = newH
+          self.LastColHeight = newH
+
+          if (self.CitacHeight ==0 ) {
+          //  newH="28px"
+            neco1.style.height = newH
+            neco2.style.height = newH
+            neco3.style.height = newH
+            self.CitacHeight = 1
+//            console.log('Jine', newH, self.CitacHeight)
+
+              self._max(iporadi)
+
+
+
+
+          } else {
+
+             newH = ''+Math.max(neco1.offsetHeight,neco2.offsetHeight,neco3.offsetHeight)+'px'
+             self.CitacHeight = 0
+             neco1.style.height = newH
+             neco2.style.height = newH
+             neco3.style.height = newH
+  //           console.log('Jine', newH, self.CitacHeight)
+
+          }
+
         }
-
+        }
         //neco2.style.height='12px'
         //neco3.style.height='12px'
       } catch (e) {
         console.log('Chybka','Poradi', iporadi,e)
         setTimeout(function() {
           self._max(iporadi)
-        },500)
+        },510)
         //neco1.style.height='12px'
         //neco2.style.height='12px'
         //neco3.style.height='12px'

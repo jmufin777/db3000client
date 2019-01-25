@@ -77,12 +77,14 @@
     ></v-pagination> -->
     <draggable  v-model="aKalkulace"  :options="{group:{ name:'Kalkulace' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
       <span  v-for="(iKalk0 ,iK0) in aKalkulace" :key="iK0">
-
+<div style="position:relative;float:left;border: solid 2px white;width:30px;text-align:center;" class="elevation-5">
       <a :href="'#'+iKalk0.kalkulaceid" @click="setKalk(iKalk0.kalkulaceid)" :ref="'ref_'+iKalk0.kalkulaceid">
 
         &nbsp;{{iKalk0.kalkulaceid}}
 
-        </a> &nbsp;
+
+        </a>
+             </div>
 
       </span>
      </draggable>
@@ -221,15 +223,47 @@ export default {
 //     return
      if ( type == 1 ){ id_query=10411 } //Velkoploch
      if ( type == 2 ){ id_query=10410 } //Archovy
-    try {
-      atmp=[]
-      atmp=(await ListStroj.one(this.user,-1, id_query)).data.enum_strojmod_full
-    //  alert(atmp[0].stroj+ ' '+ id_query )
-      return atmp
-      //console.log(JSON.stringify(atmp))
-    } catch (e) {
-      alert('Error' )
-      console.log( e)
+     if ( type == 500 ){ id_query=500 } // Seznam formatu
+     if ( type == 501 ){ id_query=501 } // Seznam formatu
+
+    if (type < 500) {
+      try {
+        atmp=[]
+        atmp=(await ListStroj.one(this.user,-1, id_query)).data.enum_strojmod_full
+      //  alert(atmp[0].stroj+ ' '+ id_query )
+        return atmp
+        //console.log(JSON.stringify(atmp))
+      } catch (e) {
+        alert('Error' )
+        console.log( e)
+      }
+    }
+
+    if (type == 500) {
+      try {
+        atmp=[]
+        atmp=(await ListStroj.one(this.user,-1, id_query)).data.enum_format
+      //  alert(atmp[0].stroj+ ' '+ id_query )
+        console.log(atmp)
+        return atmp
+        //console.log(JSON.stringify(atmp))
+      } catch (e) {
+        alert('Error' )
+        console.log( e)
+      }
+    }
+    if (type == 501) {
+      try {
+        atmp=[]
+        atmp=(await ListStroj.one(this.user,-1, id_query)).data.enum_matspec
+      //  alert(atmp[0].stroj+ ' '+ id_query )
+        console.log(atmp)
+        return atmp
+        //console.log(JSON.stringify(atmp))
+      } catch (e) {
+        alert('Error' )
+        console.log( e)
+      }
     }
     return 0
   //return
@@ -250,16 +284,57 @@ export default {
        })
      }
      try{
-       tmpData = (await (self.strojmod(KalkType)))
+       tmpData = (await (self.strojmod(KalkType)))   //MOdy pro V nebo A
        oData.Menu2 =  tmpData
        oData.Menu1 = []
        oData.Menu1Value=''
 
+       tmpData.forEach((el,idx) => {
+        nTmp =  _.findIndex(oData.Menu1, function (o) { return o.text +' '+o.nazev == el.stroj+ ' '+ el.nazev})
+        if (nTmp == -1 ) oData.Menu1.push({'text': el.stroj + ' '+ el.nazev })
+        if (idx == 0) {
+         // oData.Menu1Value = el.stroj + ' '+ el.nazev
+           oData.Menu1Value = el.idefix_mod
+        }
+       })
+
+
+       try{
+       tmpData = (await (self.strojmod(500)))   //MOdy pro V nebo A
+       oData.Format      =  tmpData
+       oData.FormatMenu1 =  []
+       oData.FormatValue =  ''
+
 
        tmpData.forEach((el,idx) => {
-        nTmp =  _.findIndex(oData.Menu1, function (o) { return o.text == el.stroj})
-        if (nTmp == -1 ) oData.Menu1.push({'text': el.stroj})
-        if (idx == 0) oData.Menu1Value = el.stroj
+        nTmp =  _.findIndex(oData.FormatMenu1, function (o) { return o.nazev == el.nazev})
+        if (nTmp == -1 ) oData.FormatMenu1.push({'text': el.nazev })
+        if (idx == 0) oData.FormatValue =  el.idefix
+
+       })
+
+
+
+      //  self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
+      //  self.aKalkulace = self.$store.state.Kalkulace
+      //  self.setKalk(newId)
+       //self.KalkulaceThis = newId
+
+     } catch (e) {
+       console.log(e)
+     }
+
+     try{
+       tmpData = (await (self.strojmod(501)))   //MOdy pro V nebo A
+       oData.Mat      =  tmpData
+       oData.MatMenu1 =  []
+       oData.MatValue =  ''
+
+
+       tmpData.forEach((el,idx) => {
+        nTmp =  _.findIndex(oData.MatMenu1, function (o) { return o.nazev == el.nazev})
+        if (nTmp == -1 ) oData.MatMenu1.push({'text': el.nazev })
+        if (idx == 0) oData.MatValue =  el.idefix_rozmer
 
         // oData.Menu1.push({'text': el.stroj})
 
@@ -269,6 +344,8 @@ export default {
 
        })
 
+
+
        self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
        self.aKalkulace = self.$store.state.Kalkulace
        self.setKalk(newId)
@@ -277,6 +354,17 @@ export default {
      } catch (e) {
        console.log(e)
      }
+
+      //  self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
+      //  self.aKalkulace = self.$store.state.Kalkulace
+      //  self.setKalk(newId)
+       //self.KalkulaceThis = newId
+
+     } catch (e) {
+       console.log(e)
+     }
+
+
 
 
      console.log("tmpData ", tmpData  )

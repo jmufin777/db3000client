@@ -2,38 +2,43 @@
 <template>
 <div :style="'width:100%;max-width:2500px;position:relative;border:solid 1px #cccccc;background:white;height:'+h"  ref="obal" >
 
-<div :style="'position:absolute;left:0px;top:0px;width:'+Leva+';max-width:2500px;background:white;overflow:auto;'+';'+TopB" ref="d1l"  v-on:scroll="syncALeft">
+<div :style="'position:absolute;left:0px;top:0px;width:'+Leva+';max-width:2500px;background:white;overflow:auto;'+';'+TopB" ref="d1l"  v-on:scroll="syncALeft" class="neco">
 
     <slot name="headl">
       LH
     </slot>
 </div>
-<div :style="'position:absolute;top:31px;width:'+Leva+';positon:relative;overflow:auto;background:white;height:80%;'+stylet2+';'+TopA "  ref="d2l" v-on:scroll="syncBLeft">
+<div :style="'position:absolute;top:31px;width:'+Leva+';positon:relative;overflow:auto;background:white;height:80%;'+stylet2+';'+TopA "  ref="d2l" v-on:scroll="syncBLeft" class="neco">
     <slot name="bodyl">
       BH
    </slot>
 </div>
 
-<div :style="'position:absolute;z-index:10;right:0px;top:-0px;width:'+Prava+';max-width:2500px;background:white;overflow:auto;'" ref="d1r"  v-on:scroll="syncARight">
+<div :style="'position:absolute;z-index:10;right:0px;top:-0px;width:'+Prava+';max-width:2500px;background:white;overflow:auto;'" ref="d1r"  v-on:scroll="syncARight" class="neco">
   <slot name="headr">
   RHead
     </slot>
 </div>
-<div :style="'position:absolute;z-index:10;right:0px;top:31px;width:'+Prava+';overflow:auto;background:white;height:80%;'+stylet2+';'+TopA "  ref="d2r" v-on:scroll="syncBRight">
+<div :style="'position:absolute;z-index:10;right:0px;top:31px;width:'+Prava+';overflow:auto;background:white;height:80%;'+stylet2+';'+TopA "  ref="d2r" v-on:scroll="syncBRight" class="neco">
     <slot name="bodyr">
       BH
    </slot>
 </div>
 <!-- Posun stredu o sirku leve //-->
-<div :style="'position:absolute;left:'+Leva+';top:0px;width:'+Stred+';max-width:2500px;background:white;overflow:auto;'" ref="d1"  v-on:scroll="syncA">
+<div :style="'position:absolute;left:'+Leva+';top:0px;width:'+Stred+';max-width:2500px;background:white;overflow:auto;'" ref="d1"  v-on:scroll="syncA" class="myml neco">
+
     <slot name="nadpis"></slot>
+
     <slot name="head">
     </slot>
+
 </div>
-<div :style="'position:absolute;left:'+Leva+';top:'+ 31  +'px;width:'+Stred+';positon:relative;overflow:auto;background:white;height:80%;'+stylet2+';'+TopA "  ref="d2" v-on:scroll="syncB">
+<div class="myml neco" :style="'position:absolute;left:'+Leva+';top:'+ 31  +'px;width:'+Stred+';positon:relative;overflow:auto;background:white;height:80%;'+stylet2+';'+TopA "  ref="d2" v-on:scroll="syncB" >
+
   <slot name="body">
    </slot>
-  </div>
+
+</div>
 </div>
 </template>
 
@@ -218,3 +223,15 @@ import { StringDecoder } from 'string_decoder';
     }
   }
 </script>
+<style scoped>
+.myml {
+  margin-left: 1px;
+}
+.mymr {
+  margin-right: 1px;
+}
+.neco {
+  transition: left 1.5s cubic-bezier(.42,-0.3,.78,1.25),
+                top 1.5s cubic-bezier(.42,-0.3,.78,1.25);
+}
+</style>

@@ -168,9 +168,13 @@ export default new Vuex.Store({
     },
     editKalk (state, kalkulaceidKeyValue) {
       console.log('Edit:  ', kalkulaceidKeyValue)
+      var klic = kalkulaceidKeyValue.key
+      console.log("Klic :", klic , kalkulaceidKeyValue.key )
       // state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[`'${kalkulaceidKeyValue.key}'`] = kalkulaceidKeyValue[kalkulaceidKeyValue.value]
-      state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data['Menu1Value'] = kalkulaceidKeyValue.value
-      console.log('Edit 2', state.Kalkulace[kalkulaceidKeyValue.kalkulaceid])
+      // state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data['Menu1Value'] = kalkulaceidKeyValue.value
+
+      state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[klic] = kalkulaceidKeyValue.value
+      //console.log('Edit 2', state.Kalkulace["'" + kalkulaceidKeyValue.key + "'"])
     },
     removeKalkCol (state, pole) {
       var kalkulaceid = pole.kalkulaceid

@@ -4,48 +4,48 @@
 <table width="100%" border="0px" >
   <tr><td v-for="n in 100" :key="n" style="font-size:1px">&nbsp;</td></tr>
     <tr>
-  <td colspan="15" style="border-style: 20px " class="sloupec">
+  <td colspan="25" style="border-style: 0px " class="sloupec">
     <slot name="leva">
        Leva Cast
    </slot>
    </td>
-  <td colspan="1">.</td>
+  <!-- <td colspan="1">A</td> -->
 
-   <td colspan="17" class="sloupec">
+   <td colspan="15" class="sloupec">
       <slot  name="sloupec1">1</slot>
     </td>
-    <td colspan="17" class="sloupec">
+    <td colspan="15" class="sloupec">
         <slot name="sloupec2">2</slot>
     </td>
-    <td colspan="17" class="sloupec">
+    <td colspan="15" class="sloupec">
         <slot name="sloupec3">3</slot>
     </td>
-    <td colspan="17" class="sloupec">
+    <td colspan="15" class="sloupec">
         <slot name="sloupec4">4</slot>
     </td>
-    <td colspan="17" class="sloupec">
+    <td colspan="15" class="sloupec">
         <slot name="sloupec5">5</slot>
     </td>
 
    </tr>
        <tr>
-  <td colspan="15" style="border-style: 20px ">
+  <td colspan="25" style="border-style: 20px ">.
    </td>
-  <td colspan="1">.</td>
+  <!-- <td colspan="1">.</td> -->
 
-   <td colspan="17" class="sloupec">
+   <td colspan="15" class="sloupec">
         <slot name="sloupec6">.</slot>
     </td>
-    <td colspan="17" class="sloupec">
+    <td colspan="15" class="sloupec">
         <slot name="sloupec7" >.</slot>
     </td>
-    <td colspan="17" class="sloupec">
+    <td colspan="15" class="sloupec">
         <slot name="sloupec8">.</slot>
     </td>
-    <td colspan="17" class="sloupec">
+    <td colspan="15" class="sloupec">
         <slot name="sloupec9">.</slot>
     </td>
-    <td colspan="17" class="sloupec">
+    <td colspan="15" class="sloupec">
         <slot name="sloupec10">.</slot>
     </td>
 
