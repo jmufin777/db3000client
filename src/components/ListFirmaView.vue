@@ -8,7 +8,8 @@
   </el-row>
 
 
-<div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2 white" :id="'t' + objId1">
+
+<div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2 white" :id="'t' + objId1" ref="sirka">
 
   <el-col :span="12" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
 
@@ -34,12 +35,113 @@
 
   <div >
 
-    <br><br>
+<ta-ble3  :h="'660px;'+pof(Sirka,99)+';top:80px'"  :Sirka="1000" :Leva="'8%'" :Prava="'6%'" :Stred="'90%'" :TopA="'top:58px'" :TopB="'height:58px'">
+<table slot="head"  :style="pof(Sirka*SirkaStred,85)">
+<!-- <ta-ble3 v-if="true"  :h="'650px;width:100%'" :stylet1="'width:800px'" :stylet2="'width:100%'" :autosize="true" > -->
+ <thead >
+   <tr>
+<th  :style="pof(Sirka*SirkaStred,80)" class="stred grey--text" colspan="106" style="background:#ffffff;opacity:1;z-index:100000;border:none">
+  Zobrazeno <el-input-number v-model="Zobrazit" size="mini" @blur="Sirka--" :min="1" :max="list.length"></el-input-number>  z  {{ list.length }}
+  Stranka
+  <el-input-number v-model="Stranka" size="mini" @blur="Sirka--" :max="Math.ceil(list.length / Zobrazit)" :min="1"></el-input-number>
+  z {{ Math.ceil(list.length / Zobrazit) }}
 
-    <br><br>
-<ta-ble v-if="false" :list="list" :h="'650px;width:100%'" :stylet1="'width:800px'" :stylet2="'width:100%'" :autosize="true" >
- <thead slot="head" >
-<th style="text-align:left">
+  {{ 1 }} >=  {{ (Zobrazit * Stranka) - Zobrazit }} && {{  1 }} <=  {{Zobrazit*Stranka - 1}}
+
+</th>
+
+</tr>
+<tr>
+
+<th  :style="pof(Sirka*SirkaStred,10)" class="stred">
+
+  <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
+  Ico
+
+  </th>
+<th  :style="pof(Sirka*SirkaStred,10)" class="stred">
+  <i  @click="sortByKey('dic','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('dic','asc')" class="el-icon-download"  ></i>
+  DIC</th>
+
+<th  :style="pof(Sirka*SirkaStred,20)" class="stred">
+  <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('nazev','asc')" class="el-icon-download"  ></i>
+  Nazev</th>
+
+<th  :style="pof(Sirka*SirkaStred,20)" class="stred">
+  <i  @click="sortByKey('ulice','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('ulice','asc')" class="el-icon-download"  ></i>
+  Ulice</th>
+<th  :style="pof(Sirka*SirkaStred,20)" class="stred">
+  <i  @click="sortByKey('obec','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('obec','asc')" class="el-icon-download"  ></i>
+  Obec</th>
+<th  :style="pof(Sirka*SirkaStred,10)" class="stred">
+  <i  @click="sortByKey('psc','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('psc','asc')" class="el-icon-download"  ></i>
+  Psc</th>
+</tr>
+
+
+</thead >
+</table>
+<table slot="body"  :style="pof(Sirka*SirkaStred,85)">
+<tbody  >
+  <!--  || lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true //-->
+  <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="irow1  >=  ((Zobrazit*Stranka) - Zobrazit) && irow1  <=  (Zobrazit*Stranka) -1"
+
+        :id="'RadekS_' +  irow1+''+ item1.idefix  + '' + list.length +''+ID"
+        :ref="'RadekS_' + _max(irow1+''+ item1.idefix  + '' + list.length +''+ID)"
+>
+
+
+  <td :style="pof(Sirka*SirkaStred,10)" class="px-2">
+
+    {{item1['ico']}}
+
+  </td>
+  <td :style="pof(Sirka*SirkaStred,10)" class="px-2">
+
+    {{item1['dic']}}
+
+  </td>
+  <td :style="pof(Sirka*SirkaStred,20)" class="px-2">
+
+    {{item1['nazev']}}
+
+  </td>
+
+  <td :style="pof(Sirka*SirkaStred,20)" class="px-2">
+    {{item1['ulice']}}
+  </td>
+  <td :style="pof(Sirka*SirkaStred,20)" class="px-2">
+    {{item1['obec']}}
+  </td>
+  <td :style="pof(Sirka*SirkaStred,10)" class="px-2">
+    {{ item1['psc'] }}
+  </td>
+
+
+  </tr>
+
+</tbody>
+</table>
+
+<table slot="headl" :style="pof(Sirka*SirkaLeva,100)">
+
+
+ <thead >
+<tr>
+  <th  :style="pof(Sirka*SirkaLeva,80)" class="stred grey--text" colspan="106" style="background:#ffffff;opacity:1;z-index:100000;border:none">
+    {{checkedList.length}}
+
+</th>
+
+</tr>
+<tr>
+<th style="text-align:left" class="stred">
  <div style="width:150px; text-align:center">
 &nbsp;<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox>
 &nbsp;&nbsp;&nbsp;&nbsp;<v-menu
@@ -61,52 +163,31 @@
     </v-menu>
   </div>
 </th>
-<th  >
-   <div style="width:130px; text-align:center">
-  <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
-  Ico
-   </div>
-  </th>
-  <th >
-  <i  @click="sortByKey('dic','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('dic','asc')" class="el-icon-download"  ></i>
-  DIC</th>
+</tr>
+ </thead>
 
-<th >
-  <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('nazev','asc')" class="el-icon-download"  ></i>
-  Nazev</th>
 
-<th  >
-  <i  @click="sortByKey('nazev_text','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('nazev_text','asc')" class="el-icon-download"  ></i>
-  Ulice</th>
-<th  >
-  <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
-  Obec</th>
- <th  >
-  <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
-  Psc</th>
 
-<th >Vymazat</th>
-</thead >
-<tbody slot="body" >
 
-  <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="true || lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true">
-        <thead slot="head1" class="h-1" colspan="2"><th width="100%">A</th></thead>
- <td >
+</table>
+<table slot="bodyl"  :style="pof(Sirka*SirkaLeva,100)">
 
-   <div style="width:120px; text-align:left">
+    <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="irow1  >=  ((Zobrazit*Stranka) - Zobrazit) && irow1  <=  (Zobrazit*Stranka) -1"
+
+        :id="'RadekL_' +  irow1+''+ item1.idefix  + '' + list.length +''+ID"
+        :ref="'RadekL_' + _max(irow1+''+ item1.idefix  + '' + list.length +''+ID)"
+>
+
+<td :style="pof(Sirka*SirkaLeva,100)">
+
+ <div style="width:120px; text-align:left">
   <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
-  <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']" :value="item1['idefix']" @change="chekListUpdate(irow1)">
+  <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']+ID" :value="item1['idefix']" @change="chekListUpdate(irow1)">
   </div>
   <div class='dcellx'  style="width:80% ; background:white;float:right"
     v-bind:class="{bila: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
   >
-     <el-tooltip  placement="left-start" effect="light">
+     <el-tooltip  placement="left-start" effect="light" v-if="false">
       <div slot="content">{{ item1['popis'] }}</div>
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
      </el-tooltip>
@@ -116,148 +197,48 @@
 
    </div>
   </td>
-  <td style='text-align:left;width:130px' class="px-2">
-    <div style="width:130px; text-align:center">
-    {{item1['ico']}}
-    </div>
-  </td>
-  <td style='text-align:left;width:130px' class="px-2">
-    <div style="width:130px; text-align:center">
-    {{item1['dic']}}
-    </div>
-  </td>
-  <td style='text-align:' class="px-2">
-    <div style="width:430px; text-align:left">
-    {{item1['nazev']}}
-    </div>
-  </td>
 
-  <td style='text-align:left' class="px-2">
-    {{item1['ulice']}}
-  </td>
-  <td style='text-align:left' class="px-2">
-    {{item1['obec']}}
-  </td>
-  <td style='text-align:left' class="px-2">
-    {{ item1['psc'] }}
-  </td>
 
-  <td style="">
+  </tr>
+</table>
+
+<table slot="headr"  :style="pof(Sirka*SirkaPrava,100)">
+
+
+<!-- <ta-ble3 v-if="true"  :h="'650px;width:100%'" :stylet1="'width:800px'" :stylet2="'width:100%'" :autosize="true" > -->
+ <thead >
+<tr>
+  <th  :style="pof(Sirka*SirkaLeva,80)" class="stred grey--text" colspan="106" style="background:#ffffff;opacity:1;z-index:100000;border:none">
+</th>
+
+</tr> <tr>
+<th :style="pof(Sirka*SirkaPrava,100)" class="stred" >
+Vymazat
+</th>
+</tr>
+ </thead>
+
+
+
+
+</table>
+<table slot="bodyr">
+
+    <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="irow1  >=  ((Zobrazit*Stranka) - Zobrazit) && irow1  <=  (Zobrazit*Stranka) -1"
+
+        :id="'RadekR_' +  irow1+''+ item1.idefix  + '' + list.length +''+ID"
+        :ref="'RadekR_' + _max(irow1+''+ item1.idefix  + '' + list.length +''+ID)"
+>
+
+  <td :style="pof(Sirka*SirkaPrava,100)" class="stred">
      <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
   </td>
 
   </tr>
-
-</tbody>
-</ta-ble>
-
-<div style="width:100%;height:550px;overflow:auto">
- <table slot="activator" style="width:100%" class="mx-0 my-4 py-4">
-
-  <thead slot="head" >
-<th style="width:15%">
-&nbsp;<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox>
-&nbsp;&nbsp;&nbsp;&nbsp;<v-menu
-      v-model="showSubMenu"
-      absolute
-      offset-y
-      style="max-width: 3600px;text-align:left"
-     >
-     <span slot="activator" class="blue--text">Akce</span>
-    <v-list>
-        <v-list-tile
-          v-for="(item, index) in SubMemuItems"
-          :key="index"
-          @click="handleSubMenu(item.akce)"
-        >
-      <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-      </v-list-tile>
-    </v-list>
-    </v-menu>
-
-</th>
-<th style="width:6%" >
-  <i  @click="sortByKey('nazev_skup','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('nazev_skup','asc')" class="el-icon-download"  ></i>
-  Ico</t>
-  <th style="width:8%" >
-  <i  @click="sortByKey('dic','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('dic','asc')" class="el-icon-download"  ></i>
-  DIC</td>
-
-<th style="width:23%">
-  <i  @click="sortByKey('nazev','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('nazev','asc')" class="el-icon-download"  ></i>
-  Nazev</th>
-
-<th style="width:23%" >
-  <i  @click="sortByKey('nazev_text','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('nazev_text','asc')" class="el-icon-download"  ></i>
-  Ulice</th>
-<th style="width:23%" >
-  <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
-  Obec</th>
- <th style="width:6%" >
-  <i  @click="sortByKey('typ_kalkulace','desc')" class="el-icon-upload2"   ></i>
-  <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
-  Psc</th>
-
-
-
-
-<th style="width:3%">Vymazat</th>
-</thead >
-
- <tbody slot="body" >
-   <thead slot="head1" class="h-1" colspan="2"><th width="100%">A</th></thead>
-
-<tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true">
-  <td style="width:7%" >
-  <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
-  <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']" :value="item1['idefix']" @change="chekListUpdate(irow1)">
-  </div>
-  <div class='dcellx'  style="width:80% ; background:white;float:right"
-    v-bind:class="{bila: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
-  >
-     <el-tooltip  placement="left-start" effect="light">
-      <div slot="content">{{ item1['popis'] }}</div>
-       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
-     </el-tooltip>
-       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
-       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
-   </div>
-
-  </td>
-  <td style='text-align:left;width:6%' class="px-2">
-    {{item1['ico']}}
-  </td>
-  <td style='text-align:left;width:8%' class="px-2">
-    {{item1['dic']}}
-  </td>
-  <td style='text-align:left;width:23%' class="px-2">
-    {{item1['nazev']}}
-  </td>
-
-  <td style='text-align:left;width:23%' class="px-2">
-    {{item1['ulice']}}
-  </td>
-  <td style='text-align:left;width:23%' class="px-2">
-    {{item1['obec']}}
-  </td>
-  <td style='text-align:left;width:6%' class="px-2">
-    {{ item1['psc'] }}
-  </td>
-  <td >
-     <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
-  </td>
-
-
-</tr>
-
-</tbody>
 </table>
-</div>
+
+</ta-ble3>
+
 
 
 
@@ -380,6 +361,9 @@ export default {
       //ChekBox
        checkAll: false,
        checkedList: [],
+       Zobrazit: 15,
+       Stranka: 1,
+
        //cities: cityOptions,
        isIndeterminate: true,
       //CheckBox
@@ -393,7 +377,18 @@ export default {
 
       lastSort: ['kod','asc'] , //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
       timeout: false,
-      citac: 0
+      citac: 0,
+
+      Sirka : 0,
+      SirkaLeva : 0.1,
+      SirkaStred : 1,
+      SirkaPrava : 0.05,
+      LastColHeight: '',
+      CitacHeight: 0,
+      ID: 0,
+      TestovaciCislo: 0 ,
+
+
 
     }
 
@@ -402,7 +397,17 @@ export default {
   async mounted () {
     const self = this
     var tmp2
+    self.ID = Math.round(Math.random() * 1983458)
+    self.objId1+=''+self.ID
+    self.objId2+=''+self.ID
+    self.objSearchBar+=''+self.ID
+    var interv =setInterval(function() {
+       self.sirka("sirka")
+       // self.TestovaciCislo++
+//       alert(self.Sirka)
+    },500)
     self.handleResize()
+
 
 
 
@@ -530,7 +535,7 @@ handleCheckAllChange(val) {
   var neco=''
 
   this.list.forEach((el,idx) => {
-    neco='check_'+self.objId1+'_'+el['idefix']
+    neco='check_'+self.objId1+'_'+el['idefix']+self.ID
     if (document.getElementById(neco)){
       if (val){
         document.getElementById(neco).checked=true
@@ -552,7 +557,7 @@ handleUnCheckAllChange() {
   var neco=''
 
   this.list.forEach((el,idx) => {
-    neco='check_'+self.objId1+'_'+el['idefix']
+    neco='check_'+self.objId1+'_'+el['idefix']+self.ID
     if (document.getElementById(neco)){
         document.getElementById(neco).checked=false
     }
@@ -566,7 +571,7 @@ chekListUpdate(idx) {
   const self = this
     //    alert(JSON.stringify(self.checkedList))
 
-    var neco='check_'+self.objId1+'_'+self.list[idx]['idefix']
+    var neco='check_'+self.objId1+'_'+self.list[idx]['idefix'] + self.ID
     var objneco
 
     if (document.getElementById(neco)){
@@ -594,9 +599,11 @@ handleCheckedListChange(value) {   //je mi to asi na hovno zda se
 handleSubMenu(e) {
 
   if (e== 'del' && this.checkedList.length>0 ){
-    alert('Vymazu zaznamy ' + JSON.stringify(this.checkedList))
+    if (confirm('Vymazu zaznamy ' + JSON.stringify(this.checkedList))) {
+      this.deleteLinesSelected()
+    }
     //this.checkedList
-    this.deleteLinesSelected()
+
   } else {
     alert("Neni zasrktnutu,nedelam nic")
   }
@@ -1256,7 +1263,94 @@ editLineToForm(nRow) {
     },
     my_data1 () {
       console.log('my data 1')
-    }
+    },
+      _max(iporadi) {
+      const self = this
+      var neco1 = document.getElementById('RadekS_'+iporadi+'')
+      var neco2 = document.getElementById('RadekL_'+iporadi+'')
+      var neco3 = document.getElementById('RadekR_'+iporadi+'')
+      var newH = ''
+      var konec = false
+      try {
+
+
+      if (neco1) {
+        neco1.style.height = "15px"
+        neco2.style.height = "15px"
+        neco3.style.height = "15px"
+      }
+      } catch (e) {
+        konec = true
+      }
+      if (konec) {
+        return
+      }
+
+
+
+    setTimeout(function(){
+
+      try {
+        if (neco1 ) {
+        newH = ''+Math.max(neco1.offsetHeight,neco2.offsetHeight,neco3.offsetHeight)+'px'
+
+        neco1.style.height = newH
+        neco2.style.height = newH
+        neco3.style.height = newH
+        }
+
+      } catch (e) {
+        console.log('Chybka','Poradi', iporadi,e)
+        setTimeout(function() {
+          self._max(iporadi)
+        },500)
+
+      }
+
+      },100)
+      //Math.max()
+      return 47
+    },
+
+   pof(max, proc) {
+      var neco = Math.round(max* proc/100) +''
+      neco = `width:${neco}px`
+      return neco
+
+      //alert(neco)
+    },
+    _rand(iporadi) {
+      var neco = iporadi + '_' +( Math.round(Math.random() *Math.random() * 100000000)) + ''
+      return neco
+      //console.log(neco)
+    },
+    sirka(ref, znovu = true) {
+      const self= this
+      var nret = 0
+      self.Sirka = self.Sirka
+      //alert(ref)
+       setTimeout(function() {
+        //alert(self.$refs[ref].clientWidth)
+        try {
+          nret = self.$refs[ref].clientWidth
+          if (nret != self.Sirka || true ) {
+            self.Sirka = nret
+            self.TestovaciCislo++
+          }
+
+          //alert(nret)
+        } catch(e) {
+          return 11
+        }
+
+        //alert(nret)
+        //alert(self.$refs.seznam)
+      }, 100)
+
+      return nret
+    },
+
+
   },
   computed: {
     ...mapState([

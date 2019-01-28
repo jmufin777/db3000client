@@ -130,8 +130,8 @@
 
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true"
 
-        :id="'RadekS_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''"
-        :ref="'RadekS_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +'')"
+        :id="'RadekS_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID"
+        :ref="'RadekS_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID)"
 >
 
 
@@ -208,8 +208,8 @@
 <table slot="bodyl" :style="pof(Sirka*SirkaLeva,100)">
 
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true"
-:id="'RadekL_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''"
-:ref="'RadekL_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +'')"
+:id="'RadekL_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID"
+:ref="'RadekL_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID) "
 >
   <td :style="pof(Sirka*SirkaLeva,100)" >
   <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
@@ -246,8 +246,8 @@
 <table slot="bodyr" :style="pof(Sirka*SirkaPrava,100)">
 
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true"
-:id="'RadekR_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''"
-:ref="'RadekR_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +'')"
+:id="'RadekR_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID"
+:ref="'RadekR_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID)"
 >
 
       <!-- item1['technologie']: item1['technologie_skup'] -->
@@ -404,6 +404,7 @@ export default {
       SirkaPrava : 0.05,
       LastColHeight: '',
       CitacHeight: 0,
+      ID: 0,
       TestovaciCislo: 0 ,
 
     }
@@ -412,6 +413,12 @@ export default {
   async mounted () {
     const self = this
     var tmp2
+    self.ID = Math.round(Math.random() * 1987458)
+    self.objId1+=''+self.ID
+    self.objId2+=''+self.ID
+    self.objSearchBar+=''+self.ID
+
+    console.log('ahoj 3 - Testovaci Cislo ', ++this.TestovaciCislo , self.ID, self.objId1, self.objId2,self.objSearchBar)
     self.handleResize()
 
 
@@ -497,8 +504,15 @@ export default {
   },
   beforeUpdate () {
 
-
+    // console.log('ahoj 2', ++this.TestovaciCislo )
   },
+  beforeEnter: (to, from, next) => {
+//    console.log('ahoj 1', ++this.TestovaciCislo )
+  //  alert('a')
+    // ...
+  },
+
+
   watch: {
 
   },
@@ -1078,8 +1092,6 @@ editLineToForm(nRow) {
    async deleteLine(nRow) {
      const self = this
 
-
-
     if (confirm('Vymazat kompletni stroj ? ' + self.list[nRow].idefix )) {
       this.IsWaiting =true
 
@@ -1318,79 +1330,42 @@ editLineToForm(nRow) {
       console.log('my data 1')
     },
 
-    _max(iporadi) {
+
+   _max(iporadi) {
       const self = this
       var neco1 = document.getElementById('RadekS_'+iporadi+'')
       var neco2 = document.getElementById('RadekL_'+iporadi+'')
       var neco3 = document.getElementById('RadekR_'+iporadi+'')
       var newH = ''
-
+      if (neco1) {
+        neco1.style.height = "15px"
+        neco2.style.height = "15px"
+        neco3.style.height = "15px"
+      }
 
 
     setTimeout(function(){
 
-
       try {
         if (neco1 ) {
         newH = ''+Math.max(neco1.offsetHeight,neco2.offsetHeight,neco3.offsetHeight)+'px'
-        if ( newH == self.LastColHeight) {
-          console.log('Stejne')
-          return
-        } else {
 
-          self.LastColHeight = newH
-
-          if (self.CitacHeight ==0 ) {
-          //  newH="28px"
-            neco1.style.height = newH
-            neco2.style.height = newH
-            neco3.style.height = newH
-            self.CitacHeight = 1
-//            console.log('Jine', newH, self.CitacHeight)
-
-              self._max(iporadi)
-
-
-
-
-          } else {
-
-             newH = ''+Math.max(neco1.offsetHeight,neco2.offsetHeight,neco3.offsetHeight)+'px'
-             self.CitacHeight = 0
-             neco1.style.height = newH
-             neco2.style.height = newH
-             neco3.style.height = newH
-  //           console.log('Jine', newH, self.CitacHeight)
-
-          }
-
+        neco1.style.height = newH
+        neco2.style.height = newH
+        neco3.style.height = newH
         }
-        }
-        //neco2.style.height='12px'
-        //neco3.style.height='12px'
+
       } catch (e) {
         console.log('Chybka','Poradi', iporadi,e)
         setTimeout(function() {
           self._max(iporadi)
-        },510)
-        //neco1.style.height='12px'
-        //neco2.style.height='12px'
-        //neco3.style.height='12px'
+        },500)
 
       }
 
-      //console.log(self.$refs.d2r.offsetHeight)
-
-      if (iporadi > 0 ) {
-        //console.log('RadekS_' + iporadi ,r1.offsetHeight , JSON.stringify(r1 ))
-
-
-      }
       },100)
-
       //Math.max()
       return 47
-
     },
 
    pof(max, proc) {

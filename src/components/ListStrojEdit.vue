@@ -262,8 +262,8 @@
         <tbody  >
 
               <tr v-for="(itemFull, iFull) in list.data.strojmod" :key="iFull" class="tdline nb tdlr"
-              :id="'RadekS_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''"
-              :ref="'RadekS_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +'')" >
+              :id="'RadekS_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID"
+              :ref="'RadekS_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID)" >
               <td :style="pof(Sirka*0.9,22)"   class="leva pl-2">{{ePrace(itemFull.idefix_prace)}}</td>
 
 <!-- <td :style="pof(Sirka*0.75,12)"  class="pl-2 leva">{{itemFull.nazev}}</td> -->
@@ -291,8 +291,8 @@
            <draggable v-model="list.data.strojmod"  :options="{group: 'people' }" @start="drag=true" @end="chooseItemMod"  class="ma-0 pa-0">
               <tr v-for="(itemFull, iFull) in list.data.strojmod" :key="iFull" class="tdline nb tdlr"
 
-              :id="'RadekL_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''"
-              :ref="'RadekL_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +'')"
+              :id="'RadekL_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID"
+              :ref="'RadekL_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID)"
               >
               <td :style="pof(Sirka*0.1,100) + ';cursor:pointer'" class="prava pr-1">{{iFull + 1}}</td>
 
@@ -321,8 +321,8 @@
         <table slot="bodyr" :style="pof(Sirka*0.10,100)">
         <tbody  >
               <tr v-for="(itemFull, iFull) in list.data.strojmod" :key="iFull" class="tdline nb tdlr"
-               :id="'RadekR_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''"
-               :ref="'RadekR_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +'')"
+               :id="'RadekR_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID"
+               :ref="'RadekR_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID)"
                >
                 <td :style="pof(Sirka*0.10,100)"  class="pl-0 stred">
 
@@ -1012,6 +1012,13 @@ export default {
       },
       lastTime: 0, //posledni cas prichozi udalosti v int
       Sirka: 0,
+      SirkaLeva : 0.1,
+      SirkaStred : 1,
+      SirkaPrava : 0.05,
+      LastColHeight: '',
+      CitacHeight: 0,
+      ID: 0,
+      TestovaciCislo: 0 ,
 
 
 // --  10   enum_strojskup
@@ -1040,6 +1047,7 @@ export default {
 
   mounted() {
     const self = this
+    self.ID = Math.round(Math.random() * 1983458)
 
     // this.analyze()
   },
@@ -1140,6 +1148,11 @@ export default {
       var neco2 = document.getElementById('RadekL_'+iporadi+'')
       var neco3 = document.getElementById('RadekR_'+iporadi+'')
       var newH = ''
+      if (neco1) {
+        neco1.style.height = "15px"
+        neco2.style.height = "15px"
+        neco3.style.height = "15px"
+      }
 
 
 

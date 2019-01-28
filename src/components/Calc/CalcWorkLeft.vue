@@ -66,6 +66,7 @@
     <tr v-if="form.MenuRet > 0 ||  true "><td colspan="20">
 
 <!--Formaty -->
+
 <div v-if="true" style="width:95%;text-align:left" ref="menuformat1main" id="menuformat1main" class="ml-4">
      <table style="width:100%" cols=2><tr>
        <td style="width:80%">
@@ -91,33 +92,28 @@
          </table>
          <table slot="body" style="width:100%">
             <thead  >
-              <tr v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Format" :key="i1" >
-              <td style="width:60%" class="leva pl-2" @click="setMenuFormat1Value(m1.idefix)" >
-                <button v-if="$store.state.Kalkulace[k_id()].data.FormatValue == m1.idefix" ref="menuformat1focus"  id="menuformat1focus" class="leva  elevation-1" style="width:90%;"
+              <tr v-for="(m1b, i1b) in $store.state.Kalkulace[k_id()].data.Format" :key="i1b" >
+              <td style="width:60%" class="leva pl-2" @click="setMenuFormat1Value(m1b.idefix)" >
+                <button v-if="$store.state.Kalkulace[k_id()].data.FormatValue == m1b.idefix" ref="menuformat1focus"  id="menuformat1focus" class="leva  elevation-1" style="width:90%;"
                 v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)"
                 >
-                 {{m1.nazev }}
+                 {{m1b.nazev }}
                 </button >
                 <button v-else  style="width:90%" class=" leva "
                 v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)">
-                 {{ m1.nazev }}
+                 {{ m1b.nazev }}
                 </button >
                  </td >
-                 <td style="width:20%">{{m1.sirka}}</td><td style="width:20%">{{m1.vyska}}</td>
+                 <td style="width:20%">{{m1b.sirka}}</td><td style="width:20%">{{m1b.vyska}}</td>
               </tr>
             </thead>
          </table>
    </ta-ble3>
    </td></tr>
  </table>
-     <!-- {{ $store.state.Kalkulace[k_id()].data.Menu1Value}} -->
  </div>
 
 <!--Formaty -->
-
-
-
-
 
 
     </td></tr>
@@ -312,7 +308,6 @@ export default {
        this.MenuShow = false
      }
 
-
    },
 
  MenuFormatShow1(yesno,e) {
@@ -390,9 +385,6 @@ export default {
           return
       }
     })
-
-
-
 
       // console.log("FORMAT VALUE ", a , idK, this.$store.state.Kalkulace[this.k_id()].data.FormatValue )
       self.MenuFormatShow1(1,0)
@@ -502,19 +494,31 @@ export default {
     var thisItem = self.$store.state.Kalkulace[this.k_id()].data.FormatValue
     var cRet =''
     var cDefRet =''
-    self.$store.state.Kalkulace[self.k_id()].data.Format.forEach((el, idx) =>{
+    var idK = self.k_id()
+    var sirka  = self.form.sirka;
+    var vyska  = self.form.vyska;
+    //return 'ahoj'
+    self.$store.state.Kalkulace[idK].data.Format.forEach((el, idx) => {
+    //  return
        if (idx == 0) {
          cDefRet =  el.nazev + 'ahoj' + thisItem
-         self.form.sirka = el.sirka
-         self.form.vyska = el.vyska
-       }
+      //   self.form.sirka = el.sirka
+     //    self.form.vyska = el.vyska
+          sirka = el.sirka
+          vyska = el.vyska
+       } else
       if (el.idefix == thisItem) {
           //console.log(el.nazev, el.idefix_mod)
           cRet =  el.nazev
-          self.form.sirka = el.sirka
-          self.form.vyska = el.vyska
+          sirka = el.sirka
+          vyska = el.vyska
+       //   self.form.sirka = el.sirka
+       //   self.form.vyska = el.vyska
+          return
       }
     })
+    self.form.sirka = sirka ;
+    self.form.vyska = vyska ;
 
     return (cRet>'')?cRet:cDefRet
     //return this.$store.state.Kalkulace[this.k_id()].data.Menu1Value
