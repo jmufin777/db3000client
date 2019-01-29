@@ -552,10 +552,8 @@ export default {
   opacity: 0.5;
   background:black !important;
 }
-textarea:focus, input:focus{
+textarea:focus, input:focus {
     outline: 1px dashed;
-
-
 
 }
 td th {

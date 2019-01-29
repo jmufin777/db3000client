@@ -41,12 +41,15 @@
  <thead >
    <tr>
 <th  :style="pof(Sirka*SirkaStred,80)" class="stred grey--text" colspan="106" style="background:#ffffff;opacity:1;z-index:100000;border:none">
-  Zobrazeno <el-input-number v-model="Zobrazit" size="mini" @blur="Sirka--" :min="1" :max="list.length"></el-input-number>  z  {{ list.length }}
-  Stranka
-  <el-input-number v-model="Stranka" size="mini" @blur="Sirka--" :max="Math.ceil(list.length / Zobrazit)" :min="1"></el-input-number>
-  z {{ Math.ceil(list.length / Zobrazit) }}
+  <span class="elevation-0 pa-1">Zobrazeno&nbsp;</span>
+  <input type="number" v-model="Zobrazit" :min="1" :max="list.length"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" @change="Stranka=1" size="6" class="prava elevation-1 pr-1" style="width:5em">
+   <!-- <el-input-number v-model="Zobrazit" size="mini" @blur="Sirka--"  :min="10" :max="list.length"></el-input-number>  -->
+  <span class="elevation-0 px-2 pt-1 pb-1"> z  {{ list.length }} </span>
+  <span class="elevation-0 px-2 pt-1 pb-1"> Strana </span>
+  <input type="number" v-model="Stranka" size="18"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" :max="Math.ceil(list.length / Zobrazit)" :min="1" class="prava elevation-1 pr-1" style="width:5em">
+  <!-- <el-input-number v-model="Stranka" size="mini" @blur="Sirka--" :max="Math.ceil(list.length / Zobrazit)" :min="1"></el-input-number> -->
+  <span class="elevation-0 px-2 pt-1 pb-1"> z {{ Math.ceil(list.length / Zobrazit) }}</span>
 
-  {{ 1 }} >=  {{ (Zobrazit * Stranka) - Zobrazit }} && {{  1 }} <=  {{Zobrazit*Stranka - 1}}
 
 </th>
 
@@ -97,12 +100,12 @@
 >
 
 
-  <td :style="pof(Sirka*SirkaStred,10)" class="px-2">
+  <td :style="pof(Sirka*SirkaStred,10)" class="stred">
 
     {{item1['ico']}}
 
   </td>
-  <td :style="pof(Sirka*SirkaStred,10)" class="px-2">
+  <td :style="pof(Sirka*SirkaStred,10)" class="stred">
 
     {{item1['dic']}}
 
@@ -224,7 +227,7 @@ Vymazat
 </table>
 <table slot="bodyr">
 
-    <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="irow1  >=  ((Zobrazit*Stranka) - Zobrazit) && irow1  <=  (Zobrazit*Stranka) -1"
+    <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="irow1  >=  ((Zobrazit*Stranka) - Zobrazit) && irow1  <=  (Zobrazit * Stranka) -1"
 
         :id="'RadekR_' +  irow1+''+ item1.idefix  + '' + list.length +''+ID"
         :ref="'RadekR_' + _max(irow1+''+ item1.idefix  + '' + list.length +''+ID)"
@@ -362,6 +365,8 @@ export default {
        checkAll: false,
        checkedList: [],
        Zobrazit: 15,
+       Zobrazit1: 15,
+
        Stranka: 1,
 
        //cities: cityOptions,
@@ -1367,5 +1372,9 @@ editLineToForm(nRow) {
 
 
 </script>
-<style >
+<style scoped>
+textarea:focus, input:focus {
+    outline: none;
+
+}
 </style>
