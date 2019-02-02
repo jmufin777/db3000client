@@ -95,7 +95,17 @@ th {
 
 
 }
+.th {
+  /* background-color: #f0f0f0; */
+  background-color: #f5f7fa;
+  opacity: 0.8;
+  text-align:center;
+
+}
 td {
+  background-color: white;
+}
+.td {
   background-color: white;
 }
 
@@ -272,12 +282,23 @@ div[role="region"] {
   /* border-right: none; */
   border-right: solid 1px #cccccc;
 }
+
+.tdlineall {
+  border-bottom: solid 1px #cccccc;
+  border-top: solid 1px #cccccc;
+  border-right: solid 1px #cccccc;
+  border-left: none;
+  
+  
+}
 .tdl {
   border-bottom: solid 1px #cccccc;
   border-left: none;
    border-right: none;
 
 }
+
+
 .tdn {
   border-left: none;
   border-right: none;

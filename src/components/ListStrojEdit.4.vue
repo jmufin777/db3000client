@@ -297,10 +297,10 @@
               :id="'RadekL_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID"
               :ref="'RadekL_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID)"
               >
-
+              
               <td width="10%" :style="pof(Sirka*0.2,100) + ';cursor:pointer'" class="prava pr-1">{{iFull + 1}}</td>
 
-              <td width="90%" :style="pof(Sirka*0.8,100) + ';cursor:pointer'"  class="pl-2 leva"   @dblclick="setEditMod(iFull)" >{{itemFull.nazev}}</td>
+              <td width="90%" :style="pof(Sirka*0.8,100) + ';cursor:pointer'"  class="pl-2 leva">{{itemFull.nazev}}</td>
               <td width="10%" :style="pof(Sirka*0.1,100) + ';cursor:pointer'" class="prava pr-1" style="boder:none !important">&nbsp;</td>
 
 
@@ -367,7 +367,7 @@
 
     > -->
 
-<vue-draggable-resizable :handles="[]"    :isActive="true" :isResizable="true" :y="100" :x="100" :z="4999" :style="pof(Sirka*0.91,100)+';background:white;position;absolute;height:90%;'"   class="elevation-1" v-if="addMod == true || editMod == true "  >
+<vue-draggable-resizable :handles="[]"    :isActive="true" :isResizable="true" :z="4999" :style="pof(Sirka*0.91,100)+';background:white;position;absolute;height:90%;'"   class="elevation-1" v-if="addMod == true || editMod == true "  >
 <!-- <div :style="pof(Sirka*0.9,100)" class="elevation-5" v-if="addMod == true || editMod == true" > -->
 <div :style="pof(Sirka*0.9,100)+';position:absolute;top:5px;left:5px;height:90%;background:#fff;z-index:5000;border:solid 2px silver'" class="elevation-5" v-if="addMod == true || editMod == true "
 @keyup.enter="setFocus('bA'+ID)" @keyup.escape="addMod=false;editMod=false"
@@ -636,62 +636,68 @@
          <v-card v-show="step2=='3'"><v-card-text v-if="step2=='3'">
 <el-row class="ma-2 ">
            <el-col :span="20" class="pa-4 mt-4 text-xs-center"  >
-             <table width="100%"><tr>
+             <table width="100%">
               <td colspan=1 class="nic bila pl-3" style="font-size:14px">Priprava stroje</td>
 
               <td class="nic bila prava pr-2 blue--text" style="font-size:14px ">Minuty </td><td class="nic bila pl-3 leva"><input type="number" v-model="list.data.stroj[0].priprava_cas_minuta"  :min="0"    size="6" class="tdl tdn prava" style="width:5em"> </td>
               <td class="nic bila prava pr-2 blue--text" style="font-size:14px ">Naklad</td> <td class="nic bila pl-3 leva"><input type="number" v-model="list.data.stroj[0].priprava_celkem_naklad"  :min="0"    size="6" class="tdl tdn prava" style="width:5em"> </td>
               <td class="nic bila prava pr-2 blue--text" style="font-size:14px ">Prodej</td> <td class="nic bila pl-3 leva"><input type="number" v-model="list.data.stroj[0].priprava_celkem_prodej"  :min="0"    size="6" class="tdl tdn prava" style="width:5em"> </td>
-            </tr></table>
-          </el-col>
-</el-row>
+            </tr></table>  
+          </el-col>  
+</el-row>  
 
           <el-row class="ma-2" >
+        
 
+          <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%"  >
+           
 
-          <el-col :span="24" class="pa-0 mt-0 text-xs-center" style="width:100%"  >
-
-
-
+                          <el-row class="ma-2" v-if="false">
+                            <el-col :span="4" class="leva">Priprava stroje - minuty</el-col>
+                            <el-col :span="2">
+                            <input type="number" v-model="list.data.stroj[0].priprava_cas_minuta"  :min="0"    size="6" class="prava elevation-1 pr-1" style="width:5em"> 
+                            <!-- <el-input-number v-model="list.data.stroj[0].priprava_cas_minuta" size="mini"  style="width:100%"></el-input-number> -->
+                            </el-col>
+                            <el-col :span="4">Naklad</el-col>
+                            <el-col :span="3">
+                            <el-input-number v-model="list.data.stroj[0].priprava_celkem_naklad" size="mini"  style="width:100%"></el-input-number>
+                            </el-col>
+                            <el-col :span="4">Prodej</el-col>
+                            <el-col :span="3">
+                            <el-input-number v-model="list.data.stroj[0].priprava_celkem_prodej" size="mini"  style="width:100%"></el-input-number>
+                            </el-col>
+                          </el-row>
 
             <el-row class="mx-0 ml-0 mt-3 mb-1 " style="border-left: 1px solid #cccccc">
               <el-col :span="2" class="th tdlineall " style="height:30px;" >Poradi</el-col>
               <el-col :span="5" class="th tdlineall" style="height:30px;" >Popis</el-col>
               <!-- <el-col :span="3">Stroj Mod</el-col> -->
-              <el-col :span="4" class="ml-0 th tdlineall" style="height:30px;" ><el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:90%">Jednotka</el-button></el-col>
-              <el-col :span="3" class="ml-0 th tdlineall" style="height:30px;" >Start</el-col>
-              <el-col :span="3" class="ml-0 th tdlineall" style="height:30px;"  >Stop</el-col>
-              <el-col :span="3" class="ml-0 th tdlineall" style="height:30px;"  >Naklad/h</el-col>
-              <el-col :span="3" class="ml-0 th tdlineall" style="height:30px;"  >Prodej/h</el-col>
-              <el-col :span="1" class="ml-0 th tdlineall" style="height:30px;"  >
-                <button  type="button" style="width:22px;height:22px; font-color:black" class="pl-0 info elevation-3"
-                      @click="addCena=!addCena;focus()"
-                     ><i class="el-icon-plus" size="mini"></i>
-                     </button>
-                </el-col>
+              <el-col :span="3" class="ml-0 th tdlineall" style="height:30px;" ><el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:90%">Jednotka</el-button></el-col>
+              <el-col :span="2" class="ml-0 th tdlineall" style="height:30px;" >Start</el-col>
+              <el-col :span="2" class="ml-0 th tdlineall" style="height:30px;"  >Stop</el-col>
+              <el-col :span="2" class="ml-0 th tdlineall" style="height:30px;"  >Naklad/h</el-col>
+              <el-col :span="2" class="ml-0 th tdlineall" style="height:30px;"  >Prodej/h</el-col>
+              <el-col :span="1" class="ml-0 th tdlineall" style="height:30px;"  >&nbsp;</el-col>
 
 
 
 
               <!-- <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%">Prace</el-button> </el-col> -->
             </el-row>
-<!--form ceny //-->
-<!-- <vue-draggable-resizable :handles="[]"    :isActive="true" :isResizable="true" :z="4999" :style="pof(Sirka*0.91,100)+';background:white;position;absolute;height:90%;'"   class="elevation-1" v-if="addCena "  > -->
-      <el-row v-if="addCena" class="ma-0 py-0"  @keyup.escape="addCena=false">
-
-      <el-col  :span="2"  style="border:solid 1px #cccccc;height:30px" @keyup.escape="addCena=false">
-         <input type="number" v-model="strojceny.kod"  class="tdl tdn prava"  style="width:80%;" :id="'fokus_'+ID">
+<!--form ceny //--> 
+      <el-row class="pt-1 pb-1 mb-2 blue-grey lighten-5" v-if="false">
+      <el-col style="border:solid 0px;height:30px" :span="2" >
+         <input type="number" v-model="strojceny.kod"  class="mb-0 px-0 cell cisla" style="width:100%;">
        </el-col>
        <el-col :span="5">
       <el-autocomplete
-      class="inline-input mr-1 tdln"
+      class="inline-input mr-1"
       v-model="strojceny.nazev"
       :fetch-suggestions="querySearch5"
         placeholder="Popis polozky"
-        @select="handleSelect"
-        size="mini"
-       style="width:90%;"
-
+      @select="handleSelect"
+      size="mini"
+      style="width:90%"
 
     ></el-autocomplete>
        </el-col>
@@ -706,8 +712,8 @@
             >{{item290.value}} </el-option>
        </el-select>
       </el-col> -->
-      <el-col :span="4" class="mx-0" style="border:solid 1px #cccccc;height:30px" >
-        <el-select v-model="strojceny.idefix_jednotka"  size="mini" class="pt-0 pl-1 ml-2"  style="width:90%"
+      <el-col :span="3" class="mx-1">
+        <el-select v-model="strojceny.idefix_jednotka"  size="mini" class="pt-1 pl-1 ml-2"  style="width:90%"
         filterable
         >
           <el-option
@@ -718,47 +724,42 @@
             >{{item291.nazev}} </el-option>
        </el-select>
       </el-col>
-      <el-col style="border:solid 1px #cccccc;height:30px"  :span="3" >
-         <input type="number" v-model="strojceny.pocet_start"  size="6" class="tdl tdn prava mt-1" style="width:5em">
+      <el-col style="border:solid 0px;height:30px" :span="2" >
+         <input type="number" v-model="strojceny.pocet_start"  class="mb-0 px-0 cell cisla" style="width:90%;position:relative;top:0px">
        </el-col>
-       <el-col style="border:solid 1px #cccccc;height:30px" :span="3" >
-         <input type="number" v-model="strojceny.pocet_stop"   size="6" class="tdl tdn prava mt-1" style="width:5em">
+       <el-col style="border:solid 0px;height:30px" :span="2" >
+         <input type="number" v-model="strojceny.pocet_stop"   class="mb-0 px-0 cell cisla" style="width:90%;">
        </el-col>
-       <el-col style="border:solid 1px #cccccc;height:30px"  :span="3" >
-         <input type="number" v-model="strojceny.cena_naklad"  size="6" class="tdl tdn prava mt-1" style="width:5em">
+       <el-col style="border:solid 0px;height:30px" :span="2" >
+         <input type="number" v-model="strojceny.cena_naklad"  class="mb-0 px-0 cell cisla" style="width:90%;">
        </el-col>
-       <el-col style="border:solid 1px #cccccc;height:30px"  :span="3" >
-         <input type="number" v-model="strojceny.cena_prodej"   size="6" class="tdl tdn prava mt-1" style="width:5em">
+       <el-col style="border:solid 0px;height:30px" :span="2" >
+         <input type="number" v-model="strojceny.cena_prodej"   class="mb-0 px-0 cell cisla" style="width:90%;">
        </el-col>
 
-     <el-col style="border:solid 1px #cccccc;height:30px"  :span="1"  class="stred">
-     <button  v-if="addCena==true && strojceny.nazev>''" type="button" style="width:26px;height:26px" class="pl-0 green yellow--text" @click="insertCeny();focus()" ><i class="el-icon-plus" size="mini"></i></button>
-     <!-- <v-btn v-if="addCena==true && strojceny.nazev>''" @click="insertCeny" small :id="'bA'+ID"> Vlozit </v-btn> -->
+     <el-col style="border:solid 0px" :span="1" >
+     <button  type="button" style="width:100%;height:26px" class="pl-4" @click="insertCeny" ><i class="el-icon-plus" size="mini"></i></button>
      </el-col>
      </el-row>
-<!-- </vue-draggable-resizable> -->
 
-    <!--form ceny //-->
+    <!--form ceny //--> 
 
   <draggable v-model="list.data.strojceny"  :options="{group: 'peoplex' }" @start="drag=true" @end="chooseItemCeny" >
       <el-row  v-for="(itemceny, iceny) in list.data.strojceny" :key="itemceny.idefix" class="ma-0 mt-0 "
               v-bind:class="{ 'white' : ( iceny % 1 == 0) , 'blue lighten-5' : ( iceny % 2 != 0)  }"
       >
-
-   <el-col style="border:solid 1px #cccccc;height:30px" :span="2" class="ml-0 th tdlineall"  >
-         <!-- <input type="number" v-model="list.data.strojceny[iceny].kod"  class="mt-2 mb-0 px-0 cell cisla" style="width:100%;"> -->
-         <input type="number" v-model="list.data.strojceny[iceny].kod"  size="6" class="tdl tdn prava mt-1" style="width:5em">
-
+   <el-col style="border:solid 0px;height:30px" :span="2" class="pt-0 nb" >
+         <input type="number" v-model="list.data.strojceny[iceny].kod"  class="mt-2 mb-0 px-0 cell cisla" style="width:100%;">
    </el-col>
-   <el-col style="border:solid 1px #cccccc;height:30px" :span="5" class="ml-0 th tdlineall"  >
+   <el-col :span="5">
    <el-autocomplete
-      class="inline-input mr-0 mt-0 "
+      class="inline-input mr-1 mt-2 "
       v-model="list.data.strojceny[iceny].nazev"
       :fetch-suggestions="querySearch5"
       placeholder="Popis polozky"
       @select="handleSelect"
       size="mini"
-      style="width:90%;border:none"
+      style="width:90%"
 
     ></el-autocomplete>
        </el-col>
@@ -773,8 +774,8 @@
             >{{item290.nazev}} </el-option>
        </el-select>
       </el-col> -->
-      <el-col style="border:solid 1px #cccccc;height:30px" :span="4" class="ml-0 th tdlineall"  >
-        <el-select v-model="list.data.strojceny[iceny].idefix_jednotka"  size="mini" class="pt-0 pl-0 ml-2 mt-0 "  style="width:90%"
+      <el-col :span="3" class="mx-1">
+        <el-select v-model="list.data.strojceny[iceny].idefix_jednotka"  size="mini" class="pt-0 pl-1 ml-2 mt-0 "  style="width:90%"
         filterable
          >
           <el-option
@@ -785,21 +786,21 @@
             >{{item291.nazev}} </el-option>
        </el-select>
       </el-col>
-      <el-col style="border:solid 1px #cccccc;height:30px" :span="3" class="ml-0 th tdlineall"  >
-         <input type="number" v-model="list.data.strojceny[iceny].pocet_start"  size="6" class="tdl tdn prava mt-1" style="width:5em">
+      <el-col style="border:solid 0px;height:30px" :span="2" >
+         <input type="number" v-model="list.data.strojceny[iceny].pocet_start"  class="mb-0 px-0 cell cisla mt-0 " style="width:90%;">
        </el-col>
-       <el-col style="border:solid 1px #cccccc;height:30px" :span="3" class="ml-0 th tdlineall"  >
-         <input type="number" v-model="list.data.strojceny[iceny].pocet_stop"   size="6" class="tdl tdn prava mt-1" style="width:5em">
+       <el-col style="border:solid 0px;height:30px" :span="2" >
+         <input type="number" v-model="list.data.strojceny[iceny].pocet_stop"   class="mb-0 px-0 cell cisla mt-0 " style="width:90%;">
        </el-col>
-       <el-col style="border:solid 1px #cccccc;height:30px" :span="3" class="ml-0 th tdlineall"  >
-         <input type="number" v-model="list.data.strojceny[iceny].cena_naklad"  size="6" class="tdl tdn prava mt-1" style="width:5em">
+       <el-col style="border:solid 0px;height:30px" :span="2" >
+         <input type="number" v-model="list.data.strojceny[iceny].cena_naklad"  class="mb-0 px-0 cell cisla mt-0 " style="width:90%;">
        </el-col>
-       <el-col style="border:solid 1px #cccccc;height:30px" :span="3" class="ml-0 th tdlineall"  >
-         <input type="number" v-model="list.data.strojceny[iceny].cena_prodej"  size="6" class="tdl tdn prava mt-1" style="width:5em">
+       <el-col style="border:solid 0px;height:30px" :span="2" >
+         <input type="number" v-model="list.data.strojceny[iceny].cena_prodej"   class="mb-0 px-0 cell cisla mt-0 " style="width:90%;">
        </el-col>
 
 
-     <el-col style="border:solid 1px #cccccc;height:30px" :span="1" >
+     <el-col style="border:solid 0px" :span="1" >
 
        <button  type="button" style="width:100%;height:22px;z-index:10000;position:relative;top:8px" class="px-0 " @click="deleteCeny(iceny)" ><i class="el-icon-delete" size="mini"></i></button>
 
@@ -922,8 +923,6 @@ export default {
       barevnostNazev: [],
       addMod: false,
       editMod: false,
-      addCena: false,
-      editCena: false,
       SendNamne: '',
       RecName: this.name,
       IsDialog1: true,
@@ -1013,22 +1012,9 @@ export default {
         cena_naklad: 0,
         cena_prodej: 0,
 
-      },
 
 
-      strojcenyDefault: {
-        idefix: 0,
 
-        idefix_stroj: 0,
-        idefix_strojmod: 0,
-        idefix_inkoust: 0,
-        idefix_jednotka: 0,
-        nazev: '',
-        kod: 0,
-        pocet_start: 0,
-        pocet_stop: 0,
-        cena_naklad: 0,
-        cena_prodej: 0,
 
       },
 
@@ -1116,8 +1102,6 @@ export default {
       eventBus.$on('dlg8210', ( dlgPar ) => {
             self.rec = dlgPar
             self.IsZmena = false
-            self.addCena = false
-            self.addMod   = false
              // alert(JSON.stringify(dlgPar))
              try {
              // self.xMyska = event.screenX - 200
@@ -1341,7 +1325,6 @@ export default {
       this.list.data.strojceny.forEach((el,i) =>{
             this.list.data.strojceny[i].kod = i+1
       })
-      this.IsZmena = true
 
       // alert(Object.keys(bEvent))
     },
@@ -1532,11 +1515,6 @@ export default {
       var newObj = f.cp(self.strojmodDefault)
       self.strojmod = newObj
     } ,
-    setInsertCena() {
-      const self = this
-      self.addCena = true
-
-    },
     setInsertMod() {
 
       const self = this
@@ -1662,12 +1640,9 @@ export default {
           }
 
           this.list.data.strojceny.push(neco)
-          var jednotka = this.strojceny.idefix_jednotka
-          var newObj = f.cp(this.strojcenyDefault)
-          newObj.idefix_jednotka = jednotka
-          //this.strojceny = newObj
-          this.strojceny = newObj
 
+          var newObj = f.cp(this.strojceny)
+          this.strojceny = newObj
           this.strojceny.kod = 0
 
 
@@ -1718,26 +1693,6 @@ export default {
 
     setFocus(cId) {
       document.getElementById(cId).focus()
-    },
-    focus() {
-      const self = this
-
-      setTimeout(function(){
-
-
-        if (document.getElementById("fokus_"+self.ID)) {
-            document.getElementById("fokus_"+self.ID).focus()
-        }
-        if (document.getElementById("fokus1_"+self.ID)) {
-            document.getElementById("fokus1_"+self.ID).focus()
-        }
-        if (document.getElementById("fokus2_"+self.ID)) {
-            document.getElementById("fokus2_"+self.ID).focus()
-        }
-
-
-      },500)
-
     },
 
     cancelForm() {

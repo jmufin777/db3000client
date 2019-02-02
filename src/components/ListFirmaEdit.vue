@@ -535,7 +535,7 @@
           >               </el-date-picker>
 
 
-           &nbsp;&nbsp;&nbsp;<span class="blue--text">Aktivni</span>&nbsp;  <input size="mini" style="height:28px;width:28px" v-model="firmaosoba.aktivni" type="checkbox" @change="changeAktivniOsoba" :name="'aktivni'+ID" value="1"  :checked="firmaosoba.aktivni==true"  class="pt-1">
+           &nbsp;&nbsp;&nbsp;<span class="blue--text">Aktivni</span>&nbsp;  <input size="mini" style="height:18px;width:18px" v-model="firmaosoba.aktivni" type="checkbox" @change="changeAktivniOsoba" :name="'aktivni'+ID" value="1"  :checked="firmaosoba.aktivni==true"  class="pt-1">
           </td>
           </tr>
 

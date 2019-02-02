@@ -70,7 +70,7 @@
         <!-- <div  ref="seznam"  class="grid-content" style="height:500px"> -->
 <!-- <ta-ble3  :h="pof(Sirka,99)" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'"> -->
 <ta-ble3  :h="'660px;'+pof(Sirka,99)+';top:100px'" style="height:690px" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'">
-   <table slot="head" :style="pof(Sirka*SirkaStred,140)">
+   <table slot="head" :style="pof(Sirka*SirkaStred,100)">
         <thead  style="height:50px" >
 
 
@@ -92,51 +92,40 @@
   <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
 
   Kalkulace</th>
-  <th :style="pof(Sirka*SirkaStred,5)">
+  <th :style="pof(Sirka*SirkaStred,5)">    <!--51 //-->
   <i  @click="sortByKey('tisk','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('tisk','asc')" class="el-icon-download"  ></i>
 
     Tisk</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">priprava cas minuta</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">
-
-  Priprava celkem naklad</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">priprava celkem prodej</th>
-
-
-
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">sirka mat max mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">delka mat max mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">sirka tisk max mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">delka tisk max mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj strana mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj start mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj spacecopy mm</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">tech okraj spacejobs mm</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">priprava cas minuta</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">Priprava celkem naklad</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">priprava celkem prodej</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">sirka mat<br> max mm</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">delka mat<br>max mm</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">sirka tisk<br>max mm</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">delka tisk<br>max mm</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">tech okraj<br>strana mm</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">tech okraj<br>start mm</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">tech okraj<br>spacecopy mm</th>
+<th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">tech okraj<br>spacejobs mm</th>
 <th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</th>
-
-
-<!-- <th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</th>
-<th :style="pof(Sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</th> -->
-
-
-
-
 
   </thead>
 </table>
 
-<table slot="body" :style="pof(Sirka*SirkaStred,140)">
+<table slot="body" :style="pof(Sirka*SirkaStred,100)">
 
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true"
 
         :id="'RadekS_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID"
         :ref="'RadekS_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID)"
         @dblclick="editLineToForm(irow1)"
+        title="Dvojklik"
+        style="cursor:pointer"
 >
 
 
-  <td  :style="pof(Sirka*SirkaStred,15)" class="px-2">
+  <td  :style="pof(Sirka*SirkaStred,15)" class="pl-2">
     {{item1['nazev']}}
   </td>
   <td  :style="pof(Sirka*SirkaStred,15)+';text-align:left'" class="px-2">
@@ -151,18 +140,17 @@
   <td :style="pof(Sirka*SirkaStred,5)" class="stred">
         {{item1['tisk']?'Ano':'Ne'}}
   </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['priprava_cas_minuta']}}</td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['priprava_celkem_naklad']}}</td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['priprava_celkem_prodej']}}</td>
-
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['sirka_mat_max_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['delka_mat_max_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['sirka_tisk_max_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['delka_tisk_max_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_strana_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_start_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_spacecopy_mm'] }} </td>
-<td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">{{ item1['tech_okraj_spacejobs_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['priprava_cas_minuta']}}</td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['priprava_celkem_naklad']}}</td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['priprava_celkem_prodej']}}</td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['sirka_mat_max_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['delka_mat_max_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['sirka_tisk_max_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['delka_tisk_max_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['tech_okraj_strana_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['tech_okraj_start_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['tech_okraj_spacecopy_mm'] }} </td>
+<td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['tech_okraj_spacejobs_mm'] }} </td>
 <td :style="pof(Sirka*SirkaStred,5)" class="prava pr-2">&nbsp;</td>
       <!-- item1['technologie']: item1['technologie_skup'] -->
  <!-- <td :style="pof(sirka*SirkaStred,5)" style="font-size:80%">&nbsp;</td>
@@ -403,7 +391,7 @@ export default {
       timeout: false,
       Sirka : 0,
       SirkaLeva : 0.1,
-      SirkaStred : 1,
+      SirkaStred : 1.3,
       SirkaPrava : 0.05,
       LastColHeight: '',
       CitacHeight: 0,
