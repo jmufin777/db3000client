@@ -54,7 +54,7 @@
 </th>
 
 </tr>
-<tr>
+<tr >
 
 <th  :style="pof(Sirka*SirkaStred,10)" class="stred">
 
@@ -94,9 +94,9 @@
 <tbody  >
   <!--  || lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true //-->
   <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="irow1  >=  ((Zobrazit*Stranka) - Zobrazit) && irow1  <=  (Zobrazit*Stranka) -1"
-
         :id="'RadekS_' +  irow1+''+ item1.idefix  + '' + list.length +''+ID"
         :ref="'RadekS_' + _max(irow1+''+ item1.idefix  + '' + list.length +''+ID)"
+        @dblclick="editLineToForm(irow1)"
 >
 
 
@@ -122,8 +122,8 @@
   <td :style="pof(Sirka*SirkaStred,20)" class="px-2">
     {{item1['obec']}}
   </td>
-  <td :style="pof(Sirka*SirkaStred,10)" class="px-2">
-    {{ item1['psc'] }}
+  <td :style="pof(Sirka*SirkaStred,10)" class="px-2 stred">
+    {{ item1['psc'].replace(' ','').substr(0,3)+' '+ item1['psc'].replace(' ','').substr(3,10)}}
   </td>
 
 
@@ -145,7 +145,8 @@
 </tr>
 <tr>
 <th style="text-align:left" class="stred">
- <div style="width:150px; text-align:center">
+ <!-- <div style="width:150px; text-align:center"> -->
+   <div :style="pof(Sirka*SirkaLeva,80)" >
 &nbsp;<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" ></el-checkbox>
 &nbsp;&nbsp;&nbsp;&nbsp;<v-menu
       v-model="showSubMenu"
@@ -179,16 +180,19 @@
 
         :id="'RadekL_' +  irow1+''+ item1.idefix  + '' + list.length +''+ID"
         :ref="'RadekL_' + _max(irow1+''+ item1.idefix  + '' + list.length +''+ID)"
+
+
 >
 
-<td :style="pof(Sirka*SirkaLeva,100)">
+<td :style="pof(Sirka*SirkaLeva,100)" class="bila tdl" style="border-bottom: solid 1px #E3F2FD; ">
 
- <div style="width:120px; text-align:left">
-  <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
+ <div style="width:120px; text-align:left"  class="bila">
+  <div class='dcellx mx-1 bila'  style="width:10% ; background:white;float:left"  >
   <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']+ID" :value="item1['idefix']" @change="chekListUpdate(irow1)">
   </div>
-  <div class='dcellx'  style="width:80% ; background:white;float:right"
+  <div class='dcellx bila'  style="width:80% ; background:white;float:right"
     v-bind:class="{bila: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
+
   >
      <el-tooltip  placement="left-start" effect="light" v-if="false">
       <div slot="content">{{ item1['popis'] }}</div>
@@ -233,8 +237,8 @@ Vymazat
         :ref="'RadekR_' + _max(irow1+''+ item1.idefix  + '' + list.length +''+ID)"
 >
 
-  <td :style="pof(Sirka*SirkaPrava,100)" class="stred">
-     <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
+  <td :style="pof(Sirka*SirkaPrava,100)" class="stred bila" style="border-bottom: solid 1px #E3F2FD; ">
+     <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete bila" size="mini" ></i></button>
   </td>
 
   </tr>
@@ -300,7 +304,7 @@ import { setTimeout, clearInterval, clearTimeout } from 'timers'
 import ListFirma from '@/services/ListFirmaService'
 import ListFirmaEdit from './ListFirmaEdit'
 
-import f from '@/services/fce'
+import f from '../services/fce'
 import { stringify } from 'querystring';
 
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
@@ -412,7 +416,12 @@ export default {
 //       alert(self.Sirka)
     },500)
     self.handleResize()
-
+/*
+    setTimeout(function(){
+      self.editLineToForm(0)
+      //alert("menim")
+    },1500)
+*/
 
 
 
@@ -1375,6 +1384,25 @@ editLineToForm(nRow) {
 <style scoped>
 textarea:focus, input:focus {
     outline: none;
+
+
+}
+button:focus {
+  outline: solid 2px #E3F2FD;
+
+}
+
+
+table tr:nth-child(odd) td{
+  background:white;
+  border-top:white;
+  border-bottom:white;
+
+}
+table tr:nth-child(even) td{
+  background: #E3F2FD;
+  border-top:#E3F2FD;
+  border-bottom:#E3F2FD;
 
 }
 </style>

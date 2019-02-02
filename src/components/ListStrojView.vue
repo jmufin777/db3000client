@@ -132,6 +132,7 @@
 
         :id="'RadekS_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID"
         :ref="'RadekS_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID)"
+        @dblclick="editLineToForm(irow1)"
 >
 
 
@@ -211,17 +212,17 @@
 :id="'RadekL_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID"
 :ref="'RadekL_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID) "
 >
-  <td :style="pof(Sirka*SirkaLeva,100)" >
-  <div class='dcellx mx-1'  style="width:10% ; background:white;float:left" >
+  <td :style="pof(Sirka*SirkaLeva,100)"  class="bila" style="border-bottom: solid 1px #E3F2FD; ">
+  <div class='dcellx mx-1 bila'  style="width:10% ; background:white;float:left" >
   <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']" :value="item1['idefix']" @change="chekListUpdate(irow1)">
   </div>
-  <div class='dcellx'  style="width:80% ; background:white;float:right"
+  <div class='dcellx bila'  style="width:80% ; background:white;float:right"
     v-bind:class="{bila: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
   >
-     <el-tooltip  placement="left-start" effect="light">
+     <!-- <el-tooltip  placement="left-start" effect="light">
       <div slot="content">{{ item1['popis'] }}</div>
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
-     </el-tooltip>
+     </el-tooltip> -->
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
    </div>
@@ -248,10 +249,12 @@
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true"
 :id="'RadekR_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID"
 :ref="'RadekR_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID)"
+
+
 >
 
       <!-- item1['technologie']: item1['technologie_skup'] -->
-  <td :style="pof(Sirka*SirkaPrava,100)" >
+  <td :style="pof(Sirka*SirkaPrava,100)" class="bila stred" style="border-bottom: solid 1px #E3F2FD; ">
      <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
   </td>
 
@@ -426,8 +429,8 @@ export default {
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
-        this.getWhere()
-         this.getEnums()
+        await this.getWhere()
+        await  this.getEnums()
          /*
               try {
                   tmp2 =  ( await ListStroj.one(this.user,this.idefixThis ,101,''))
@@ -461,15 +464,17 @@ export default {
 
     // return
     var objlist = []
-
+/*
   setTimeout(function(){
+    alert('aa')
       self.searchS="xxx"
       self.getWhere()
       setTimeout(function() {
          self.searchS=""
          self.getWhere()
-      },20)
-    },350)
+      },120)
+    },650)
+   */
         return
     }
   },
@@ -1423,5 +1428,16 @@ editLineToForm(nRow) {
 <style scoped >
 th {
   height:51px;
+}
+
+table tr:nth-child(odd) td{
+  background:white;
+  border-top:white;
+  border-bottom:white;
+}
+table tr:nth-child(even) td{
+  background: #E3F2FD;
+  border-top:#E3F2FD;
+  border-bottom:#E3F2FD;
 }
 </style>

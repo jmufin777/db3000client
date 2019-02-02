@@ -290,6 +290,15 @@ div[role="region"] {
   border-right: none;
 
 }
+
+.nic {
+  border-right: none;
+  border-left: none;
+  border-bottom: none;
+  border-top: none;
+
+}
+
 .prvni {
 
    background: #FFFFFF;
@@ -299,6 +308,14 @@ div[role="region"] {
 }
 .seda {
   background:#E0E0E0;
+}
+
+td {
+  font-size: 13px;
+  color: #616266;
+}
+input {
+  color: #616266;
 }
 
 
@@ -312,6 +329,7 @@ div[role="region"] {
     height: 50px;
     font-size: 20px;
    }
+
 
 
 

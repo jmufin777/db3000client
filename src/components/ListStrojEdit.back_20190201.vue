@@ -22,7 +22,7 @@
 <div slot="b1" class="green lighten-4 elevation-2" style="height:40px;font-size:18px">{{ stepInfo}} </div>
 <!-- <span slot="b3">B3</span> -->
 <div slot="a1" style="height:40px;font-size:18px;" class="px-2 green lighten-4 elevation-2" >
-{{ ((isCopy ==false )?'Zmena':'Nova polozka ') +' ' + list.data.stroj[0].nazev  }} / {{Sirka}}
+{{ ((isCopy ==false )?'Zmena':'Nova polozka ') +' ' + list.data.stroj[0].nazev  }}
 </div>
 <div slot="c1" style="height:40px;font-size:18px" class="green lighten-4 elevation-2">
       <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit8210" @click="submitForm('formnew')" size="mini"> Novy Upravou</el-button>
@@ -90,7 +90,7 @@
 
          <v-window-item :value="1">
 
-    <v-card v-show="step2=='1'"><v-card-text  v-if="step2=='1'">
+        <v-card v-show="step2=='1'"><v-card-text>
 
 
     <el-row class="ma-2">
@@ -238,7 +238,7 @@
    <v-window-item :value="2" style="opacity:1" >
 
      <v-card v-show="step2=='2'">
-       <v-card-text  v-if="step2=='2'">
+       <v-card-text>
      <el-row class="ma-2">
 
      <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%" >
@@ -631,7 +631,7 @@
 
         <v-window-item :value="3">
 
-         <v-card v-show="step2=='3'"><v-card-text v-if="step2=='3'">
+         <v-card v-show="step2=='3'"><v-card-text>
           <el-row class="ma-2 ">
           <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%" >
              <el-row class="ma-2">
@@ -757,7 +757,7 @@
        </el-select>
       </el-col> -->
       <el-col :span="3" class="mx-1">
-        <el-select v-model="list.data.strojceny[iceny].idefix_jednotka"  size="mini" class="pt-0 pl-1 ml-2 mt-0 "  style="width:90%"
+        <el-select v-model="list.data.strojceny[iceny].idefix_jednotka"  size="mini" class="pt-0 pl-1 ml-2 mt-2 "  style="width:90%"
         filterable
          >
           <el-option
@@ -769,16 +769,16 @@
        </el-select>
       </el-col>
       <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].pocet_start"  class="mb-0 px-0 cell cisla mt-0 " style="width:90%;">
+         <input type="number" v-model="list.data.strojceny[iceny].pocet_start"  class="mb-0 px-0 cell cisla mt-2 " style="width:90%;">
        </el-col>
        <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].pocet_stop"   class="mb-0 px-0 cell cisla mt-0 " style="width:90%;">
+         <input type="number" v-model="list.data.strojceny[iceny].pocet_stop"   class="mb-0 px-0 cell cisla mt-2 " style="width:90%;">
        </el-col>
        <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].cena_naklad"  class="mb-0 px-0 cell cisla mt-0 " style="width:90%;">
+         <input type="number" v-model="list.data.strojceny[iceny].cena_naklad"  class="mb-0 px-0 cell cisla mt-2 " style="width:90%;">
        </el-col>
        <el-col style="border:solid 0px;height:30px" :span="2" >
-         <input type="number" v-model="list.data.strojceny[iceny].cena_prodej"   class="mb-0 px-0 cell cisla mt-0 " style="width:90%;">
+         <input type="number" v-model="list.data.strojceny[iceny].cena_prodej"   class="mb-0 px-0 cell cisla mt-2 " style="width:90%;">
        </el-col>
 
 
@@ -1211,13 +1211,6 @@ export default {
     pof(max, proc) {
       var neco = Math.round(max* proc/100) +''
       neco = `width:${neco}px`
-      return neco
-
-      //alert(neco)
-    },
-    pofnum(max, proc) {
-      var neco = Math.round(max* proc/100) +''
-      // neco = `width:${neco}px`
       return neco
 
       //alert(neco)
@@ -1939,11 +1932,9 @@ export default {
 
 table tr:nth-child(odd) td{
   background:white;
-
 }
 table tr:nth-child(even) td{
   background: #E3F2FD;
-
 }
 </style>
 <style>
