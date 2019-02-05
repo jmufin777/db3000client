@@ -238,167 +238,108 @@
 
     <el-row class="ma-1">
      <el-col :span="24" class="pa-3 mt-1 text-xs-center" style="width:100%" >
-      <!-- <table style="width:99%;border:none;" class="nic bila"  cols="2" @keyup.enter="setFocus('bA'+ID)" @keyup.escape="closeKontakt"> -->
-        <br>
-      <table style="width:90%;border:none;" class="nic bila"  cols="2" >
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%"><b> Nazev firmy: </b></td>
-            <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].nazev" size="mini"  style="width:95%" class="tdl tdn" placeholder="Nazev firmy" :id="'nazev_firmy_'+ID">
-            </td>
-       </tr>
 
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">
-            <a style="color:white" size="mini" type="primary" v-bind:class="{'green--text': IsIco==1,'blue--text': IsIco==0, 'warning': IsIco==2 }" class="elevation-0" @click="firma_ares(list.data.firma[0].ico)">IČO:</a>
-             <!-- <el-button slot="prepend"  style="color:white" size="mini" type="primary" v-bind:class="{'success': IsIco==1,'info': IsIco==0, 'warning': IsIco==2 }" class="elevation-15" @click="firma_ares(list.data.firma[0].ico)" icon="el-icon-search" >Ico:</el-button> -->
-          </td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].ico" size="mini"  style="width:95%" class="tdl tdn" placeholder="Ico"  :id="'ico_'+ID">
-          </td>
-       </tr>
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">DIČ:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].dic" size="mini"  style="width:95%" class="tdl tdn" placeholder="DIC"  :id="'dic_'+ID">
-          </td>
-       </tr>
-        <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%"><b>Sídlo</b></td>
-          <td class="nic bila pl-3" style="width:70%">
-              &nbsp;
-          </td>
-       </tr>
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">Ulice:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].ulice" size="mini"  style="width:95%" class="tdl tdn" placeholder="Ulice"  >
-          </td>
-       </tr>
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">Obec:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].obec" size="mini"  style="width:95%" class="tdl tdn" placeholder="Obec"  >
-          </td>
-       </tr>
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">PSČ:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].psc" size="mini"  style="width:95%" class="tdl tdn" placeholder="PSČ"  >
-          </td>
-       </tr>
+    <el-row class="ma-2">
+      <el-col :span="24"><hr></el-col>
+    </el-row>
+    <el-row class="ma-2">
+      <el-col :span="10" style="text-align:left">
+       <el-input v-model="list.data.firma[0].nazev" size="mini"  style="width:97%; " :id="'fokus_'+ID">
+        <template slot="prepend">Nazev</template>
+       </el-input>
+    </el-col>
 
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%"><b>Kancelář</b></td>
-          <td class="nic bila pl-3" style="width:70%">
-              <button type="button" size="mini" @click="firma_copy" style="width:95%" class="elevation-0 blue--text bezramecku leva" > = </button>
-          </td>
-       </tr>
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">Ulice:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].ulice2" size="mini"  style="width:95%" class="tdl tdn" placeholder="Ulice"  >
-          </td>
-       </tr>
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">Obec:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].obec2" size="mini"  style="width:95%" class="tdl tdn" placeholder="Obec"  >
-          </td>
-       </tr>
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">PSČ:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].psc2" size="mini"  style="width:95%" class="tdl tdn" placeholder="PSČ"  >
-          </td>
-       </tr>
-
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%"><b>&nbsp;</b></td>
-          <td class="nic bila pl-3" style="width:70%">
-              &nbsp;
-          </td>
-       </tr>
-      <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">Mobil:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].tel" size="mini"  style="width:95%" class="tdl tdn" placeholder="mobil"  >
-          </td>
-       </tr>
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">Tel:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].tel2" size="mini"  style="width:95%" class="tdl tdn" placeholder="telefon"  >
-          </td>
-       </tr>
-      <tr class="bila">
-
-
-             <td class="nic bila prava pr-2 blue--text " style="width:20%"><a v-if="list.data.firma[0].mail>''" :href="'mailto:'+list.data.firma[0].mail">Email</a><span v-else>Email:</span></td>
-            <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].mail" size="mini"  style="width:95%" class="tdl tdn" placeholder="email"  >
-          </td>
-       </tr>
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">
-            <a :href="'http://'+list.data.firma[0].www.replace('http://','')"  v-if="list.data.firma[0].www>''" target="blank">Web:
-            </a>
-            <span v-else>Web:</span>
-            </td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input v-model="list.data.firma[0].www" size="mini"  style="width:95%" class="tdl tdn" placeholder="web"  >
-          </td>
-       </tr>
-
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%"><b>&nbsp;</b></td>
-          <td class="nic bila pl-3" style="width:70%">
-              &nbsp;
-          </td>
-       </tr>
-
-       <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">Splatnost:</td>
-          <td class="nic bila pl-3" style="width:70%">
-              <input type="number" v-model="list.data.firma[0].splatnost" size="mini"  style="width:95%" class="tdl tdn" placeholder="splatnost"  >
-          </td>
-       </tr>
-      <tr class="bila">
-        <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">Hotovost:</td>
-          <td class="nic bila pl-4 leva" style="width:70%">
-          <input size="mini" style="height:18px;width:18px" type="checkbox" @change="changeHotovost" name="Hotovost" value="1"  :checked="(list.data.firma[0].hotovost==1)?true:false">
-          </td>
-       </tr>
-      <tr class="bila">
-        <tr class="bila">
-          <td class="nic bila prava pr-2 blue--text " style="width:20%">Materiály:</td>
-          <td class="nic bila pl-4 leva" style="width:70%">
-            <input style="height:18px;width:18px" type="checkbox" @change="changeMat" name="MatDodavatel" value="1"  :checked="(list.data.firma[0].mat==1)?true:false">
-          </td>
-       </tr>
-
-
-
-      </table>
-      <br>
-
+     <el-col :span="5">
+     <el-input  v-model="list.data.firma[0].ico" size="mini"  style="width:98%">
+        <el-button slot="prepend"  style="color:white" size="mini" type="primary" v-bind:class="{'success': IsIco==1,'info': IsIco==0, 'warning': IsIco==2 }" class="elevation-15" @click="firma_ares(list.data.firma[0].ico)" icon="el-icon-search" >Ico:</el-button>
+     </el-input>
      </el-col>
 
-     <el-col :span="24" class="pa-3 mt-1 text-xs-center" style="width:100%" >
+     <el-col :span="5">
+     <el-input v-model="list.data.firma[0].dic" size="mini"  style="width:95%">
+       <template slot="prepend">DIC</template>
+     </el-input>
+     </el-col>
+    </el-row>
+    <el-row class="ma-2">
+        <el-col :span="10">
+          <el-input v-model="list.data.firma[0].ulice" size="mini"  style="width:100%">
+            <template slot="prepend">
+              <b>Sidlo&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+              Ulice</template>
+          </el-input>
+        </el-col>
+        <el-col :span="7">
+          <el-input v-model="list.data.firma[0].obec" size="mini"  style="width:95%">
+              <template slot="prepend">Obec</template>
+           </el-input>
+        </el-col>
+        <el-col :span="4">
+          <el-input v-model="list.data.firma[0].psc" size="mini"  style="width:95%">
+              <template slot="prepend">Psc</template>
+           </el-input>
+        </el-col>
+        <el-col :span="1">
+        <el-button size ="mini" @click="firma_copy" type="primary" class="elevation-15" >= </el-button>
+        </el-col>
+    </el-row>
 
+    <el-row class="ma-2">
+      <el-col :span="2" > </el-col>
 
+        <el-col :span="10">
+          <el-input v-model="list.data.firma[0].ulice2" size="mini"  style="width:100%">
+            <template slot="prepend" >
+            <b>Kancelar :</b>&nbsp;
+            Ulice
+            </template>
+          </el-input>
+        </el-col>
 
+        <el-col :span="7">
+          <el-input v-model="list.data.firma[0].obec2" size="mini"  style="width:95%">
+              <template slot="prepend">Obec</template>
+           </el-input>
+        </el-col>
+
+        <el-col :span="4">
+          <el-input v-model="list.data.firma[0].psc2" size="mini"  style="width:95%">
+              <template slot="prepend">Psc</template>
+           </el-input>
+        </el-col>
+    </el-row>
     <el-row class="ma-2">
 
 
+        <el-col :span="6">
+          <el-input v-model="list.data.firma[0].tel" size="mini"  style="width:100%" suffix-icon="el-icon-phone">
+            <template slot="prepend">Mobil</template>
+          </el-input>
+        </el-col>
 
+        <el-col :span="12">
+          <el-input v-model="list.data.firma[0].tel2" size="mini"  style="width:95%" suffix-icon="el-icon-phone">
+            <template slot="prepend">Tel</template>
+          </el-input>
+        </el-col>
+        </el-row>
+        <el-row class="ma-2">
 
+        <el-col :span="9">
+          <el-input v-model="list.data.firma[0].mail" size="mini"  style="width:100%" suffix-icon="el-icon-message">
+            <template slot="prepend" >Email</template>
+          </el-input>
+        </el-col>
 
+        <el-col :span="12">
+          <el-input v-model="list.data.firma[0].www" size="mini"  style="width:95%" type="url">
+             <template slot="prepend">Http://</template>
+          </el-input>
+        </el-col>
 
     </el-row>
 
-<el-row><el-col :span="24" v-if="false">
+<el-row><el-col :span="24">
 
 <el-row class="ma-2">
        <el-col :span="3" >
@@ -755,7 +696,7 @@
         <tr>
          <td class="nic bila prava pr-2 blue--text ">Aktivni</td>
           <td class="nic bila pl-3" style="width:70%">
-          <input size="mini" style="height:18px;width:18px" v-model="firmaosoba.aktivni" type="checkbox" @change="changeAktivniOsoba" :name="'aktivni'+ID" value="1"  :checked="firmaprovozovna.aktivni==true"  class="pt-1">
+          <input size="mini" style="height:28px;width:28px" v-model="firmaosoba.aktivni" type="checkbox" @change="changeAktivniOsoba" :name="'aktivni'+ID" value="1"  :checked="firmaprovozovna.aktivni==true"  class="pt-1">
          </td>
        </tr>
 
@@ -3034,10 +2975,10 @@ select:focus  {
 
 </style>
 <style scoped>
-textarea:focus, input:focus, .bezramecku:focus {
+textarea:focus, input:focus {
     outline: none;
 }
-a:focus  {
+a:focus {
     outline: dotted 1px silver;
 }
 ::placeholder {

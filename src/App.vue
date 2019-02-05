@@ -288,11 +288,11 @@ div[role="region"] {
   border-top: solid 1px #cccccc;
   border-right: solid 1px #cccccc;
   border-left: none;
-  
-  
+
+
 }
 .tdl {
-  border-bottom: solid 1px #cccccc;
+  border-bottom: dotted 1px #cccccc;
   border-left: none;
    border-right: none;
 
