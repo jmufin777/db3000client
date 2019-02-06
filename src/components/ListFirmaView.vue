@@ -41,14 +41,28 @@
  <thead >
    <tr>
 <th  :style="pof(Sirka*SirkaStred,80)" class="stred grey--text" colspan="106" style="background:#ffffff;opacity:1;z-index:100000;border:none">
-  <span class="elevation-0 pa-1">Zobrazeno&nbsp;</span>
-  <input type="number" v-model="Zobrazit" :min="1" :max="list.length"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" @change="Stranka=1" size="6" class="prava elevation-1 pr-1" style="width:5em">
-   <!-- <el-input-number v-model="Zobrazit" size="mini" @blur="Sirka--"  :min="10" :max="list.length"></el-input-number>  -->
-  <span class="elevation-0 px-2 pt-1 pb-1"> z  {{ list.length }} </span>
-  <span class="elevation-0 px-2 pt-1 pb-1"> Strana </span>
-  <input type="number" v-model="Stranka" size="18"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" :max="Math.ceil(list.length / Zobrazit)" :min="1" class="prava elevation-1 pr-1" style="width:5em">
+  
+<span class="elevation-0 px-2 pt-1 pb-1 blue--text"> Strana </span>
+   <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="Stranka=1"                 ><i class="el-icon-d-arrow-left" size="mini"></i></button>
+   <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="Stranka=(Stranka>1)?Stranka - 1:1" ><i class="el-icon-arrow-left" size="mini"></i></button>
+  
+ 
+        <input type="number" v-model="Stranka" size="18"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" :max="Math.ceil(list.length / Zobrazit)" :min="1" class="elevation-0 pr-0 tdl tdn prava" style="width:3em">
+        <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="StrankaNext()"                 ><i class="el-icon-arrow-right" size="mini"></i></button>
+         <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="StrankaEnd()"                 ><i class="el-icon-d-arrow-right" size="mini"></i></button>         
+
+         
+        <span class="elevation-0 pa-1 blue--text">Zobrazeno&nbsp;</span>
+        <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="Zobrazit=(Zobrazit<list.length)?Zobrazit+1:list.length" ><i class="el-icon-arrow-up" size="mini"></i></button>
+        <input type="number" v-model="Zobrazit" :min="1" :max="list.length"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" @change="Stranka=1" size="6" class="prava elevation-0 pr-0 tdl tdn  " style="width:4em">      
+        <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="Zobrazit=(Zobrazit>1)?Zobrazit-1:1" ><i class="el-icon-arrow-down" size="mini"></i></button>
+   
+   
+  <span class="elevation-0 px-2 pt-1 pb-1 blue--text"> z  {{ list.length }} </span>
+   
+
   <!-- <el-input-number v-model="Stranka" size="mini" @blur="Sirka--" :max="Math.ceil(list.length / Zobrazit)" :min="1"></el-input-number> -->
-  <span class="elevation-0 px-2 pt-1 pb-1"> z {{ Math.ceil(list.length / Zobrazit) }}</span>
+  <span class="elevation-0 px-2 pt-1 pb-1 blue--text"> z {{ Math.ceil(list.length / Zobrazit) }}</span>
 
 
 </th>
@@ -123,7 +137,7 @@
     {{item1['obec']}}
   </td>
   <td :style="pof(Sirka*SirkaStred,10)" class="px-2 stred">
-    {{ item1['psc'].replace(' ','').substr(0,3)+' '+ item1['psc'].replace(' ','').substr(3,10)}}
+    {{ (item1['psc']>'')?item1['psc'].replace(' ','').substr(0,3)+' '+ item1['psc'].replace(' ','').substr(3,10):'' }}
   </td>
 
 
@@ -472,6 +486,31 @@ methods: {
   handleResize () {
     this.thisHeight = f.wyska(0.88)
   },
+
+  StrankaNext(){
+    const self= this
+    //alert(Math.ceil(self.list.length/self.Zobrazit))
+    
+    
+      if (self.Stranka <  Math.ceil(self.list.length/self.Zobrazit) ) {
+        self.Stranka+=1
+      }
+    
+
+  },
+  StrankaEnd(){
+    const self= this
+    //alert(Math.ceil(self.list.length/self.Zobrazit))
+    
+    setTimeout(function(){
+      self.Stranka=Math.ceil(self.list.length/self.Zobrazit)
+
+    },300)
+    
+    
+    //this.Stranka = Math.ceil(this.list.length/this.Zobrazit)
+  },
+  
 async getEnums() {
   const self= this
   var tmp2, tmp3

@@ -387,11 +387,7 @@
 
      <el-col :span="24" class="pa-3 mt-1 text-xs-center" style="width:100%" >
 
-
-
     <el-row class="ma-2">
-
-
 
 
 
@@ -639,9 +635,11 @@
 
                      <table style="width:100%" slot="head">
                        <thead>
-                         <th style="width:10%">Nazev</th>
+                         <th style="width:15%">Nazev</th>
+                         <th style="width:15%">Skupina</th>
                          <th style="width:20%">Adresa</th>
-                         <th style="width:20%">Jmeno</th>
+
+                         <th style="width:15%">Jmeno</th>
                          <th style="width:20%">Mail</th>
                          <th style="width:10%">Tel</th>
                          <th style="width:10%">Tel2</th>
@@ -664,10 +662,11 @@
                        @dblclick="editProvozovna(provozovnax)"
 
                        >
-                         <td style="width:10%">{{provozovnax.nazev}}</td>
+                         <td style="width:15%">{{provozovnax.nazev}}</td>
+                         <td style="width:15%">{{provozovnax.nazev_txt}}</td>
                          <td style="width:20%" >{{provozovnax.ulice + ', '+ provozovnax.psc+ ' ' +provozovnax.obec  }}</td>
 
-                         <td style="width:20%">{{provozovnax.jmeno + ' '+ provozovnax.prijmeni}} </td>
+                         <td style="width:15%">{{provozovnax.jmeno + ' '+ provozovnax.prijmeni}} </td>
 
                          <td style="width:20%">{{provozovnax.mail}}</td>
                          <td style="width:10%">{{provozovnax.tel}}</td>
@@ -695,6 +694,24 @@
             <td class="nic bila prava pr-2 blue--text " style="width:20%">Nazev</td>
               <td class="nic bila pl-3" style="width:70%">
                 <input v-model="firmaprovozovna.nazev" size="mini"  style="width:95%" class="tdl tdn" placeholder="Nazev" :id="'fokus1_'+ID" >
+              </td>
+            </tr>
+                        <tr>
+            <td class="nic bila prava pr-2 blue--text " style="width:20%">Skupina</td>
+              <td class="nic bila pl-3" style="width:70%">
+                <el-autocomplete
+                class="inline-input mr-1 tdl tdn"
+                v-model="firmaprovozovna.nazev_txt"
+                :fetch-suggestions="querySearch501"
+                placeholder="Skupina"
+                @select="handleSelect"
+                size="mini "
+                style="width:95%;"
+                min
+                ></el-autocomplete>
+
+                <input v-if="false" v-model="firmaprovozovna.nazev_txt" size="mini"  style="width:95%" class="tdl tdn" placeholder="Skupina provozoven"  >
+                
               </td>
             </tr>
           <tr>
@@ -851,7 +868,7 @@
                 <el-checkbox  @change="CheckAllRight" >
                 </el-checkbox>
               </th>
-              <th    class="tdrn tdln">Prideleno</th>
+              <th    class="tdrn tdln">Prideleno</t>
                 <th class="tdln">
                   {{ checkedRight.length }}/{{ list.data.firmaprace.length }}
                 </th>
@@ -1993,6 +2010,7 @@ renderFunc(h, option) {
           self.list.data.firmaprace =neco2.data.firmaprace
           self.list.data.enumprace =neco3.data.enumprace
 
+
           alert('ahoj'+JSON.stringify(self.firmaprace))
 
 
@@ -2544,6 +2562,19 @@ renderFunc(h, option) {
     },
 
 
+  querySearch501(queryString, cb) {  //Nazev
+        var n1 = this.list.data.enumprovozovna_txt
+        var links = n1
+        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        cb(results);
+      },
+  querySearch100(queryString, cb) {  //Nazev
+        var n1 = this.list.data.enum_
+        var links = n1
+        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        cb(results);
+      },
+
     querySearch1(queryString, cb) {  //Nazev
         var n1 = this.list.data.enum_nazev
         var links = n1
@@ -3057,6 +3088,10 @@ border:none;
   background: white;
 }
 
+
+.el-autocomplete, .inline-input, .el-input__inner, .el-input, .el-input--mini  {
+  
+}
 </style>
 
 
