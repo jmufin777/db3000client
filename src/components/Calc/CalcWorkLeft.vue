@@ -21,36 +21,48 @@
 
 <!-- Vychozi - Mody stroju //-->
 
-   <div v-if="!MenuShow || true" style="width:100%;text-align:left" ref="menu1main" id="menu1main">
-     <table style="width:100%" cols=2><tr>
+   <div v-if="!MenuShow || true" style="width:100%;text-align:left" ref="menu1main" :id="'menu1main'+ID">
+     <table style="width:100%" cols=2>
+       <tr v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix">
        <td style="width:80%">
-         <span @click="MenuShow1(MenuShow, $event )" style="width:80%;border:20px">
-      {{ getStrojMod() }}
-     </span>
+         <span @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )" style="width:80%;border:20px;cursor:pointer" class="neco">
+
+           {{ itemStroj.idefix }} : {{ idefixClick }} : {{ idefixVidet }}
+           {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
+
+
+           <!-- : {{idefixVidet>0 ? itemStroj.stroj + ' ' + itemStroj.nazev : itemStroj.stroj }}
+           :: [ {{$store.state.Kalkulace[k_id()].data.Menu1Value}} ] -->
+
+        </span>
        </td>
       <td style="width:20%">
-        <span @click="MenuShow1(MenuShow, $event )">
+        <span @click="idefixClick=itemStroj.idefix; MenuShow1(MenuShow, $event )">
     <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light"></i>
     </span>
        </td>
      </tr>
     </table>
 
- <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menu1" id="menu1"  class="neco">
+ <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menu1" :id="'menu1'+ID"  class="neco">
      <tr v-if="MenuShow" ><td colspan="2">
    <ta-ble3  :h="'350px'" :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'"       v-if="MenuShow" >
          <table slot="body" style="width:100%">
             <thead  >
-              <tr v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Menu2" :key="i1">
+              <tr v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Menu2" :key="i1" v-if="m1.idefix == idefixClick">
               <td class="leva pl-2" @click="setMenu1Value(m1.idefix_mod)" >
-                <button v-if="$store.state.Kalkulace[k_id()].data.Menu1Value == m1.idefix_mod" ref="menu1focus"  id="menu1focus" class="leva  elevation-1" style="width:90%;"
+                <button v-if="$store.state.Kalkulace[k_id()].data.Menu1Value == m1.idefix_mod" ref="menu1focus"  :id="'menu1focus'+ID" class="leva  elevation-1" style="width:90%;"
                 v-on:keyup.27="MenuShow1(MenuShow,$event)"
+
                 >
                  {{m1.stroj +' ' + m1.nazev }}
                 </button >
                 <button v-else  style="width:90%" class=" leva "
-                v-on:keyup.27="MenuShow1(MenuShow,$event)">
+                v-on:keyup.27="MenuShow1(MenuShow,$event)"
+
+                >
                  {{m1.stroj +' ' + m1.nazev }}
+
                 </button >
                  </td>
               </tr>
@@ -59,15 +71,16 @@
    </ta-ble3>
    </td></tr>
  </table>
+
     <!-- {{ $store.state.Kalkulace[k_id()].data.Menu1Value}} -->
-    </div>
+ </div>
 
     </td></tr>
     <tr v-if="form.MenuRet > 0 ||  true "><td colspan="20">
 
 <!--Formaty -->
 
-<div v-if="true" style="width:95%;text-align:left" ref="menuformat1main" id="menuformat1main" class="ml-4">
+<div v-if="$store.state.Kalkulace[k_id()].type==2 && true" style="width:95%;text-align:left" ref="menuformat1main" :id="'menuformat1main'+ID" class="ml-4">
      <table style="width:100%" cols=2><tr>
        <td style="width:80%">
          <span @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:80%;border:20px">
@@ -76,25 +89,25 @@
        </td>
       <td style="width:20%">
         <span @click="MenuFormatShow1(MenuFormatShow, $event )">
-    <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light"></i>
+      <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light"></i>
     </span>
        </td>
      </tr>
     </table>
 
- <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menuformat1" id="menuformat1"  class="neco">
+ <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menuformat1" :id="'menuformat1'+ID"  class="neco">
 <tr v-if="MenuFormatShow" ><td colspan="2">
    <ta-ble3  :h="'350px'" :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'"   >
          <table slot="head" style="width:100%">
             <thead  >
-              <th style="width:60%"> Format</th><th style="width:20%">Sirka</th><th style="width:20%">Vyska</th>
+              <th style="width:60%"> Format {{ID}} </th><th style="width:20%">Sirka</th><th style="width:20%">Vyska</th>
             </thead>
          </table>
          <table slot="body" style="width:100%">
             <thead  >
               <tr v-for="(m1b, i1b) in $store.state.Kalkulace[k_id()].data.Format" :key="i1b" >
               <td style="width:60%" class="leva pl-2" @click="setMenuFormat1Value(m1b.idefix)" >
-                <button v-if="$store.state.Kalkulace[k_id()].data.FormatValue == m1b.idefix" ref="menuformat1focus"  id="menuformat1focus" class="leva  elevation-1" style="width:90%;"
+                <button v-if="$store.state.Kalkulace[k_id()].data.FormatValue == m1b.idefix" ref="menuformat1focus"  :id="'menuformat1focus'+ID" class="leva  elevation-1" style="width:90%;"
                 v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)"
                 >
                  {{m1b.nazev }}
@@ -114,23 +127,74 @@
  </div>
 
 <!--Formaty -->
+<!--Materialy -->
+
+<div v-if="$store.state.Kalkulace[k_id()].type==1" style="width:95%;text-align:left" ref="menuformat1main" :id="'menuformat1main'+ID" class="ml-4">
+     <table style="width:100%" cols=2><tr>
+       <td style="width:80%">
+         <span @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:80%;border:20px">
+      {{ getFormat() }}
+     </span>
+       </td>
+      <td style="width:20%">
+        <span @click="MenuFormatShow1(MenuFormatShow, $event )">
+      <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light"></i>
+    </span>
+       </td>
+     </tr>
+    </table>
+
+ <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menuformat1" :id="'menuformat1'+ID"  class="neco">
+<tr v-if="MenuFormatShow" ><td colspan="2">
+   <ta-ble3  :h="'350px'" :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'"   >
+         <table slot="head" style="width:100%">
+            <thead  >
+              <th style="width:60%"> Format {{ID}} </th><th style="width:20%">Sirka</th><th style="width:20%">Vyska</th>
+            </thead>
+         </table>
+         <table slot="body" style="width:100%">
+            <thead  >
+              <tr v-for="(m1b, i1b) in $store.state.Kalkulace[k_id()].data.Mat" :key="i1b" >
+              <td style="width:60%" class="leva pl-2" @click="setMenuFormat1Value(m1b.idefix)" >
+                <button v-if="$store.state.Kalkulace[k_id()].data.FormatValue == m1b.idefix" ref="menuformat1focus"  :id="'menuformat1focus'+ID" class="leva  elevation-1" style="width:90%;"
+                v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)"
+                >
+                 {{m1b.nazev }}
+                </button >
+                <button v-else  style="width:90%" class=" leva "
+                v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)">
+                 {{ m1b.nazev }}
+                </button >
+                 </td >
+                 <td style="width:20%">{{m1b.sirka}}</td><td style="width:20%">{{m1b.vyska}}</td>
+              </tr>
+            </thead>
+         </table>
+   </ta-ble3>
+   </td></tr>
+ </table>
+ </div>
+
+
+
+<!--Materialy -->
 
 
     </td></tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value >''" >
      <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Sirka:</td>
      <td colspan="7">
-   <input type="text"   v-model="form.sirka" style="text-align:right" class="pr-2 pt-3 pb-3">
+   <input type="text"   v-model="form.sirka" style="text-align:right" class="pr-2 pt-3 pb-3" @focus="$event.target.select()">
      </td>
   <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Vyska:</td>
     <td colspan="7">
-   <input type="text"   v-model="form.vyska" style="text-align:right" class="pr-2 py-3">
+   <input type="text"   v-model="form.vyska" style="text-align:right" class="pr-2 py-3" @focus="$event.target.select()">
    </td>
    </tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''">
     <td colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Naklad&nbsp;ks:</td>
     <td colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid;border-right:1px solid">
-    <input type="text"   v-model="form.nakladks" style="text-align:right" class="pr-2 py-3">
+    <input type="text"   v-model="form.nakladks" style="text-align:right" class="pr-2 py-3" @focus="$event.target.select()">
     </td>
     </tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''"><td colspan="20">
@@ -205,43 +269,12 @@ export default {
      FormatJoin: [
 
 
-      {key:  10 , text: "A0"                 ,sirka: 118.80 ,vyska:  84.00 },
-      {key:  17 , text: "A0"                 ,sirka: 118.80 ,vyska:  84.00 },
-      {key:  18 , text: "A1"                 ,sirka:  84.00 ,vyska:  59.40 },
-      {key:  19 , text: "A2"                 ,sirka:  59.40 ,vyska:  42.00 },
-      {key:  20 , text: "A1"                 ,sirka:  84.00 ,vyska:  59.40 },
-      {key:  20 , text: "A3"                 ,sirka:  42.00 ,vyska:  29.70 },
-      {key:  21 , text: "A4"                 ,sirka:  29.70 ,vyska:  21.00 },
-      {key:  22 , text: "A5"                 ,sirka:  21.00 ,vyska:  14.80 },
-      {key:  23 , text: "A6"                 ,sirka:  14.80 ,vyska:  10.50 },
-      {key:  24 , text: "A7"                 ,sirka:  10.50 ,vyska:   7.40 },
-      {key:  30 , text: "A2"                 ,sirka:  59.40 ,vyska:  42.00 },
-      {key:  40 , text: "A3"                 ,sirka:  42.00 ,vyska:  29.70 },
-      {key:  50 , text: "A4"                 ,sirka:  29.70 ,vyska:  21.00 },
-      {key:  60 , text: "A5"                 ,sirka:  21.00 ,vyska:  14.80 },
-      {key:  70 , text: "A6"                 ,sirka:  14.80 ,vyska:  10.50 },
-      {key:  80 , text: "A7"                 ,sirka:  10.50 ,vyska:   7.40 },
-      {key:  90 , text: "B0"                 ,sirka: 141.00 ,vyska: 100.00 },
-      {key: 100 , text: "B1"                 ,sirka: 100.00 ,vyska:  70.70 },
-      {key: 110 , text: "B2"                 ,sirka:  70.70 ,vyska:  50.00 },
-      {key: 120 , text: "B3"                 ,sirka:  50.00 ,vyska:  35.40 },
-      {key: 130 , text: "B4"                 ,sirka:  35.40 ,vyska:  25.00 },
-      {key: 140 , text: "B5"                 ,sirka:  25.00 ,vyska:  17.70 },
-      {key: 150 , text: "B6"                 ,sirka:  17.70 ,vyska:  12.50 },
-      {key: 160 , text: "B7"                 ,sirka:  12.50 ,vyska:   8.85 },
-      {key: 170 , text: "SRA 3"              ,sirka:  45.00 ,vyska:  32.00 },
-      {key: 180 , text: "DL"                 ,sirka:   9.90 ,vyska:  21.00 },
-      {key: 190 , text: "Citylight"          ,sirka: 175.00 ,vyska: 118.50 },
-      {key: 200 , text: "Billboard EURO"     ,sirka: 238.00 ,vyska: 504.00 },
-      {key: 210 , text: "Billboard AVENIR"   ,sirka: 300.00 ,vyska: 400.00 },
-      {key: 220 , text: "Billboard EASTWEST" ,sirka: 320.00 ,vyska: 480.00 },
-      {key: 230 , text: "Big Board"          ,sirka: 360.00 ,vyska: 960.00 },
-      {key: 999 , text: "Vlastni"            ,sirka:   0.00 ,vyska:   0.00 }
       ],
 
      aKalk: {},   //
      MenuShow: false,
      MenuFormatShow: false,
+     aStroj: [],
 
      form: {
        MenuRet :0,
@@ -251,15 +284,28 @@ export default {
        nakladks: 0,
        filelist:[]
 
-     }
+     },
+    ID: 0,
+    idefixVidet: 0,
+    idefixClick: 0,
 
    }
  },
 
  mounted () {
    const self = this
+
    self.k_id()
+   self.ID = Math.round(Math.random() * 1983458)+self.k_id()
+
+
+   console.log("MenuStroj TOP")
+   self.MenuStroj()
+   console.log("MenuStroj EOF")
+
    return
+
+   /*
    self.FormatJoin.forEach(element => {
      self.Format.push({text: element.text})
    });
@@ -267,6 +313,10 @@ export default {
     self.MenuLeftJoin.forEach(element => {
      self.MenuLeft.push({text: element.text})
    });
+   */
+
+
+
  },
  methods: {
    onoff() {
@@ -283,22 +333,15 @@ export default {
        this.$refs.menu1.style.top  =(e.clientY + 0) +'px'
        self.MenuFormatShow = false;
 
-       //console.log("OOFFF", this.$refs.menu1focus.offsetWidth)
 
-       //this.$nextTick(() => this.$refs.menu1focus.focus())
-
-      //document.getElementById("menu1focus").focus()
-       this.$nextTick(() => {
-        //this.$refs['menu1focus'].focus()
-        })
         setTimeout(function() {
           //this.$refs.menu1.style.left = (e.clientX - document.getElementById("menu1focus").offsetWidth ) +'px'
-          console.log("F!",document.getElementById("menu1main").offsetWidth, document.getElementById("menu1") )
-          document.getElementById("menu1").style.width = document.getElementById("menu1main").offsetWidth +'px'
-          document.getElementById("menu1").style.top = document.getElementById("menu1main").style.top
-          document.getElementById("menu1").style.left = (document.getElementById("menu1main").offsetLeft + 100) + 'px'
+          console.log("F!",document.getElementById("menu1main"+self.ID).offsetWidth, document.getElementById("menu1") )
+          document.getElementById("menu1"+self.ID).style.width = document.getElementById("menu1main"+self.ID).offsetWidth +'px'
+          document.getElementById("menu1"+self.ID).style.top = document.getElementById("menu1main"+self.ID).style.top
+          document.getElementById("menu1"+self.ID).style.left = (document.getElementById("menu1main"+self.ID).offsetLeft + 100) + 'px'
           //self.$refs.menu1focus.focus()
-          document.getElementById("menu1focus").focus()
+          document.getElementById("menu1focus"+self.ID).focus()
 
         },200)
 
@@ -309,18 +352,48 @@ export default {
      }
 
    },
+   SelectStroj(idefixVidet,idefix_mod) {
+     const self = this
+     if (self.idefixVidet == 0) {
+     self.idefixVidet = idefixVidet
+     self.setMenu1Value(idefix_mod)
+
+
+     } else {
+       self.idefixVidet =0
+     }
+   },
+
+MenuStroj() {
+  const self = this
+  var nTmp;
+
+  self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach(el => {
+    nTmp =  _.findIndex(self.aStroj, function (o) { return o.idefix  == el.idefix })
+    if (nTmp < 0){
+      self.aStroj.push({idefix: el.idefix, stroj: el.stroj,idefix_mod: el.idefix_mod, nazev: el.nazev})
+    }
+      console.log(self.aStroj)
+  })
+},
 
  MenuFormatShow1(yesno,e) {
 
     const self = this
 
-
-
      if (yesno== 0) {
        this.MenuFormatShow = true
-       this.$refs.menuformat1.style.left = (e.clientX - 300) +'px'
-       this.$refs.menuformat1.style.top  = (e.clientY +   0) +'px'
+       //this.$refs.menuformat1.style.left = (e.clientX - 300) +'px'
+       //this.$refs.menuformat1.style.top  = (e.clientY +   0) +'px'
+
+         document.getElementById("menuformat1"+self.ID).style.left = (e.clientX - 300) +'px'
+         document.getElementById("menuformat1"+self.ID).style.top =  (e.clientY -50) +'px'
+
+        //document.getElementById("menuformat1"+self.ID).style.left = (e.clientX - 300) +'px'
+        //document.getElementById("menuformat1"+self.ID).style.top =  (e.clientY  +0 ) +'px'
+
        self.MenuShow = false;
+
 
        //console.log("OOFFF", this.$refs.menu1focus.offsetWidth)
 
@@ -332,12 +405,12 @@ export default {
         })
         setTimeout(function() {
           //this.$refs.menu1.style.left = (e.clientX - document.getElementById("menu1focus").offsetWidth ) +'px'
-          console.log("F!",document.getElementById("menu1main").offsetWidth, document.getElementById("menuformat1") )
-          document.getElementById("menuformat1").style.width = document.getElementById("menuformat1main").offsetWidth +'px'
-          document.getElementById("menuformat1").style.top = document.getElementById("menuformat1main").style.top
-          document.getElementById("menuformat1").style.left = (document.getElementById("menuformat1main").offsetLeft + 100) + 'px'
+          console.log("F!",document.getElementById("menu1main"+self.ID).offsetWidth, document.getElementById("menuformat1"+self.ID) )
+          document.getElementById("menuformat1"+self.ID).style.width = document.getElementById("menuformat1main"+self.ID).offsetWidth +'px'
+          // document.getElementById("menuformat1"+self.ID).style.top = document.getElementById("menuformat1main"+self.ID).style.top
+          document.getElementById("menuformat1"+self.ID).style.left = (document.getElementById("menuformat1main"+self.ID).offsetLeft + 100) + 'px'
           //self.$refs.menu1focus.focus()
-          document.getElementById("menuformat1focus").focus()
+          document.getElementById("menuformat1focus"+self.ID).focus()
 
         },200)
 
@@ -352,9 +425,19 @@ export default {
       const self = this
       var idK = this.k_id()
       self.setKalk(idK)
-      console.log("a",a)
+
+
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Menu1Value' , value: a })
       self.MenuShow1(1,0)
+      var nTmp =  _.findIndex(self.$store.state.Kalkulace[self.k_id()].data.Menu2, function (o) { return o.idefix_mod  == a })
+      if(nTmp > -1) {
+        //alert(self.$store.state.Kalkulace[self.k_id()].data.Menu2[nTmp].idefix)
+         self.idefixVidet=self.$store.state.Kalkulace[self.k_id()].data.Menu2[nTmp].idefix
+         //alert(self.idefixVidet)
+      }
+
+      //alert(nTmp )
+
      //this.Kalkulace = []
      //this.$store.state.Kalkulace[this.k_id()].data.Menu1Value = a
 
@@ -466,7 +549,6 @@ export default {
   setKalk(idK) {
           this.$store.dispatch('setKalk',idK)
           console.log('setKalk',idK)
-
   },
   getStrojMod() {
     //return 'ahoj'
@@ -476,17 +558,21 @@ export default {
     var cDefRet =''
     self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach((el, idx) =>{
        if (idx == 0) {
-         cDefRet = el.stroj +' ' + el.nazev
+    //     cDefRet = el.stroj +' ' + el.nazev
+         cDefRet = el.nazev
        }
       if (el.idefix_mod == thisItem) {
           //console.log(el.nazev, el.idefix_mod)
-          cRet = el.stroj +' ' + el.nazev
+          //cRet = el.stroj +' ' + el.nazev
+          cRet =  el.nazev
       }
     })
 
     return (cRet>'')?cRet:cDefRet
     //return this.$store.state.Kalkulace[this.k_id()].data.Menu1Value
   },
+
+
 
     getFormat() {
     //return 'ahoj'

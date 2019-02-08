@@ -13,18 +13,20 @@
               <v-card-text>
 
                 <v-form v-if="!$store.state.isUserLoggedIn">
-                  <v-text-field v-model='login' prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
-                  <v-text-field v-model="password" id="password" prepend-icon="lock" name="password" label="Heslo"  type="password"></v-text-field>
+                  <v-text-field v-model='login' prepend-icon="person" name="login" label="Login" type="text" :id="'Login_'+ID" @keyup.enter="setFocus('Pass_'+ID)"></v-text-field>
+                  <v-text-field v-model="password" :id="'Pass_'+ID" prepend-icon="lock" name="password" label="Heslo"  type="password"   @keyup.enter="setFocus('Sub_'+ID)"></v-text-field>
                 </v-form>
                 <div v-for="mess in   message" :key="mess.login">
                 </div>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <div class="error" v-html="error" />
+                <div class="error " v-html="error" /><v-spacer></v-spacer>
                 <v-btn
                 v-if="!$store.state.isUserLoggedIn"
-                @click="login0" color="primary">Prihlaseni</v-btn>
+                @click="login0"
+                @focus="login0"
+                color="primary" :id="'Sub_'+ID">Prihlaseni</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -38,6 +40,7 @@
 
 <script>
 import AuthService from '@/services/AuthService'
+import { setTimeout } from 'timers';
 
 export default {
   data () {
@@ -46,13 +49,17 @@ export default {
       login: '',
       password: '',
       error: null,
-      message: 'cekam'
+      message: 'cekam',
+      ID: 0
     }
   },
   props: {
     source: String
   },
   mounted () {
+    const self=this
+    self.ID = Math.round(Math.random() * 1983458)
+
     if (!this.$store.state.isUserLoggedIn) {
       this.$message({
                  message: 'Neprihlaseno, prihlaste se prosim',
@@ -60,6 +67,12 @@ export default {
                  center: true,
                  duration: 3000
               })
+      setTimeout(function(){
+
+          self.setFocus("Login_"+self.ID)
+        },1000)
+
+
     }
 
     if (this.$store.state.isUserLoggedIn) {
@@ -104,7 +117,11 @@ export default {
     }
   },
   methods: {
+    setFocus(cId) {
+      document.getElementById(cId).focus()
+    },
     async logout () {
+
        this.$message({
          dangerouslyUseHTMLString: true,
          message: 'Odhlasuji',
@@ -112,7 +129,7 @@ export default {
          center: true,
          duration: 1000
        })
-       alert('logout 111'+ 'x')
+
        try {
          const response = await AuthService.logout({
           idefix: this.idefix
@@ -123,6 +140,7 @@ export default {
         this.$store.dispatch('setLevel', null)
         this.$store.dispatch('setIdefix', null)
         this.$router.push({ name: 'login' })
+
 
       } catch(error) {
         this.$message({
@@ -138,10 +156,13 @@ export default {
         this.$store.dispatch('setLevel', null)
         this.$store.dispatch('setIdefix', null)
         this.$router.push({ name: 'login' })
+
+
+
       }
     },
     async login0 () {
-
+      const self = this
             this.$message({
                 dangerouslyUseHTMLString: true,
                 message: 'Prihlasuji - autorizuji v databazi',
@@ -191,7 +212,12 @@ export default {
                 center: true,
                 duration: 1000
               })
-        this.error = error.response.data.error
+        this.error = error.response.data.error+"...."
+        setTimeout(function(){
+          // self.error="Aaaaaa"
+          self.setFocus("Login_"+self.ID)
+        },1000)
+
       }
     },
     async loginUpdate () {
@@ -202,8 +228,9 @@ export default {
         this.$store.dispatch('setLevel', response.data.level)
         this.$store.dispatch('setIdefix', response.data.idefix)
       } catch (error) {
-                  // alert('3')
+                 // alert('3')
         this.error = error.response.data.error
+
       }
     },
 
@@ -221,6 +248,7 @@ export default {
 
         } catch(error) {
           this.error = error.response.data.error
+
         }
     }
 

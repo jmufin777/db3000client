@@ -190,7 +190,7 @@ export default {
       }
       setTimeout(function(){
             eventBus.$emit('enable')
-        },500)
+        },2000)
       //alert(self.Hlavni)
 
     })
@@ -221,10 +221,10 @@ export default {
      var found = true
      var id_query = -0
 //     return
-     if ( type == 1 ){ id_query=10411 } //Velkoploch
-     if ( type == 2 ){ id_query=10410 } //Archovy
-     if ( type == 500 ){ id_query=500 } // Seznam formatu
-     if ( type == 501 ){ id_query=501 } // Seznam formatu
+     if ( type == 1 )   { id_query=10411 } //Velkoploch
+     if ( type == 2 )   { id_query=10410 } //Archovy
+     if ( type == 500 ) { id_query=500   } // Seznam formatu
+     if ( type == 501 ) { id_query=501   } // Seznam formatu
 
     if (type < 500) {
       try {
@@ -288,7 +288,7 @@ export default {
        oData.Menu2 =  tmpData
        oData.Menu1 = []
        oData.Menu1Value=''
-
+//       alert(tmpData.length)
        tmpData.forEach((el,idx) => {
         nTmp =  _.findIndex(oData.Menu1, function (o) { return o.text +' '+o.nazev == el.stroj+ ' '+ el.nazev})
         if (nTmp == -1 ) oData.Menu1.push({'text': el.stroj + ' '+ el.nazev })
