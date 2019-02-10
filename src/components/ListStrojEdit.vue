@@ -22,7 +22,7 @@
 <div slot="b1" class="green lighten-4 elevation-2" style="height:40px;font-size:18px">{{ stepInfo}} </div>
 <!-- <span slot="b3">B3</span> -->
 <div slot="a1" style="height:40px;font-size:18px;" class="px-2 green lighten-4 elevation-2" >
-{{ ((isCopy ==false )?'Zmena':'Nova polozka ') +' ' + list.data.stroj[0].nazev  }} / {{Sirka}}
+{{ ((isCopy ==false )?'Zmena':'Nova polozka ') +' ' + list.data.stroj[0].nazev  }} / {{Sirka}}/ {{list.data.stroj[0].idefix }}
 </div>
 <div slot="c1" style="height:40px;font-size:18px" class="green lighten-4 elevation-2">
       <el-button v-if="isCopy == false " type="primary" id="btn_user_new_submit8210" @click="submitForm('formnew')" size="mini"> Novy Upravou</el-button>
@@ -256,7 +256,7 @@
               <th :style="pof(Sirka*0.9,15)">Rychlost</th>
               <th :style="pof(Sirka*0.9,15)">Jednotka</th>
               <th :style="pof(Sirka*0.9,10)">Prioritni</th>
-              <th :style="pof(Sirka*0.9,25)">Zbytek</th>
+              <th :style="pof(Sirka*0.9,25)">Přidelit stroj</th>
               </tr>
             </thead>
         </table>
@@ -274,7 +274,11 @@
               <td :style="pof(Sirka*0.9,15)"   class="stred">{{itemFull.rychlost}}</td>
               <td :style="pof(Sirka*0.9,15)"   class="stred">{{eJednotka(itemFull.idefix_jednotka)}}</td>
               <td :style="pof(Sirka*0.9,10)"   class="stred"><input size="mini" style="height:18px;width:18px" v-model="itemFull.mod_priorita" type="checkbox" @change="editPriorita(iFull)" name="Hotovost" value="1"  :checked="itemFull.mod_priorita==true"></td>
-              <td :style="pof(Sirka*0.9,25)" > ZB: {{itemFull.nazev}}</td>
+              <td :style="pof(Sirka*0.9,25)" >
+                    <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="setMoveMod(itemFull.idefix)" ><i class="el-icon-edit" size="mini" title="Presunut"></i></button>
+                    <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="setCopyMod(itemFull.idefix)" ><i class="el-icon-plus" size="mini" title="Zkopiruj"></i></button>
+                    {{itemFull.ma}}
+                 </td>
               </tr>
 
         </tbody>
@@ -1345,7 +1349,29 @@ export default {
 
       // alert(Object.keys(bEvent))
     },
+    async setMoveMod(idefix_mod){
+      alert(idefix_mod)
+      var neco = (await this.getModExceptThis(idefix_mod) ).data
+      alert(JSON.stringify(neco))
 
+    },
+    async setCopyMod(idefix_mod){
+      alert(idefix_mod)
+      var neco = (await this.getModExceptThis(idefix_mod) ).data
+      alert(JSON.stringify(neco))
+
+
+    },
+
+    async getModExceptThis(idefix_mod) {
+      //select distinct nazev,idefix_stroj from list_strojmod 59061;
+        var tmp
+        tmp =  ( await ListStroj.nema(this.user,idefix_mod , 600))
+
+        return tmp;
+      // select a.idefix,a.nazev as stroj, b.nazev,b.idefix as idefix_mod from list_stroj a join list_strojmod b on a.idefix = b.idefix_stroj
+
+    },
     async getDataEnum(){
       const self = this
             //alert('PRED' + JSON.stringify(self.list.data.enum_strojskup))
