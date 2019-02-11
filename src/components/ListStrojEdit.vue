@@ -241,22 +241,54 @@
        <v-card-text  v-if="step2=='2'">
      <el-row class="ma-2">
 
-     <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%" >
+     <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%"  ref="vyska">
 
 
 
       <el-row class="ma-2" >
         <div  ref="seznam"  class=grid-content >
+        <vue-draggable-resizable :handles="[]"    :isActive="true" :isResizable="true" :y="100" :x="100" :z="4999" :style="pof(Sirka*0.51,100)+';background:white;position;absolute;height:90%;'"   class="elevation-1" v-if="copyMod || moveMod"
+
+        >
+        <div @mouseleave="moveMod=false;copyMod=false" style="width:100%;height:100%" >
+
+          <div v-if="moveMod" style="width:100%" class="blue lighten-5 px-2 stred"> Presun  modu  {{activeModTxt}} </div>
+          <div v-if="copyMod" style="width:100%" class="blue lighten-5 px-2 stred"> Duplikace  modu  {{activeModTxt}} </div>
+          <!-- {{ activeMod }} / {{ strojmodeMoveList }} / {{activeModTxt}} -->
+
+
+
+        <ta-ble3  :h="'350px'" :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'"     >
+         <table slot="body" style="width:100%" >
+            <thead  >
+              <tr v-for="(m1, mi) in strojmodeMoveList" :key="mi" >
+              <td class="leva pl-2 bila"  >
+                <button  type="button" v-if="true" class="leva  elevation-1" style="width:90%;height:90%;background:white"
+                @click="PridelitStroj(m1.idefix_stroj,$event)"
+                v-on:keyup.27="moveMod=false;copyMod=false"
+
+                >
+                 {{m1.nazev }} / {{m1.idefix_stroj }}
+                </button >
+                 </td>
+              </tr>
+            </thead>
+         </table>
+      </ta-ble3>
+     </div>
+
+        </vue-draggable-resizable>
         <ta-ble3  :h="'360px;width:100%'" :Sirka="1000" :Leva="'20%'" :Prava="'10%'" :Stred="'70%'" >
          <table slot="head" :style="pof(Sirka*0.9,100)">
             <thead  >
               <tr>
               <th :style="pof(Sirka*0.9,22)+';color:red'">Prace</th>
+              <th :style="pof(Sirka*0.9,25)">Přidelit stroj</th>
               <th :style="pof(Sirka*0.9,15)">Rozliseni</th>
               <th :style="pof(Sirka*0.9,15)">Rychlost</th>
               <th :style="pof(Sirka*0.9,15)">Jednotka</th>
               <th :style="pof(Sirka*0.9,10)">Prioritni</th>
-              <th :style="pof(Sirka*0.9,25)">Přidelit stroj</th>
+              
               </tr>
             </thead>
         </table>
@@ -268,17 +300,18 @@
               :id="'RadekS_' + iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID"
               :ref="'RadekS_' + _max(iFull+''+ itemFull.idefix + '' + itemFull.idefix_prace+ '' + '' + list.data.stroj.length +''+ID)" >
               <td :style="pof(Sirka*0.9,22)"   class="leva pl-2">{{ePrace(itemFull.idefix_prace)}}</td>
+              <td :style="pof(Sirka*0.9,25)" class="leva pl-1" >
+                    <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="activeModTxt=itemFull.nazev;setMoveMod(itemFull.idefix)" ><i class="el-icon-arrow-right" size="mini" title="Presune"></i></button>
+                    <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="activeModTxt=itemFull.nazev;setCopyMod(itemFull.idefix)" ><i class="el-icon-plus" size="mini" title="Zkopiruje"></i></button>
+                    {{itemFull.ma}}
+                 </td>
 
 <!-- <td :style="pof(Sirka*0.75,12)"  class="pl-2 leva">{{itemFull.nazev}}</td> -->
               <td :style="pof(Sirka*0.9,15)"   class="pl-2 leva">{{itemFull.nazev_text}}</td>
               <td :style="pof(Sirka*0.9,15)"   class="stred">{{itemFull.rychlost}}</td>
               <td :style="pof(Sirka*0.9,15)"   class="stred">{{eJednotka(itemFull.idefix_jednotka)}}</td>
               <td :style="pof(Sirka*0.9,10)"   class="stred"><input size="mini" style="height:18px;width:18px" v-model="itemFull.mod_priorita" type="checkbox" @change="editPriorita(iFull)" name="Hotovost" value="1"  :checked="itemFull.mod_priorita==true"></td>
-              <td :style="pof(Sirka*0.9,25)" >
-                    <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="setMoveMod(itemFull.idefix)" ><i class="el-icon-edit" size="mini" title="Presunut"></i></button>
-                    <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="setCopyMod(itemFull.idefix)" ><i class="el-icon-plus" size="mini" title="Zkopiruj"></i></button>
-                    {{itemFull.ma}}
-                 </td>
+              
               </tr>
 
         </tbody>
@@ -1045,6 +1078,13 @@ export default {
         cena_prodej_m2: 0,
         strojinkoustbarevnost: []
       },
+      strojmodeMoveList: {  //List pro presun ci pridani modu do jineho stroje
+      },
+
+      moveMod: false,
+      copyMod: false,
+      activeMod: 0,
+      activeTxt: '',
 
       //
       //
@@ -1053,6 +1093,7 @@ export default {
       form3: {
 
       },
+
       lastTime: 0, //posledni cas prichozi udalosti v int
       Sirka: 0,
       SirkaLeva : 0.1,
@@ -1063,7 +1104,9 @@ export default {
       ID: 0,
       TestovaciCislo: 0 ,
       IDForm: "",
-      IsZmena: false
+      IsZmena: false,
+      Vyska : 1000,
+      
 
 
 // --  10   enum_strojskup
@@ -1104,6 +1147,7 @@ export default {
     var self=this
     var interv =setInterval(function() {
        self.sirka("seznam")
+       self.vyska("vyska")
        //alert(self.Sirka)
     },500)
     eventBus.$off('edit_stroj')
@@ -1122,6 +1166,10 @@ export default {
             self.IsZmena = false
             self.addCena = false
             self.addMod   = false
+            self.activeMod =  0
+            self.moveMod  = false
+            self.copyMod  = false
+
              // alert(JSON.stringify(dlgPar))
              try {
              // self.xMyska = event.screenX - 200
@@ -1194,6 +1242,7 @@ export default {
       //Otazka
 
     },
+    
     _max(iporadi) {
       const self = this
       var neco1 = document.getElementById('RadekS_'+iporadi+'')
@@ -1285,6 +1334,32 @@ export default {
 
       return nret
     },
+    vyska(ref, znovu = true) {
+      const self= this
+      var nret = 0
+      self.Vyska = self.Vyska
+      //alert(ref)
+       setTimeout(function() {
+         // alert(self.$refs[ref].offsetHeight)
+        try {
+          nret = self.$refs[ref].clientHeight
+          if (nret != self.Vyska || true ) {
+            self.Vyska = nret
+            self.TestovaciCislo++
+          }
+
+          
+        } catch(e) {
+          return 1100
+        }
+
+        //alert(nret)
+        //alert(self.$refs.seznam)
+      }, 1000)
+
+      return nret
+    },
+
 
     //Enums
     ePrace(idefix) {
@@ -1349,16 +1424,56 @@ export default {
 
       // alert(Object.keys(bEvent))
     },
+
+    async PridelitStroj(idefix_stroj,b){
+      const self = this
+      console.log("aaaaa")
+      if (self.moveMod){
+        console.log("bbb")
+        
+        var neco=  (await ListStroj.moveMod(self.user,self.idefixThis,{
+          idefix_stroj: idefix_stroj,
+          idefix_mod: self.activeMod
+          }))
+         self.moveMod = false 
+         self.getData(self.rec, false)
+      }
+       if (self.copyMod){
+         console.log("ccc")
+        //alert("Zkopiruji fce_strojmod_copy(idefix_stroj_to bigint, _idefix_mod bigint "  +activeMod  + " " + idefix_stroj)
+        var neco=  (await ListStroj.copyMod(self.user,self.idefixThis,{
+          idefix_stroj: idefix_stroj,
+          idefix_mod: self.activeMod
+          }))
+          self.copyMod = false 
+          self.getData(self.rec, false)
+
+
+      }
+
+    },
     async setMoveMod(idefix_mod){
-      alert(idefix_mod)
+      this.moveMod=true;
+      this.copyMod=false;
+
+      this.activeMod = idefix_mod ;
+      //alert(self.activeMod)
+      this.strojmodeMoveList=[]
       var neco = (await this.getModExceptThis(idefix_mod) ).data
-      alert(JSON.stringify(neco))
+      this.strojmodeMoveList = neco;
+
+      // alert(JSON.stringify(neco))
 
     },
     async setCopyMod(idefix_mod){
-      alert(idefix_mod)
+      this.copyMod=true;
+      this.moveMod=false;
+      //alert("A" +this.moveMod)
+      this.activeMod = idefix_mod ;
+      this.strojmodeMoveList=[]
       var neco = (await this.getModExceptThis(idefix_mod) ).data
-      alert(JSON.stringify(neco))
+      this.strojmodeMoveList = neco;
+      //alert(JSON.stringify(neco))
 
 
     },
@@ -1439,8 +1554,16 @@ export default {
             }
     },
 
-    async getData(dlgPar) {
+    async getData(dlgPar, otoc=true) {
           const self = this
+          if (otoc==false){
+           //   self.list=[]
+              self.list = (await ListStroj.one(this.user,self.idefixThis, -1,'edit'))
+              
+              return
+
+           }
+           
           var nT = new Date()
           var curTime= (nT.getMinutes()*60000)+(nT.getSeconds()*1000) + nT.getMilliseconds()
           if (curTime - self.lastTime <100 ) {
@@ -1454,6 +1577,7 @@ export default {
           // alert(JSON.stringify(dlgPar)+ "/" + dlgPar.Id)
           // alert(dlgPar.Idefix)
            self.list = []
+           
 
 
 
@@ -1708,12 +1832,16 @@ export default {
       try {
 
 
+
       if (this.list.data.strojmod[idx]['idefix'] > 0 ){
         if (confirm("Smazat tento mod ?")){
             this.list.data.strojmod.splice(idx,1)
+            this.IsZmena = true;
+            
         }
       } else {
             this.list.data.strojmod.splice(idx,1)
+            this.IsZmena = true;
       }
       } catch(e) {
         console.log('jsem chyba',e )
@@ -1724,9 +1852,11 @@ export default {
       try {
       if (this.list.data.strojceny[idx].idefix > 0 ){
         if (confirm("Smazat polozku ?")){
+            this.IsZmena = true;
             this.list.data.strojceny.splice(idx,1)
         }
       } else {
+            this.IsZmena = true;
             this.list.data.strojceny.splice(idx,1)
       }
       } catch(e) {

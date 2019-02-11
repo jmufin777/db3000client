@@ -39,6 +39,15 @@ export default {
   saveone (user, idefix, form ) {
     console.log({'Form': form})
     return Api().post('list-stroj-save-one',  { form: form ,user: user, idefix: idefix })
+   },
+
+   moveMod (user, idefix, form ) {
+    console.log({'Form': form})
+    return Api().post('list-stroj-save-one',  { form: form, user: user, idefix: idefix, moveMod: 1 })
+   },
+   copyMod (user, idefix, form ) {
+    console.log({'Form': form})
+    return Api().post('list-stroj-save-one',  { form: form, user: user, idefix: idefix, copyMod: 1 })
    }
 
 }
