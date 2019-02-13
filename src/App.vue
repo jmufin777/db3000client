@@ -333,10 +333,40 @@ div[role="region"] {
 
 td {
   font-size: 13px;
+  font-family: Helvetica;
   color: #616266;
 }
 input {
   color: #616266;
+}
+
+.font_13 {
+  font-size: 13px;
+  font-family: Helvetica;
+}
+.font_12 {
+  font-size: 12px;
+  font-family: Helvetica;
+}
+.font_11 {
+  font-size: 11px;
+  font-family: Helvetica;
+}
+.font_10 {
+  font-size: 10px;
+  font-family: Helvetica;
+}
+.font_14 {
+  font-size: 14px;
+  font-family: Helvetica;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.bot {
+   vertical-align: text-bottom;
 }
 
 

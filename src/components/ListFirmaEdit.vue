@@ -360,7 +360,7 @@
        <tr class="bila">
           <td class="nic bila prava pr-2 blue--text " style="width:20%">Splatnost:</td>
           <td class="nic bila pl-3" style="width:70%">
-              <input type="number" v-model="list.data.firma[0].splatnost" size="mini"  style="width:95%" class="tdl tdn" placeholder="splatnost"  >
+              <input type="number" v-model="list.data.firma[0].splatnost" size="mini"  style="width:95%" class="tdl tdn" placeholder="splatnost"  @focus="$event.target.select()">
           </td>
        </tr>
       <tr class="bila">
@@ -514,6 +514,7 @@
                          >{{clovek.jmeno}}</td>
                          <td :style="pof(Sirka*SirkaStred,15)"
                           v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'seda' : ( clovek.aktivni==false )  }"
+                          style="cursor:pointer"
                           class="tdline pl-1"
                          > {{clovek.prijmeni}}</td>
                          <td :style="pof(Sirka*SirkaStred,25)"
@@ -662,7 +663,7 @@
                        @dblclick="editProvozovna(provozovnax)"
 
                        >
-                         <td style="width:15%">{{provozovnax.nazev}}</td>
+                         <td style="width:15%;cursor:pointer">{{provozovnax.nazev}}</td>
                          <td style="width:15%">{{provozovnax.nazev_txt}}</td>
                          <td style="width:20%" >{{provozovnax.ulice + ', '+ provozovnax.psc+ ' ' +provozovnax.obec  }}</td>
 
@@ -711,7 +712,7 @@
                 ></el-autocomplete>
 
                 <input v-if="false" v-model="firmaprovozovna.nazev_txt" size="mini"  style="width:95%" class="tdl tdn" placeholder="Skupina provozoven"  >
-                
+
               </td>
             </tr>
           <tr>
@@ -763,10 +764,15 @@
                    &nbsp;&nbsp;Do:&nbsp; <input type="time" v-model="firmaprovozovna.otevreno_do" size="mini"  style="width:35%;text-align:center" class="tdl tdn" placeholder="Do" >
            </td>
          </tr>
-         <tr>
+         <tr v-if="firmaprovozovna.so ||firmaprovozovna.ne" >
            <td class="nic bila pl-3" style="width:70%" >
               Vikendy : <input type="time" v-model="firmaprovozovna.otevreno_w_od" size="mini"  style="width:35%;text-align:center" class="tdl tdn" placeholder="Od">
                    &nbsp;&nbsp;Do:&nbsp; <input type="time" v-model="firmaprovozovna.otevreno_w_do" size="mini"  style="width:35%;text-align:center" class="tdl tdn" placeholder="Do" >
+           </td>
+         </tr>
+         <tr v-else>
+           <td class="nic bila pl-3" style="width:70%" >
+                &nbsp;
            </td>
          </tr>
         <tr>
@@ -3090,7 +3096,7 @@ border:none;
 
 
 .el-autocomplete, .inline-input, .el-input__inner, .el-input, .el-input--mini  {
-  
+
 }
 </style>
 

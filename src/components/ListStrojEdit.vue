@@ -96,10 +96,10 @@
     <el-row class="ma-2">
      <el-col :span="24" class="pa-3 mt-4 text-xs-center" style="width:100%" >
     <el-row class="ma-2">
-     <el-col :span="2">Nazev </el-col>
+     <el-col :span="2" class="nic bila prava pr-2 blue--text font_12"  >Nazev</el-col>
      <el-col :span="5">
       <el-autocomplete
-      class="inline-input mr-1"
+      class="inline-input mr-1 nic bila prava pr-2 "
       v-model="list.data.stroj[0].nazev"
       :fetch-suggestions="querySearch1"
       placeholder="Nazev stroje"
@@ -107,7 +107,7 @@
       size="mini"
     ></el-autocomplete>
      </el-col>
-     <el-col :span="3">Technologie </el-col>
+     <el-col :span="3" class="nic bila prava pr-2 blue--text font_12">Technologie </el-col>
      <el-col :span="4">
       <el-autocomplete
       class="inline-input mr-1"
@@ -118,7 +118,7 @@
       size="mini"
     ></el-autocomplete>
     </el-col>
-    <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-strojskup','Skupiny Stroju')" style="width:90%">Skupina stroje:</el-button> </el-col>
+    <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-strojskup','Skupiny Stroju')" style="width:90%" class="nic bila prava blue--text font_12 elevation-1 stred">Skupina stroje</el-button> </el-col>
      <el-col :span="4" >
 
        <el-select v-model="list.data.stroj[0]['idefix_strojskup']"
@@ -138,91 +138,79 @@
     <el-row class="ma-2">
       <el-col :span="24"><hr></el-col>
     </el-row>
-    <el-row class="ma-2">
-     <el-col :span="6">max šířka materiálu mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].sirka_mat_max_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
-     <el-col :span="6">max délka materiálu mm</el-col>
+    <el-row class="ma-2" >
+      <el-col :span="24" class="mt-2">
+        <table style="width:89%;border:none;" class="nic"  cols="4">
+            <tr>
+            <td class="nic bila prava pr-2 blue--text " style="width:25%">max šířka materiálu mm</td>
+              <td class="nic bila pl-3" style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].sirka_mat_max_mm" size="mini"  style="width:65%" class="tdl tdn stred " placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+              <td class="nic bila prava pr-2 blue--text " style="width:25%">max délka materiálu mm</td>
+              <td class="nic bila pl-3 " style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].delka_mat_max_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+            </tr>
+           <tr>
+            <td class="nic bila prava pr-2 blue--text " style="width:25%">max šířka tisku mm</td>
+              <td class="nic bila pl-3 " style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].sirka_tisk_max_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+              <td class="nic bila prava pr-2 blue--text " style="width:25%">max délka tisku mm</td>
+              <td class="nic bila pl-3" style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].delka_tisk_max_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+            </tr>
 
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].delka_mat_max_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
-     </el-row>
-    <el-row class="ma-2">
+           <tr>
+            <td class="nic bila prava pr-2 blue--text " style="width:25%">technologický okraj strana mm</td>
+              <td class="nic bila pl-3" style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_strana_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+              <td class="nic bila prava pr-2 blue--text " style="width:25%">technologický okraj začátek mm</td>
+              <td class="nic bila pl-3" style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_start_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+            </tr>
 
-     <el-col :span="6">max šířka tisku mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].sirka_tisk_max_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
+           <tr>
+            <td class="nic bila prava pr-2 blue--text " style="width:25%">technologická mezera mezi kopiema mm</td>
+              <td class="nic bila pl-3" style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_spacecopy_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+              <td class="nic bila prava pr-2 blue--text " style="width:25%">technologická mezera mezi jobama mm</td>
+              <td class="nic bila pl-3" style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_spacejobs_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+            </tr>
 
-     <el-col :span="6">max délka tisku mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].delka_tisk_max_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
-     </el-row>
-<!--//
-    <el-row class="ma-2">
+           <tr>
+            <td class="nic bila prava pr-2 blue--text " style="width:25%">technologický okraj konec mm</td>
+              <td class="nic bila pl-3" style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_end_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+              <td class="nic bila prava pr-2 blue--text " style="width:25%">bezokrajový tisk</td>
+              <td class="nic bila pl-1" style="width:25%">
+                <input style="height:14px;width:14px" type="checkbox" @change="changeBezOkraj" name="bezOkraje" value="1"  :checked="(list.data.stroj[0].bez_okraj==1)?true:false">
+              </td>
+            </tr>
 
-     <el-col :span="6">max šířka laminace mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].sirka_lam_max_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
+          <tr>
+            <td class="nic bila prava pr-2 blue--text " style="width:25%">velikost spadávky pro technologii mm</td>
+              <td class="nic bila pl-3" style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].spadavka_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+              <td class="nic bila prava pr-2 blue--text " style="width:25%">prostor pro strojové ořezové značky - mm?</td>
+              <td class="nic bila pl-3" style="width:25%">
+                <input type="number" v-model="list.data.stroj[0].space_znacky_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              </td>
+            </tr>
 
-     <el-col :span="6">max délka laminace mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].delka_lam_max_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
-     </el-row>
--->
-    <el-row class="ma-2">
-
-     <el-col :span="6">technologický okraj strana mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].tech_okraj_strana_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
-
-     <el-col :span="6">technologický okraj začátek mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].tech_okraj_start_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
-     </el-row>
-    <el-row class="ma-2">
-
-     <el-col :span="6">technologická mezera mezi kopiema mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].tech_okraj_spacecopy_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
-
-     <el-col :span="6">technologická mezera mezi jobama mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].tech_okraj_spacejobs_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
+        </table>
+      </el-col>
     </el-row>
-    <el-row class="ma-2">
 
-     <el-col :span="6">technologický okraj konec mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].tech_okraj_end_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
 
-     <el-col :span="6">bezokrajový tisk</el-col>
-     <el-col :span="3">
-     <input style="height:14px;width:14px" type="checkbox" @change="changeBezOkraj" name="bezOkraje" value="1"  :checked="(list.data.stroj[0].bez_okraj==1)?true:false">
-     <!-- <el-input-number v-model="list.data.stroj[0].bez_okraj" size="mini"  style="width:100%"></el-input-number> -->
-     </el-col>
-     </el-row>
-    <el-row class="ma-2">
-
-     <el-col :span="6">velikost spadávky pro technologii mm</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].spadavka_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
-     <el-col :span="6">prostor pro strojové ořezové značky - mm?</el-col>
-     <el-col :span="3">
-     <el-input-number v-model="list.data.stroj[0].space_znacky_mm" size="mini"  style="width:100%"></el-input-number>
-     </el-col>
-    </el-row>
 
 
 
@@ -288,7 +276,7 @@
               <th :style="pof(Sirka*0.9,15)">Rychlost</th>
               <th :style="pof(Sirka*0.9,15)">Jednotka</th>
               <th :style="pof(Sirka*0.9,10)">Prioritni</th>
-              
+
               </tr>
             </thead>
         </table>
@@ -311,7 +299,7 @@
               <td :style="pof(Sirka*0.9,15)"   class="stred">{{itemFull.rychlost}}</td>
               <td :style="pof(Sirka*0.9,15)"   class="stred">{{eJednotka(itemFull.idefix_jednotka)}}</td>
               <td :style="pof(Sirka*0.9,10)"   class="stred"><input size="mini" style="height:18px;width:18px" v-model="itemFull.mod_priorita" type="checkbox" @change="editPriorita(iFull)" name="Hotovost" value="1"  :checked="itemFull.mod_priorita==true"></td>
-              
+
               </tr>
 
         </tbody>
@@ -404,26 +392,28 @@
 
     > -->
 
-<vue-draggable-resizable :handles="[]"    :isActive="true" :isResizable="true" :y="100" :x="100" :z="4999" :style="pof(Sirka*0.91,100)+';background:white;position;absolute;height:90%;'"   class="elevation-1" v-if="addMod == true || editMod == true "  >
+<vue-draggable-resizable :handles="[]"    :isActive="true" :isResizable="true" :y="100" :x="100" :z="4999" :style="pof(Sirka*0.91,100)+';background:white;position;absolute;height:90%;'"   class="elevation-2" v-if="addMod == true || editMod == true "  >
 <!-- <div :style="pof(Sirka*0.9,100)" class="elevation-5" v-if="addMod == true || editMod == true" > -->
-<div :style="pof(Sirka*0.9,100)+';position:absolute;top:5px;left:5px;height:90%;background:#fff;z-index:5000;border:solid 2px silver'" class="elevation-5" v-if="addMod == true || editMod == true "
+<div :style="pof(Sirka*0.9,100)+';position:absolute;top:5px;left:5px;height:90%;background:#fff;z-index:5000;border:solid 2px silver'" class="elevation-0" v-if="addMod == true || editMod == true "
 @keyup.enter="setFocus('bA'+ID)" @keyup.escape="addMod=false;editMod=false"
 >
 <!-- <div :style="pof(Sirka*0.9,100)+';position:absolute;top:40%;left:30%;height:90%;background:#fff;z-index:50;border:solid 2px silver'" class="elevation-5" v-if="addMod == true || editMod == true " > -->
 <el-row class="ml-3 mt-3 mb-0  " v-if="true" >
-<el-col :span="14" class="elevation-2">
+<el-col :span="14" class="elevation-0">
   <el-row>
-    <el-col :span="23" class="elevation-3 pa-1 my-2 green--text"><b>Zakladni vlastnosti</b></el-col>
+    <el-col :span="23" class="elevation-0 pa-1 my-2 nic bila leva stred blue--text font_12">Zakladni vlastnosti</el-col>
   </el-row>
   <!--1 Prace //-->
   <el-row>
-    <el-col :span="6" ><el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:100%;" class=" elevation-5">Prace</el-button></el-col>
+    <el-col :span="6" >
+      <a size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:100%;" class="elevation-0 nic bila stred pr-0 blue--text font_12">Prace</a>
+    </el-col>
     <el-col :span="10">
         <el-select
                   v-model="strojmod.idefix_prace"
                   default-first-option
                   size="mini"
-                  class="pt-0 pl-1"
+                  class="pt-0 pl-1 elevation-0 nic bila prava pr-2 blue--text font_12"
                   filterable
                   style="width:90%"
             >
@@ -432,21 +422,24 @@
                 :key="item82.idefix*1"
                 :label="item82.nazev"
                 :value="item82.idefix*1"
+                class="pt-0 pl-1 elevation-0 nic bila leva pl-2  font_12"
+
                 >{{item82.nazev}} </el-option>
           </el-select>
       </el-col>
-      <el-col :span="6" class="elevation-1 py-1" >Prioritni</el-col>
+      <el-col :span="5" class="elevation-0 nic bila stred pr-2 blue--text font_12" >Prioritni</el-col>
 
-     <el-col :span="2">
-       <el-checkbox v-model="strojmod.mod_priorita" class="mx-1 px-1 mt-1"
-            size="mini">
+     <el-col :span="3" class="pl-0">
+             <input size="mini" v-model="strojmod.mod_priorita"  style="height:18px;width:18px" type="checkbox"  name="Hotovost" value="1"  :checked="strojmod.mod_priorita">
+              <!-- <el-checkbox v-model="strojmod.mod_priorita" class="mx-1 px-1 mt-0"
+            size="mini"> -->
        </el-checkbox>
      </el-col>
   </el-row>
 <!--2 Nazev //-->
   <el-row class="my-2" >
-    <el-col :span="6" class="elevation-1 py-1" >Nazev</el-col>
-    <el-col :span="17">
+    <el-col :span="6"  class="pt-0 pl-1 elevation-0 nic bila  stred blue--text font_12" >Nazev</el-col>
+    <el-col :span="18" class="pl-0">
          <el-autocomplete
         class="inline-input mr-1"
         v-model="strojmod.nazev"
@@ -461,7 +454,7 @@
 
   <!--3 Rozliseni - nazev_text //-->
   <el-row class="my-2" >
-    <el-col :span="6" class="elevation-1 py-1" >Rozliseni</el-col>
+    <el-col :span="6"  class="pt-0 pl-1 elevation-0 nic bila  stred blue--text font_12"" >Rozliseni</el-col>
     <el-col :span="18">
       <el-autocomplete
       class="inline-input mr-1 "
@@ -477,12 +470,15 @@
 
   <!--4 Rychlost //-->
   <el-row class="my-2" >
-    <el-col :span="6" class="elevation-1 py-1" >Rychlost</el-col>
+    <el-col :span="6" class="pt-0 pl-1 elevation-0 nic bila  stred blue--text font_12" >Rychlost</el-col>
     <el-col :span="6" class="pl-2">
-        <el-input-number v-model="strojmod.rychlost" size="mini"  style="width:90%"></el-input-number>
+      <input type="number" v-model="strojmod.rychlost" size="mini"  style="width:95%" class="tdl tdn stred font_12" placeholder="Rychlost"  @focus="$event.target.select()">
+
     </el-col>
 
-        <el-col :span="4" ><el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:100%;" class=" elevation-5">Jednotka</el-button></el-col>
+        <el-col :span="4" >
+          <!-- <el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:100%;" class=" elevation-5">Jednotka</el-button></el-col> -->
+          <button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:100%;" class=" elevation-0 blue--text font_12">Jednotka</button></el-col>
         <el-col :span="7" class="pr-2 pl-0">
        <el-select v-model="strojmod.idefix_jednotka"
         default-first-option
@@ -503,16 +499,16 @@
 
 </el-col>
 
-<el-col :span="9" class="elevation-1 ml-1">
+<el-col :span="9" class="elevation-0 ml-1">
 
 
   <el-row class="elevation-0 pa-1 my-1 green--text">
-    <el-col :span="14" class="py-0 elevation-1" >Inkoust</el-col>
-    <el-col :span="10" class="py-0 elevation-1">Spotreba</el-col>
+    <el-col :span="14" class="py-0 elevation-0 blue--text font_12" >Inkoust</el-col>
+    <el-col :span="10" class="py-0 elevation-0  blue--text font_12">Spotreba</el-col>
   </el-row>
   <el-row >
-      <el-col :span="2" class="elevation-1 py-1">1</el-col>
-      <el-col :span="12" class="elevation-1">
+      <el-col :span="2" class="elevation-0 py-1 blue--text">1</el-col>
+      <el-col :span="12" class="elevation-0 ">
         <el-select v-model="strojmod.idefix_i1"
           size="mini"
           class="pt-0 pl-1 mx-1"
@@ -527,14 +523,15 @@
        </el-select>
 
       </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i1spotreba" size="mini"  style="width:90%"></el-input-number>
+      <el-col :span="10" class="elevation-0">
+        <!-- <el-input-number v-model="strojmod.i1spotreba" size="mini"  style="width:90%"></el-input-number> -->
+        <input type="number" v-model="strojmod.i1spotreba" size="mini"  style="width:95%" class="tdl tdn font_12 stred" placeholder="l / m2"  @focus="$event.target.select()">
       </el-col>
   </el-row>
 <!--2--//-->
   <el-row >
-      <el-col :span="2" class="elevation-1 py-1">2</el-col>
-      <el-col :span="12" class="elevation-1">
+      <el-col :span="2" class="elevation-0 py-1 blue--text">2</el-col>
+      <el-col :span="12" class="elevation-0">
         <el-select v-model="strojmod.idefix_i2"
           size="mini"
           class="pt-0 pl-1 mx-1"
@@ -549,15 +546,16 @@
        </el-select>
 
       </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i2spotreba" size="mini"  style="width:90%"></el-input-number>
+      <el-col :span="10" class="elevation-0">
+        <!-- <el-input-number v-model="strojmod.i2spotreba" size="mini"  style="width:90%"></el-input-number> -->
+        <input type="number" v-model="strojmod.i2spotreba" size="mini"  style="width:95%" class="tdl tdn font_12 stred" placeholder="l / m2"  @focus="$event.target.select()">
       </el-col>
   </el-row>
 <!--2 EOF //-->
 <!--3--//-->
   <el-row >
-      <el-col :span="2" class="elevation-1 py-1">3</el-col>
-      <el-col :span="12" class="elevation-1">
+      <el-col :span="2" class="elevation-0 py-1 blue--text">3</el-col>
+      <el-col :span="12" class="elevation-0">
         <el-select v-model="strojmod.idefix_i3"
           size="mini"
           class="pt-0 pl-1 mx-1"
@@ -572,15 +570,16 @@
        </el-select>
 
       </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i3spotreba" size="mini"  style="width:90%"></el-input-number>
+      <el-col :span="10" class="elevation-0">
+        <!-- <el-input-number v-model="strojmod.i3spotreba" size="mini"  style="width:90%"></el-input-number> -->
+        <input type="number" v-model="strojmod.i3spotreba" size="mini"  style="width:95%" class="tdl tdn font_12 stred" placeholder="l / m2"  @focus="$event.target.select()">
       </el-col>
   </el-row>
 <!--3 EOF //-->
 <!--4--//-->
   <el-row >
-      <el-col :span="2" class="elevation-1 py-1">4</el-col>
-      <el-col :span="12" class="elevation-1">
+      <el-col :span="2" class="elevation-0 py-1 blue--text">4</el-col>
+      <el-col :span="12" class="elevation-0">
         <el-select v-model="strojmod.idefix_i4"
           size="mini"
           class="pt-0 pl-1 mx-1"
@@ -595,16 +594,17 @@
        </el-select>
 
       </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i4spotreba" size="mini"  style="width:90%"></el-input-number>
+      <el-col :span="10" class="elevation-0">
+        <!-- <el-input-number v-model="strojmod.i4spotreba" size="mini"  style="width:90%"></el-input-number> -->
+        <input type="number" v-model="strojmod.i4spotreba" size="mini"  style="width:95%" class="tdl tdn font_12 stred" placeholder="l / m2"  @focus="$event.target.select()">
       </el-col>
   </el-row>
 <!--4 EOF //-->
 
 <!--5--//-->
   <el-row >
-      <el-col :span="2" class="elevation-1 py-1">5</el-col>
-      <el-col :span="12" class="elevation-1">
+      <el-col :span="2" class="elevation-0 py-1 blue--text">5</el-col>
+      <el-col :span="12" class="elevation-0">
         <el-select v-model="strojmod.idefix_i5"
           size="mini"
           class="pt-0 pl-1 mx-1"
@@ -619,8 +619,9 @@
        </el-select>
 
       </el-col>
-      <el-col :span="10" class="elevation-1">
-        <el-input-number v-model="strojmod.i5spotreba" size="mini"  style="width:90%"></el-input-number>
+      <el-col :span="10" class="elevation-0">
+        <!-- <el-input-number v-model="strojmod.i5spotreba" size="mini"  style="width:90%"></el-input-number> -->
+        <input type="number" v-model="strojmod.i5spotreba" size="mini"  style="width:95%" class="tdl tdn font_12 stred" placeholder="l / m2"  @focus="$event.target.select()">
       </el-col>
   </el-row>
 <!--5 EOF //-->
@@ -1106,7 +1107,7 @@ export default {
       IDForm: "",
       IsZmena: false,
       Vyska : 1000,
-      
+
 
 
 // --  10   enum_strojskup
@@ -1242,7 +1243,7 @@ export default {
       //Otazka
 
     },
-    
+
     _max(iporadi) {
       const self = this
       var neco1 = document.getElementById('RadekS_'+iporadi+'')
@@ -1348,7 +1349,7 @@ export default {
             self.TestovaciCislo++
           }
 
-          
+
         } catch(e) {
           return 1100
         }
@@ -1430,12 +1431,12 @@ export default {
       console.log("aaaaa")
       if (self.moveMod){
         console.log("bbb")
-        
+
         var neco=  (await ListStroj.moveMod(self.user,self.idefixThis,{
           idefix_stroj: idefix_stroj,
           idefix_mod: self.activeMod
           }))
-         self.moveMod = false 
+         self.moveMod = false
          self.getData(self.rec, false)
       }
        if (self.copyMod){
@@ -1445,7 +1446,7 @@ export default {
           idefix_stroj: idefix_stroj,
           idefix_mod: self.activeMod
           }))
-          self.copyMod = false 
+          self.copyMod = false
           self.getData(self.rec, false)
 
 
@@ -1559,11 +1560,11 @@ export default {
           if (otoc==false){
            //   self.list=[]
               self.list = (await ListStroj.one(this.user,self.idefixThis, -1,'edit'))
-              
+
               return
 
            }
-           
+
           var nT = new Date()
           var curTime= (nT.getMinutes()*60000)+(nT.getSeconds()*1000) + nT.getMilliseconds()
           if (curTime - self.lastTime <100 ) {
@@ -1577,7 +1578,7 @@ export default {
           // alert(JSON.stringify(dlgPar)+ "/" + dlgPar.Id)
           // alert(dlgPar.Idefix)
            self.list = []
-           
+
 
 
 
@@ -1837,7 +1838,7 @@ export default {
         if (confirm("Smazat tento mod ?")){
             this.list.data.strojmod.splice(idx,1)
             this.IsZmena = true;
-            
+
         }
       } else {
             this.list.data.strojmod.splice(idx,1)
