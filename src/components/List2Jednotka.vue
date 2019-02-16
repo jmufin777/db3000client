@@ -7,8 +7,8 @@
     </el-col>
   </el-row>
   <el-row  :gutter="20">
-  <el-col :span="4" :offset="0" style="margin-top:5px;padding-left:10px" >
-  <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku">
+  <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" >
+  <el-input prefix-icon="el-icon-search" :id="objSearchBar" autofocus clearable size="mini" v-model="search" placeholder="Prohledat tabulku" >
   </el-input>
   </el-col>
   <el-col :span="1" :offset="0" style="margin-top:5px;padding-left:10px" >
@@ -51,13 +51,13 @@
 <div style="height:100%;overflow:scroll" class="mt-0" :id="'t' + objId1">
 
 <el-row    style="backgroud: white">
-  <el-col :span="2" class="mth">
+  <el-col :span="2" class="mth stred">
    Akce
  </el-col>
 
 
  <el-col :span="22">
-  <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth"
+  <el-col v-for="( col, i0 ) in cols" :key="col.id" :span="col.span" class="mth stred"
   v-bind:class="{'green--text': lastSort[0]==col.id }"
   v-show="col.props.visible=='yes'"
   >
@@ -69,7 +69,7 @@
     <!-- <button v-if="col.sort && col.sort=='asc'" type="button" style="width:10px;height:18px" class="white  px-0 cell" @click="sortByKey(col.id,'desc')" ><i class="el-icon-upload2" size="medium"></i></button>
     <button v-if="!col.sort || col.sort=='desc'" type="button" style="width:10px;height:8px" class="white  px-0 cell" @click="sortByKey(col.id,'asc')" ><i class="el-icon-download" size="medium"></i></button> -->
       </el-col>
- <el-col :span="2" class="mth">
+ <el-col :span="2" class="mth stred">
    X
  </el-col>
  </el-col>
@@ -81,15 +81,15 @@
   <el-row v-for="( item, irow ) in list" :key="item.id"
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
       :id="'d'+objId2 + '_r_'+irow"
-        style="backgroud: white"
+        style="background: white"
   >
 
 
   <el-col :span="2" >
 
 
-    <div class='dcell'  style="width::100% ; background:white"
-    v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+    <div class='dcell stred'  style="width::100% ; background:white;border-bottom: solid 1px silver"
+    v-bind:class="{bila: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
@@ -98,18 +98,20 @@
   </el-col>
 
 
-  <el-col :span="22"
+  <el-col :span="22" style="background:white;border: solid 0px #c1ddf8"
   >
     	<el-col v-for="(col,icol) in cols"
 			:key="col.id"
       :span="col.span"
       v-show="col.props.visible=='yes'"
+      class="pl-0"
       >
-      <div :id="'d'+ objId2+ '_r_'+irow+'_c_'+icol"  class='dcell' >
+      <div :id="'d'+ objId2+ '_r_'+irow+'_c_'+icol"  class='dcell'  >
 
         <input type="number" v-if="col.type =='number'"
         class=" px-0 cell " :id="'c' + objId2 + '_r_'+irow+'_c_'+icol"
-        :value="item[col.id]" style="width:100%;border:none;height:100%" readonly
+
+        :value="item[col.id]" style="width:100%;border:none;height:100%;border:none" readonly
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
        >
        <select v-else-if="col.type=='selectone'" v-model="list[irow][col.id]"
@@ -141,7 +143,7 @@
     </el-dropdown>
 
         <input type="text" v-else
-        class=" px-0 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
+        class=" pl-1 px-0 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
 
@@ -159,8 +161,10 @@
 
     	</el-col>
      <el-col :span="2" >
-      <div class='dcell'  style="width::100% ; background:white"
-      v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+      <div class='dcell stred'  style="width::100% ; background:white"
+      v-bind:class="{bila: irow % 2 ==0 , bila:  irow % 2 >0}"
+
+
       >
          <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow)" ><i class="el-icon-delete" size="mini"></i></button>
       </div>
@@ -282,10 +286,23 @@ export default {
       list: [],
       listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
       listEdits: [],   //Prehled zmen s prinakem edit, delete
-      lastSort: ['kod','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      lastSort: ['kod','asc'],  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      ID: 0,
     }
   },
+  created() {
+    const self = this
+
+  },
   async mounted () {
+      const self = this
+      self.ID = Math.round(Math.random() * 1983458)
+      self.objId1+= self.ID
+      self.objId2+=  self.ID
+      self.objSearchBar+= self.ID
+      //alert(self.objId1)
+
+
 
 //    return
     if (this.isUserLoggedIn) {

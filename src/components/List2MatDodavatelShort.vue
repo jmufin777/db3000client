@@ -427,8 +427,6 @@ editLine(nRow) {
            'record': self.list[nRow],
            'nRow': nRow
 
-
-
       })
 
    },
@@ -440,10 +438,6 @@ copyLine(nRow) {
      self.Info = nRow
 
      self.newLine(nRow)
-
-
-
-
 
 
    },

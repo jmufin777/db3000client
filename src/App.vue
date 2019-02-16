@@ -179,7 +179,8 @@ html div {
 
 }
 .seda {
-  background: #eee !important;
+  /* background: #eee !important; */
+  background: #e6f2fc  !important;;
 }
 .bila{
   background-color: white !important;
@@ -368,18 +369,34 @@ input {
 .bot {
    vertical-align: text-bottom;
 }
+.tlacitko {
+  border:none;
+  text-decoration: underline;
+  color: #4795ec;
+}
+.popisek {
+  border:none;
+  color: #4795ec;
+}
+textarea:focus, input:focus {
+    outline: none;
+}
 
+select:focus, input:focus {
+    outline: none;
+}
 
 .handle {
     width: 50px;
     height: 50px;
     font-size: 20px;
    }
-   .handle-bm {
+.handle-bm {
     width: 50px;
     height: 50px;
     font-size: 20px;
    }
+
 
 
 

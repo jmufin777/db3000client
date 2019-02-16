@@ -4,7 +4,7 @@
     :x="xMyska"
     :w="1024"
     :y="100"
-    :z="0"
+    :z="1000000"
     :h="510"
     :parent="false"
     :maximize="false"
@@ -143,66 +143,66 @@
         <table style="width:89%;border:none;" class="nic"  cols="4">
             <tr>
             <td class="nic bila prava pr-2 blue--text " style="width:25%">max šířka materiálu mm</td>
-              <td class="nic bila pl-3" style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].sirka_mat_max_mm" size="mini"  style="width:65%" class="tdl tdn stred " placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].sirka_mat_max_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
               <td class="nic bila prava pr-2 blue--text " style="width:25%">max délka materiálu mm</td>
-              <td class="nic bila pl-3 " style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].delka_mat_max_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].delka_mat_max_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
             </tr>
            <tr>
             <td class="nic bila prava pr-2 blue--text " style="width:25%">max šířka tisku mm</td>
-              <td class="nic bila pl-3 " style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].sirka_tisk_max_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].sirka_tisk_max_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
               <td class="nic bila prava pr-2 blue--text " style="width:25%">max délka tisku mm</td>
-              <td class="nic bila pl-3" style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].delka_tisk_max_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].delka_tisk_max_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
             </tr>
 
            <tr>
             <td class="nic bila prava pr-2 blue--text " style="width:25%">technologický okraj strana mm</td>
-              <td class="nic bila pl-3" style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].tech_okraj_strana_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_strana_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
               <td class="nic bila prava pr-2 blue--text " style="width:25%">technologický okraj začátek mm</td>
-              <td class="nic bila pl-3" style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].tech_okraj_start_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_start_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
             </tr>
 
            <tr>
             <td class="nic bila prava pr-2 blue--text " style="width:25%">technologická mezera mezi kopiema mm</td>
-              <td class="nic bila pl-3" style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].tech_okraj_spacecopy_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_spacecopy_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
               <td class="nic bila prava pr-2 blue--text " style="width:25%">technologická mezera mezi jobama mm</td>
-              <td class="nic bila pl-3" style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].tech_okraj_spacejobs_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_spacejobs_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
             </tr>
 
            <tr>
             <td class="nic bila prava pr-2 blue--text " style="width:25%">technologický okraj konec mm</td>
-              <td class="nic bila pl-3" style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].tech_okraj_end_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].tech_okraj_end_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
               <td class="nic bila prava pr-2 blue--text " style="width:25%">bezokrajový tisk</td>
-              <td class="nic bila pl-1" style="width:25%">
-                <input style="height:14px;width:14px" type="checkbox" @change="changeBezOkraj" name="bezOkraje" value="1"  :checked="(list.data.stroj[0].bez_okraj==1)?true:false">
+              <td class="nic bila pl-4 leva" style="width:25%" >
+                <input style="height:14px;width:14px" type="checkbox" @change="changeBezOkraj" name="bezOkraje" value="1"  :checked="(list.data.stroj[0].bez_okraj==1)?true:false" class="pl-4">
               </td>
             </tr>
 
           <tr>
             <td class="nic bila prava pr-2 blue--text " style="width:25%">velikost spadávky pro technologii mm</td>
-              <td class="nic bila pl-3" style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].spadavka_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].spadavka_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
               <td class="nic bila prava pr-2 blue--text " style="width:25%">prostor pro strojové ořezové značky - mm?</td>
-              <td class="nic bila pl-3" style="width:25%">
-                <input type="number" v-model="list.data.stroj[0].space_znacky_mm" size="mini"  style="width:65%" class="tdl tdn stred" placeholder="splatnost"  @focus="$event.target.select()">
+                            <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="list.data.stroj[0].space_znacky_mm" size="mini"  style="width:35%" class="tdl tdn prava " placeholder="splatnost"  @focus="$event.target.select()">
               </td>
             </tr>
 
@@ -674,17 +674,74 @@
          <v-card v-show="step2=='3'"><v-card-text v-if="step2=='3'">
 <el-row class="ma-2 ">
            <el-col :span="20" class="pa-4 mt-4 text-xs-center"  >
-             <table width="100%"><tr>
-              <td colspan=1 class="nic bila pl-3" style="font-size:14px">Priprava stroje</td>
+             <table width="90%"><tr>
+              <td colspan=1 class="nic bila pl-3" style="font-size:12px">Priprava stroje</td>
 
-              <td class="nic bila prava pr-2 blue--text" style="font-size:14px ">Minuty </td><td class="nic bila pl-3 leva"><input type="number" v-model="list.data.stroj[0].priprava_cas_minuta"  :min="0"    size="6" class="tdl tdn prava" style="width:5em"> </td>
-              <td class="nic bila prava pr-2 blue--text" style="font-size:14px ">Naklad</td> <td class="nic bila pl-3 leva"><input type="number" v-model="list.data.stroj[0].priprava_celkem_naklad"  :min="0"    size="6" class="tdl tdn prava" style="width:5em"> </td>
-              <td class="nic bila prava pr-2 blue--text" style="font-size:14px ">Prodej</td> <td class="nic bila pl-3 leva"><input type="number" v-model="list.data.stroj[0].priprava_celkem_prodej"  :min="0"    size="6" class="tdl tdn prava" style="width:5em"> </td>
-            </tr></table>
+              <td class="nic bila prava pr-2 blue--text" style="font-size:12px ">Minuty </td><td class="nic bila pl-3 leva"><input type="number" v-model="list.data.stroj[0].priprava_cas_minuta"  :min="0"    size="6" class="tdl tdn prava" style="width:5em"> </td>
+              <td class="nic bila prava pr-2 blue--text" style="font-size:12px ">Naklad</td> <td class="nic bila pl-3 leva"><input type="number" v-model="list.data.stroj[0].priprava_celkem_naklad"  :min="0"    size="6" class="tdl tdn prava" style="width:5em"> </td>
+              <td class="nic bila prava pr-2 blue--text" style="font-size:12px ">Prodej</td> <td class="nic bila pl-3 leva"><input type="number" v-model="list.data.stroj[0].priprava_celkem_prodej"  :min="0"    size="6" class="tdl tdn prava" style="width:5em"> </td>
+
+            </tr>
+            <tr >
+              <td colspan="7" class="nic bila prava pr-2 blue--text" style="font-size:1px ">
+                &nbsp;
+              </td>
+            </tr >
+            <tr >
+              <td colspan="2" class="nic bila prava pr-2 blue--text" style="font-size:12px ">
+                <el-button size ="mini" @click="edit_vlastnosti('list2-jednotka','Jednotka')" style="width:90%"  class="tlacitko">Jednotka</el-button>
+              </td>
+              <td colspan="2" class="nic bila leva pr-2 popisek" style="font-size:12px ">
+
+            <el-select v-model="cenyJednotka"  size="mini" class="pt-0 pl-1 ml-2"  style="width:90%;border:none"
+            filterable
+            >
+
+            <el-option
+              v-for="item291 in list.data.enum_jednotka"
+              :key="item291.idefix*1"
+              :label="item291.nazev"
+              :value="item291.idefix*1"
+              >{{item291.nazev}} </el-option>
+           </el-select>
+
+              </td>
+              <td colspan="3" class="nic bila stred pr-2" >
+                &nbsp;
+              </td>
+            </tr>
+             </table>
+
+
+
           </el-col>
 </el-row>
+<el-row class="ma-0 pt-0" >
 
-          <el-row class="ma-2" >
+   <table style="border:none;" class="nic"  cols="3">
+     <thead>
+       <td class="nic bila stred pr-2 blue--text " style="width:40%">&nbsp;</td>
+       <td class="nic bila leva pl-4 blue--text " style="width:30%">Naklad</td>
+       <td class="nic bila leva pl-4 blue--text " style="width:30%">Prodej</td>
+     </thead>
+      <tbody>
+            <tr  v-for="(itemceny, iceny) in list.data.strojceny" :key="itemceny.idefix" >
+
+            <td class="nic bila prava pr-2 blue--text " style="width:25%">{{itemceny.nazev}} {{cenyJednotkaTxt}}</td>
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <!-- {{itemceny.kod}} /  {{itemceny.idefix}} -->
+                <input type="number" v-model="itemceny.cena_naklad" size="mini"  style="width:75%" class="tdl tdn prava " placeholder="Naklad"  @focus="$event.target.select()" @blur="copyCena">
+              </td>
+              <td class="nic bila pl-3 leva" style="width:25%" >
+                <input type="number" v-model="itemceny.cena_prodej" size="mini"  style="width:75%" class="tdl tdn prava " placeholder="Prodej"  @focus="$event.target.select()" @blur="copyCena">
+              </td>
+
+            </tr>
+           </tbody>
+   </table>
+
+</el-row>
+          <el-row class="ma-2" v-if="false">
 
 
           <el-col :span="24" class="pa-0 mt-0 text-xs-center" style="width:100%"  >
@@ -714,7 +771,7 @@
               <!-- <el-col :span="3"><el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%">Prace</el-button> </el-col> -->
             </el-row>
 <!--form ceny //-->
-<!-- <vue-draggable-resizable :handles="[]"    :isActive="true" :isResizable="true" :z="4999" :style="pof(Sirka*0.91,100)+';background:white;position;absolute;height:90%;'"   class="elevation-1" v-if="addCena "  > -->
+
       <el-row v-if="addCena" class="ma-0 py-0"  @keyup.escape="addCena=false">
 
       <el-col  :span="2"  style="border:solid 1px #cccccc;height:30px" @keyup.escape="addCena=false">
@@ -774,11 +831,11 @@
      <!-- <v-btn v-if="addCena==true && strojceny.nazev>''" @click="insertCeny" small :id="'bA'+ID"> Vlozit </v-btn> -->
      </el-col>
      </el-row>
-<!-- </vue-draggable-resizable> -->
+
 
     <!--form ceny //-->
 
-  <draggable v-model="list.data.strojceny"  :options="{group: 'peoplex' }" @start="drag=true" @end="chooseItemCeny" >
+  <draggable v-model="list.data.strojceny"  :options="{group: 'peoplex' }" @start="drag=true" @end="chooseItemCeny"  v-if="false">
       <el-row  v-for="(itemceny, iceny) in list.data.strojceny" :key="itemceny.idefix" class="ma-0 mt-0 "
               v-bind:class="{ 'white' : ( iceny % 1 == 0) , 'blue lighten-5' : ( iceny % 2 != 0)  }"
       >
@@ -1081,6 +1138,17 @@ export default {
       },
       strojmodeMoveList: {  //List pro presun ci pridani modu do jineho stroje
       },
+      cenyPredpis: [
+        {txt:'Prvnich 20', start:0, stop:20},
+        {txt:'Druhych 20', start:21, stop:40},
+        {txt:'Tretich 20', start:41, stop:60},
+        {txt:'Dalsich 60', start:61, stop:120},
+        {txt:'Dalsich 60', start:121, stop:180},
+        {txt:'Kazdych dalsich', start:181, stop:999999999},
+
+      ],
+      cenyJednotka : 0,
+      cenyJednotkaTxt : '',
 
       moveMod: false,
       copyMod: false,
@@ -1232,6 +1300,21 @@ export default {
     strojmod: function () {
        this.sirka("seznam")
 
+    },
+    cenyJednotka: function() {
+       const self = this
+
+       self.cenyJednotkaTxt = self.eJednotka(self.cenyJednotka)
+
+      this.list.data.strojceny.forEach(el=>{
+        if (el.idefix_jednotka != self.cenyJednotka *1) {
+          self.IsZmena = true
+          el.idefix_jednotka = self.cenyJednotka *1
+        }
+
+
+    //  alert(self.cenyJednotkaTxt)
+      })
     }
 
   } ,
@@ -1639,10 +1722,48 @@ export default {
                 })
 
                  self.list.data.strojceny.forEach((el,i)=> {
+
+                  if (i == 0 || el.idefix_jednotka *1 ==  0 )  {
+                    if (el.idefix_jednotka *=1 > 0 ){
+                      self.cenyJednotka = el.idefix_jednotka *1
+                    }
+
+
+                  }
                   el.idefix_strojmod *=1
-                  el.idefix_jednotka *=1
+//                  el.idefix_jednotka *=1
+                  el.idefix_jednotka = self.cenyJednotka
                   el.idefix_inkoust  *=1
                 })
+                var tmpObj
+                self.cenyPredpis.forEach((el,i) => {
+                  if (self.list.data.strojceny[i]) {
+                    self.list.data.strojceny[i].kod=i+1
+                    self.list.data.strojceny[i].nazev = el.txt
+                    self.list.data.strojceny[i].pocet_start = el.start
+                    self.list.data.strojceny[i].pocet_stop = el.stop
+                    self.list.data.strojceny[i].idefix_jednotka = self.cenyJednotka
+
+                  } else {
+                    tmpObj = f.cp(self.strojcenyDefault)
+                    tmpObj.kod = i+1
+                    tmpObj.idefix = (i+1) *-1
+                    tmpObj.nazev = el.txt
+                    tmpObj.idefix_stroj = self.idefixThis
+                    tmpObj.pocet_start = el.start
+                    tmpObj.pocet_stop = el.stop
+                    tmpObj.idefix_jednotka = self.cenyJednotka
+                    self.list.data.strojceny.push(tmpObj)
+
+                  }
+
+                })
+
+                self.cenyJednotkaTxt = self.eJednotka(self.cenyJednotka)
+                self.copyCena()
+
+                //alert(self.list.data.strojceny.length)
+
 
 
 
@@ -1676,6 +1797,8 @@ export default {
             }
 
           },
+
+
     closeMod() {
       const self = this
       self.editMod = false
@@ -1683,6 +1806,19 @@ export default {
       var newObj = f.cp(self.strojmodDefault)
       self.strojmod = newObj
     } ,
+    copyCena() {
+      const self = this
+      var copyNaklad=0
+      var copyProdej=0
+      self.list.data.strojceny.forEach((el,i)=> {
+              if (el.cena_naklad > 0) copyNaklad = el.cena_naklad ;
+              if (el.cena_prodej > 0) copyProdej = el.cena_prodej ;
+              if (copyNaklad > 0 && el.cena_naklad == 0) el.cena_naklad = copyNaklad
+              if (copyProdej > 0 && el.cena_prodej == 0) el.cena_prodej = copyProdej
+
+
+                })
+    },
     setInsertCena() {
       const self = this
       self.addCena = true

@@ -3,7 +3,7 @@
 
 
     :x="xMyska"
-    :w="600"
+    :w="650"
     :y="100"
     :z="90"
     :h="510"
@@ -17,14 +17,18 @@
 
     >
 <!-- @keydown.esc="konec2" -->
-  <div slot="b1" class="green" style="height:40px;font-size:18px">{{$store.state.showModuleTitle}}</div>
-  <span slot="c1" style="height:40px;font-size:18px">
-                <v-btn slot="action" style="height:40px;font-size:18px"  @click="konec" :id="btn_konec"> Zavrit</v-btn>
-   </span>
 
-  <div style="opacity:1; background:white;width:100%; " class="white" id="de821xx" >
+  <div slot="b1" class="pt-1 blue lighten-4" style="height:30px;font-size:14px" >{{$store.state.showModuleTitle}}</div>
+  <div slot="c1" style="height:30px;font-size:18px;" class="blue lighten-4">
+                <v-btn slot="action" style="height:18px;font-size:12px"  class="blue  lighten-4 elevation-1" flat @click="konec" :id="btn_konec"> Zavrit</v-btn>
+   </div>
+   <div slot="a1" class="blue lighten-4" style="height:30px;font-size:14px">&nbsp;</div>
 
-          <div  style="float:left;background:white;height:510px;width:600px" :id="$store.state.showModule">
+
+
+  <div style="opacity:1; background:white;width:650px " class="blue lighten-4 " :id="'de821xx'+ID" >
+
+          <div  style="float:left;background:white;height:510px;width:100%;" :id="$store.state.showModule + ID" class="pl-0 pr-0 mr-0 ">
             <component v-bind:is="$store.state.showModule"></component>
           </div>
   </div>
@@ -91,6 +95,7 @@ export default {
       xMyska: 100,
       comp:'',
       status: 0, // 1 = material, 2 = stroj
+      ID: 0,
 
     }
 
@@ -112,6 +117,14 @@ export default {
       self.status  = 2
         //alert('Vracim parametry' + JSON.stringify(dlgPar))
     })
+
+
+  },
+  mounted() {
+    const self = this
+    self.ID = Math.round(Math.random() * 1983458)
+    this.btn_konec=this.btn_konec + this.ID
+
   },
   methods: {
     konec(){

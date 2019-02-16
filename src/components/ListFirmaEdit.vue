@@ -31,8 +31,10 @@
  <el-row slot="b22" style="height:20px;font-size:14px;">
 
  <el-tabs v-model="step2" @tab-click="handleClick" class="mx-4">
-        <el-tab-pane label=" Prehledy"  name="0"></el-tab-pane>
-        <el-tab-pane label=" Adresy"  name="1" ></el-tab-pane>
+
+        <el-tab-pane label=" Prehledy"  name="1"></el-tab-pane>
+        <el-tab-pane label=" Adresy"  name="0" ></el-tab-pane>
+
         <el-tab-pane label=" Kontakty "  name="2"></el-tab-pane>
         <el-tab-pane label=" Provozovny"  name="3" ></el-tab-pane>
         <el-tab-pane label=" Prace"  name="4" ></el-tab-pane>
@@ -67,9 +69,9 @@
         class="demo-ruleForm is-success" > -->
 <form  :id="IDForm" @change="formChange()">
 
-<v-window-item :value="0">
+<v-window-item :value="1">
 
-        <v-card v-show="step2=='0'">
+        <v-card v-show="step2=='1'">
           <v-card-text class="mt-4">
          <el-row class="ma-2 mt-2" >
           <el-col :span="24" style="text-align:left;">Poznamky: {{list.data.firmanotice.length}}<hr></el-col>
@@ -231,9 +233,9 @@
          </v-card-text>
         </v-card>
 </v-window-item>
-  <v-window-item :value="1">
+  <v-window-item :value="0">
 
-        <v-card v-show="step2=='1'"><v-card-text v-if="step2=='1'">
+        <v-card v-show="step2=='0'"><v-card-text v-if="step2=='0'">
 
 
     <el-row class="ma-1">

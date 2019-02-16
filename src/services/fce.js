@@ -209,6 +209,9 @@ if (document.getElementById(_obj1)){
 
    if (e.type=='click') {
      ekeyCode = -13
+     // el.style.outline="none";
+
+
    }
 
    keyCodesExitSave   = [13,9,-13]
@@ -222,6 +225,7 @@ if (document.getElementById(_obj1)){
      self.saveLines(0)
      if (!el.type == 'number') {
        el.selectionEnd = el.selectionStart
+       el.style.outline="none";
      }
      return
    }
@@ -243,6 +247,7 @@ if (document.getElementById(_obj1)){
   //return
    if (document.getElementById(searchObj) && ekeyCode == 114 ){
       document.getElementById(searchObj).focus()
+       document.getElementById(searchObj).style.outline="none";
     }
    keyCodes = keyCodes.concat([13,27,9,-13])
    keyCodes = keyCodes.concat([40,37,38,39])  //Sipky
@@ -293,6 +298,7 @@ if (document.getElementById(_obj1)){
        return true
 
        el.focus()
+       el.style.outline="none";
      }
 
      if (ekeyCode==13){
@@ -322,6 +328,7 @@ if (document.getElementById(_obj1)){
           f.addClass(el,"bila2")
          if (el.type.match(/select/g)){
          el.focus()
+         el.style.outline="none";
          } else {
           if((ekeyCode) == 13 ) {
             el.select()
@@ -339,6 +346,7 @@ if (document.getElementById(_obj1)){
        if (el.type == 'select-one' && el.id != self.lastId) {
            self.currentOrigValue = el.value
            self.lastId = el.id
+
            //alert(origValue)
            //alert('1111')
        }
@@ -349,6 +357,7 @@ if (document.getElementById(_obj1)){
 
 
        el.style.color="black"
+       el.style.outline="none";
        if (!self.isWrite) {
          if(!el.type == 'number') {
            el.selectionEnd = el.selectionStart
@@ -422,6 +431,7 @@ if (document.getElementById(_obj1)){
          f.changeClass(elObal,'dcell_edit','dcell')
          isPresun = true
          document.getElementById(newId).focus()
+         document.getElementById(newId).style.outline="none";
       }
       break;
       case 34: //pgDn
@@ -455,6 +465,7 @@ if (document.getElementById(_obj1)){
 
          isPresun = true
          document.getElementById(newId).focus()
+         document.getElementById(newId).style.outline="none";
         },100)
 
        break;
@@ -469,6 +480,7 @@ if (document.getElementById(_obj1)){
          newId +=  (tmpRow ) + '_c_' +curCol
 
          if (document.getElementById(newId)){
+
            //alert(newId)
            break;
          }
@@ -489,6 +501,7 @@ if (document.getElementById(_obj1)){
 
          isPresun = true
          document.getElementById(newId).focus()
+         document.getElementById(newId).style.outline="none";
         },100)
 
        break;
@@ -504,6 +517,7 @@ if (document.getElementById(_obj1)){
 
          isPresun = true
          document.getElementById(newId).focus()
+         document.getElementById(newId).style.outline="none";
          // alert(document.getElementById(newId))
       }
 
@@ -521,6 +535,7 @@ if (document.getElementById(_obj1)){
          isPresun = true
          // alert(newId)
          document.getElementById(newId).focus()
+         document.getElementById(newId).style.outline="none";
          // alert(document.getElementById(newId))
       }
 //        self.aInfo.push('ESC')
@@ -536,9 +551,11 @@ if (document.getElementById(_obj1)){
          f.changeClass(elObal,'dcell_edit','dcell')
          f.addClass(newObal,'elevation-1')
          f.removeClass(elObal,'elevation-1')
+         document.getElementById(newId).style.outline="none";
          isPresun = true
          // alert(newId)
          document.getElementById(newId).focus()
+         document.getElementById(newId).style.outline="none";
          // alert(document.getElementById(newId))
       }
        //self.aInfo.push('ESC')
@@ -597,6 +614,8 @@ if (document.getElementById(_obj1)){
          if ( self.cols[newCol].isEdit && document.getElementById(newId).hasAttribute('readonly') ) {
          document.getElementById(newId).removeAttribute('readonly')
          document.getElementById(newId).focus()
+         document.getElementById(newId).style.outline="none";
+
          if (!self.cols[newCol].type.match(/select/g)){
            document.getElementById(newId).select()
          }
@@ -610,6 +629,7 @@ if (document.getElementById(_obj1)){
          } else {
            document.getElementById(newId).selectionEnd = document.getElementById(newId).selectionStart;
            document.getElementById(newId).focus()
+           document.getElementById(newId).style.outline="none";
          }
 
 

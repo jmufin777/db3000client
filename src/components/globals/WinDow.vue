@@ -30,14 +30,14 @@
 
 
   <el-row  :gutter="0">
-  <el-col :span="8" class="slot-a "  >
+  <el-col :span="8" class="slot-a " style="font-size:10px" >
     <slot name="a1" :sm="8" :md="8" :lg="8" :xl="8"><span v-if="title > ''">&nbsp;</span></slot>
 
   </el-col>
-  <el-col v-if="title > ''"  :span="8" class="slot-b " :sm="8" :md="8" :lg="8" :xl="8">
+  <el-col v-if="title > ''"  :span="8" class="slot-b " :sm="8" :md="8" :lg="8" :xl="8" style="font-size:10px">
     <slot name="b1">{{title}}&nbsp;</slot>
   </el-col>
-  <el-col  :span="8" class="slot-c " :sm="8" :md="8" :lg="8" :xl="8">
+  <el-col  :span="8" class="slot-c " :sm="8" :md="8" :lg="8" :xl="8" style="font-size:10px;">
 
     <slot v-if="title > ''" name="c1" >&nbsp;</slot>
   </el-col>

@@ -285,10 +285,17 @@ export default {
       list: [],
       listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
       listEdits: [],   //Prehled zmen s prinakem edit, delete
-      lastSort: ['kod','asc']  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      lastSort: ['kod','asc'],  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      ID: 0,
     }
   },
   async mounted () {
+      const self=this
+      self.ID = Math.round(Math.random() * 1983458)
+      self.objId1+=   self.ID
+      self.objId2+=   self.ID
+      self.objSearchBar+=  self.ID
+      //alert(self.objId1)
 
 //    return
     if (this.isUserLoggedIn) {
