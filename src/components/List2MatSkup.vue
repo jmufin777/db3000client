@@ -252,9 +252,7 @@ export default {
       search:'',
       //event
       //event
-      objId1: '321',
-      objId2: '322',
-      objSearchBar: 'search_321',
+
 
       aInfo: [],
       total: 0,
@@ -286,6 +284,9 @@ export default {
       listNewLine: [], //Prazdna radka - automaticky se vygeneruje a vymaze podle prvni nactene radky
       listEdits: [],   //Prehled zmen s prinakem edit, delete
       lastSort: ['kod','asc'],  //Obsahuje hodnoty klic, smer, vychozi je id , asc,nebot toto je vsude
+      objId1: '321',
+      objId2: '322',
+      objSearchBar: 'search_321',
       ID: 0,
     }
   },

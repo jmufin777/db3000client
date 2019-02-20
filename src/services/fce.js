@@ -1,5 +1,7 @@
 import moment from 'moment'
+
 export default {
+
 
   hasClass(element, cls) {
     try {
@@ -22,17 +24,14 @@ export default {
     return xd.getFullYear()+"."+xd.getMonth()+"."+("0"+""+xd.getDay()+"").slice(-2)
     // return this.datum(xd)
   },
-
-  cp(obj){
+ cp(obj) {
     const self = this
-    var nobj = {};
-      try {
-        for (let key in obj) {
-                 nobj[key] = obj[key];
-              //alert(nobj[key])
-
-      }
-      } catch (e) {
+    var nobj = {}
+    try {
+      for (let key in obj) {
+        nobj[key] = obj[key];
+ }
+    } catch (e) {
         console.log(e)
       }
     return nobj;
@@ -45,8 +44,7 @@ cp2(obj){
       for (let key in obj) {
         if (typeof obj[key] === 'object'){
             nobj[key] = this.cp(obj[key]);
-
-        } else {
+       } else {
             nobj[key] = obj[key];
             //alert(nobj[key])
         }
@@ -56,6 +54,13 @@ cp2(obj){
     }
   return nobj;
 },
+cislo(ncislo=0) {
+
+    if (ncislo >'' && ncislo.match(/,/) ) {
+      return ((ncislo+'').replace(/,/, '.'))*1
+    }
+    return ncislo;
+  },
 
   hasClassId(elementId, cls) {
     return document.getElementById(elementId).className.split(' ').indexOf(cls) > -1

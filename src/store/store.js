@@ -31,7 +31,8 @@ export default new Vuex.Store({
     xMenuMain: [],
     seekFirma: null,
     Kalkulace: [],
-    KalkulaceThis: -1
+    KalkulaceThis: -1,
+    KalkulaceLast: -1
   },
   mutations: {
     setToken (state, token) {
@@ -121,11 +122,29 @@ export default new Vuex.Store({
       state.Kalkulace = []
     },
     addKalk (state, kalkulace) { //Vlozi celou definic
-      console.log('A :', JSON.stringify(kalkulace))
+      var tmpIdNew = 1
+      //console.log('A :', JSON.stringify(kalkulace))
       if (state.Kalkulace == null) {
         state.Kalkulace = []
       }
+      if (state.Kalkulace.length>0) {
+        var tmpId = kalkulace.kalkulaceid
+        tmpIdNew = kalkulace.kalkulaceid
+        for (var i = 0; i < 3; i++) {
+          state.Kalkulace.forEach(el => {
+            if (el.kalkulaceid === tmpId) {
+              tmpIdNew += 1
+              tmpId = tmpIdNew
+            }
+          })
+        }
+      }
+      kalkulace.kalkulaceid = tmpIdNew
       state.Kalkulace.push(kalkulace)
+      state.KalkulaceLast = kalkulace.kalkulaceid
+      // console.log("Vkladam : ", state.KalkulaceLast )
+
+
     },
 
     addKalkCol (state, kalkulaceid) {
@@ -200,6 +219,8 @@ export default new Vuex.Store({
     },
     cleanKalk (state) {
       state.Kalkulace = []
+      state.KalkulaceLast = -1
+      state.KalkulaceThis = -1
     }
   },
 
@@ -298,6 +319,9 @@ export default new Vuex.Store({
     },
     getKalk: state => {
       return state.KalkulaceThis
+    },
+    getKalkLast: state => {
+      return state.KalkulaceLast
     },
     //getId - index kalkulace pro dane id Kalulace
     getId: state => (id) => {

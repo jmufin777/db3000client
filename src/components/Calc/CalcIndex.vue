@@ -5,7 +5,7 @@
     <my-layout>
 
     <div slot="hlavni">
-      {{ KalkulaceThis}} {{ this.$store.state.KalkulaceThis }}
+      {{ KalkulaceThis}} {{ this.$store.state.KalkulaceThis }} /Last {{ KalkulaceLast }}
       <menu-hlavni>
 
       </menu-hlavni>
@@ -13,12 +13,12 @@
 
     <menu-left slot="menuleft"></menu-left>
 
-      <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK">
+      <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" >
 
      <!-- <work slot="kalkulace" v-for="na in (2 ,20) " :key="na"> -->
-        <span slot="leva">
+        <span slot="leva" >
 
-          <work-left :typid="1" :kalkulaceid="iKalk.kalkulaceid">
+          <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
 
               <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalk(iKalk.kalkulaceid)" >
                 <a :name="iKalk.kalkulaceid"></a>
@@ -78,7 +78,7 @@
     <draggable  v-model="aKalkulace"  :options="{group:{ name:'Kalkulace' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
       <span  v-for="(iKalk0 ,iK0) in aKalkulace" :key="iK0">
 <div style="position:relative;float:left;border: solid 2px white;width:30px;text-align:center;" class="elevation-5">
-      <a :href="'#'+iKalk0.kalkulaceid" @click="setKalk(iKalk0.kalkulaceid)" :ref="'ref_'+iKalk0.kalkulaceid">
+      <a :href="'#'+iKalk0.kalkulaceid" @click="setKalk(iKalk0.kalkulaceid)" :ref="'ref_'+iKalk0.kalkulaceid" :id="'ref_'+iKalk0.kalkulaceid + ID">
 
         &nbsp;{{iKalk0.kalkulaceid}}
 
@@ -109,6 +109,8 @@ import Work from './CalcWork.vue'       // Pracovni cast nahore, obshahuje levou
 import WorkLeft from './CalcWorkLeft.vue'       // Pracovni cast nahore
 import WorkCol from './CalcWorkCol.vue' // Prehledova dole
 import ListStroj from '../../services/ListStrojService'
+import f from '@/services/fce'
+import query from '../../services/query'
 //10411
 
 
@@ -125,8 +127,6 @@ export default {
     'work-col': WorkCol,
     'menu-hlavni': MenuHlavni,
 
-
-
  },
  data () {
 
@@ -135,10 +135,13 @@ export default {
      Hlavni: 0,
      Left: 0,
      aKalkulace: [],
-//     KalkulaceThis: - 1,
+     KalkulaceThis: - 1,
+     KalkulaceLast: - 1,
      CalcCount: 0,
      ColCount: 0,
-     showPrehled: 0
+     showPrehled: 0,
+     qtest: [],
+     ID: 0,
    }
  },
  watch: {
@@ -168,31 +171,47 @@ export default {
       if (server.key == 666) {  //Guma
          self.$store.dispatch('cleanKalk')
          self.aKalkulace = self.$store.state.Kalkulace
+         self.KalkulaceThis = -1
+         self.KalkulaceLast = -1
+         setTimeout(function(){
+            eventBus.$emit('enable')
+        },1000)
       }
 
       if (server.key == 777) {
         //self.aKalkulace=[]
         self.showPrehled=1
+        //alert("aaa")
+        setTimeout(function(){
+            eventBus.$emit('enable')
+        },1000)
       }
 
       if (server.key < 11) {
-
+        var beforeK = self.KalkulaceLast
         self.addKalk(server.key)
+        //self.addKalkCol()
 
+        var n = 0
+
+        // setTimeout(function(){
+
+        //   alert(self.KalkulaceLast)
+        // },5000)
       }
       if (server.key == 11) {
 
         self.addKalkCol()
+        setTimeout(function(){
+            eventBus.$emit('enable')
+        },1000)
 
 
         //addNew(11)
         //self.aKalkulace.push({kalkulaceid: self.aKalkulace.length+1})
       }
-      setTimeout(function(){
-            eventBus.$emit('enable')
-        },2000)
-      //alert(self.Hlavni)
 
+      //alert(self.Hlavni)
     })
 
      eventBus.$on('MenuLeft', (server) => {
@@ -203,11 +222,30 @@ export default {
     })
 
  },
- mounted () {
+ async mounted () {
+
+/* Vzor query
+    try {
+    this.qtest = (await query.all(this.user,'select * from   list_dodavatel limit 100')).data
+    } catch (e) {
+      console.log(JSON.stringify(e.response.data.error))
+    }
+    if (this.qtest) {
+        qtest.data - obsahuje data
+        qtest.fields - obsahuje seznam fields
+
+
+    }
+*/
+   this.ID = Math.round(Math.random() * 198345813)
    this.aKalkulace = this.$store.state.Kalkulace
    if (this.aKalkulace.length > 0 && this.aKalkulace[0].kalkulaceid ) {
      this.$store.dispatch('setKalk',this.aKalkulace[0].kalkulaceid)
      this.KalkulaceThis = this.$store.getters.getKalk
+     this.KalkulaceLast = this.$store.getters.getKalkLast
+
+
+//     alert(this.KalkulaceThis )
 
    }
  },
@@ -234,8 +272,12 @@ export default {
         return atmp
         //console.log(JSON.stringify(atmp))
       } catch (e) {
-        alert('Error' )
-        console.log( e)
+        alert('Error 1' )
+        eventBus.$emit('enable')
+
+        console.log(JSON.stringify(e.response.data.error))
+        alert(JSON.stringify(e.response.data.error))
+        //console.log( e)
       }
     }
 
@@ -248,7 +290,8 @@ export default {
         return atmp
         //console.log(JSON.stringify(atmp))
       } catch (e) {
-        alert('Error' )
+        alert('Error 2' )
+        eventBus.$emit('enable')
         console.log( e)
       }
     }
@@ -261,7 +304,8 @@ export default {
         return atmp
         //console.log(JSON.stringify(atmp))
       } catch (e) {
-        alert('Error' )
+        alert('Error 3' )
+        eventBus.$emit('enable')
         console.log( e)
       }
     }
@@ -272,8 +316,9 @@ export default {
 
    async addKalk (KalkType) {
      const self = this
-     var newId = 1
+      var newId = 1
      var tmpData = []
+     var KalkulaceLast = self.KalkulaceLast
      let oData = {}
      var nTmp = -1
      if (self.aKalkulace.length > 0){
@@ -283,6 +328,7 @@ export default {
           }
        })
      }
+
      try{
        tmpData = (await (self.strojmod(KalkType)))   //MOdy pro V nebo A
        oData.Menu2 =  tmpData
@@ -306,19 +352,42 @@ export default {
        oData.FormatValue =  ''
 
 
+       /*
        tmpData.forEach((el,idx) => {
         nTmp =  _.findIndex(oData.FormatMenu1, function (o) { return o.nazev == el.nazev})
         if (nTmp == -1 ) oData.FormatMenu1.push({'text': el.nazev })
         if (idx == 0) oData.FormatValue =  el.idefix
-
        })
-
-
+       */
 
       //  self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
       //  self.aKalkulace = self.$store.state.Kalkulace
       //  self.setKalk(newId)
        //self.KalkulaceThis = newId
+       self.KalkulaceLast = self.$store.getters.getKalkLast
+       setTimeout(function(){
+         if (self.KalkulaceLast != KalkulaceLast) {
+
+           eventBus.$emit('enable')
+           self.KalkulaceThis = self.KalkulaceLast
+           // self.defaultStyle(self.KalkulaceThis)
+           self.setKalk(self.KalkulaceThis)
+            var neco = 'ref_'+self.KalkulaceThis + self.ID
+            if (document.getElementById(neco)) {
+              document.getElementById(neco).click()
+              self.addKalkCol()
+              self.addKalkCol()
+              self.addKalkCol()
+              self.addKalkCol()
+              self.addKalkCol()
+          //    document.getElementById(neco).style.color='red'
+
+            }
+
+
+       }
+       },1500)
+
 
      } catch (e) {
        console.log(e)
@@ -330,26 +399,28 @@ export default {
        oData.MatMenu1 =  []
        oData.MatValue =  ''
 
-
+      /*
        tmpData.forEach((el,idx) => {
         nTmp =  _.findIndex(oData.MatMenu1, function (o) { return o.nazev == el.nazev})
         if (nTmp == -1 ) oData.MatMenu1.push({'text': el.nazev })
         if (idx == 0) oData.MatValue =  el.idefix_rozmer
-
-        // oData.Menu1.push({'text': el.stroj})
-
-       // console.log(nTmp, oData.Menu1 )
-
-
-
        })
-
+      */
 
 
        self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
        self.aKalkulace = self.$store.state.Kalkulace
+
        self.setKalk(newId)
        //self.KalkulaceThis = newId
+       self.KalkulaceLast = self.$store.getters.getKalkLast
+       setTimeout(function(){
+         if (self.KalkulaceLast != KalkulaceLast) {
+          //alert("ted")
+          eventBus.$emit('enable')
+       }
+       },500)
+
 
      } catch (e) {
        console.log(e)
@@ -371,6 +442,7 @@ export default {
      //self.aKalkulace.push({kalkulaceid: newId,sloupecid:[]})
 
    },
+
    removeKalk (kalkulaceid) {
       const self = this
      // alert(kalkulaceid)
@@ -395,7 +467,7 @@ export default {
         self.CalcCount++
    },
    removeKalkCol(kalkulaceid,sloupecid) {
-     alert(kalkulaceid)
+
      console.log('Mazu', JSON.stringify(sloupecid) )
      const self= this
      self.$store.dispatch('removeKalkCol', {kalkulaceid: kalkulaceid, sloupecid: sloupecid} )
@@ -416,7 +488,32 @@ export default {
        });
    },
 
+  defaultStyle(setkalkId) {
+    const self = this
+    var neco
+         self.aKalkulace.forEach(element => {
+            neco = 'ref_'+element.kalkulaceid + self.ID
+            if (document.getElementById(neco)){
+              document.getElementById(neco).style.color="green"
+              f.changeClass(document.getElementById(neco),"elevation-12",'elevation-0')
+              //f.addClass("elevation-0",'elevation-12')
+            }
+         })
 
+         if (setkalkId > 0) {
+
+              //alert('b'+self.ID)
+               neco = 'ref_'+setkalkId+self.ID
+               setTimeout(function(){
+               if (document.getElementById(neco)) {
+                      //alert('c'+self.ID)
+                 document.getElementById(neco).style.color='red'
+                 f.changeClass(document.getElementById(neco),"elevation-0",'elevation-12')
+                }
+           },100)
+         }
+
+  },
    dropCol(kalkulaceid, sloupecid) {
      const self = this
      var ref = self.$refs[sloupecid]
@@ -427,7 +524,6 @@ export default {
             if ( elS == sloupecid) {
               element.sloupecid.splice(idx,1)
               return
-
 
             }
           })
@@ -440,6 +536,15 @@ export default {
    },
    setKalk(idK) {
           this.$store.dispatch('setKalk',idK)
+
+
+           var neco = 'ref_'+idK+this.ID
+
+
+           //document.getElementById(neco).click()
+
+           this.defaultStyle(idK)
+
           console.log('setKalk',idK)
 
    },

@@ -89,7 +89,7 @@
   <el-col :span="2" >
 
 
-    <div class='dcell'  style="width::100% ; background:white"
+    <div class='dcell stred'  style="width::100% ; background:white"
     v-bind:class="{bila: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
@@ -114,7 +114,7 @@
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
        >
        <select v-else-if="col.type=='selectone'" v-model="list[irow][col.id]"
-              class=" px-0 cell " :id="'c' + objId2+ '_r_'+irow+'_c_'+icol"
+              class=" pl-1 cell " :id="'c' + objId2+ '_r_'+irow+'_c_'+icol"
               v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
               style="width:100%;border:none;height:22px;width:100%"
               readonly
@@ -140,7 +140,7 @@
     </el-dropdown>
 
         <input type="text" v-else
-        class=" px-0 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
+        class=" px-0 pl-1 cell " :id="'c' +objId2 +'_r_'+irow+'_c_'+icol"
         v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
         :value="item[col.id]"  style="width:100%;border:none;height:100%;text-align:left" readonly
 
@@ -158,8 +158,8 @@
 
     	</el-col>
      <el-col :span="2" >
-      <div class='dcell'  style="width::100% ; background:white"
-      v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+      <div class='dcell stred'  style="width::100% ; background:white"
+      v-bind:class="{bila: irow % 2 ==0 , bila:  irow % 2 >0}"
       >
          <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow)" ><i class="el-icon-delete" size="mini"></i></button>
       </div>
@@ -480,10 +480,10 @@ copyLine(nRow) {
          if (el.id < 0 && el.kod >''){
            isInsert=true
          }
-        aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka
+        // aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka  })
+        // Posli.push(aTmp)
 
-
-        })
+        aTmp.push({id: el.id,kod: el.kod, idefix_matskup: el.idefix_matskup,nazev: el.nazev })
         Posli.push(aTmp)
        }
      })
