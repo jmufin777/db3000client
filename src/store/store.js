@@ -147,14 +147,16 @@ export default new Vuex.Store({
 
     },
 
-    addKalkCol (state, kalkulaceid) {
-      console.log('A :', JSON.stringify(kalkulaceid))
+    addKalkCol (state, kalkulacecoltype) {
+      console.log('A :', JSON.stringify(kalkulacecoltype.kalkulaceid))
       var newId = -1
       var idK = -1
 
 
+
+
       state.Kalkulace.forEach((el, idxk) => {
-        if (el.kalkulaceid === kalkulaceid) {
+        if (el.kalkulaceid === kalkulacecoltype.kalkulaceid) {
           idK = idxk
           if (el.sloupecid.length === 0) {
             newId = el.sloupecid.length + 1
@@ -172,7 +174,7 @@ export default new Vuex.Store({
       })
       if (newId > 0)  {
         //console.log('Add : ', state.Kalkulace[idK])
-        state.Kalkulace[idK].sloupecid.push({id: newId, data: {}})
+        state.Kalkulace[idK].sloupecid.push({id: newId, type: kalkulacecoltype.type,  data: {}})
       }
     },
     removeKalk (state, kalkulaceid) {

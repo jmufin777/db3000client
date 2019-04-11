@@ -25,6 +25,7 @@
 
     ></v-overflow-btn>
     {{ kalkulaceid}} / {{sloupecid}} / {{ neco }}
+    :: {{$store.state.Kalkulace[k_id()].sloupecid[sloupecid-1].type}} ::
       </td>
     </tr>
     <tr ><td colspan="20" class="pl-1  pa-1">
@@ -106,42 +107,7 @@ export default {
 
      Format: [],
 
-     FormatJoin: [
-
-
-      {key:  10 , text: "A0"                 ,sirka: 118.80 ,vyska:  84.00 },
-      {key:  17 , text: "A0"                 ,sirka: 118.80 ,vyska:  84.00 },
-      {key:  18 , text: "A1"                 ,sirka:  84.00 ,vyska:  59.40 },
-      {key:  19 , text: "A2"                 ,sirka:  59.40 ,vyska:  42.00 },
-      {key:  20 , text: "A1"                 ,sirka:  84.00 ,vyska:  59.40 },
-      {key:  20 , text: "A3"                 ,sirka:  42.00 ,vyska:  29.70 },
-      {key:  21 , text: "A4"                 ,sirka:  29.70 ,vyska:  21.00 },
-      {key:  22 , text: "A5"                 ,sirka:  21.00 ,vyska:  14.80 },
-      {key:  23 , text: "A6"                 ,sirka:  14.80 ,vyska:  10.50 },
-      {key:  24 , text: "A7"                 ,sirka:  10.50 ,vyska:   7.40 },
-      {key:  30 , text: "A2"                 ,sirka:  59.40 ,vyska:  42.00 },
-      {key:  40 , text: "A3"                 ,sirka:  42.00 ,vyska:  29.70 },
-      {key:  50 , text: "A4"                 ,sirka:  29.70 ,vyska:  21.00 },
-      {key:  60 , text: "A5"                 ,sirka:  21.00 ,vyska:  14.80 },
-      {key:  70 , text: "A6"                 ,sirka:  14.80 ,vyska:  10.50 },
-      {key:  80 , text: "A7"                 ,sirka:  10.50 ,vyska:   7.40 },
-      {key:  90 , text: "B0"                 ,sirka: 141.00 ,vyska: 100.00 },
-      {key: 100 , text: "B1"                 ,sirka: 100.00 ,vyska:  70.70 },
-      {key: 110 , text: "B2"                 ,sirka:  70.70 ,vyska:  50.00 },
-      {key: 120 , text: "B3"                 ,sirka:  50.00 ,vyska:  35.40 },
-      {key: 130 , text: "B4"                 ,sirka:  35.40 ,vyska:  25.00 },
-      {key: 140 , text: "B5"                 ,sirka:  25.00 ,vyska:  17.70 },
-      {key: 150 , text: "B6"                 ,sirka:  17.70 ,vyska:  12.50 },
-      {key: 160 , text: "B7"                 ,sirka:  12.50 ,vyska:   8.85 },
-      {key: 170 , text: "SRA 3"              ,sirka:  45.00 ,vyska:  32.00 },
-      {key: 180 , text: "DL"                 ,sirka:   9.90 ,vyska:  21.00 },
-      {key: 190 , text: "Citylight"          ,sirka: 175.00 ,vyska: 118.50 },
-      {key: 200 , text: "Billboard EURO"     ,sirka: 238.00 ,vyska: 504.00 },
-      {key: 210 , text: "Billboard AVENIR"   ,sirka: 300.00 ,vyska: 400.00 },
-      {key: 220 , text: "Billboard EASTWEST" ,sirka: 320.00 ,vyska: 480.00 },
-      {key: 230 , text: "Big Board"          ,sirka: 360.00 ,vyska: 960.00 },
-      {key: 999 , text: "Vlastni"             ,sirka:   0.00 ,vyska:   0.00 }
-      ],
+     FormatJoin: [],
       enum_up: [],
       enum_mod:[],
       enum_mod_full:[],
@@ -250,6 +216,11 @@ export default {
    setKalk(idK) {
             this.$store.dispatch('setKalk',idK)
     },
+    k_id() {
+  var kRet=   this.$store.getters.getId(this.kalkulaceid)
+  return kRet
+
+ },
    //Soubory
       handleRemove(file, fileList) {
         console.log(file, fileList);

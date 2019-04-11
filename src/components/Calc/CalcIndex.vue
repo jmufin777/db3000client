@@ -375,11 +375,15 @@ export default {
             var neco = 'ref_'+self.KalkulaceThis + self.ID
             if (document.getElementById(neco)) {
               document.getElementById(neco).click()
-              self.addKalkCol()
-              self.addKalkCol()
-              self.addKalkCol()
-              self.addKalkCol()
-              self.addKalkCol()
+              setTimeout(function() {
+                self.addKalkCol('Mat')
+                self.addKalkCol('Dok')
+                self.addKalkCol('Dok1')
+                self.addKalkCol('Dok2')
+                self.addKalkCol('Dok3')
+              },2000)
+
+
           //    document.getElementById(neco).style.color='red'
 
             }
@@ -454,9 +458,9 @@ export default {
       }
 
    },
-   addKalkCol () {
+   addKalkCol (type="X") {
      const self =this
-     self.$store.dispatch('addKalkCol', self.KalkulaceThis)
+     self.$store.dispatch('addKalkCol', {kalkulaceid: self.KalkulaceThis, type: type})
      self.aKalkulace = self.$store.state.Kalkulace
 
 
