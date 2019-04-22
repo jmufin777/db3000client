@@ -177,6 +177,62 @@ export default new Vuex.Store({
         state.Kalkulace[idK].sloupecid.push({id: newId, type: kalkulacecoltype.type,  data: {}})
       }
     },
+
+      addColMat (state, kalkulacecoltype) {
+        var idK = kalkulacecoltype.kalkulaceid
+        var type= kalkulacecoltype.type
+      console.log('A 2aaaa2:', JSON.stringify(kalkulacecoltype))
+
+      // return
+
+//      var newId = -1
+  //    var idK = -1
+      if (state.Kalkulace[idK].sloupecid.length>0){
+
+        console.log('Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
+        if (state.Kalkulace[idK].sloupecid[0].type==type){
+          console.log('Shoda:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
+          state.Kalkulace[idK].sloupecid[0] = {id: 91, type: type,  data: {}}
+        } else {
+          state.Kalkulace[idK].sloupecid.splice(0,0,{id: 91, type: type ,  data: {}})
+
+        }
+
+        //state.Kalkulace[idK].sloupecid[0] = {id: newId, type: kalkulacecoltype.type,  data: {}}
+      } else {
+        state.Kalkulace[idK].sloupecid.push({id: 91, type: type ,  data: {}})
+        console.log('NE Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid))
+        //state.Kalkulace[idK].sloupecid.push({id: 1, type: kalkulacecoltype.type,  data: {}})
+
+      }
+
+
+      return
+
+
+
+      state.Kalkulace.forEach((el, idxk) => {
+        if (el.kalkulaceid === kalkulacecoltype.kalkulaceid) {
+          idK = idxk
+          if (el.sloupecid.length === 0) {
+            newId = el.sloupecid.length + 1
+          } else {
+            newId = el.sloupecid.length + 1
+            el.sloupecid.forEach(eSl => {
+              if (eSl.id >= newId) {
+                newId = eSl.id + 1
+
+              }
+            })
+          }
+          return 0
+        }
+      })
+      if (newId > 0)  {
+        //console.log('Add : ', state.Kalkulace[idK])
+        state.Kalkulace[idK].sloupecid.push({id: newId, type: kalkulacecoltype.type,  data: {}})
+      }
+    },
     removeKalk (state, kalkulaceid) {
       console.log('Remov ', kalkulaceid)
       state.Kalkulace = state.Kalkulace.filter(function (el) {
@@ -188,13 +244,19 @@ export default new Vuex.Store({
       state.KalkulaceThis = kalkulaceid
     },
     editKalk (state, kalkulaceidKeyValue) {
-      console.log('Edit:  ', kalkulaceidKeyValue)
+      console.log('Edit Klice :  ', kalkulaceidKeyValue)
       var klic = kalkulaceidKeyValue.key
       console.log("Klic :", klic , kalkulaceidKeyValue.key )
       // state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[`'${kalkulaceidKeyValue.key}'`] = kalkulaceidKeyValue[kalkulaceidKeyValue.value]
       // state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data['Menu1Value'] = kalkulaceidKeyValue.value
+      try {
+        state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[klic] = kalkulaceidKeyValue.value
+        console.log("OK  001 STORE klic: ", klic, "hodnota: "  ,kalkulaceidKeyValue.value , " id kalkulace : ",kalkulaceidKeyValue.kalkulaceid )
+      } catch (err) {
 
-      state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[klic] = kalkulaceidKeyValue.value
+        console.log("Chybka 001 STORE klic: ", klic, "hodnota: "  ,kalkulaceidKeyValue.value , " id kalkulace : ",kalkulaceidKeyValue.kalkulaceid )
+      }
+
       //console.log('Edit 2', state.Kalkulace["'" + kalkulaceidKeyValue.key + "'"])
     },
     removeKalkCol (state, pole) {
@@ -307,6 +369,11 @@ export default new Vuex.Store({
       console.log('Actions- addKalkCol -Dispatch', kalkulaceid)
       commit('addKalkCol', kalkulaceid)
     },
+    addColMat ({commit}, kalkulaceid) {
+      console.log('Add Materialy', kalkulaceid)
+      //alert('store mat')
+      commit('addColMat', kalkulaceid)
+    },
     removeKalkCol ({commit}, pole) {
       console.log('Actions- setWin -Dispatch', pole)
       commit('removeKalkCol', pole)
@@ -334,6 +401,62 @@ export default new Vuex.Store({
           return idx
         }
       })
+      return idx
+    },
+
+    getIdCol: state => (id,idCol) => {
+      var idx = -1
+
+      try{
+      state.Kalkulace.forEach((el2,idx2) => {
+        console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2 ,"el.kalkulaceid" , el2.kalkulaceid )
+        if (el2.kalkulaceid === id) {
+          console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2  )
+        state.Kalkulace[idx2].sloupecid.forEach((el, idxk) => {
+        if (el.id === idCol) {
+          idx = idxk
+          return idx
+        }
+      })
+      return
+    }
+    })
+
+
+      console.log("Col Id :", icCol, "  poradi ",idx )
+    } catch(e) {
+
+     console.log("neni Sloupiec id pr kalkulaci ", id  )
+    }
+
+      return idx
+    }
+
+    ,getIdColType: state => (id,idCol) => {
+      var idx = ""
+
+      try{
+      state.Kalkulace.forEach((el2,idx2) => {
+        console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2 ,"el.kalkulaceid" , el2.kalkulaceid )
+        if (el2.kalkulaceid === id) {
+          console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2  )
+        state.Kalkulace[idx2].sloupecid.forEach((el, idxk) => {
+        if (el.id === idCol) {
+          idx = el.type
+          return idx
+        }
+      })
+      return
+    }
+    })
+
+
+      console.log("Col Id :", icCol, "  poradi ",idx )
+    } catch(e) {
+
+     console.log("neni Sloupiec id pr kalkulaci ", id  )
+    }
+
       return idx
     }
 

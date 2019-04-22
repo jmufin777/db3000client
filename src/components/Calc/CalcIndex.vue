@@ -60,7 +60,11 @@
             </v-btn-toggle>
           <v-card>
             <v-card-text>
-              {{itemP}} {{ KalkulaceThis }}
+              {{(2==2)? itemP.sloupecid: 'prdel1'}} {{ KalkulaceThis  }}
+              {{ itemP }}
+
+
+
             </v-card-text>
           </v-card>
 
@@ -162,10 +166,19 @@ export default {
      eventBus.$off('MenuHlavni')
      eventBus.$off('MenuLeft')
      eventBus.$on('kalkulaceDelete',(serverDel) => {
+     eventBus.$off('MatCol')
      console.log(serverDel)
 
      })
      //eventBus.$off()
+
+    eventBus.$on('MatCol', (server) => {
+      //alert("Prodam sloupec s materialem")
+      console.log('Pridam jej Mt')
+      self.addColMat(server)
+
+
+    })
      eventBus.$on('MenuHlavni', (server) => {
       self.Hlavni=server.key
       if (server.key == 666) {  //Guma
@@ -345,11 +358,14 @@ export default {
        })
 
 
-       try{
+       try {
        tmpData = (await (self.strojmod(500)))   //MOdy pro V nebo A
        oData.Format      =  tmpData
        oData.FormatMenu1 =  []
        oData.FormatValue =  ''
+       oData.FormatSirka =  0
+       oData.FormatVyska =  0
+
 
 
        /*
@@ -413,6 +429,7 @@ export default {
 
 
        self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
+
        self.aKalkulace = self.$store.state.Kalkulace
 
        self.setKalk(newId)
@@ -458,6 +475,32 @@ export default {
       }
 
    },
+
+  k_id() {
+  var kRet=   this.$store.getters.getId(this.KalkulaceThis)
+  return kRet
+
+
+ },
+   addColMat() {
+     const self =this
+     var idK = self.KalkulaceThis-1
+     var idK = this.k_id()
+     //this.k_id()
+//      alert(idK)
+  //  return
+     //--self.setKalk(idK)
+
+     //self.$store.dispatch('addColMat', {kalkulaceid: self.KalkulaceThis, type: 'Mat'})
+     self.$store.dispatch('addColMat', {kalkulaceid: idK, type: 'Mat1'})
+        /////self.addKalkCol("Mat");
+     self.aKalkulace = self.$store.state.Kalkulace
+     // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: 9999 })
+
+     // alert("Pridma mat na prvni misto")
+
+   },
+
    addKalkCol (type="X") {
      const self =this
      self.$store.dispatch('addKalkCol', {kalkulaceid: self.KalkulaceThis, type: type})
@@ -538,6 +581,7 @@ export default {
      //alert("drop" )
 
    },
+
    setKalk(idK) {
           this.$store.dispatch('setKalk',idK)
 

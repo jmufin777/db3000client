@@ -2,7 +2,7 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
       <div style="font-size:100%; height:100%" class="white lighten-5 pt-0 " >
-        <slot name="obsah">
+         <slot name="obsah">
           <table width="100%" style="border:none"><tr><td style="width:30%;border:none">
            <v-btn small
             outline
@@ -47,6 +47,7 @@
            class="elevation-5"
            :disabled="false"
            >
+
              <v-icon>fa-plus</v-icon>
              </v-btn>
             </td>

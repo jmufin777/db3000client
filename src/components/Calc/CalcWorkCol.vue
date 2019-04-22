@@ -24,10 +24,17 @@
       editable
 
     ></v-overflow-btn>
+<!--
     {{ kalkulaceid}} / {{sloupecid}} / {{ neco }}
     :: {{$store.state.Kalkulace[k_id()].sloupecid[sloupecid-1].type}} ::
+    --->
+
+    {{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
+    {{ getType()}}/ {{getIndex()}} /{{getId()}}
+
       </td>
     </tr>
+
     <tr ><td colspan="20" class="pl-1  pa-1">
       <table width="100%" >
         <tr class="mt-1 green" v-for="(item, i) in enum_mod_full.filter(el => form.stroj == el.stroj) " :key="i">
@@ -36,6 +43,7 @@
            <v-card class="silver ">
              <v-card-text style="font-size:80%;text-align:left" >
              {{ item['nazev']+' '+item['nazev_text'] }}
+
 
            </v-card-text>
            </v-card>
@@ -108,12 +116,10 @@ export default {
      Format: [],
 
      FormatJoin: [],
+
       enum_up: [],
       enum_mod:[],
       enum_mod_full:[],
-
-
-
 
 
      //
@@ -129,12 +135,16 @@ export default {
        stroj: ''
      }
 
+     ,ID:0
+
 
 
    }
  },
  mounted () {
    const self = this
+
+
    return
    self.FormatJoin.forEach(element => {
      self.Format.push({text: element.text})
@@ -154,6 +164,7 @@ export default {
      const self = this
      var atmp=[]
      var found = true
+
      atmp=(await ListStroj.one(this.user,-1,1041)).data.enum_strojmod_full
      self.enum_mod_full = atmp
      if (!atmp.length || atmp.length == 0)  return
@@ -178,6 +189,13 @@ export default {
      //if (atmp.
      //this.enum_up
    //  alert(enum_up)
+   },
+
+
+   async matKat() {
+
+
+
    },
 
    ShowMod(a) {
@@ -213,6 +231,38 @@ export default {
        }
      })
    },
+
+   getType() {
+     var cRet=   this.$store.getters.getIdColType(this.kalkulaceid,this.sloupecid)
+
+
+  return cRet
+     //{{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
+   },
+   getIndex() {
+  //   var idK = k_id()
+///     var cType = this.$store.state.Kalulace[idK].sloupecid[sloupecid]
+  var kRet=   this.$store.getters.getIdCol(this.kalkulaceid,this.sloupecid)
+  return kRet
+
+     //{{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
+
+
+   },
+
+
+getId() {
+  //   var idK = k_id()
+///     var cType = this.$store.state.Kalulace[idK].sloupecid[sloupecid]
+
+  return this.sloupecid
+
+     //{{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
+
+
+   },
+
+
    setKalk(idK) {
             this.$store.dispatch('setKalk',idK)
     },
@@ -221,6 +271,7 @@ export default {
   return kRet
 
  },
+
    //Soubory
       handleRemove(file, fileList) {
         console.log(file, fileList);

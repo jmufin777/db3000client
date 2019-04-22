@@ -31,7 +31,6 @@
            <!-- {{ itemStroj.idefix }} : {{ idefixClick }} : {{ idefixVidet }} -->
            {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
 
-
            <!-- : {{idefixVidet>0 ? itemStroj.stroj + ' ' + itemStroj.nazev : itemStroj.stroj }}
            :: [ {{$store.state.Kalkulace[k_id()].data.Menu1Value}} ] -->
 
@@ -40,7 +39,8 @@
       <td style="width:20%">
         <span @click="idefixClick=itemStroj.idefix; MenuShow1(MenuShow, $event )">
                  <!-- <span @click="MenuFormatShow1(MenuFormatShow, $event )"> -->
-    <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light"></i>
+    <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light" style="cursor:pointer"></i>
+
     </span>
        </td>
      </tr>
@@ -96,16 +96,16 @@
 <!--Formaty -->
 <!-- $store.state.Kalkulace[k_id()].type==2 &&  -->
 <div v-if="true" style="width:95%;text-align:left" ref="menuformat1main" :id="'menuformat1main'+ID" class="ml-4">
-     <table style="width:100%" cols=2><tr>
+     <table style="width:100%; position:relative;left:17px" cols=2><tr>
        <td style="width:80%">
-         <span @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:80%;border:20px">
+         <div @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;postion:relative;left:80px;font-size:100%">
         {{ form.Format }}
       <!-- A {{ getFormat() }} -->
-     </span>
+     </div>
        </td>
       <td style="width:20%">
         <span @click="MenuFormatShow1(MenuFormatShow, $event )">
-      <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light"></i>
+      <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light" style="cursor:pointer"></i>
     </span>
        </td>
      </tr>
@@ -263,6 +263,10 @@ export default {
        filelist:[]
 
      },
+     last: {
+       sirka: 0,
+       vyska: 0
+     },
 
     ID: 0,
     idefixVidet: 0,
@@ -345,13 +349,17 @@ export default {
 
         document.getElementById("menu1"+self.ID).style.left =(e.clientX - 300) +'px'
         document.getElementById("menu1"+self.ID).style.top  =(e.clientY + 0) +'px'
-       self.MenuFormatShow = false;
+        self.MenuFormatShow = false;
         setTimeout(function() {
 
           document.getElementById("menu1"+self.ID).style.width = document.getElementById("menu1main"+self.ID).offsetWidth +'px'
           document.getElementById("menu1"+self.ID).style.left = (document.getElementById("menu1main"+self.ID).offsetLeft + 100) + 'px'
-
-          document.getElementById("menu1focus"+self.ID).focus()
+          if (  document.getElementById("menu1focus"+self.ID) )  {
+            document.getElementById("menu1focus"+self.ID).focus()
+            //alert('prdel2 OK')
+          } else {
+            // alert('prdel2')
+          }
 
         },200)
 
@@ -364,6 +372,7 @@ export default {
    },
     MenuFormatShow1(yesno,e) {
     const self = this
+
      if (yesno== 0) {
        this.MenuFormatShow = true
          document.getElementById("menuformat1"+self.ID).style.left = (e.clientX - 300) +'px'
@@ -374,7 +383,12 @@ export default {
 
           document.getElementById("menuformat1"+self.ID).style.width = document.getElementById("menuformat1main"+self.ID).offsetWidth +'px'
           document.getElementById("menuformat1"+self.ID).style.left = (document.getElementById("menuformat1main"+self.ID).offsetLeft + 100) + 'px'
+          if (  document.getElementById("menu1focus"+self.ID) )  {
           document.getElementById("menuformat1focus"+self.ID).focus()
+          //alert('prdel3 OK')
+         } else {
+            //alert('prdel3')
+          }
         },200)
      }
      if (yesno==1) {
@@ -436,11 +450,20 @@ MenuStroj() {
       self.setKalk(idK)
       // console.log("FORMAT VALUE ", a , idK, this.$store.state.Kalkulace[this.k_id()].data.FormatValue )
       // return
+
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatValue' , value: a })
+      if (self.form.sirka >0 && self.form.vyska > 0 ){
+      //  alert('aaaaa')
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska' , value: self.form.vyska })
+      }
+
+
+
 
       // var thisItem = self.$store.state.Kalkulace[this.k_id()].data.Menu1Value
       var thisItem = a
-
+      //alert(thisItem);
       self.$store.state.Kalkulace[self.k_id()].data.Format.forEach((el, idx) =>{
        if (idx == 0) {
 
@@ -448,15 +471,21 @@ MenuStroj() {
          //self.form.vyska = el.vyska
 
        }
+
       if (el.idefix == thisItem) {
+
           //console.log(el.nazev, el.idefix_mod)
           var necoSirka = el.sirka
           var necoVyska = el.vyska
+          if (el.kod ==9999) {
+                      self.form.sirka = self.last.sirka
+                      self.form.vyska = self.last.vyska
+          } else {
           self.form.sirka = necoSirka
           self.form.vyska = necoVyska
+          }
           self.form.Format=el.nazev
           self.getFormatName()
-
           return
       }
     })
@@ -604,6 +633,9 @@ getFormatName() {
         //self.form.vyska= (self.form.vyska+'').replace(/,/,".")
           self.form.sirka = f.cislo(self.form.sirka)
           self.form.vyska = f.cislo(self.form.vyska)
+
+
+
      if (self.form.vyska > 0 && self.form.vyska>0){
 
           console.log(self.form.vyska)
@@ -626,7 +658,9 @@ getFormatName() {
                 self.form.sirka = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka
                 self.form.vyska = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska
               } else {
-                   self.form.Format = 'Vlastní'
+                  self.last.sirka =  f.cislo(self.form.sirka)
+                  self.last.vyska =  f.cislo(self.form.vyska)
+                  self.form.Format = 'Vlastní'
               }
         }
 
@@ -644,6 +678,13 @@ getFormatName() {
         //self.getFormat(1)
 
      }
+     //console.log("Pridam jej")
+     if (self.form.sirka > 0 && self.form.vyska > 0 ) {
+       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
+       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska' , value: self.form.vyska })
+       eventBus.$emit('MatCol', {key: 0  })
+     }
+
    },
 
 
