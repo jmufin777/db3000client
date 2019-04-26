@@ -61,13 +61,11 @@
           <v-card>
             <v-card-text>
               {{(2==2)? itemP.sloupecid: 'prdel1'}} {{ KalkulaceThis  }}
-              {{ itemP }}
-
-
-
+              {{ $store.state.Kalkulace[k_id()].data.Menu2 }}
+              {{ $store.state.Kalkulace[k_id()].data.Menu1Value }}<hr>
+              {{ $store.state.Kalkulace[k_id()] }}
             </v-card-text>
           </v-card>
-
 
         </span>
      </prehled>
@@ -81,10 +79,11 @@
     ></v-pagination> -->
     <draggable  v-model="aKalkulace"  :options="{group:{ name:'Kalkulace' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" >
       <span  v-for="(iKalk0 ,iK0) in aKalkulace" :key="iK0">
-<div style="position:relative;float:left;border: solid 2px white;width:30px;text-align:center;" class="elevation-5">
+      <div style="position:relative;float:left;border: solid 2px white;width:30px;text-align:center;" class="elevation-5">
       <a :href="'#'+iKalk0.kalkulaceid" @click="setKalk(iKalk0.kalkulaceid)" :ref="'ref_'+iKalk0.kalkulaceid" :id="'ref_'+iKalk0.kalkulaceid + ID">
 
         &nbsp;{{iKalk0.kalkulaceid}}
+
 
 
         </a>
@@ -175,7 +174,14 @@ export default {
     eventBus.$on('MatCol', (server) => {
       //alert("Prodam sloupec s materialem")
       console.log('Pridam jej Mt')
-      self.addColMat(server)
+      //alert(self.KalkulaceThis)
+      //self.$store.dispatch('removeKalkColID', {kalkulaceid: 1, sloupecid: 91} )
+      //self.removeKalkCol(0,0)
+      setTimeout(function(){
+        self.addColMat(server);
+      },1000)
+      //self.addColMat(server)
+
 
 
     })
@@ -594,7 +600,6 @@ export default {
            this.defaultStyle(idK)
 
           console.log('setKalk',idK)
-
    },
    getKalk() {
      return this.$store.getters('getKalk')

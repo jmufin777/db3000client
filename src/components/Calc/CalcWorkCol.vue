@@ -27,23 +27,28 @@
 <!--
     {{ kalkulaceid}} / {{sloupecid}} / {{ neco }}
     :: {{$store.state.Kalkulace[k_id()].sloupecid[sloupecid-1].type}} ::
+
+
+    {{ k_id() }} {{ kalkulaceid }}
+    {{ getType()}}/ {{getIndex()}} /{{getId()}} {{ ID }}
+    {{ info }} Col: {{ Col.data }}
     --->
 
-    {{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
-    {{ getType()}}/ {{getIndex()}} /{{getId()}}
+
 
       </td>
     </tr>
 
     <tr ><td colspan="20" class="pl-1  pa-1">
       <table width="100%" >
-        <tr class="mt-1 green" v-for="(item, i) in enum_mod_full.filter(el => form.stroj == el.stroj) " :key="i">
+        <!-- <tr class="mt-1 green" v-for="(item, i) in enum_mod_full.filter(el => form.stroj == el.stroj) " :key="i"> -->
+           <tr class="mt-1 green" v-for="(item, i) in Col.data" :key="i">
+
           <td >
           <a >
            <v-card class="silver ">
              <v-card-text style="font-size:80%;text-align:left" >
-             {{ item['nazev']+' '+item['nazev_text'] }}
-
+             {{item['sub'] }} {{ item['nazev']}} {{item['sirka_mm']}} x {{ item['vyska_mm']}} D: {{item['zkratka']}}
 
            </v-card-text>
            </v-card>
@@ -74,18 +79,22 @@ import {getters} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import ListStroj from '../../services/ListStrojService'
+import SQL from '../../services/fcesql'
+import Q from '../../services/query'
+import f from '../../services/fce'
+import { stringify } from 'querystring';
+
 //enum_strojmod_text
 
 export default {
     props: {
-
     kalkulaceid: {
       type : Number,
       required: true
     } ,
     sloupecid: {
       type : Number,
-      required: true
+      required: false
     },
     typid: {
       type : Number,
@@ -133,33 +142,127 @@ export default {
        filelist:[],
 
        stroj: ''
-     }
+     },
 
-     ,ID:0
+     ID:0,
+     SirkaLast:0,
+     VyskaLast:0,
 
+     Interval:0,
+     info:'',
+     countZmen:0,
 
+     //vuex - odkazy
+     Kalk: [],
+     Cols: [],
+     Col:  [],
+     Mat:  [],
+     MatVolba: 0
 
    }
  },
  mounted () {
    const self = this
+     this.ID = Math.round(Math.random() * 198345813)
+       //self.Kalk.push(  f.cp(self.Kalkulace[self.k_id()]) )
+       self.Kalk=  f.cp(self.Kalkulace[self.k_id()])
+     // console.log('tagtagtagtagtagtagtagtag',neco )
+     // console.log("COL ", JSON.stringify(self.Kalk[0].sloupecid))
+     // return
+     // self.Kalk.push([self.Kalkulace[self.k_id()]] )  //Nacteni kalkulace
+     //self.Cols.push(self.Kalk[0].sloupecid) // Sloupce do samostany promenny abych se neposral z tech tecek
+     //self.Cols=self.Kalk[0].sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
+      self.Cols=self.Kalk.sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
+     //self.Col.push( self.Cols);
+     self.Col=self.Cols[self.getIndex()] ;
+
+     //console.log("COL 2", JSON.stringify(self.Kalk[0].sloupecid))
+     console.log("COL 3", JSON.stringify(self.Col))
+     //return
+//     self.Col=self.Kalk.sloupecid[self.getIndex()]
+
+  //alert(this.$store.state.Kalkulace[self.k_id()].data.FormatSirka + " / "+ self.SirkaLast)
+  self.info="Nic"
+  self.Interval= setInterval(function()  {
+    if (self.getType()=="Mat1") {
+      var atmp=[]
+
+      // self.info=self.Kalkulace[self.k_id()].data.FormatSirka
+      if (
+        self.SirkaLast!=self.Kalkulace[self.k_id()].data.FormatSirka  ||
+        self.VyskaLast!=self.Kalkulace[self.k_id()].data.FormatVyska
+       ) {
+        if (self.Kalkulace[self.k_id()].data.FormatSirka == 0 || self.Kalkulace[self.k_id()].data.FormatVyska == 0 ) {
+          return
+        }
+        self.countZmen++;
+        // alert('COL 44 ' + JSON.stringify(self.Col)+" / "+ self.getIndex())
+
+        self.info="zmena " + self.countZmen;
+        self.SirkaLast = self.Kalkulace[self.k_id()].data.FormatSirka // this.$store.state.Kalkulace[self.k_id()].data.FormatSirka
+        self.VyskaLast = self.Kalkulace[self.k_id()].data.FormatVyska // this.$store.state.Kalkulace[self.k_id()].data.FormatSirka
+        //self.info+=self.idefix+"juzr"
+        ///self.Col=self.Kalk[self.k_id()][0].sloupecid[self.getIndex()]
+
+        // console.log("COL ", JSON.stringify(self.Col[0].sloupecid))
+        console.log("COL 4", JSON.stringify(self.Col))
+
+        var q1=SQL.getMatList(self.Kalkulace[self.k_id()].data.Menu1Value,self.Kalkulace[self.k_id()].data.FormatSirka ,self.Kalkulace[self.k_id()].data.FormatVyska )
+        self.q(q1)
+      }
+    }
+
+  },1000)
 
 
    return
-   self.FormatJoin.forEach(element => {
-     self.Format.push({text: element.text})
-   });
 
-     self.MenuLeftJoin.forEach(element => {
-     self.MenuLeft.push({text: element.text})
-   });
-
-   console.log('COL')
-   this.strojmod();
 
  },
 
+
+
+computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'xMenuMain',
+      'level',
+      'idefix',
+      'compaStore',
+      'Kalkulace',
+      'KalkulaceThis',
+      'user',
+    ]),
+},
  methods: {
+   async q(qq) {
+     const self = this
+     var atmp=[]
+     // self.info = qq
+      try {
+       atmp=(await Q.all(self.idefix,qq)).data.data
+        //self.info = atmp
+        var idCol = self.getIndex()
+        var idK = self.k_id()
+        self.Col.data=atmp;
+        console.log('TTT 1', self.Cols)
+
+
+        //self.$store.dispatch('saveCols', {id: idK,data: self.Cols })
+        //self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'sloupecid['+idCol+'].data' , value: 8822 })
+
+          // self.Kalkulace.push({"a" : 778899})
+//        self.Col.data=atmp;
+
+        //self.info = self.Col.data
+        //self.Mat=atmp;
+
+      } catch(e){
+        self.info="aaaaa"
+        console.log(e)
+      }
+
+   },
    async strojmod() {
      const self = this
      var atmp=[]
@@ -171,8 +274,6 @@ export default {
      //self.enum_up=atmp
      //console.log(atmp.length)
      //return
-
-
      atmp.forEach(el => {
        //console.log(el)
        found = self.enum_up.find( el2=>{
@@ -191,14 +292,11 @@ export default {
    //  alert(enum_up)
    },
 
-
    async matKat() {
 
 
-
    },
-
-   ShowMod(a) {
+  ShowMod(a) {
      const self = this
      console.log(a)
      self.form.stroj = a
@@ -215,7 +313,6 @@ export default {
      })
      //eventBus.$emit('WorkLeft',{key: self.nRet })
      //console.log(a ,"::: ", self.nRet)
-
 
    },
    SetFormat(a,b) {
@@ -235,7 +332,6 @@ export default {
    getType() {
      var cRet=   this.$store.getters.getIdColType(this.kalkulaceid,this.sloupecid)
 
-
   return cRet
      //{{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
    },
@@ -244,10 +340,7 @@ export default {
 ///     var cType = this.$store.state.Kalulace[idK].sloupecid[sloupecid]
   var kRet=   this.$store.getters.getIdCol(this.kalkulaceid,this.sloupecid)
   return kRet
-
      //{{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
-
-
    },
 
 

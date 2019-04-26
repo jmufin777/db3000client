@@ -432,16 +432,8 @@ MenuStroj() {
       self.MenuShow1(1,0)
       var nTmp =  _.findIndex(self.$store.state.Kalkulace[self.k_id()].data.Menu2, function (o) { return o.idefix_mod  == a })
       if(nTmp > -1) {
-        //alert(self.$store.state.Kalkulace[self.k_id()].data.Menu2[nTmp].idefix)
-         self.idefixVidet=self.$store.state.Kalkulace[self.k_id()].data.Menu2[nTmp].idefix
-         //alert(self.idefixVidet)
-      }
-
-      //alert(nTmp )
-
-     //this.Kalkulace = []
-     //this.$store.state.Kalkulace[this.k_id()].data.Menu1Value = a
-
+            self.idefixVidet=self.$store.state.Kalkulace[self.k_id()].data.Menu2[nTmp].idefix
+         }
    },
   setMenuFormat1Value (a, b) {
 

@@ -147,14 +147,11 @@ export default new Vuex.Store({
 
     },
 
+
     addKalkCol (state, kalkulacecoltype) {
       console.log('A :', JSON.stringify(kalkulacecoltype.kalkulaceid))
       var newId = -1
       var idK = -1
-
-
-
-
       state.Kalkulace.forEach((el, idxk) => {
         if (el.kalkulaceid === kalkulacecoltype.kalkulaceid) {
           idK = idxk
@@ -165,7 +162,6 @@ export default new Vuex.Store({
             el.sloupecid.forEach(eSl => {
               if (eSl.id >= newId) {
                 newId = eSl.id + 1
-
               }
             })
           }
@@ -177,61 +173,39 @@ export default new Vuex.Store({
         state.Kalkulace[idK].sloupecid.push({id: newId, type: kalkulacecoltype.type,  data: {}})
       }
     },
-
-      addColMat (state, kalkulacecoltype) {
+    saveKalk(state,kalkulace){
+      console.log('SAVE ' ,kalkulace.id)
+      state.Kalkulace[kalkulace.id]= kalkulace.data
+    },
+    saveCols(state,kalkulace){
+      console.log('SAVE ' ,kalkulace.id)
+       state.Kalkulace[kalkulace.id].sloupecid= []
+       state.Kalkulace[kalkulace.id].sloupecid.push(kalkulace.data)
+    },
+    addColMat (state, kalkulacecoltype) {
         var idK = kalkulacecoltype.kalkulaceid
         var type= kalkulacecoltype.type
-      console.log('A 2aaaa2:', JSON.stringify(kalkulacecoltype))
+        console.log('A 2aaaa2:', JSON.stringify(kalkulacecoltype))
 
       // return
 
 //      var newId = -1
   //    var idK = -1
       if (state.Kalkulace[idK].sloupecid.length>0){
-
         console.log('Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
         if (state.Kalkulace[idK].sloupecid[0].type==type){
           console.log('Shoda:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
           state.Kalkulace[idK].sloupecid[0] = {id: 91, type: type,  data: {}}
         } else {
           state.Kalkulace[idK].sloupecid.splice(0,0,{id: 91, type: type ,  data: {}})
-
         }
-
         //state.Kalkulace[idK].sloupecid[0] = {id: newId, type: kalkulacecoltype.type,  data: {}}
       } else {
         state.Kalkulace[idK].sloupecid.push({id: 91, type: type ,  data: {}})
         console.log('NE Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid))
         //state.Kalkulace[idK].sloupecid.push({id: 1, type: kalkulacecoltype.type,  data: {}})
-
       }
-
-
       return
-
-
-
-      state.Kalkulace.forEach((el, idxk) => {
-        if (el.kalkulaceid === kalkulacecoltype.kalkulaceid) {
-          idK = idxk
-          if (el.sloupecid.length === 0) {
-            newId = el.sloupecid.length + 1
-          } else {
-            newId = el.sloupecid.length + 1
-            el.sloupecid.forEach(eSl => {
-              if (eSl.id >= newId) {
-                newId = eSl.id + 1
-
-              }
-            })
-          }
-          return 0
-        }
-      })
-      if (newId > 0)  {
-        //console.log('Add : ', state.Kalkulace[idK])
-        state.Kalkulace[idK].sloupecid.push({id: newId, type: kalkulacecoltype.type,  data: {}})
-      }
     },
     removeKalk (state, kalkulaceid) {
       console.log('Remov ', kalkulaceid)
@@ -243,6 +217,7 @@ export default new Vuex.Store({
       console.log('Set ', kalkulaceid)
       state.KalkulaceThis = kalkulaceid
     },
+
     editKalk (state, kalkulaceidKeyValue) {
       console.log('Edit Klice :  ', kalkulaceidKeyValue)
       var klic = kalkulaceidKeyValue.key
@@ -281,6 +256,62 @@ export default new Vuex.Store({
         state.Kalkulace[idk].sloupecid.splice(ids, 1)
       }
     },
+    removeKalkColID (state, pole) {
+
+    var idx = -1
+    var idk = -1
+
+      try{
+      state.Kalkulace.forEach((el2,idx2) => {
+        console.log("Hledam REMOVE ", pole.sloupecid , "v kalkulaci ", pole.kalkulaceid, " idx2 ", idx2, " // ", el2.kalkulaceid  , pole )
+        if (el2.kalkulaceid === pole.kalkulaceid) {
+          console.log("Hledam REMOVE ", pole.sloupecid , "v kalkulaci ", pole.kalkulaceid, " idx2 ", idx2 , pole )
+          idk=idx2
+        state.Kalkulace[idx2].sloupecid.forEach((el, idxk) => {
+          console.log("Hledam REMOVE ", pole.sloupecid , "v kalkulaci ", pole.kalkulaceid, " idx2 ", idx2 , el )
+        if (el.id === pole.sloupecid) {
+          idx = idxk
+          return idx
+        }
+      })
+      if (idk > -1 && idx > -1 ) {
+        //console.log("COL NASEL Id :", pole.sloupecid, "  poradi ",idx )
+        state.Kalkulace[idk].sloupecid.splice(idx, 1)
+      }
+      return
+    }
+    })
+
+
+
+    } catch(e) {
+
+     console.log("NENI Sloupiec id pr kalkulaci ", idk ,  e )
+    }
+  },
+    removeKalkColID0 (state, pole) {
+      var kalkulaceid = pole.kalkulaceid
+      var sloupecid = pole.sloupecid
+      var idk = -1
+      var ids = -1
+      // console.log('Remove kalk kol id:', JSON.stringify(kalkulaceid, sloupecid))
+      state.Kalkulace.forEach((el, idxk) => {
+        if (el.kalkulaceid === kalkulaceid) {
+          console.log('C', sloupecid)
+          idk = idxk
+
+          el.sloupecid.forEach((el2, idx) => {
+            if (el2.id === sloupecid.id) {
+              ids = idx
+            }
+          })
+        }
+      })
+      if (idk > -1 && ids > -1 ) {
+        state.Kalkulace[idk].sloupecid.splice(ids, 1)
+      }
+    },
+
     cleanKalk (state) {
       state.Kalkulace = []
       state.KalkulaceLast = -1
@@ -360,6 +391,16 @@ export default new Vuex.Store({
       // return
       commit('editKalk', kalkulaceidKeyValue)
     },
+    saveKalk ({commit}, kalkulaceidKeyValue) {
+      // console.log('Actions- removeKalk ', kalkulaceid)
+      // return
+      commit('saveKalk', kalkulaceidKeyValue)
+    },
+    saveCols ({commit}, kalkulaceidKeyValue) {
+      // console.log('Actions- removeKalk ', kalkulaceid)
+      // return
+      commit('saveCols', kalkulaceidKeyValue)
+    },
     removeKalk ({commit}, kalkulaceid) {
       // console.log('Actions- removeKalk ', kalkulaceid)
       // return
@@ -369,14 +410,21 @@ export default new Vuex.Store({
       console.log('Actions- addKalkCol -Dispatch', kalkulaceid)
       commit('addKalkCol', kalkulaceid)
     },
+
+
     addColMat ({commit}, kalkulaceid) {
       console.log('Add Materialy', kalkulaceid)
       //alert('store mat')
       commit('addColMat', kalkulaceid)
     },
+
     removeKalkCol ({commit}, pole) {
       console.log('Actions- setWin -Dispatch', pole)
       commit('removeKalkCol', pole)
+    }
+    ,removeKalkColID ({commit}, pole) {
+      console.log('REMOVE ID', pole)
+      commit('removeKalkColID', pole)
     }
   },
   getters: {
@@ -409,7 +457,6 @@ export default new Vuex.Store({
 
       try{
       state.Kalkulace.forEach((el2,idx2) => {
-        console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2 ,"el.kalkulaceid" , el2.kalkulaceid )
         if (el2.kalkulaceid === id) {
           console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2  )
         state.Kalkulace[idx2].sloupecid.forEach((el, idxk) => {
@@ -426,7 +473,7 @@ export default new Vuex.Store({
       console.log("Col Id :", icCol, "  poradi ",idx )
     } catch(e) {
 
-     console.log("neni Sloupiec id pr kalkulaci ", id  )
+     // console.log("neni Sloupiec id pr kalkulaci ", id  )
     }
 
       return idx
@@ -437,9 +484,9 @@ export default new Vuex.Store({
 
       try{
       state.Kalkulace.forEach((el2,idx2) => {
-        console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2 ,"el.kalkulaceid" , el2.kalkulaceid )
+        // console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2 ,"el.kalkulaceid" , el2.kalkulaceid )
         if (el2.kalkulaceid === id) {
-          console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2  )
+          // console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2  )
         state.Kalkulace[idx2].sloupecid.forEach((el, idxk) => {
         if (el.id === idCol) {
           idx = el.type
@@ -454,7 +501,7 @@ export default new Vuex.Store({
       console.log("Col Id :", icCol, "  poradi ",idx )
     } catch(e) {
 
-     console.log("neni Sloupiec id pr kalkulaci ", id  )
+     //console.log("neni Sloupiec id pro kalkulaci ", id  )
     }
 
       return idx

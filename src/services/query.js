@@ -6,7 +6,7 @@ export default {
     return Api().get('query',{ params: {  user: user,query: query  }})
   },
 
-  post (user, id ) {
+  post (user, query ) {
     return Api().post('query', { params: {  user: user,query: query}} )
   }
 
