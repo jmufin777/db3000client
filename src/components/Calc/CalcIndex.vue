@@ -371,6 +371,7 @@ export default {
        oData.FormatValue =  ''
        oData.FormatSirka =  0
        oData.FormatVyska =  0
+       oData.FormatTisk  =  0   //Jednostranny,oboustranny, oboustranny ruzny
 
 
 

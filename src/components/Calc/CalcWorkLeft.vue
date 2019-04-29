@@ -138,7 +138,7 @@
                  {{ m1b.nazev }}
                 </button >
                  </td >
-                 <td style="width:20%">{{m1b.sirka}}</td><td style="width:20%">{{m1b.vyska}}</td>
+                 <td style="width:30%">{{m1b.sirka}}/</td><td style="width:20%">{{m1b.vyska}}</td>
               </tr>
             </thead>
          </table>
@@ -152,13 +152,27 @@
 
     </td></tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value >''" >
-     <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Sirka:</td>
+
+     <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid;text-align:right" class="pl-1">Rozmer A x B</td>
      <td colspan="7">
-   <input type="text"   v-model="form.sirka" style="text-align:right" class="pr-2 pt-3 pb-3" @focus="$event.target.select()" @change="getFormatName()">
+
+   <input type="text"   v-model="form.sirka" style="text-align:right;;width:40%" class="tdl tdn elevation-1 pr-1" placeholder="A"  @focus="$event.target.select()" @change="getFormatName()">
+   x
+   <input type="text"   v-model="form.vyska" style="text-align:right;width:40%" class="tdl tdn elevation-1 pr-1" @focus="$event.target.select()" @change="getFormatName()">
      </td>
-  <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Vyska:</td>
-    <td colspan="7">
-   <input type="text"   v-model="form.vyska" style="text-align:right" class="pr-2 py-3" @focus="$event.target.select()" @change="getFormatName()">
+
+    <td colspan="10">
+<select v-model="form.tisk" @change="getFormatName()">
+        <option v-for="(a,b ) in Tisk"
+            :key="a.val"
+            :label="a.txt"
+            :value="a.val"
+        >
+          {{ a.txt }}
+        </option>
+
+      </select>
+
    </td>
    </tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''">
@@ -248,15 +262,24 @@ export default {
 
       ],
 
+
      aKalk: {},   //
      MenuShow: false,
      MenuFormatShow: false,
      aStroj: [],
+     Tisk: [
+       {val:0,txt:'Jednostranny'},
+       {val:1,txt:'Oboustranny'},
+       {val:2,txt:'Oboustranny ruzny'},
+       {val:3,txt:'Bez tisku'},
+
+     ],
 
      form: {
        MenuRet :0,
        sirka: 0,
        vyska: 0,
+       tisk:0,
 
        Format: '',
        nakladks: 0,
@@ -267,6 +290,7 @@ export default {
        sirka: 0,
        vyska: 0
      },
+
 
     ID: 0,
     idefixVidet: 0,
@@ -360,9 +384,7 @@ export default {
           } else {
             // alert('prdel2')
           }
-
         },200)
-
 
      }
      if (yesno==1) {
@@ -445,9 +467,10 @@ MenuStroj() {
 
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatValue' , value: a })
       if (self.form.sirka >0 && self.form.vyska > 0 ){
-      //  alert('aaaaa')
+        //alert('aaaaa')
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska' , value: self.form.vyska })
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatTisk' , value: self.form.tisk })
       }
 
 
@@ -637,18 +660,24 @@ getFormatName() {
 
 
 
-        nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return o.sirka*1 == self.form.sirka*1 && o.vyska*1 == self.form.vyska*1})
+        nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return
+        (o.sirka*1 == self.form.sirka*1 && o.vyska*1 == self.form.vyska*1) || (o.sirka*1 == self.form.vyska*1 && o.vyska*1 == self.form.sirka*1)
+        })
         if (nTmp >-1){
           self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
           self.form.sirka = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka
           self.form.vyska = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska
 
+
         } else {
-                nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return o.sirka*1 == self.form.vyska*1 && o.vyska*1 == self.form.sirka*1})
+                nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return
+                (o.sirka*1 == self.form.vyska*1 && o.vyska*1 == self.form.sirka*1) ||(o.sirka*1 == self.form.sirka*1 && o.vyska*1 == self.form.vyska*1)
+                })
               if (nTmp >-1){
                 self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
                 self.form.sirka = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka
                 self.form.vyska = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska
+
               } else {
                   self.last.sirka =  f.cislo(self.form.sirka)
                   self.last.vyska =  f.cislo(self.form.vyska)
@@ -672,8 +701,10 @@ getFormatName() {
      }
      //console.log("Pridam jej")
      if (self.form.sirka > 0 && self.form.vyska > 0 ) {
+
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska' , value: self.form.vyska })
+       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatTisk' , value: self.form.tisk })
        eventBus.$emit('MatCol', {key: 0  })
      }
 
