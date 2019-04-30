@@ -170,8 +170,7 @@
         >
           {{ a.txt }}
         </option>
-
-      </select>
+</select>
 
    </td>
    </tr>

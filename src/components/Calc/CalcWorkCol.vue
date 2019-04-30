@@ -14,6 +14,19 @@
     </slot>
     </td>
       <td colspan="18" class="pl-1 sloupec" style="border-right: solid 1px silver;" >
+        <input type="text" v-model="form.txt" size="mini"  style="width:95%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
+<!--
+        <el-autocomplete
+                class="inline-input mr-1 tdl tdn"
+
+                :fetch-suggestions="querySearch501"
+                placeholder="Skupina"
+                @select="handleSelect"
+                size="mini "
+                style="width:95%;"
+                min
+                ></el-autocomplete>
+
      <v-overflow-btn slot="obsah"
       :items="enum_up"
       hide-details
@@ -24,6 +37,7 @@
       editable
 
     ></v-overflow-btn>
+    //-->
 <!--
     {{ kalkulaceid}} / {{sloupecid}} / {{ neco }}
     :: {{$store.state.Kalkulace[k_id()].sloupecid[sloupecid-1].type}} ::
@@ -38,16 +52,36 @@
 
       </td>
     </tr>
+    <tr>
+      <td colspan="20" class="pl-1  pa-1">
+      <select v-model="form.tisk" @change="">
+        <option v-for="(a,b ) in Tisk"
+            :key="a.val"
+            :label="a.txt"
+            :value="a.val"
+        >
+          {{ a.txt }}
+        </option>
+    </select>
+    </td>
+
+    </tr>
 
     <tr ><td colspan="20" class="pl-1  pa-1">
-      <table width="100%" >
+      <table width="100%" v-if="form.showtxt">
         <!-- <tr class="mt-1 green" v-for="(item, i) in enum_mod_full.filter(el => form.stroj == el.stroj) " :key="i"> -->
-           <tr class="mt-1 green" v-for="(item, i) in Col.data" :key="i">
+
+           <tr class="mt-1 green" v-for="(item, i) in Col.data.filter(el => (
+             (el.nazev).toUpperCase().match(form.txt.toUpperCase())  || form.txt ==''
+             ||
+             (el.sub).toUpperCase().match(form.txt.toUpperCase())  || form.txt ==''  )
+
+             )" :key="i" >
 
           <td >
           <a >
            <v-card class="silver ">
-             <v-card-text style="font-size:80%;text-align:left" >
+             <v-card-text style="font-size:80%;text-align:left" @click="form.txt= item['nazev']; form.showtxt=false">
              {{item['sub'] }} {{ item['nazev']}} {{item['sirka_mm']}} x {{ item['vyska_mm']}} D: {{item['zkratka']}}
 
            </v-card-text>
@@ -130,6 +164,14 @@ export default {
       enum_mod:[],
       enum_mod_full:[],
 
+     Tisk: [
+       {val:0,txt:'Jednostranny'},
+       {val:1,txt:'Oboustranny'},
+       {val:2,txt:'Oboustranny ruzny'},
+       {val:3,txt:'Bez tisku'},
+
+     ],
+
 
      //
 
@@ -140,6 +182,11 @@ export default {
        Format: '',
        nakladks: 0,
        filelist:[],
+       tisk:0,
+       txt: '',  //polozka hledaniho textu 1,  je vztazena k typu sloupce
+       showtxt: false,
+
+
 
        stroj: ''
      },
@@ -263,6 +310,23 @@ computed: {
       }
 
    },
+   querySearch501(queryString, cb) {  //Nazev
+        var n1 = self.Col.Data
+        var links = n1
+        var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        cb(results);
+      },
+      handleSelect(item) {
+        console.log(item)
+      },
+    createFilter(queryString) {
+        return (link) => {
+          if (link.value == null ) {
+            return ''
+          }
+          return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
    async strojmod() {
      const self = this
      var atmp=[]

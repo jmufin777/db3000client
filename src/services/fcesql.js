@@ -28,10 +28,10 @@ export default {
         )
       )`
 
-      cq=`select c.nazev as sub,concat2(' ',nazev1,nazev2) as nazev,b.* from list_mat a  join (
+      cq=`select distinct on (c.nazev,concat2(' ',nazev1,nazev2,nazev3)) c.nazev as sub,concat2(' ',nazev1,nazev2,nazev3) as nazev,b.* from list_mat a  join (
           ${cq}
       ) b on a.idefix=b.idefix_mat join (select * from list2_matsubskup aa) c on a.idefix_matsubskup=c.idefix`
-      console.log(cq)
+      //console.log(cq)
      return cq
 
   }  ,
