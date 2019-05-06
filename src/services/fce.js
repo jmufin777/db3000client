@@ -55,7 +55,7 @@ cp2(obj){
   return nobj;
 },
 cislo(ncislo=0) {
-
+    ncislo=ncislo+''
     if (ncislo >'' && ncislo.match(/,/) ) {
       return ((ncislo+'').replace(/,/, '.'))*1
     }

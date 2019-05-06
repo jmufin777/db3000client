@@ -54,7 +54,7 @@
     </tr>
     <tr>
       <td colspan="20" class="pl-1  pa-1">
-      <select v-model="form.tisk" @change="">
+      <select v-if="getType()!=='Mat1'" v-model="form.tisk" @change="">
         <option v-for="(a,b ) in Tisk"
             :key="a.val"
             :label="a.txt"
@@ -67,36 +67,56 @@
 
     </tr>
 
-    <tr ><td colspan="20" class="pl-1  pa-1">
-      <table width="100%" v-if="form.showtxt">
-        <!-- <tr class="mt-1 green" v-for="(item, i) in enum_mod_full.filter(el => form.stroj == el.stroj) " :key="i"> -->
+    <tr>
+      <td colspan="20" class="pl-1  pa-1">
+        <div style="height:250px;overflow:scroll"  v-if="form.showtxt && getType()=='Mat1' " >
+          <table  width="100%" v-if="form.showtxt && getType()=='Mat1' " >
+             <tr class="mt-1 green" v-for="(item, i) in Col.data.filter(el => (
+                (el.nazev).toUpperCase().match(form.txt.toUpperCase())  || form.txt ==''
+                ||
+                (el.sub).toUpperCase().match(form.txt.toUpperCase())  || form.txt ==''  )
 
-           <tr class="mt-1 green" v-for="(item, i) in Col.data.filter(el => (
-             (el.nazev).toUpperCase().match(form.txt.toUpperCase())  || form.txt ==''
-             ||
-             (el.sub).toUpperCase().match(form.txt.toUpperCase())  || form.txt ==''  )
+                )" :key="i" >
+              <td >
+              <a>
+              <v-card class="silver ">
+                <v-card-text style="font-size:80%;text-align:left" @click="form.txt= item['nazev']; form.showtxt=false; setCol(i)"
+                :class="{'blue lighten-5':item['poradi']==1, 'orange lighten-5':item['poradi']>1}"
+                >
+                 {{ item['sub'] }} {{ item['nazev']}}
+                 {{item['sirka_mm']}} x {{ item['vyska_mm']}}
+                 {{item['zkratka']}}
 
-             )" :key="i" >
 
-          <td >
-          <a >
-           <v-card class="silver ">
-             <v-card-text style="font-size:80%;text-align:left" @click="form.txt= item['nazev']; form.showtxt=false">
-             {{item['sub'] }} {{ item['nazev']}} {{item['sirka_mm']}} x {{ item['vyska_mm']}} D: {{item['zkratka']}}
 
-           </v-card-text>
-           </v-card>
-          </a>
-          </td>
-        </tr>
-      </table>
+              </v-card-text>
+              </v-card>
+              </a>
+              </td>
+            </tr>
 
-    </td></tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="20" class="pl-1  pa-1">
+        <div style="height:15px;overflow:scroll">
+        <input type="text" v-model="form.txt" size="mini"  style="width:95%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
+        </div>
+      </td>
+    </tr>
+
+
 
 
 <tr><td colspan="20" style="border-bottom: dotted 1px silver" >&nbsp;</td></tr>
     </table>
 
+Naklad:<input type="number" v-model="form.txt" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
+Prodej:<input type="text" v-model="form.txt" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
+Naklad2:<input type="number" v-model="form.txt" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
+Prodej2:<input type="text" v-model="form.txt" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
         <slot name="obsah">
          <!-- Slot Menu Leve -->
        </slot>
@@ -184,7 +204,7 @@ export default {
        filelist:[],
        tisk:0,
        txt: '',  //polozka hledaniho textu 1,  je vztazena k typu sloupce
-       showtxt: false,
+       showtxt: true,
 
 
 
@@ -221,7 +241,7 @@ export default {
      //self.Cols=self.Kalk[0].sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
       self.Cols=self.Kalk.sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
      //self.Col.push( self.Cols);
-     self.Col=self.Cols[self.getIndex()] ;
+      self.Col=self.Cols[self.getIndex()] ;
 
      //console.log("COL 2", JSON.stringify(self.Kalk[0].sloupecid))
      console.log("COL 3", JSON.stringify(self.Col))
@@ -269,6 +289,7 @@ export default {
 
 
 
+
 computed: {
     ...mapState([
       'isUserLoggedIn',
@@ -280,7 +301,9 @@ computed: {
       'KalkulaceThis',
       'user',
     ]),
+
 },
+
  methods: {
    async q(qq) {
      const self = this
@@ -309,6 +332,19 @@ computed: {
         console.log(e)
       }
 
+   },
+   setCol(idx){
+     const self = this
+     if (self.getType()=='Mat1'){
+       self.Col.txtMat= self.Col.data[idx].nazev
+       self.Col.cenaNaklad= self.Col.data[idx].cena_naklad_m2
+       self.Col.cenaProdej= self.Col.data[idx].cena_prodej_m2
+
+       self.Kalk.sloupecid= self.Col
+       self.$store.dispatch('setKalk',self.Kalk)
+       alert('aaa')
+
+     }
    },
    querySearch501(queryString, cb) {  //Nazev
         var n1 = self.Col.Data
@@ -384,8 +420,8 @@ computed: {
      console.log("a",a)
      self.FormatJoin.forEach(el => {
        if (el.text == a) {
-         self.form.sirka = el.sirka
-         self.form.vyska = el.vyska
+         self.form.sirka = el.sirka*1
+         self.form.vyska = el.vyska*1
          self.form.Format = el.text
          //console.log("ret",self.form.MenuRet)
          return

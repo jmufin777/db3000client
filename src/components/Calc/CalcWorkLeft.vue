@@ -30,6 +30,7 @@
 
            <!-- {{ itemStroj.idefix }} : {{ idefixClick }} : {{ idefixVidet }} -->
            {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
+             <!-- HUHU2 {{ idefixVidet }} {{ itemStroj.idefix_mod }} -->
 
            <!-- : {{idefixVidet>0 ? itemStroj.stroj + ' ' + itemStroj.nazev : itemStroj.stroj }}
            :: [ {{$store.state.Kalkulace[k_id()].data.Menu1Value}} ] -->
@@ -152,33 +153,48 @@
 
     </td></tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value >''" >
-
-     <td colspan="3" style="font-size:80%;text-align:left;border-bottom:1px solid;text-align:right" class="pl-1">Rozmer A x B</td>
-     <td colspan="7">
-
-   <input type="text"   v-model="form.sirka" style="text-align:right;;width:40%" class="tdl tdn elevation-1 pr-1" placeholder="A"  @focus="$event.target.select()" @change="getFormatName()">
-   x
-   <input type="text"   v-model="form.vyska" style="text-align:right;width:40%" class="tdl tdn elevation-1 pr-1" @focus="$event.target.select()" @change="getFormatName()">
-     </td>
-
-    <td colspan="10">
-<select v-model="form.tisk" @change="getFormatName()">
-        <option v-for="(a,b ) in Tisk"
-            :key="a.val"
-            :label="a.txt"
-            :value="a.val"
-        >
-          {{ a.txt }}
-        </option>
-</select>
-
-   </td>
+      <td colspan="20"><hr></td>
    </tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''">
-    <td colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid" class="pl-1">Naklad&nbsp;ks:</td>
-    <td colspan="10" style="font-size:80%;text-align:left;border-bottom:1px solid;border-right:1px solid">
-    <input type="text"   v-model="form.nakladks" style="text-align:right" class="pr-2 py-3" @focus="$event.target.select()" @change="ks()">
+    <td colspan="20" >
+    <table>
+      <tr>
+     <td style="font-size:90%;text-align:left;border-bottom:0px solid;text-align:right;width:20%" class="pl-1">A x B</td>
+      <td  style="text-align:center;width:17%">
+        <input type="text"   v-model="form.sirka" style="text-align:right;width:90%;height:80%" class="tdl tdn elevation-1 pr-1" placeholder="A"  @focus="$event.target.select()" @change="getFormatName()">
+      </td>
+      <td style="width:3%">x</td>
+      <td style="width:17%">
+        <input type="text"   v-model="form.vyska" style="text-align:right;width:90%;height:80%" class="tdl tdn elevation-1 pr-1" @focus="$event.target.select()" @change="getFormatName()">
+      </td>
+
+      <td colspan="2" style="width:30%;">
+        <select v-model="form.tisk" @change="getFormatName()" style="text-align:right;width:80%;height:90%;font-size:90%" class="tdl tdn elevation-1 pr-1">
+                <option v-for="(a,b ) in Tisk"
+                    :key="a.val"
+                    :label="a.txt"
+                    :value="a.val"
+                >
+                  {{ a.txt }}
+                </option>
+        </select>
+      </td>
+      </tr>
+      <tr>
+        <td style="width:20%;font-size:90%;pl-4">Panelovat</td>
+        <td style="width:5%"><input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)" style="text-align:right;width:100%" class="tdl tdn elevation-0 pr-0" @change="getFormatName()"></td>
+        <td style="width:10%;font-size:90%;">Po</td>
+        <td style="width:20%">
+          <input type="text"   v-model="form.sirkaPanel" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-1 pr-1"  @focus="$event.target.select()" @change="getFormatName();sirkaP()">
+        </td>
+        <td  style="width:10%;font-size:90%;" class="pl-1">Naklad&nbsp;ks:</td>
+        <td  style="width:25%;text-align:right">
+        <input type="text"   v-model="form.nakladks" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-1 pr-1" @focus="$event.target.select()" @change="ks();getFormatName()">
+        </td>
+      </tr>
+    </table>
     </td>
+
     </tr>
     <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''"><td colspan="20">
       <!-- upload-demo -->
@@ -279,6 +295,8 @@ export default {
        sirka: 0,
        vyska: 0,
        tisk:0,
+       sirkaPanel: 0,
+       panelovat:0,
 
        Format: '',
        nakladks: 0,
@@ -290,9 +308,11 @@ export default {
        vyska: 0
      },
 
+     Kalk:[],
+
 
     ID: 0,
-    idefixVidet: 0,
+    idefixVidet: 0,  //Nasypat do vuexu idefixVidet
     idefixClick: 0,
 
    }
@@ -303,11 +323,16 @@ export default {
 
    self.k_id()
    self.ID = Math.round(Math.random() * 1983458)+self.k_id()
+   self.Kalk=  f.cp(self.Kalkulace[self.k_id()])
+   // alert(self.k_id())
+
+
 
 
    console.log("MenuStroj TOP")
    self.MenuStroj()
    console.log("MenuStroj EOF")
+   self.readVuexData()
 
    return
 
@@ -325,8 +350,36 @@ export default {
 
  },
  methods: {
+   readVuexData(){
+     const self=this
+     self.form.nakladks = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
+     self.form.sirka = self.$store.state.Kalkulace[self.k_id()].data.FormatSirka
+     self.form.vyska = self.$store.state.Kalkulace[self.k_id()].data.FormatVyska
+     self.form.panelovat = self.$store.state.Kalkulace[self.k_id()].data.FormatPanelovat
+     self.form.sirkaPanel = self.$store.state.Kalkulace[self.k_id()].data.FormatSirkaPanel
+     self.form.tisk = self.$store.state.Kalkulace[self.k_id()].data.FormatTisk
+     self.idefixVidet = self.$store.state.Kalkulace[self.k_id()].data.idefixVidet
+
+   //  this.$store.dispatch('setKalk',this.aKalkulace[0].kalkulaceid)
+
+
+
+
+
+
+
+
+
+this.form.vyska = self.$store.state.Kalkulace[self.k_id()].data.FormatVyska
+
+
+
+   },
    ks() {
      this.form.nakladks = f.cislo(this.form.nakladks)
+   },
+   sirkaP() {
+     this.form.sirkaPanel = f.cislo(this.form.sirkaPanel)
    },
    onoff() {
      this.active = !this.active
@@ -388,6 +441,7 @@ export default {
      }
      if (yesno==1) {
        this.MenuShow = false
+
      }
 
    },
@@ -422,10 +476,12 @@ export default {
      if (self.idefixVidet == 0) {
      self.idefixVidet = idefixVidet
      self.setMenu1Value(idefix_mod)
+     //alert('vide')
 
 
      } else {
        self.idefixVidet =0
+       //alert('vide  2')
      }
    },
 
@@ -438,7 +494,7 @@ MenuStroj() {
     if (nTmp < 0){
       self.aStroj.push({idefix: el.idefix, stroj: el.stroj,idefix_mod: el.idefix_mod, nazev: el.nazev})
     }
-      console.log(self.aStroj)
+      // console.log(self.aStroj)
   })
 },
 
@@ -450,11 +506,18 @@ MenuStroj() {
 
 
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Menu1Value' , value: a })
+
       self.MenuShow1(1,0)
       var nTmp =  _.findIndex(self.$store.state.Kalkulace[self.k_id()].data.Menu2, function (o) { return o.idefix_mod  == a })
       if(nTmp > -1) {
             self.idefixVidet=self.$store.state.Kalkulace[self.k_id()].data.Menu2[nTmp].idefix
+            self.Kalk.data.txtStroj = self.Kalk.data.Menu2[nTmp].stroj + ' '+ self.Kalk.data.Menu2[nTmp].nazev
+            // {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
          }
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
+      //self.Kalk.data.txtStroj="NAZDARBAZAR"
+      self.$store.dispatch('setKalk',self.Kalk)
+      //alert('memik ' + self.idefixVidet + '  ) ')
    },
   setMenuFormat1Value (a, b) {
 
@@ -470,6 +533,14 @@ MenuStroj() {
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska' , value: self.form.vyska })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatTisk' , value: self.form.tisk })
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatPanelovat' , value: self.form.panelovat })
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirkaPanel' , value: self.form.sirkaPanel })
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
+      self.Kalk.data.txtFormat = self.form.Format
+      self.$store.dispatch('setKalk',self.Kalk)
+      //alert(self.Kalk.data.txtFormat)
+
       }
 
 
@@ -492,11 +563,11 @@ MenuStroj() {
           var necoSirka = el.sirka
           var necoVyska = el.vyska
           if (el.kod ==9999) {
-                      self.form.sirka = self.last.sirka
-                      self.form.vyska = self.last.vyska
+                      self.form.sirka = self.last.sirka*1
+                      self.form.vyska = self.last.vyska*1
           } else {
-          self.form.sirka = necoSirka
-          self.form.vyska = necoVyska
+          self.form.sirka = necoSirka*1
+          self.form.vyska = necoVyska*1
           }
           self.form.Format=el.nazev
           self.getFormatName()
@@ -658,43 +729,68 @@ getFormatName() {
 
 
 
+//&& o.vyska*1 == self.form.vyska*1) || (o.sirka*1 == self.form.vyska*1 && o.vyska*1 == self.form.sirka*1)
+        // nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return
+        // (o.sirka*1 == self.form.sirka*1 )
+        // })
+        self.$store.state.Kalkulace[idK].data.Format.forEach((el,idx) => {
+          if (self.form.sirka*1==el.sirka*1 && self.form.vyska*1==el.vyska*1  ) {
+            nTmp=idx
+            return
+            // console.log(el.sirka*1, el.vyska*1);
+            // alert("Ok 11 - nazev "+ el.nazev+ " / "+(el.vyska*1))
+          }
 
-        nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return
-        (o.sirka*1 == self.form.sirka*1 && o.vyska*1 == self.form.vyska*1) || (o.sirka*1 == self.form.vyska*1 && o.vyska*1 == self.form.sirka*1)
+          if (self.form.vyska*1==el.sirka*1  && self.form.sirka*1==el.vyska*1  ) {
+            nTmp=idx
+            return
+            // console.log(el.sirka*1, el.vyska*1);
+            // alert("Ok 11 - nazev "+ el.nazev+ " / "+(el.vyska*1))
+          }
+
+
         })
         if (nTmp >-1){
+
           self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
-          self.form.sirka = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka
-          self.form.vyska = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska
+          self.form.sirka = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka*1
+          self.form.vyska = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska*1
 
 
         } else {
-                nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return
-                (o.sirka*1 == self.form.vyska*1 && o.vyska*1 == self.form.sirka*1) ||(o.sirka*1 == self.form.sirka*1 && o.vyska*1 == self.form.vyska*1)
-                })
-              if (nTmp >-1){
-                self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
-                self.form.sirka = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka
-                self.form.vyska = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska
-
-              } else {
                   self.last.sirka =  f.cislo(self.form.sirka)
                   self.last.vyska =  f.cislo(self.form.vyska)
                   self.form.Format = 'Vlastní'
-              }
+
         }
+
+        //         nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return
+        //         (o.sirka*1 == self.form.vyska*1 && o.vyska*1 == self.form.sirka*1) ||(o.sirka*1 == self.form.sirka*1 && o.vyska*1 == self.form.vyska*1)
+        //         })
+        //       if (nTmp >-1){
+        //         self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
+        //         self.form.sirka = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka
+        //         self.form.vyska = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska
+
+        //       } else {
+        //           self.last.sirka =  f.cislo(self.form.sirka)
+        //           self.last.vyska =  f.cislo(self.form.vyska)
+        //           self.form.Format = 'Vlastní'
+        //       }
+        // }
 
         if (self.form.sirka*1 > self.form.vyska*1) {
           console.log("getFormatName 3 : ", self.form.sirka,"/", self.form.sirka)
 
           setTimeout(function(){
             var neco = self.form.sirka
-            self.form.sirka = self.form.vyska
-            self.form.vyska = neco
+//            self.form.sirka = self.form.vyska
+  //          self.form.vyska = neco
 
           },2000)
 
         }
+
         //self.getFormat(1)
 
      }
@@ -704,6 +800,12 @@ getFormatName() {
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska' , value: self.form.vyska })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatTisk' , value: self.form.tisk })
+       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatPanelovat' , value: self.form.panelovat })
+       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirkaPanel' , value: self.form.sirkaPanel })
+       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
+       self.Kalk.data.txtFormat = self.form.Format
+       self.$store.dispatch('setKalk',self.Kalk)
+       // alert(self.Kalk.data.txtFormat)
        eventBus.$emit('MatCol', {key: 0  })
      }
 

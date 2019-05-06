@@ -41,10 +41,12 @@
 
 
 
-      <prehled slot="prehled" v-for="(itemP, iP) in aKalkulace" :key="iP">
+      <!-- <prehled slot="prehled" v-for="(itemP, iP) in aKalkulace" :key="iP"> -->
+      <prehled slot="prehled" >
 
         <span slot="obsah" >
-          <v-btn-toggle v-if="showPrehled==1 && iP==0">
+          <!-- <v-btn-toggle v-if="showPrehled==1 && iP==0"> -->
+          <v-btn-toggle >
               <v-btn flat value="vyroba">
                 Vyroba
               </v-btn>
@@ -58,14 +60,45 @@
                 Vl
               </v-btn>
             </v-btn-toggle>
-          <v-card>
-            <v-card-text>
+          <div v-for="(iK,i) in Kalkulace" :key="i" style="width:100%;">
+             <div style="width:2%;float:left">
+               <v-card><v-card-text>
+                  {{iK.kalkulaceid}}
+                </v-card-text></v-card>
+              </div>
+              <div style="float:left">
+                 <v-card><v-card-title style="font-size:12px;height:14px">{{Kalkulace[i].data.txtStroj}}</v-card-title><v-card-text>
+
+                    <div class="white" style="float:left">Rozmer {{Kalkulace[i].data.txtFormat}}</div><div>{{Kalkulace[i].data.FormatSirka}}x{{Kalkulace[i].data.FormatVyska}}mm</div>
+                    <div class="white" style="float:left">Naklad</div><div>{{Kalkulace[i].data.FormatNakladKs}}</div>
+
+                </v-card-text></v-card>
+              </div>
+              <div v-for="(sl, iSloupce ) in iK.sloupecid" :key="iSloupec" style="float:left">
+                 <v-card><v-card-title style="font-size:12px;height:14px">{{sl.type}}</v-card-title><v-card-text>
+                    <div class="white" style="font-size:12px;height:14px">{{sl.txtMat}}</div>
+                    <div class="white" style="float:left">Naklad:</div>
+                    <div class="white" style="float:left" >{{sl.cenaNaklad}}</div>
+                    <div class="white" style="float:left">Prodej:</div>
+                    <div class="white" style="float:left">{{sl.cenaProdej}}</div>
+
+                </v-card-text></v-card>
+              </div>
+
+              <div style="width:5%">aaaa</div>
+
+
+
+
+
+              <!--
               {{(2==2)? itemP.sloupecid: 'prdel1'}} {{ KalkulaceThis  }}
               {{ $store.state.Kalkulace[k_id()].data.Menu2 }}
               {{ $store.state.Kalkulace[k_id()].data.Menu1Value }}<hr>
               {{ $store.state.Kalkulace[k_id()] }}
-            </v-card-text>
-          </v-card>
+              //-->
+
+          </div>
 
         </span>
      </prehled>
@@ -142,7 +175,7 @@ export default {
      KalkulaceLast: - 1,
      CalcCount: 0,
      ColCount: 0,
-     showPrehled: 0,
+     showPrehled: 1,
      qtest: [],
      ID: 0,
    }
@@ -258,14 +291,19 @@ export default {
 */
    this.ID = Math.round(Math.random() * 198345813)
    this.aKalkulace = this.$store.state.Kalkulace
-   if (this.aKalkulace.length > 0 && this.aKalkulace[0].kalkulaceid ) {
+
+   return
+   if (this.aKalkulace.length > 0 && this.aKalkulace[0].kalkulaceid >-1 ) {
      this.$store.dispatch('setKalk',this.aKalkulace[0].kalkulaceid)
      this.KalkulaceThis = this.$store.getters.getKalk
      this.KalkulaceLast = this.$store.getters.getKalkLast
 
 
-//     alert(this.KalkulaceThis )
 
+     alert(this.KalkulaceThis )
+
+   } else {
+     alert(2)
    }
  },
  beforeEnter: (to, from, next) => {
@@ -353,6 +391,7 @@ export default {
        oData.Menu2 =  tmpData
        oData.Menu1 = []
        oData.Menu1Value=''
+       oData.idefixVidet=0
 //       alert(tmpData.length)
        tmpData.forEach((el,idx) => {
         nTmp =  _.findIndex(oData.Menu1, function (o) { return o.text +' '+o.nazev == el.stroj+ ' '+ el.nazev})
@@ -372,6 +411,9 @@ export default {
        oData.FormatSirka =  0
        oData.FormatVyska =  0
        oData.FormatTisk  =  0   //Jednostranny,oboustranny, oboustranny ruzny
+       oData.FormatPanelovat =  0
+       oData.FormatSirkaPanel =  0
+       oData.FormatNakladKs =  0
 
 
 
