@@ -323,7 +323,8 @@ export default {
 
    self.k_id()
    self.ID = Math.round(Math.random() * 1983458)+self.k_id()
-   self.Kalk=  f.cp(self.Kalkulace[self.k_id()])
+   var neco=JSON.stringify(self.Kalkulace[self.k_id()])
+   self.Kalk=JSON.parse(neco)
    // alert(self.k_id())
 
 
@@ -538,7 +539,7 @@ MenuStroj() {
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
       self.Kalk.data.txtFormat = self.form.Format
-      self.$store.dispatch('setKalk',self.Kalk)
+      self.$store.dispatch('replaceKalk',self.Kalk)
       //alert(self.Kalk.data.txtFormat)
 
       }
@@ -753,8 +754,8 @@ getFormatName() {
         if (nTmp >-1){
 
           self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
-          self.form.sirka = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka*1
-          self.form.vyska = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska*1
+          self.form.sirka  = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka*1
+          self.form.vyska  = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska*1
 
 
         } else {
@@ -781,18 +782,13 @@ getFormatName() {
 
         if (self.form.sirka*1 > self.form.vyska*1) {
           console.log("getFormatName 3 : ", self.form.sirka,"/", self.form.sirka)
-
           setTimeout(function(){
             var neco = self.form.sirka
 //            self.form.sirka = self.form.vyska
   //          self.form.vyska = neco
-
           },2000)
-
         }
-
         //self.getFormat(1)
-
      }
      //console.log("Pridam jej")
      if (self.form.sirka > 0 && self.form.vyska > 0 ) {
@@ -804,13 +800,13 @@ getFormatName() {
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirkaPanel' , value: self.form.sirkaPanel })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
        self.Kalk.data.txtFormat = self.form.Format
-       self.$store.dispatch('setKalk',self.Kalk)
+       //self.$store.dispatch('setKalk',self.Kalk)
+       self.$store.dispatch('setKalk',idK)
+       self.$store.dispatch('replaceKalk',self.Kalk)
        // alert(self.Kalk.data.txtFormat)
        eventBus.$emit('MatCol', {key: 0  })
      }
-
    },
-
 
  //--Values
  Menu1 () {

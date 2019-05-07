@@ -3,9 +3,9 @@
     <!-- Link:
   <router-link :to="{name: 'col', params: {ktery: 1 }}">Moduly</router-link> -->
     <my-layout>
-
     <div slot="hlavni">
-      {{ KalkulaceThis}} {{ this.$store.state.KalkulaceThis }} /Last {{ KalkulaceLast }}
+      {{ KalkulaceThis}} /Last {{ KalkulaceLast }}
+       {{ this.$store.state.KalkulaceThis }}
       <menu-hlavni>
 
       </menu-hlavni>
@@ -19,7 +19,6 @@
         <span slot="leva" >
 
           <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
-
               <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalk(iKalk.kalkulaceid)" >
                 <a :name="iKalk.kalkulaceid"></a>
                 <i class="el-icon-delete" size="mini"></i></button>
@@ -68,10 +67,8 @@
               </div>
               <div style="float:left">
                  <v-card><v-card-title style="font-size:12px;height:14px">{{Kalkulace[i].data.txtStroj}}</v-card-title><v-card-text>
-
                     <div class="white" style="float:left">Rozmer {{Kalkulace[i].data.txtFormat}}</div><div>{{Kalkulace[i].data.FormatSirka}}x{{Kalkulace[i].data.FormatVyska}}mm</div>
                     <div class="white" style="float:left">Naklad</div><div>{{Kalkulace[i].data.FormatNakladKs}}</div>
-
                 </v-card-text></v-card>
               </div>
               <div v-for="(sl, iSloupce ) in iK.sloupecid" :key="iSloupec" style="float:left">
@@ -84,11 +81,7 @@
 
                 </v-card-text></v-card>
               </div>
-
               <div style="width:5%">aaaa</div>
-
-
-
 
 
               <!--
@@ -114,14 +107,9 @@
       <span  v-for="(iKalk0 ,iK0) in aKalkulace" :key="iK0">
       <div style="position:relative;float:left;border: solid 2px white;width:30px;text-align:center;" class="elevation-5">
       <a :href="'#'+iKalk0.kalkulaceid" @click="setKalk(iKalk0.kalkulaceid)" :ref="'ref_'+iKalk0.kalkulaceid" :id="'ref_'+iKalk0.kalkulaceid + ID">
-
         &nbsp;{{iKalk0.kalkulaceid}}
-
-
-
         </a>
              </div>
-
       </span>
      </draggable>
       <div :ref="'neco11'"></div>
@@ -438,15 +426,17 @@ export default {
            // self.defaultStyle(self.KalkulaceThis)
            self.setKalk(self.KalkulaceThis)
             var neco = 'ref_'+self.KalkulaceThis + self.ID
+
             if (document.getElementById(neco)) {
               document.getElementById(neco).click()
               setTimeout(function() {
+                return
                 self.addKalkCol('Mat')
                 self.addKalkCol('Dok')
                 self.addKalkCol('Dok1')
                 self.addKalkCol('Dok2')
                 self.addKalkCol('Dok3')
-              },2000)
+              },20)
 
 
           //    document.getElementById(neco).style.color='red'
@@ -542,6 +532,12 @@ export default {
 
      //self.$store.dispatch('addColMat', {kalkulaceid: self.KalkulaceThis, type: 'Mat'})
      self.$store.dispatch('addColMat', {kalkulaceid: idK, type: 'Mat1'})
+     self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Laminace', id:92})
+     self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Kasir', id:93})
+     self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Rezani', id:94})
+     self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Baleni', id:95})
+     //self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Jine-Externi', id:96})
+
         /////self.addKalkCol("Mat");
      self.aKalkulace = self.$store.state.Kalkulace
      // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: 9999 })
@@ -554,7 +550,6 @@ export default {
      const self =this
      self.$store.dispatch('addKalkCol', {kalkulaceid: self.KalkulaceThis, type: type})
      self.aKalkulace = self.$store.state.Kalkulace
-
 
      return
 

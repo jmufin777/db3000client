@@ -207,6 +207,34 @@ export default new Vuex.Store({
       }
       return
     },
+    addColMat2 (state, kalkulacecoltype) {
+      var idK = kalkulacecoltype.kalkulaceid
+      var type= kalkulacecoltype.type
+      var colid= kalkulacecoltype.id
+      console.log('A 2aaaa2:', JSON.stringify(kalkulacecoltype))
+
+    // return
+
+//      var newId = -1
+//    var idK = -1
+      var nfound=-1;
+    if (state.Kalkulace[idK].sloupecid.length>0){
+      state.Kalkulace[idK].sloupecid.forEach((el,idx) => {
+        if (el.id == colid ) {
+          nfound=idx
+          return
+        }
+
+      })
+      if (nfound == -1){
+        state.Kalkulace[idK].sloupecid.push({id: colid, type: type ,  data: {}})
+      }
+    } else {
+      state.Kalkulace[idK].sloupecid.push({id: colid, type: type ,  data: {}})
+    }
+
+    return
+  },
     removeKalk (state, kalkulaceid) {
       console.log('Remov ', kalkulaceid)
       state.Kalkulace = state.Kalkulace.filter(function (el) {
@@ -216,6 +244,13 @@ export default new Vuex.Store({
     setKalk (state, kalkulaceid) {
       console.log('Set ', kalkulaceid)
       state.KalkulaceThis = kalkulaceid
+    },
+    replaceKalk (state, dataAll) {
+      var idx = this.getters.getId(dataAll.kalkulaceid)
+//      console.log('SetSetSetSetSetSetSetSetSetSetSetSet ', dataAll.kalkulaceid,this.getters.getId(dataAll.kalkulaceid))
+      //getId()
+
+        state.Kalkulace[idx] = dataAll
     },
 
     editKalk (state, kalkulaceidKeyValue) {
@@ -385,6 +420,10 @@ export default new Vuex.Store({
       // console.log('Actions- setWin -Dispatch', newWin)
       commit('setKalk', kalkulaceid)
     },
+    replaceKalk ({commit}, dataAll) {
+      // console.log('Actions- setWin -Dispatch', newWin)
+      commit('replaceKalk', dataAll)
+    },
 
     editKalk ({commit}, kalkulaceidKeyValue) {
       // console.log('Actions- removeKalk ', kalkulaceid)
@@ -416,6 +455,11 @@ export default new Vuex.Store({
       console.log('Add Materialy', kalkulaceid)
       //alert('store mat')
       commit('addColMat', kalkulaceid)
+    },
+    addColMat2 ({commit}, kalkulaceid) {
+      console.log('Add Materialy', kalkulaceid)
+      //alert('store mat')
+      commit('addColMat2', kalkulaceid)
     },
 
     removeKalkCol ({commit}, pole) {

@@ -101,8 +101,8 @@
     </tr>
     <tr>
       <td colspan="20" class="pl-1  pa-1">
-        <div style="height:15px;overflow:scroll">
-        <input type="text" v-model="form.txt" size="mini"  style="width:95%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
+        <div style="height:25px;overflow:scroll">
+        <input type="text" v-model="form.poznamka" size="mini"  style="width:95%; height:100%" class="tdl tdn elevation-1"  placeholder="Poznamka" >
         </div>
       </td>
     </tr>
@@ -112,11 +112,15 @@
 
 <tr><td colspan="20" style="border-bottom: dotted 1px silver" >&nbsp;</td></tr>
     </table>
+<v-card style="width:80%;position:relative;left:5%">
+  <v-card-text>
+    Naklad:<input type="number" v-model="form.naklad" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1"  >
+    Prodej:<input type="number" v-model="form.prodej" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1"    ><br>
+    Naklad2:<input type="number" v-model="form.naklad2" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1"   >
+    Prodej2:<input type="number" v-model="form.prodej2" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1"  >
+  </v-card-text>
+</v-card>
 
-Naklad:<input type="number" v-model="form.txt" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
-Prodej:<input type="text" v-model="form.txt" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
-Naklad2:<input type="number" v-model="form.txt" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
-Prodej2:<input type="text" v-model="form.txt" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
         <slot name="obsah">
          <!-- Slot Menu Leve -->
        </slot>
@@ -205,6 +209,11 @@ export default {
        tisk:0,
        txt: '',  //polozka hledaniho textu 1,  je vztazena k typu sloupce
        showtxt: true,
+       naklad:0,
+       naklad2:0,
+       prodej:0,
+       prodej2:0,
+       poznamka:'',
 
 
 
@@ -232,7 +241,11 @@ export default {
    const self = this
      this.ID = Math.round(Math.random() * 198345813)
        //self.Kalk.push(  f.cp(self.Kalkulace[self.k_id()]) )
-       self.Kalk=  f.cp(self.Kalkulace[self.k_id()])
+       //self.Kalk=  f.cp(self.Kalkulace[self.k_id()])
+       var neco=JSON.stringify(self.Kalkulace[self.k_id()])
+       self.Kalk=JSON.parse(neco)
+       //alert(self.Kalk.sloupecid)
+       //return;
      // console.log('tagtagtagtagtagtagtagtag',neco )
      // console.log("COL ", JSON.stringify(self.Kalk[0].sloupecid))
      // return
@@ -315,7 +328,7 @@ computed: {
         var idCol = self.getIndex()
         var idK = self.k_id()
         self.Col.data=atmp;
-        console.log('TTT 1', self.Cols)
+
 
 
         //self.$store.dispatch('saveCols', {id: idK,data: self.Cols })
@@ -328,21 +341,30 @@ computed: {
         //self.Mat=atmp;
 
       } catch(e){
-        self.info="aaaaa"
         console.log(e)
       }
 
    },
    setCol(idx){
      const self = this
+     var aTmp={}
      if (self.getType()=='Mat1'){
-       self.Col.txtMat= self.Col.data[idx].nazev
-       self.Col.cenaNaklad= self.Col.data[idx].cena_naklad_m2
-       self.Col.cenaProdej= self.Col.data[idx].cena_prodej_m2
+       /////
+       var neco=JSON.stringify(self.Col)
+       var oNeco={}
+       //oNeco.push(JSON.parse(neco));
+       oNeco.txtMat= self.Col.data[idx].nazev
+       oNeco.cenaNaklad= self.Col.data[idx].cena_naklad_m2
+       oNeco.cenaProdej= self.Col.data[idx].cena_prodej_m2
 
-       self.Kalk.sloupecid= self.Col
-       self.$store.dispatch('setKalk',self.Kalk)
-       alert('aaa')
+       //self.Col.txtMat= self.Col.data[idx].nazev
+       //self.Col.cenaNaklad= self.Col.data[idx].cena_naklad_m2
+       //self.Col.cenaProdej= self.Col.data[idx].cena_prodej_m2
+      // self.Col=self.Cols[self.getIndex()] ;
+       self.Kalk.sloupecid[self.getIndex()]= self.Col
+       self.$store.dispatch('setKalk',self.k_id())
+       self.$store.dispatch('replaceKalk',self.Kalk)
+
 
      }
    },
@@ -457,7 +479,9 @@ getId() {
 
 
    setKalk(idK) {
-            this.$store.dispatch('setKalk',idK)
+            this.$store.dispatch('setKalk',idK) //Jen nastavi KalkulaceThis
+            //alert(idK)
+            //self.$store.dispatch('replaceKalk',{dataAll: self.Kalk})
     },
     k_id() {
   var kRet=   this.$store.getters.getId(this.kalkulaceid)
