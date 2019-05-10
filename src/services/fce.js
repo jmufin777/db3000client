@@ -1,6 +1,47 @@
 import moment from 'moment'
 
 export default {
+  getBottom(id,addPoz=10) {
+    var neco=-1000
+    var oNeco
+    if (oNeco = document.getElementById(id)) {
+      neco = oNeco.offsetParent.offsetTop+oNeco.offsetHeight+ addPoz
+
+      //neco = oNeco.offsetTop
+      //alert(neco)
+
+    } else {
+
+    }
+
+    return neco;
+  },
+  getLeft(id,addPoz=10) {
+    var neco=-1000
+    var oNeco
+    if (oNeco = document.getElementById(id)) {
+      neco = oNeco.offsetParent.offsetLeft+addPoz
+
+    } else {
+    }
+
+    return neco;
+  },
+  getWidth(id,addPoz=10) {
+    var neco=-1000
+    var oNeco
+    if (oNeco = document.getElementById(id)) {
+      neco = oNeco.offsetWidth+addPoz
+
+      //neco = oNeco.offsetTop
+      //alert(neco)
+
+    } else {
+
+    }
+
+    return neco;
+  },
 
 
   hasClass(element, cls) {
@@ -661,6 +702,8 @@ if (document.getElementById(_obj1)){
 
     //
   }
+
+
 
 
 

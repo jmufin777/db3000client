@@ -96,22 +96,57 @@
 
 <!--Formaty -->
 <!-- $store.state.Kalkulace[k_id()].type==2 &&  -->
-<div v-if="true" style="width:95%;text-align:left" ref="menuformat1main" :id="'menuformat1main'+ID" class="ml-4">
+    <div v-if="true" style="width:95%;text-align:left" ref="menuformat1main" :id="'menuformat1main'+ID" class="ml-4">
      <table style="width:100%; position:relative;left:17px" cols=2><tr>
        <td style="width:80%">
          <div @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;postion:relative;left:80px;font-size:100%">
-        {{ form.Format }}
+        <!-- {{ form.Format }} -->
+        <input type="text" v-model="form.Format" size="mini"  style="width:100%; height:25px" class="tdl tdn elevation-1" :placeholder="'Format'"
+                @focus="MenuFormatShow=true"  :id="'seek'+ID">
       <!-- A {{ getFormat() }} -->
      </div>
        </td>
+
+
       <td style="width:20%">
-        <span @click="MenuFormatShow1(MenuFormatShow, $event )">
+<!--
+      <span @click="MenuFormatShow1(MenuFormatShow, $event )">
       <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light" style="cursor:pointer"></i>
-    </span>
+      </span>
+//-->
        </td>
      </tr>
     </table>
 
+      <div style="max-height:250px;overflow-y:scroll;position:absolute;z-index:1000"  v-if="MenuFormatShow" class="elevation-12 yellow"
+        :style="'top:'+ getBottom('seek'+ID,250)+'px;width:'+getWidth('seek'+ID,20)+'px;left:'+getLeft('seek'+ID,50)+'px'" >
+        <!-- {{ filtrData()}} -->
+          <table  width="100%" v-if="MenuFormatShow" >
+              <tr v-for="(m1b, i1b) in $store.state.Kalkulace[k_id()].data.Format.filter(el => (el.nazev.toUpperCase().match(FormatSearch.toUpperCase()) || (el.sirka+'').match(FormatSearch) || (el.vyska+'').match(FormatSearch)) || FormatSearch==''  )" :key="i1b" >
+              <td >
+              <v-card class="silver" style="width:95%;" >
+                <a>
+                <table style="width:100%"><tr><td style="width:70%">
+                <v-card-text style="font-size:80%;text-align:left;width:100%"  @click="setMenuFormat1Value(m1b.idefix)"
+                >
+                 <!-- {{ item['sub'] }}  -->
+                 {{ m1b['nazev']}}
+                 </v-card-text>
+                 </td><td style="width:30%;height:100">
+                 <v-card-text style="font-size:80%;text-align:left;width:100%;height:100%"  @click="setMenuFormat1Value(m1b.idefix)"
+                >
+                 {{ m1b['sirka']*1}}&nbsp;x&nbsp;{{ m1b['vyska']*1}}
+                 </v-card-text>
+                 </td>
+                 </tr></table>
+              </a>
+              </v-card>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+<!--
  <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menuformat1" :id="'menuformat1'+ID"  class="neco">
 <tr v-if="MenuFormatShow" @mouseleave="MenuFormatShow = false"><td colspan="2">
    <ta-ble3  :h="'350px'" :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'"   >
@@ -129,6 +164,7 @@
             <thead  >
               <tr v-for="(m1b, i1b) in $store.state.Kalkulace[k_id()].data.Format.filter(el => (el.nazev.toUpperCase().match(FormatSearch.toUpperCase()) || (el.sirka+'').match(FormatSearch) || (el.vyska+'').match(FormatSearch)) || FormatSearch==''  )" :key="i1b" >
               <td style="width:60%" class="leva pl-2" @click="setMenuFormat1Value(m1b.idefix)" >
+                <v-card><v-card-text>
                 <button v-if="$store.state.Kalkulace[k_id()].data.FormatValue == m1b.idefix" ref="menuformat1focus"  :id="'menuformat1focus'+ID" class="leva  elevation-1" style="width:90%;"
                 v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)"
                 >
@@ -138,6 +174,8 @@
                 v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)">
                  {{ m1b.nazev }}
                 </button >
+                </v-card-text>
+                </v-card>
                  </td >
                  <td style="width:30%">{{m1b.sirka}}/</td><td style="width:20%">{{m1b.vyska}}</td>
               </tr>
@@ -146,6 +184,7 @@
    </ta-ble3>
    </td></tr>
  </table>
+//-->
  </div>
 
 <!--Formaty -->
@@ -360,19 +399,9 @@ export default {
      self.form.sirkaPanel = self.$store.state.Kalkulace[self.k_id()].data.FormatSirkaPanel
      self.form.tisk = self.$store.state.Kalkulace[self.k_id()].data.FormatTisk
      self.idefixVidet = self.$store.state.Kalkulace[self.k_id()].data.idefixVidet
-
    //  this.$store.dispatch('setKalk',this.aKalkulace[0].kalkulaceid)
 
-
-
-
-
-
-
-
-
-this.form.vyska = self.$store.state.Kalkulace[self.k_id()].data.FormatVyska
-
+    self.form.vyska = self.$store.state.Kalkulace[self.k_id()].data.FormatVyska
 
 
    },
@@ -385,6 +414,55 @@ this.form.vyska = self.$store.state.Kalkulace[self.k_id()].data.FormatVyska
    onoff() {
      this.active = !this.active
    //  alert(this.active)
+   },
+   getBottom(id,addPoz=10) {
+     var neco=-1000
+     var oNeco
+     var obal= document.getElementById("obal1_kalkulace")
+   //   alert('A' + neco+ " X "+ id + ":"+document.getElementById(id) )
+     if (oNeco = document.getElementById(id)) {
+       neco = oNeco.offsetParent.offsetTop+oNeco.offsetHeight+ addPoz
+       neco = neco - obal.scrollTop
+       //console.log("Parent Scroll", oNeco.parentElement.scrollTop," SCROLL 2 ", obal.scrollTop)
+
+       //oNeco.parentElement.style.background='pink'
+
+       //neco = oNeco.offsetTop
+   //    alert(neco+ " // "+ id )
+
+     } else {
+
+     }
+
+     return neco;
+   },
+
+   getLeft(id,addPoz=10) {
+     var neco=-1000
+     var oNeco
+     if (oNeco = document.getElementById(id)) {
+       neco = oNeco.offsetParent.offsetLeft+addPoz
+
+
+     } else {
+     }
+
+     return neco;
+   },
+   getWidth(id,addPoz=10) {
+     var neco=-1000
+     var oNeco
+     if (oNeco = document.getElementById(id)) {
+       neco = oNeco.offsetWidth+addPoz
+
+       //neco = oNeco.offsetTop
+       //alert(neco)
+
+     } else {
+
+     }
+
+     return neco;
    },
   MenuShowLeave() {
     const self = this
@@ -538,9 +616,11 @@ MenuStroj() {
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirkaPanel' , value: self.form.sirkaPanel })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
-      self.Kalk.data.txtFormat = self.form.Format
-      self.$store.dispatch('replaceKalk',self.Kalk)
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
+      //self.Kalk.data.txtFormat =
+      //self.$store.dispatch('replaceKalk',self.Kalk)
       //alert(self.Kalk.data.txtFormat)
+      alert("sypu 1")
 
       }
 
@@ -799,11 +879,14 @@ getFormatName() {
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatPanelovat' , value: self.form.panelovat })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirkaPanel' , value: self.form.sirkaPanel })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
-       self.Kalk.data.txtFormat = self.form.Format
+       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
+       //self.Kalk.data.txtFormat = self.form.Format
        //self.$store.dispatch('setKalk',self.Kalk)
        self.$store.dispatch('setKalk',idK)
-       self.$store.dispatch('replaceKalk',self.Kalk)
-       // alert(self.Kalk.data.txtFormat)
+       //self.$store.dispatch('replaceKalk',self.Kalk)
+      // alert(self.Kalk.data.txtFormat)
+        // alert("sypu 2 idK : "+ idK )
+      //return
        eventBus.$emit('MatCol', {key: 0  })
      }
    },

@@ -3,57 +3,101 @@
      <div style="font-size:100%; min-height:120px" class="white lighten-5 pt-0 px-0 "
      @click="setKalk(kalkulaceid)"
      >
+     <!--- aboslutne pozicivany nabidky !-->
+     <span v-if="kalkulaceid==KalkulaceThis">
+
+     <div style="max-height:250px;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxt && (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni')
+            && (filtrData().length>1 || (filtrData().length==1 && filtrData()[0].nazev!=form.txt) )
+        " class="elevation-12 yellow"
+        :style="'top:'+ getBottom('seek'+ID)+'px;width:'+getWidth('seek'+ID,20)+'px;left:'+getLeft('seek'+ID,-5)+'px'" >
+        <!-- {{ filtrData()}} -->
+          <table  width="100%" v-if="form.showtxt &&  (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni')" >
+             <tr class="mt-1 green" v-for="(item, i) in filtrData()" :key="i" >
+              <td >
+              <v-card class="silver" style="width:95%;" >
+                <a>
+                <table style="width:100%"><tr><td style="width:80%">
+                <v-card-text style="font-size:80%;text-align:left;width:100%" @click="form.txt= item['nazev']; form.showtxt=false; setCol(i)"
+                :class="{'blue lighten-5':item['poradi']==1, 'orange lighten-5':item['poradi']>1}"
+                >
+                 <!-- {{ item['sub'] }}  -->
+                 {{ item['nazev']}}
+                 </v-card-text>
+                 </td><td style="width:20%;height:100">
+                 <v-card-text style="font-size:80%;text-align:left;width:100%;height:100%" @click="form.txt= item['nazev']; form.showtxt=false; setCol(i)"
+                 :class="{'blue lighten-5':item['poradi']==1, 'orange lighten-5':item['poradi']>1}"
+                >
+                 <!-- {{item['sirka_mm']}} x {{ item['vyska_mm']}} -->
+                 {{item['zkratka']}}
+                 </v-card-text>
+                 </td></tr></table>
+              </a>
+              </v-card>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!--Materilay EOF//-->
+        <!--LAMINACE, rezani, baleni - stroj//-->
+        <div style="min-height:5px;max-height:250px;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni')
+            && (filtrDataStroj().length>1|| (filtrDataStroj().length==1 && filtrDataStroj()[0].nazev!=form.txtStroj) )
+        " class="elevation-12 teal"
+          :style="'top:'+ getBottom('seek2_'+ID)+'px;width:'+getWidth('seek2_'+ID,20)+'px;left:'+getLeft('seek2_'+ID,-5)+'px'">
+         <!-- {{ filtrDataStroj()}} {{ getBottom('seek2_'+ID) }} -->
+          <table  width="100%" v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni') " >
+             <tr class="mt-1 green" v-for="(item1, i1) in filtrDataStroj()" :key="i1" >
+              <td >
+              <v-card class="silver" style="width:95%;" >
+                <a>
+                <table style="width:100%"><tr><td style="width:100%">
+                <v-card-text style="font-size:80%;text-align:left;width:100%" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(i1)"
+                :class="{'blue lighten-5':1==1, 'orange lighten-5':1>1}"
+                >
+                 {{ item1['nazev'] }}
+                 </v-card-text>
+                 </td></tr></table>
+                </a>
+              </v-card>
+              </td>
+            </tr>
+          </table>
+        </div>
+      <!--LAMINACE//-->
+     </span>
+     <!--- aboslutne pozicivany nabidky !-->
     <form>
-     <table cols="20">
+
+     <table cols="20" >
+
        <tr><td v-for="n in 20" :key="n" style="font-size:1px">&nbsp;</td></tr>
-       <tr>
-    <td colspan="2" style="border-left: solid 1px;">
-    <slot name="akce" >
-      Slota akce
-    <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
-    </slot>
-    </td>
-      <td colspan="18" class="pl-1 sloupec" style="border-right: solid 1px silver;" >
-        <input type="text" v-model="form.txt" size="mini"  style="width:95%; height:25px" class="tdl tdn elevation-1" placeholder="Hledani"   @focus="form.showtxt=true" >
-<!--
-        <el-autocomplete
-                class="inline-input mr-1 tdl tdn"
+       <tr class="pa-0">
 
-                :fetch-suggestions="querySearch501"
-                placeholder="Skupina"
-                @select="handleSelect"
-                size="mini "
-                style="width:95%;"
-                min
-                ></el-autocomplete>
+      <td colspan="18" class="pl-1 pb-0 sloupec" style="border-right: solid 0px silver;border-bottom: solid 0px silver;" >
+          <v-card style="width:100%;float:left" class="pa-0" v-if="getType()!='Jine' && !getType().match(/Mat/)">
+          <v-card-text style="width:100%;" class="pa-1" >
+            <input type="text" v-model="form.txtStroj" size="mini"  style="width:100%; height:25px" class="tdl tdn elevation-1" :placeholder="'Hledani Stroj'+ getType()+ ' '+ID"
+                @focus="form.showtxtStroj=true"  :id="'seek2_'+ID">
+          </v-card-text>
+          </v-card>
+          <v-card style="width:100%;float:left" class="pa-0" >
+            <v-card-text style="width:100%;" class="pa-1" >
+              <input type="text" v-model="form.txt" size="mini"  style="width:100%; height:25px" class="tdl tdn elevation-1" :placeholder="'Hledani Mat'+ getType()+ ' '+ID"   @focus="form.showtxt=true"  :id="'seek'+ID">
 
-     <v-overflow-btn slot="obsah"
-      :items="enum_up"
-      hide-details
-      class="px-1"
-      overflow
-      @change="ShowMod"
-      value=""
-      editable
-
-    ></v-overflow-btn>
-    //-->
-<!--
-    {{ kalkulaceid}} / {{sloupecid}} / {{ neco }}
-    :: {{$store.state.Kalkulace[k_id()].sloupecid[sloupecid-1].type}} ::
-
-
-    {{ k_id() }} {{ kalkulaceid }}
-    {{ getType()}}/ {{getIndex()}} /{{getId()}} {{ ID }}
-    {{ info }} Col: {{ Col.data }}
-    --->
-
-
+                <!-- {{ getBottom2('seek2_'+ID) }} / {{ getBottom('seek'+ID) }} -->
+                <!-- {{ filtrDataStroj() }} -->
+            </v-card-text>
+          </v-card>
 
       </td>
+     <td colspan="2" style="border-right: solid 0px silver;border-bottom: solid 0px silver;" class="silver">
+     <slot name="akce" >
+      Slota akce
+      <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
+    </slot>
+    </td>
     </tr>
-    <tr>
-      <td colspan="20" class="pl-1  pa-1">
+    <tr >
+      <td colspan="20" class="pl-1  pa-0" style="border-right: solid 0px silver;border-bottom: solid 0px silver;">
       <select v-if="getType()!=='Mat1'" v-model="form.tisk" @change="">
         <option v-for="(a,b ) in Tisk"
             :key="a.val"
@@ -64,66 +108,34 @@
         </option>
     </select>
     </td>
-
     </tr>
 
     <tr>
       <td colspan="20" class="pl-1  pa-1">
-        <div style="height:250px;overflow:scroll"  v-if="form.showtxt && getType()=='Mat1' " >
-          <table  width="100%" v-if="form.showtxt && getType()=='Mat1' " >
-             <tr class="mt-1 green" v-for="(item, i) in Col.data.filter(el => (
-                (el.nazev).toUpperCase().match(form.txt.toUpperCase())  || form.txt ==''
-                ||
-                (el.sub).toUpperCase().match(form.txt.toUpperCase())  || form.txt ==''  )
 
-                )" :key="i" >
-              <td >
-              <a>
-              <v-card class="silver ">
-                <v-card-text style="font-size:80%;text-align:left" @click="form.txt= item['nazev']; form.showtxt=false; setCol(i)"
-                :class="{'blue lighten-5':item['poradi']==1, 'orange lighten-5':item['poradi']>1}"
-                >
-                 {{ item['sub'] }} {{ item['nazev']}}
-                 {{item['sirka_mm']}} x {{ item['vyska_mm']}}
-                 {{item['zkratka']}}
-
-
-
-              </v-card-text>
-              </v-card>
-              </a>
-              </td>
-            </tr>
-
-          </table>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="20" class="pl-1  pa-1">
-        <div style="height:25px;overflow:scroll">
+        <v-card style="width:80%;position:relative;left:0%">
+        <v-card-text style="text-align:left">
         <input type="text" v-model="form.poznamka" size="mini"  style="width:95%; height:100%" class="tdl tdn elevation-1"  placeholder="Poznamka" >
-        </div>
+        </v-card-text>
+        <v-card-text style="text-align:left">
+        Naklad:<input type="number" v-model="form.naklad" size="mini"  style="width:30%; height:25px; text-align:right" class="tdl tdn elevation-1 pr-1"  >
+    <!-- STROJpoz: {{ getBottom('seek2_'+ID)}}  / MATpoz: {{ getBottom('seek'+ID) }}
+    {{Col.dataStroj}} -->
+        </v-card-text>
+        </v-card>
+
+
       </td>
     </tr>
-
-
-
 
 <tr><td colspan="20" style="border-bottom: dotted 1px silver" >&nbsp;</td></tr>
     </table>
-<v-card style="width:80%;position:relative;left:5%">
-  <v-card-text>
-    Naklad:<input type="number" v-model="form.naklad" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1"  >
-    Prodej:<input type="number" v-model="form.prodej" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1"    ><br>
-    Naklad2:<input type="number" v-model="form.naklad2" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1"   >
-    Prodej2:<input type="number" v-model="form.prodej2" size="mini"  style="width:20%; height:25px" class="tdl tdn elevation-1"  >
-  </v-card-text>
-</v-card>
+
 
         <slot name="obsah">
          <!-- Slot Menu Leve -->
        </slot>
+
        </form>
       </div>
 
@@ -193,9 +205,7 @@ export default {
        {val:1,txt:'Oboustranny'},
        {val:2,txt:'Oboustranny ruzny'},
        {val:3,txt:'Bez tisku'},
-
      ],
-
 
      //
 
@@ -209,13 +219,9 @@ export default {
        tisk:0,
        txt: '',  //polozka hledaniho textu 1,  je vztazena k typu sloupce
        showtxt: true,
+       showtxtStroj: true,
        naklad:0,
-       naklad2:0,
-       prodej:0,
-       prodej2:0,
        poznamka:'',
-
-
 
        stroj: ''
      },
@@ -237,7 +243,7 @@ export default {
 
    }
  },
- mounted () {
+ async mounted () {
    const self = this
      this.ID = Math.round(Math.random() * 198345813)
        //self.Kalk.push(  f.cp(self.Kalkulace[self.k_id()]) )
@@ -263,7 +269,9 @@ export default {
 
   //alert(this.$store.state.Kalkulace[self.k_id()].data.FormatSirka + " / "+ self.SirkaLast)
   self.info="Nic"
-  self.Interval= setInterval(function()  {
+  //self.Interval= setInterval(function()  {
+  setTimeout(function()  {
+    // alert(self.getType())
     if (self.getType()=="Mat1") {
       var atmp=[]
 
@@ -292,7 +300,38 @@ export default {
       }
     }
 
-  },1000)
+    if (self.getType()=="Laminace" || self.getType()=="Kasir" || self.getType()=="Rezani" || self.getType()=="Baleni") {
+      var atmp=[]
+
+      // self.info=self.Kalkulace[self.k_id()].data.FormatSirka
+      if (
+        self.SirkaLast!=self.Kalkulace[self.k_id()].data.FormatSirka  ||
+        self.VyskaLast!=self.Kalkulace[self.k_id()].data.FormatVyska
+       ) {
+        if (self.Kalkulace[self.k_id()].data.FormatSirka == 0 || self.Kalkulace[self.k_id()].data.FormatVyska == 0 ) {
+          return
+        }
+        self.countZmen++;
+        // alert('COL 44 ' + JSON.stringify(self.Col)+" / "+ self.getIndex())
+
+        self.info="zmena " + self.countZmen;
+        self.SirkaLast = self.Kalkulace[self.k_id()].data.FormatSirka // this.$store.state.Kalkulace[self.k_id()].data.FormatSirka
+        self.VyskaLast = self.Kalkulace[self.k_id()].data.FormatVyska // this.$store.state.Kalkulace[self.k_id()].data.FormatSirka
+        //self.info+=self.idefix+"juzr"
+        ///self.Col=self.Kalk[self.k_id()][0].sloupecid[self.getIndex()]
+
+        // console.log("COL ", JSON.stringify(self.Col[0].sloupecid))
+        console.log("COL 4", JSON.stringify(self.Col))
+
+        var q1=SQL.getStroj(self.getType())
+
+
+        self.qStroj(q1)
+        //alert(' ijem hir  \n '+ q1   )
+      }
+    }
+
+  },1500)
 
 
    return
@@ -345,14 +384,50 @@ computed: {
       }
 
    },
+
+   async qStroj(qq) {
+     const self = this
+     var atmp=[]
+     // self.info = qq
+      try {
+       atmp=(await Q.all(self.idefix,qq)).data.data
+        //self.info = atmp
+        var idCol = self.getIndex()
+        var idK = self.k_id()
+        self.Col.dataStroj=atmp;
+
+        console.log("DATA STROJ" , JSON.stringify(self.Col.dataStroj))
+
+        //self.$store.dispatch('saveCols', {id: idK,data: self.Cols })
+        //self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'sloupecid['+idCol+'].data' , value: 8822 })
+
+          // self.Kalkulace.push({"a" : 778899})
+//        self.Col.data=atmp;
+
+        //self.info = self.Col.data
+        //self.Mat=atmp;
+
+      } catch(e){
+        console.log(e)
+      }
+
+   },
    setCol(idx){
      const self = this
      var aTmp={}
+      alert(self.getIndex())
      if (self.getType()=='Mat1'){
        /////
+       var neco=JSON.stringify(self.Col.data[idx])
        var neco=JSON.stringify(self.Col)
+//       alert("k_id: "+self.k_id())
+       self.$store.dispatch('replaceKalkCol',{kalkulaceid: self.k_id(), idxCol: self.getIndex(), data: {mat: self.Col.data[idx], stroj:{}, naklad: self.form.naklad, poznamka: self.form.poznamka }} )
+       return
+       //alert("neco : "+ self.Col.data[idx].nazev)
+
        var oNeco={}
        //oNeco.push(JSON.parse(neco));
+       //Nahradit celou radkou materialu
        oNeco.txtMat= self.Col.data[idx].nazev
        oNeco.cenaNaklad= self.Col.data[idx].cena_naklad_m2
        oNeco.cenaProdej= self.Col.data[idx].cena_prodej_m2
@@ -361,12 +436,132 @@ computed: {
        //self.Col.cenaNaklad= self.Col.data[idx].cena_naklad_m2
        //self.Col.cenaProdej= self.Col.data[idx].cena_prodej_m2
       // self.Col=self.Cols[self.getIndex()] ;
+      var neco=JSON.stringify(self.Kalkulace[self.k_id()])
+       self.Kalk=JSON.parse(neco)
+       //self.Kalk.sloupecid[self.getIndex()]= self.Col
+       //self.$store.dispatch('setKalk',self.k_id())
+       //self.$store.dispatch('replaceKalk',self.Kalk)
+       alert('saved Mat')
+
+     }
+   },
+   setColStroj(idx){
+
+     const self = this
+     var aTmp={}
+     if (self.getType()!=='Mat1'){
+       /////
+       self.$store.dispatch('replaceKalkCol',{kalkulaceid: self.k_id(), idxCol: self.getIndex(), data: {mat: self.Col.data[idx],stroj:self.Col.dataStroj[idx],naklad: self.form.naklad, poznamka: self.form.poznamka }})
+       alert('sem ten stroj')
+      return
+       return;
+       var neco=JSON.stringify(self.Col)
+       var oNeco={}
+       //Nahradit celou radkou stroje
+       //oNeco.push(JSON.parse(neco));
+//       oNeco.txtMat= self.Col.data[idx].nazev
+  //     oNeco.cenaNaklad= self.Col.data[idx].cena_naklad_m2
+    //   oNeco.cenaProdej= self.Col.data[idx].cena_prodej_m2
+
+       //self.Col.txtMat= self.Col.data[idx].nazev
+       //self.Col.cenaNaklad= self.Col.data[idx].cena_naklad_m2
+       //self.Col.cenaProdej= self.Col.data[idx].cena_prodej_m2
+      // self.Col=self.Cols[self.getIndex()] ;
        self.Kalk.sloupecid[self.getIndex()]= self.Col
        self.$store.dispatch('setKalk',self.k_id())
        self.$store.dispatch('replaceKalk',self.Kalk)
-
+       alert('saved Stroj')
 
      }
+   },
+   filtrData() {
+      const self = this
+      var neco =[]
+      try {
+      neco = self.Col.data.filter(el => (
+          (
+          (el.nazev).toUpperCase().match(self.form.txt.toUpperCase())  || self.form.txt ==''
+                ||
+          (el.sub).toUpperCase().match(self.form.txt.toUpperCase())  || self.form.txt ==''  )
+          ))
+
+       } catch (e) {
+         console.log("Asi cekam na materialy")
+         var q1=SQL.getMatList(self.Kalkulace[self.k_id()].data.Menu1Value,self.Kalkulace[self.k_id()].data.FormatSirka ,self.Kalkulace[self.k_id()].data.FormatVyska )
+         self.q(q1)
+
+       }
+      return neco
+   },
+   filtrDataStroj() {
+      const self = this
+      var neco =[]
+      try {
+
+       neco = self.Col.dataStroj.filter(el => (
+              (
+                (el.nazev).toUpperCase().match(self.form.txtStroj.toUpperCase())  || self.form.txtStroj ==''
+               )
+             ))
+            console.log("Asi mamstroj pocet:", neco.length )
+
+      }  catch (e) {
+        var q1=SQL.getStroj(self.getType())
+        self.qStroj(q1)
+         console.log("Asi cekam na ",self.getType(), neco.length, e, "Data stroj: ",self.Col.dataStroj )
+       }
+
+      return neco
+   },
+
+   getBottom(id,addPoz=10) {
+     var neco=-1000
+     var oNeco
+     var obal= document.getElementById("obal1_kalkulace")
+   //   alert('A' + neco+ " X "+ id + ":"+document.getElementById(id) )
+     if (oNeco = document.getElementById(id)) {
+       neco = oNeco.offsetParent.offsetTop+oNeco.offsetHeight+ addPoz
+       neco = neco - obal.scrollTop
+       //console.log("Parent Scroll", oNeco.parentElement.scrollTop," SCROLL 2 ", obal.scrollTop)
+
+       //oNeco.parentElement.style.background='pink'
+
+       //neco = oNeco.offsetTop
+   //    alert(neco+ " // "+ id )
+
+     } else {
+
+     }
+
+     return neco;
+   },
+
+   getLeft(id,addPoz=10) {
+     var neco=-1000
+     var oNeco
+     if (oNeco = document.getElementById(id)) {
+       neco = oNeco.offsetParent.offsetLeft+addPoz
+
+
+     } else {
+     }
+
+     return neco;
+   },
+   getWidth(id,addPoz=10) {
+     var neco=-1000
+     var oNeco
+     if (oNeco = document.getElementById(id)) {
+       neco = oNeco.offsetWidth+addPoz
+
+       //neco = oNeco.offsetTop
+       //alert(neco)
+
+     } else {
+
+     }
+
+     return neco;
    },
    querySearch501(queryString, cb) {  //Nazev
         var n1 = self.Col.Data
@@ -394,7 +589,7 @@ computed: {
      self.enum_mod_full = atmp
      if (!atmp.length || atmp.length == 0)  return
      //self.enum_up=atmp
-     //console.log(atmp.length)
+      //console.log(atmp.length)
      //return
      atmp.forEach(el => {
        //console.log(el)
@@ -453,8 +648,7 @@ computed: {
 
    getType() {
      var cRet=   this.$store.getters.getIdColType(this.kalkulaceid,this.sloupecid)
-
-  return cRet
+    return cRet
      //{{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
    },
    getIndex() {
@@ -464,7 +658,6 @@ computed: {
   return kRet
      //{{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
    },
-
 
 getId() {
   //   var idK = k_id()
@@ -539,6 +732,8 @@ textarea:focus, input:focus{
 
 table tr td {
   border:none;
+  border-right: solid 0px white;border-bottom: solid 0px white;
+  border-collapse:collapse;
 }
 
 input {

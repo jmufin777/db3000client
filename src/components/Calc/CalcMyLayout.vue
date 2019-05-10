@@ -1,6 +1,6 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-       <div  class="white lighten-5 pt-4 px-2 mt-2" style="height:400px">
+       <div  class="white lighten-5 pt-4 px-2 mt-2" style="height:400px" >
          <table cols="100" >
            <tr>
              <td v-for="n in 100" :key="n" style="font-size:1px">&nbsp;</td>
@@ -14,7 +14,7 @@
 
            <tr>
              <td colspan="100">
-               <div  class="green lighten-5 pt-0 px-0 mt-0 ml-2" style="height:350px;overflow:scroll">
+               <div  class="green lighten-5 pt-0 px-0 mt-0 ml-2" style="height:350px;overflow:scroll" id="obal1_kalkulace">
                <slot name="kalkulace">Slot kalkulace</slot>
                </div>
                </td>
@@ -55,9 +55,14 @@ export default {
   },
  data () {
    return {
+     ID:0,
 
 
    }
+ },
+ mounted() {
+   this.ID = Math.round(Math.random() * 198345813)
+   //alert("ahoj"+ this.ID)
  }
 }
 

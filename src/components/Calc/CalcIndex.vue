@@ -68,16 +68,17 @@
               <div style="float:left">
                  <v-card><v-card-title style="font-size:12px;height:14px">{{Kalkulace[i].data.txtStroj}}</v-card-title><v-card-text>
                     <div class="white" style="float:left">Rozmer {{Kalkulace[i].data.txtFormat}}</div><div>{{Kalkulace[i].data.FormatSirka}}x{{Kalkulace[i].data.FormatVyska}}mm</div>
+                    <div class="white" style="float:left">Panelovat</div><div>{{Kalkulace[i].data.FormatPanelovat}}</div>
                     <div class="white" style="float:left">Naklad</div><div>{{Kalkulace[i].data.FormatNakladKs}}</div>
                 </v-card-text></v-card>
               </div>
               <div v-for="(sl, iSloupce ) in iK.sloupecid" :key="iSloupec" style="float:left">
                  <v-card><v-card-title style="font-size:12px;height:14px">{{sl.type}}</v-card-title><v-card-text>
-                    <div class="white" style="font-size:12px;height:14px">{{sl.txtMat}}</div>
+                    <div class="white" style="font-size:12px;height:14px">{{ sl}}</div>
                     <div class="white" style="float:left">Naklad:</div>
-                    <div class="white" style="float:left" >{{sl.cenaNaklad}}</div>
+                    <div class="white" style="float:left" >{{sl}}</div>
                     <div class="white" style="float:left">Prodej:</div>
-                    <div class="white" style="float:left">{{sl.cenaProdej}}</div>
+                    <div class="white" style="float:left">{{sl}}</div>
 
                 </v-card-text></v-card>
               </div>
@@ -166,6 +167,7 @@ export default {
      showPrehled: 1,
      qtest: [],
      ID: 0,
+
    }
  },
  watch: {
@@ -179,6 +181,7 @@ export default {
     //alert('a')
   }
  },
+
 
  async created () {
       const self = this
@@ -298,6 +301,16 @@ export default {
  //  this.$destroy()
  },
  methods: {
+   getVal(obj,klic) {
+
+     if (obj){
+       if (obj[klic]){
+              return obj[klic]
+       }
+     }
+     return ""
+
+   },
     async strojmod(type) {
      const self = this
      var atmp=[]
@@ -531,11 +544,11 @@ export default {
      //--self.setKalk(idK)
 
      //self.$store.dispatch('addColMat', {kalkulaceid: self.KalkulaceThis, type: 'Mat'})
-     self.$store.dispatch('addColMat', {kalkulaceid: idK, type: 'Mat1'})
-     self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Laminace', id:92})
-     self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Kasir', id:93})
-     self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Rezani', id:94})
-     self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Baleni', id:95})
+      self.$store.dispatch('addColMat',  {kalkulaceid: idK, type: 'Mat1'})
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Laminace', id:92})
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Kasir', id:93})
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Rezani', id:94})
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Baleni', id:95})
      //self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Jine-Externi', id:96})
 
         /////self.addKalkCol("Mat");
@@ -568,6 +581,7 @@ export default {
 
 
    },
+
 
    dropKalk(kalkulaceid) {
      const self = this
@@ -643,10 +657,12 @@ export default {
      return this.$store.getters('getKalk')
    },
 
+
    chooseItem: function (event, bEvent) {
       console.log('Choos item: ', event.draggedRect, 'B', bEvent)
       // alert(Object.keys(bEvent))
     },
+
  },
  computed: {
     ...mapState([

@@ -36,16 +36,11 @@ export default {
       cq2 = `select * from ( ${cq_zaklad} ) a where not exists (select * from (${cq}) b where a.idefix_rozmer=b.idefix_rozmer)`
       cq=`select 1::int as poradi,* from (${cq}) a union select 2::int as poradi,* from (${cq2}) b`
 
-
       cq=`select distinct on (c.nazev,concat2(' ',nazev1,nazev2,nazev3)) c.nazev as sub,concat2(' ',nazev1,nazev2,nazev3) as nazev,b.* from list_mat a  join (
           ${cq}
       ) b on a.idefix=b.idefix_mat join (select * from list2_matsubskup aa) c on a.idefix_matsubskup=c.idefix `
 
-
-      cq = `select a.*,b.cena_naklad_m2,b.cena_prodej_m2 from (${cq}) a join list_mat b on a.idefix_mat=b.idefix where a.zkratka !='X' order by poradi`
-
-
-
+      cq = `select a.*,b.cena_naklad_m2,b.cena_prodej_m2 from (${cq}) a join list_mat b on a.idefix_mat=b.idefix where a.zkratka !='X' order by nazev,zkratka`
 
 
       //console.log("AAAAA", cq)
@@ -53,6 +48,58 @@ export default {
      return cq
 
   }  ,
+
+   getStrojItems(cwhere = '')  {
+
+    var cq = `select a.*, b.nazev as nazev_stroj
+      ,b.delka_mat_max_mm,b.sirka_mat_max_mm
+      ,b.delka_tisk_max_mm,b.sirka_tisk_max_mm
+      ,b.tech_okraj_strana_mm,b.tech_okraj_start_mm
+      ,b.tech_okraj_spacecopy_mm,b.tech_okraj_spacejobs_mm
+      ,bez_okraj
+      ,spadavka_mm,space_znacky_mm
+      ,sirka_lam_max_mm,delka_lam_max_mm
+
+      ,b.nazev_text as technologie
+      --naklady
+      ,priprava_minuta_naklad,priprava_minuta_prodej
+      ,priprava_cas_minuta,priprava_celkem_naklad,priprava_celkem_prodej
+      ,tisk
+
+      from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix  where a.nazev ilike '${cwhere}'
+      order by case when a.mod_priorita = true then 1 else 2 end,  a.kod`
+    return cq ;
+
+
+   },
+   getLaminace() {
+    return this.getStrojItems('%lam%');
+   },
+   getRezani() {
+    return this.getStrojItems('%ez_n%');
+   },
+   getKasir() {
+    return this.getStrojItems('%ka__r%');
+   },
+   getBaleni() {
+    return this.getStrojItems('%balen%');
+   },
+   getStroj(colType="") {
+    if (colType=='Kasir') {
+      return this.getKasir();
+    } else
+    if (colType=='Laminace') {
+      return this.getLaminace();
+    }
+    else
+    if (colType=='Baleni') {
+      return this.getBaleni();
+    }
+    if (colType=='Rezani') {
+      return this.getRezani();
+    }
+    return ''
+   }
 
 
 

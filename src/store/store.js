@@ -144,7 +144,6 @@ export default new Vuex.Store({
       state.KalkulaceLast = kalkulace.kalkulaceid
       // console.log("Vkladam : ", state.KalkulaceLast )
 
-
     },
 
 
@@ -249,8 +248,16 @@ export default new Vuex.Store({
       var idx = this.getters.getId(dataAll.kalkulaceid)
 //      console.log('SetSetSetSetSetSetSetSetSetSetSetSet ', dataAll.kalkulaceid,this.getters.getId(dataAll.kalkulaceid))
       //getId()
-
         state.Kalkulace[idx] = dataAll
+    },
+    replaceKalkCol (state, dataAll) {
+      //var idx = this.getters.getId(dataAll.kalkulaceid)
+      var idx = dataAll.kalkulaceid
+      var idxCol = dataAll.idxCol
+//      console.log('SetSetSetSetSetSetSetSetSetSetSetSet ', dataAll.kalkulaceid,this.getters.getId(dataAll.kalkulaceid))
+      //getId()
+      alert("stroe : " +idx)
+        state.Kalkulace[idx].sloupecid[idxCol].data = dataAll.data
     },
 
     editKalk (state, kalkulaceidKeyValue) {
@@ -424,6 +431,12 @@ export default new Vuex.Store({
       // console.log('Actions- setWin -Dispatch', newWin)
       commit('replaceKalk', dataAll)
     },
+    replaceKalkCol ({commit}, dataAll) {
+      // console.log('Actions- setWin -Dispatch', newWin)
+      commit('replaceKalkCol', dataAll)
+    },
+
+
 
     editKalk ({commit}, kalkulaceidKeyValue) {
       // console.log('Actions- removeKalk ', kalkulaceid)
