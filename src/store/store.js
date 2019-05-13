@@ -184,7 +184,7 @@ export default new Vuex.Store({
     addColMat (state, kalkulacecoltype) {
         var idK = kalkulacecoltype.kalkulaceid
         var type= kalkulacecoltype.type
-        console.log('A 2aaaa2:', JSON.stringify(kalkulacecoltype))
+        console.log('A 2aaaa2: IDK :',idK, " type ", JSON.stringify(kalkulacecoltype), "This ", state.KalkulaceThis )
 
       // return
 
@@ -246,17 +246,12 @@ export default new Vuex.Store({
     },
     replaceKalk (state, dataAll) {
       var idx = this.getters.getId(dataAll.kalkulaceid)
-//      console.log('SetSetSetSetSetSetSetSetSetSetSetSet ', dataAll.kalkulaceid,this.getters.getId(dataAll.kalkulaceid))
-      //getId()
         state.Kalkulace[idx] = dataAll
     },
     replaceKalkCol (state, dataAll) {
       //var idx = this.getters.getId(dataAll.kalkulaceid)
       var idx = dataAll.kalkulaceid
       var idxCol = dataAll.idxCol
-//      console.log('SetSetSetSetSetSetSetSetSetSetSetSet ', dataAll.kalkulaceid,this.getters.getId(dataAll.kalkulaceid))
-      //getId()
-      alert("stroe : " +idx)
         state.Kalkulace[idx].sloupecid[idxCol].data = dataAll.data
     },
 

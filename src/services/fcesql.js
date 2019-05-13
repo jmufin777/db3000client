@@ -68,6 +68,12 @@ export default {
 
       from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix  where a.nazev ilike '${cwhere}'
       order by case when a.mod_priorita = true then 1 else 2 end,  a.kod`
+       cq = `select distinct on (a.nazev)  * from ( ${cq} ) a order by nazev`
+       if (cwhere=='') {
+         cq += ' limit 0'
+         alert('Limit 0')
+       }
+
     return cq ;
 
 

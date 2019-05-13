@@ -73,12 +73,12 @@
                 </v-card-text></v-card>
               </div>
               <div v-for="(sl, iSloupce ) in iK.sloupecid" :key="iSloupec" style="float:left">
-                 <v-card><v-card-title style="font-size:12px;height:14px">{{sl.type}}</v-card-title><v-card-text>
-                    <div class="white" style="font-size:12px;height:14px">{{ sl}}</div>
+                 <v-card><v-card-title style="font-size:12px;height:14px">Typ: {{sl.type}}</v-card-title><v-card-text>
+                    <div class="white" style="font-size:12px;height:14px">Mat:{{ sl.mat}}</div>
+                    <div class="white" style="font-size:12px;height:14px">Stroj:{{ sl.stroj}}</div>
                     <div class="white" style="float:left">Naklad:</div>
-                    <div class="white" style="float:left" >{{sl}}</div>
-                    <div class="white" style="float:left">Prodej:</div>
-                    <div class="white" style="float:left">{{sl}}</div>
+                    <div class="white" style="float:left" >{{sl.naklad}}</div>
+
 
                 </v-card-text></v-card>
               </div>
@@ -291,10 +291,10 @@ export default {
 
 
 
-     alert(this.KalkulaceThis )
+     //alert(this.KalkulaceThis )
 
    } else {
-     alert(2)
+     //alert(2)
    }
  },
  beforeEnter: (to, from, next) => {
@@ -534,12 +534,15 @@ export default {
 
 
  },
-   addColMat() {
+   addColMat(server) {
      const self =this
      var idK = self.KalkulaceThis-1
      var idK = this.k_id()
      //this.k_id()
-//      alert(idK)
+      //alert("IDK :" + idK+ ' json :' + JSON.stringify(server))
+
+      idK=server.key
+
   //  return
      //--self.setKalk(idK)
 

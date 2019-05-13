@@ -887,7 +887,8 @@ getFormatName() {
       // alert(self.Kalk.data.txtFormat)
         // alert("sypu 2 idK : "+ idK )
       //return
-       eventBus.$emit('MatCol', {key: 0  })
+       //alert(" LEFT " + idK )
+       eventBus.$emit('MatCol', {key: idK  })
      }
    },
 
