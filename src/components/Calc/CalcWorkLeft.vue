@@ -26,7 +26,9 @@
      <table style="width:100%" cols=2>
        <tr v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix">
        <td style="width:80%">
+         <v-card><v-text>
          <span @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )" style="width:80%;border:20px;cursor:pointer" class="neco">
+           
 
            <!-- {{ itemStroj.idefix }} : {{ idefixClick }} : {{ idefixVidet }} -->
            {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
@@ -36,6 +38,7 @@
            :: [ {{$store.state.Kalkulace[k_id()].data.Menu1Value}} ] -->
 
         </span>
+       </v-text></v-card>
        </td>
       <td style="width:20%">
         <span @click="idefixClick=itemStroj.idefix; MenuShow1(MenuShow, $event )">
@@ -235,9 +238,15 @@
     </td>
 
     </tr>
-    <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''"><td colspan="20">
+    <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''"><td colspan="20" style="text-align:left">
+     <label class="custom-file-upload" style="height:25px;width:150px ">
+            <input type="file" style="float:left"/>
+      </label>
+
+
+
       <!-- upload-demo -->
-     <el-upload
+     <!-- <el-upload
   class="el-upload-dragger1 upload-demo"
   action="https://jsonplaceholder.typicode.com/posts/"
   :on-preview="handlePreview"
@@ -251,9 +260,9 @@
 
   <el-button size="small" type="primary" style="position:relative;left:-0%;top:10%">Data</el-button>
   <div slot="tip" class="el-upload__tip " >Prilohy</div>
-</el-upload>
+</el-upload> -->
       </td></tr>
-      <tr><td colspan="20" style="border-bottom: dotted 1px silver" >&nbsp;</td></tr>
+      <!-- <tr><td colspan="20" style="border-bottom: dotted 1px silver" >&nbsp;</td></tr> -->
 
     </table>
 
@@ -930,6 +939,23 @@ td th {
 }
 </style>
 <style scoped>
+input[type="file"] {
+    display: block;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+::-webkit-file-upload-button {
+  
+  background: yelllow;
+  color: red;
+  padding: 1em;
+  
+}
 
 
 table tr td {
@@ -962,6 +988,7 @@ button:focus, input:focus{
   transition:   left 0.4s cubic-bezier(.42,-0.3,.78,.25),
                 top 0.4s cubic-bezier(.42,-0.3,.78,.25);
 }
+
 
 
 

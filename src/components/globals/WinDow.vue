@@ -21,11 +21,13 @@
   v-on:resizestop="onResizestop"
   v-on:activated="onActivated"
   :maximize="maximize"
+
+
   >
     <div class="drag00 elevation-20" :id="id"
       style="padding: 0px; margin: 0px;  border: 0px solid;font-size:14px
       ;font-family: Arial;background:#FFF;"
-      v-on:click.self="w_zindex"
+      v-on:click.self="w_zindex()"
       >
 
 
@@ -233,17 +235,21 @@ export default {
   },
   methods: {
     w_zindex: function() {
-//      console.log('Click na tlacitko')
+      //console.log('Click na tlacitko')
+      alert('a')
+
     },
   idxx: function() {
-
-      var nRet = this.WinDows.findIndex((el) => {
-        return  (el.id == this.id)
-      })
-
+    var nRet=0
+    try {
+    nRet = this.WinDows.findIndex((el) => {
+      return  (el.id == this.id)
+    })
+    } catch(e){
+      nRet = 100
+    }
       return nRet
     },
-
   onResize: function (x1, y1, w1, h1) {
        this.x1 = x1
        this.y1 = y1

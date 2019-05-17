@@ -49,7 +49,44 @@ export default {
 
   }  ,
 
-   getStrojItems(cwhere = '')  {
+   getStrojItems(cwhere = '', technologie='')  {
+
+    var cq = `select a.*
+      ,b.nazev as nazev_stroj
+      ,b.nazev_text as technologie
+      ,b.delka_mat_max_mm,b.sirka_mat_max_mm
+      ,b.delka_tisk_max_mm,b.sirka_tisk_max_mm
+      ,b.tech_okraj_strana_mm,b.tech_okraj_start_mm
+      ,b.tech_okraj_spacecopy_mm,b.tech_okraj_spacejobs_mm
+      ,bez_okraj
+      ,spadavka_mm,space_znacky_mm
+      ,sirka_lam_max_mm,delka_lam_max_mm
+
+      ,b.nazev_text as technologie
+      /* n naklady */
+      ,priprava_minuta_naklad,priprava_minuta_prodej
+      ,priprava_cas_minuta,priprava_celkem_naklad,priprava_celkem_prodej
+      ,tisk
+
+      from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix`
+      if (technologie>''){
+        cq+=` where b.nazev_text ilike '${cwhere}'`
+      } else {
+        cq+=` where a.nazev ilike '${cwhere}'`
+      }
+
+      cq+=` order by case when a.mod_priorita = true then 1 else 2 end,  a.kod`
+       cq = `select distinct on (a.nazev)  * from ( ${cq} ) a order by nazev`
+       if (cwhere=='') {
+         cq += ' limit 0'
+         alert('Limit 0')
+       }
+
+    return cq ;
+
+
+   },
+   getStrojOnly(cwhere = '')  {
 
     var cq = `select a.*, b.nazev as nazev_stroj
       ,b.delka_mat_max_mm,b.sirka_mat_max_mm
@@ -66,9 +103,9 @@ export default {
       ,priprava_cas_minuta,priprava_celkem_naklad,priprava_celkem_prodej
       ,tisk
 
-      from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix  where a.nazev ilike '${cwhere}'
+      from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix  where b.nazev ilike '${cwhere}'
       order by case when a.mod_priorita = true then 1 else 2 end,  a.kod`
-       cq = `select distinct on (a.nazev)  * from ( ${cq} ) a order by nazev`
+       cq = `select distinct on (a.nazev_stroj)  * from ( ${cq} ) a order by nazev_stroj`
        if (cwhere=='') {
          cq += ' limit 0'
          alert('Limit 0')
@@ -79,7 +116,7 @@ export default {
 
    },
    getLaminace() {
-    return this.getStrojItems('%lam%');
+    return this.getStrojItems('%lam%','1'); // hleda jen v laminatorech
    },
    getRezani() {
     return this.getStrojItems('%ez_n%');
@@ -89,6 +126,10 @@ export default {
    },
    getBaleni() {
     return this.getStrojItems('%balen%');
+   },
+   getStroj1(colType="") {
+     if (colType=="Rezani")
+    return this.getStrojOnly('%ez_n%',"1");
    },
    getStroj(colType="") {
     if (colType=='Kasir') {

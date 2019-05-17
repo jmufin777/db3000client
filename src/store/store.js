@@ -82,7 +82,9 @@ export default new Vuex.Store({
     SETWIN (state, newWin) {
       // state.WinDows = []
       var nasel = state.WinDows.findIndex( (el) => {
-        return el.id === newWin.id
+
+          return el.id === newWin.id
+
       })
 
       // console.log('Nasel : ', nasel )
@@ -184,7 +186,7 @@ export default new Vuex.Store({
     addColMat (state, kalkulacecoltype) {
         var idK = kalkulacecoltype.kalkulaceid
         var type= kalkulacecoltype.type
-        console.log('A 2aaaa2: IDK :',idK, " type ", JSON.stringify(kalkulacecoltype), "This ", state.KalkulaceThis )
+        // console.log('A 2aaaa2: IDK :',idK, " type ", JSON.stringify(kalkulacecoltype), "This ", state.KalkulaceThis )
 
       // return
 
