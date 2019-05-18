@@ -701,8 +701,20 @@ if (document.getElementById(_obj1)){
     // 40 sipka dolu, 38 sikpa nahoru, 37 left, 39 right
 
     //
-  }
+  },
 
+ obsluha_seznamu(id_prvku, id_seznamu=""){
+
+
+  alert(id_prvku+" : "+ id_seznamu)
+
+}
+
+,stopka(e){
+      e.preventDefault()
+      e.stopPropagation()
+      e.stopImmediatePropagation()
+}
 
 
 

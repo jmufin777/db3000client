@@ -28,7 +28,7 @@
        <td style="width:80%">
          <v-card><v-text>
          <span @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )" style="width:80%;border:20px;cursor:pointer" class="neco">
-           
+
 
            <!-- {{ itemStroj.idefix }} : {{ idefixClick }} : {{ idefixVidet }} -->
            {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
@@ -211,7 +211,8 @@
       </td>
 
       <td colspan="2" style="width:30%;">
-        <select v-model="form.tisk" @change="getFormatName()" style="text-align:right;width:80%;height:90%;font-size:90%" class="tdl tdn elevation-1 pr-1">
+        <select v-model="form.tisk" @change="getFormatName()" style="text-align:right;width:80%;height:90%;font-size:90%" class="tdl tdn elevation-1 pr-1 green lighten-2  pl-1 pr-2"
+        >
                 <option v-for="(a,b ) in Tisk"
                     :key="a.val"
                     :label="a.txt"
@@ -950,13 +951,18 @@ input[type="file"] {
 }
 
 ::-webkit-file-upload-button {
-  
+
   background: yelllow;
   color: red;
   padding: 1em;
-  
+
 }
 
+select:focus, option:focus {
+    color: black;
+    font-weight: 600;
+
+}
 
 table tr td {
   border:none;

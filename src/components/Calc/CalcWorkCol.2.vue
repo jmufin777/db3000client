@@ -7,7 +7,7 @@
      >
      <!--- aboslutne pozicivany nabidky !-->
     <span v-if="kalkulaceid==KalkulaceThis">
-      <win-dow v-if="true && getType()=='Mat1'"
+      <win-dow v-if="false && getType()=='Baleni'"
           id="a"
           :id="'id_'+getIndex()+'_id'"
           :title="getType()"
@@ -22,40 +22,36 @@
           >
         <div>OKNO {{getType()}} / {{getId()}} {{ kalkulaceid}}</div>
         <div>budik {{ info }}</div>
-
+        <div>s2: {{ filtrDataStro1 }}</div>
       </win-dow>
 
 <!---Materialy - rezani nema k dispozici !!!1//-->
      <div style="max-height:250px;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxt && (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir'  )
             && (filtrData().length>1 || (filtrData().length==1 && filtrData()[0].nazev!=form.txt) )
         " class="elevation-12 yellow"
-        :style="'top:'+ getBottom('seek1_'+ID)+'px;width:'+getWidth('seek1_'+ID,8)+'px;left:'+getLeft('seek1_'+ID,1)+'px'" >
+        :style="'top:'+ getBottom('seek1_'+ID)+'px;width:'+getWidth('seek1_'+ID,20)+'px;left:'+getLeft('seek1_'+ID,-5)+'px'" >
         <!-- {{ filtrData()}} -->
-          <table  width="100%" v-if="form.showtxt &&  (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' )"  >
+          <table  width="100%" v-if="form.showtxt &&  (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' )" >
              <tr class="mt-1 green" v-for="(item, i) in filtrData()" :key="i" >
               <td >
-              <a :href="'#'" :id="'seek1_'+ID+'_list_'+i" @keydown="seznam('seek1_'+ID+'_list_'+i,1,$event)" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)">
-              <v-card class="silver pa-0 ma-0 " style="width:99%;" >
-                <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:80%;height:100%" class="pa-0 ma-0 grey lighten-5">
-                <v-card-text style="font-size:90%;text-align:left;width:100%;height:100%" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)"
-                :class="{'blue':1==1, 'blue lighten-5':item['poradi']==111, 'orange lighten-5':item['poradi']>1888888,'grey lighten-5':1==1}"
-                class="pa-0 ma-0 pl-1 pr-1"
+              <v-card class="silver" style="width:95%;" >
+                <a>
+                <table style="width:100%"><tr><td style="width:80%">
+                <v-card-text style="font-size:80%;text-align:left;width:100%" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)"
+                :class="{'blue lighten-5':item['poradi']==1, 'orange lighten-5':item['poradi']>1}"
                 >
-                 <!-- {{'list_'+i}} : -->
-                  {{ item['nazev']}}
+                 {{ item['nazev']}} {{ getType()}}
                  </v-card-text>
-                 </td><td style="width:20%;height:100" class="pa-0 ma-0 grey lighten-5">
-                 <v-card-text style="font-size:90%;text-align:center;width:100%;height:100%" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)"
-                 :class="{'grey lighten-5':item['poradi']==10, 'grey lighten-5':item['poradi']>10 ,'grey lighten-5':1==1 }"
-                 class="pa-0 ma-0"
+                 </td><td style="width:20%;height:100">
+                 <v-card-text style="font-size:80%;text-align:left;width:100%;height:100%" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)"
+                 :class="{'blue lighten-5':item['poradi']==1, 'orange lighten-5':item['poradi']>1}"
                 >
                  <!-- {{item['sirka_mm']}} x {{ item['vyska_mm']}} -->
-                  {{item['zkratka']}}
+                 {{item['zkratka']}}
                  </v-card-text>
                  </td></tr></table>
-
+              </a>
               </v-card>
-               </a>
               </td>
             </tr>
           </table>
@@ -66,28 +62,26 @@
         <!--    // && ( filtrDataStroj().length>1|| (filtrDataStroj().length==1 && filtrDataStroj()[0].nazev!=form.txtStroj) //-->
         <div style="min-height:5px;max-height:250px;overflow-y:scroll;position:absolute;z-index:51001"
         v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni') && filtrDataStro.length > 0" class="elevation-12 teal"
-          :style="'top:'+ getBottom('seek2_'+ID)+'px;width:'+getWidth('seek2_'+ID,8)+'px;left:'+getLeft('seek2_'+ID,0)+'px'">
+          :style="'top:'+ getBottom('seek2_'+ID)+'px;width:'+getWidth('seek2_'+ID,20)+'px;left:'+getLeft('seek2_'+ID,-5)+'px'">
           <span style="display:none">FF {{ filtrDataStro.length}}</span>
         <span style="display:none">
          {{ filtrDataStro}}
          <!-- {{ getBottom('seek2_'+ID) }} {{ Col.dataStroj}} -->
         </span>
           <table  width="100%" v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni') " >
-             <tr class="mt-0 pa-0 grey lighten-4" v-for="(item1, i1) in filtrDataStro" :key="i1"  >
-              <td class="pa-0 ma-0 pl-1 grey lighten-4">
-              <a :href="'#'" :id="'seek2_'+ID+'_list_'+i1"  @keydown="seznam('seek2_'+ID+'_list_'+i1,1,$event)" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)">
-              <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
-                <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
-                <v-card-text style="font-size:90%;text-align:left;width:100%" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)"
-                :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
-                class="ma-0 pa-0 pl-1"
+             <tr class="mt-1 green" v-for="(item1, i1) in filtrDataStro" :key="i1" >
+              <td >
+              <v-card class="silver" style="width:95%;" >
+                <a>
+                <table style="width:100%"><tr><td style="width:100%">
+                <v-card-text style="font-size:80%;text-align:left;width:100%" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)"
+                :class="{'blue lighten-5':1==1, 'orange lighten-5':1>1}"
                 >
-                     {{'list_'+i1}} : {{ item1['nazev'] }}
+                  {{ item1['nazev'] }}
                  </v-card-text>
                  </td></tr></table>
-
+                </a>
               </v-card>
-            </a>
               </td>
             </tr>
           </table>
@@ -96,33 +90,28 @@
 
       <!--Jen stroj - stroj//-->
         <!--    // && ( filtrDataStroj().length>1|| (filtrDataStroj().length==1 && filtrDataStroj()[0].nazev!=form.txtStroj) //-->
-        <div style="min-height:5px;max-height:250px;overflow-y:scroll;position:absolute;z-index:510015;border:1px solid silver"
-
-        v-if="form.showtxtStroj1 && ( getType()=='Rezani' ) && filtrDataStro1.length > 0 "  class="elevation-2 grey lighten-4 pa-0 ma-0"
-        :style="'top:'+ getBottom('seek3_'+ID)+'px;width:'+getWidth('seek3_'+ID,8)+'px;left:'+getLeft('seek3_'+ID,0)+'px'">
-        <span style="display:none">FF {{ filtrDataStro1.length}}</span>
+        <div style="min-height:5px;max-height:250px;overflow-y:scroll;position:absolute;z-index:510015"
+        v-if="form.showtxtStroj1 && ( getType()=='Rezani' ) && filtrDataStro1.length > 0 "  class="elevation-0 blue"
+        :style="'top:'+ getBottom('seek3_'+ID)+'px;width:'+getWidth('seek3_'+ID,20)+'px;left:'+getLeft('seek3_'+ID,-5)+'px'">
+         <span style="display:none">FF {{ filtrDataStro1.length}}</span>
         <span style="display:none">
          {{ filtrDataStro1}}
          <!-- {{ getBottom('seek2_'+ID) }} {{ Col.dataStroj}} -->
         </span>
           <table  width="100%" v-if="form.showtxtStroj1 && (  getType()=='Rezani' || getType()=='Baleni') " >
-             <tr class="mt-0 pa-0" v-for="(item2, i2) in filtrDataStro1" :key="i2" >
-              <td class="ma-0 pa-0">
-              <a :href="'#'" :id="'seek3_'+ID+'_list_'+i2"  @keydown="seznam('seek3_'+ID+'_list_'+i2,$event)" @click="form.txtStroj1= item2['nazev_stroj']; form.showtxtStroj1=false; setColStroj1(item2)">
-              <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
-
-
-                <table style="width:100%"><tr><td style="width:100%" class="ma-0 pa-0 grey lighten-4">
-                <v-card-text style="font-size:90%;text-align:left;width:100%" @click="form.txtStroj1= item2['nazev_stroj']; form.showtxtStroj1=false; setColStroj1(item1)"
+             <tr class="mt-1 green" v-for="(item1, i1) in filtrDataStro1" :key="i1" >
+              <td >
+              <v-card class="silver" style="width:95%;" >
+                <a>
+                <table style="width:100%"><tr><td style="width:100%">
+                <v-card-text style="font-size:80%;text-align:left;width:100%" @click="form.txtStroj1= item1['nazev_stroj']; form.showtxtStroj1=false; setColStroj1(item1)"
                 :class="{'blue lighten-5':1==1, 'orange lighten-5':1>1}"
-                class="grey lighten-4 pa-0 ma-0 pl-1"
                 >
-                 {{ item2['nazev_stroj'] }}
+                   {{ item1['nazev_stroj'] }}
                  </v-card-text>
                  </td></tr></table>
-
-              </v-card>
                 </a>
+              </v-card>
               </td>
             </tr>
           </table>
@@ -137,8 +126,8 @@
             <input type="text" v-model="form.txtStroj1" size="mini"  style="width:100%; height:15px" class="tdl tdn elevation-0" :placeholder="'Hledani Stroj1'+ getType()+ ' '+ID"
                 @focus="fokus('stroj1')"
                 @click="fokus('stroj1')"
-                @keydown="fokus('stroj1');filtrDataStroj1();seznam('seek3_'+ID+'_list_0',0,$event)"
-                :id="'seek3_'+ID"  >
+                @keydown="fokus('stroj1');filtrDataStroj1()"
+                :id="'seek3_'+ID">
          </v-card-text>
          </v-card>
           <!-- jen rezani //-->
@@ -147,8 +136,8 @@
             <input type="text" v-model="form.txtStroj" size="mini"  style="width:100%; height:15px" class="tdl tdn elevation-0" :placeholder="'Hledani Stroj'+ getType()+ ' '+ID"
                 @focus="fokus('stroj')"
                 @click="fokus('stroj')"
-                @keydown="fokus('stroj');filtrDataStroj();seznam('seek2_'+ID+'_list_0',0,$event)"
-                :id="'seek2_'+ID"  >
+                @keydown="fokus('stroj');filtrDataStroj()"
+                :id="'seek2_'+ID">
          </v-card-text>
          </v-card>
          <v-card style="width:100%;float:none" class="pa-0"  v-if="getType()!='Jine' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
@@ -158,24 +147,20 @@
               :placeholder="'Hledani Mat'+ getType()+ ' '+ID"
               @focus="fokus('mat');form.showtxt=true"
               @click="fokus('mat');form.showtxt=true"
-              @keydown="fokus('mat');form.showtxt=true;seznam('seek1_'+ID+'_list_0',0,$event)"
-              :id="'seek1_'+ID"  >
+              @keydown="fokus('mat');form.showtxt=true"
+              :id="'seek1_'+ID" >
                 <!-- {{ getBottom2('seek2_'+ID) }} / {{ getBottom('seek1_'+ID) }} -->
                 <!-- {{ filtrDataStroj() }} -->
             </v-card-text>
          </v-card>
          <v-card style="width:100%;float:none" class="pa-0"  v-if="getType()!='Jine' && !getType().match(/Rez/)  && !getType().match(/Baleni/)" >
-          <v-card-text style="width:80%; text-align: left" class="pa-0 pl-1" >
-          <select v-if="getType()!=='Mat1'" v-model="form.tisk"  @change="saveVuexData(); classJarda('sel1_'+ID)" :id="'sel1_'+ID"       @keydown="classJarda('sel1opt_'+ID+'_'+form.tisk)"
-            style="color:black;font-color:black;background:yellow;border: 1px solid green!important;" class="green lighten-2 pl-1 pr-2"
-          >
+          <v-card-text style="width:80%;" class="pa-0" >
+          <select v-if="getType()!=='Mat1'" v-model="form.tisk"  @change="saveVuexData(); classJarda('sel1_'+ID)" :id="'sel1_'+ID"       @keydown="classJarda('sel1opt_'+ID+'_'+form.tisk)">
             <option v-for="(a,b ) in Tisk"
                 :key="a.val"
                 :label="a.txt"
                 :value="a.val"
                 :id="'sel1opt_'+ID+'_'+a.val"
-
-
               >
               {{ a.txt }}
             </option>
@@ -184,11 +169,8 @@
         </v-card>
         <div v-if="getType().match(/Baleni/)">
         <v-card style="width:100%;" class="pa-0"  v-if="getType().match(/Baleni/)" >
-          <v-card-text style="width:100%;text-align:left" class="pa-0 pl-1" >
-          <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"       @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)" style="width:40%"
-           class="green lighten-2  pl-1 pr-2"
-          >
-
+          <v-card-text style="width:100%;text-align:left" class="pa-0 pl-0" >
+          <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"       @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)" style="width:40%">
             <option v-for="(c,d ) in Baleni"
                 :key="c.val"
                 :label="c.txt"
@@ -342,9 +324,9 @@ export default {
        txtStroj1:'',
        txtStroj:'',
 
-       showtxt: false,
-       showtxtStroj: false,  //mody stroje
-       showtxtStroj1: false, //Jen stroj
+       showtxt: true,
+       showtxtStroj: true,  //mody stroje
+       showtxtStroj1: true, //Jen stroj
        naklad:0,
        //Baleni - polozku naklad
 
@@ -411,7 +393,30 @@ export default {
 
      if (nNic2<20){
       nNic++;
+      try{
 
+
+     document.getElementById('seek'+nNic+'_'+self.ID).focus()
+     // document.getElementById('seek'+nNic+'_'+self.ID).change()
+
+      var pressthiskey = "q"
+
+      var e = new Event("keydown");
+      e.key = pressthiskey;
+      e.keyCode = e.key.charCodeAt(0);
+      e.which = e.keyCode;
+      e.altKey = false;
+      e.ctrlKey = false;
+      e.shiftKey = false;
+      e.metaKey = false;
+      e.bubbles = true;
+  //    document.dispatchEvent(e);
+      document.getElementById('seek'+nNic+'_'+self.ID).dispatchEvent(e)
+
+
+    } catch(e){
+
+    }
       // document.getElementById('seek'+nNic+'_'+self.ID).dispatchEvent(new KeyboardEvent('keydown',{'key':'a'}));
       if (nNic>=3) nNic = 0;
       nNic2++;
@@ -504,191 +509,6 @@ computed: {
 },
 
  methods: {
-    seznam(id,kod,e, obsah="ahoj"){
-     const self  = this
-     var i=0;
-     var aPrvek=id.split("_")
-
-     var nKey=e.keyCode
-     var obj1= e.target  //kde stojim
-     var objSeznam="";
-     var delka=aPrvek.length
-     var idPoz= aPrvek[delka -1] ;
-     var PrvekBase=""
-     var PrvekNext=""
-     var PrvekBefore=""
-     var tmp=0;
-
-     var PrvekTxt=""
-
-     self.info=aPrvek
-     self.info.push({dele: aPrvek.length })
-
-     for (i=0;i<(delka-1);i++) {
-       if (i < delka -2){
-         if (PrvekTxt>"") PrvekTxt+="_"
-         PrvekTxt+=aPrvek[i]
-       }
-       PrvekBase+=aPrvek[i]+'_'
-        //self.info.push(PrvekBase)
-
-     }
-      self.info.push({"PrvekTXT": PrvekTxt })
-      self.info.push({"Pozice": idPoz })
-      self.info.push({"base": PrvekBase })
-
-      tmp = idPoz*1;
-      if (idPoz>0){
-        tmp = tmp -1
-        PrvekBefore = PrvekBase + tmp
-      }
-        tmp = idPoz*1;
-        tmp = tmp +1
-        PrvekNext = PrvekBase + tmp
-
-
-
-     var status = false;
-
-
-      if (document.getElementById(id)) { //Id odkazuje na prvni radku seznamu = pokud existuje
-          status= true;
-          objSeznam= document.getElementById(id)
-          self.info.push("OK")
-      }
-
-
-     self.info.push(e.keyCode)
-     if (kod==0){
-       switch (nKey) {
-       case 40:
-         f.stopka(e)
-         self.info.push("sipec")
-         if (status) {
-           objSeznam.focus()
-           self.info.push(objSeznam.id)
-         }
-     }
-
-     }
-     if (kod==1){
-
-       switch (nKey) {
-      case 38:
-          f.stopka(e)
-          if (PrvekBefore>"" &&  document.getElementById(PrvekBefore)){
-            document.getElementById(PrvekBefore).focus()
-            break;
-          }
-      case 40:
-          f.stopka(e)
-          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
-            document.getElementById(PrvekNext).focus()
-            break;
-          }
-      case 36: //Houm
-          f.stopka(e)
-          PrvekNext = PrvekBase+"0"
-
-          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
-            document.getElementById(PrvekNext).focus()
-            break;
-          }
-
-      case 35: //End
-          f.stopka(e)
-            tmp = idPoz*1;
-          while (PrvekNext>"" &&  document.getElementById(PrvekNext)) {
-
-            tmp = tmp +1
-            PrvekNext = PrvekBase + tmp
-          }
-          PrvekNext = PrvekBase + (tmp-1)
-
-          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
-            document.getElementById(PrvekNext).focus()
-            break;
-          }
-      case 34: //PejdzDaun
-          f.stopka(e)
-          tmp = idPoz*1;
-          PrvekNext = PrvekBase + tmp
-          for (i=1;i<8;i++){
-            if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
-              tmp = tmp +1
-              PrvekNext = PrvekBase + tmp
-            } else {
-              if (!document.getElementById(PrvekNext)){
-                PrvekNext = PrvekBase + (tmp-1)
-              }
-              break;
-            }
-          }
-          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
-            document.getElementById(PrvekNext).focus()
-            break;
-          }
-         case 33: //PejdzAp
-          f.stopka(e)
-          tmp = idPoz*1;
-          PrvekNext = PrvekBase + tmp
-          for (i=1;i<8;i++){
-            if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
-              tmp = tmp - 1
-              if (tmp<=0){
-                PrvekNext = PrvekBase + "0"
-                break;
-              }
-              PrvekNext = PrvekBase + tmp
-
-            } else {
-              if (!document.getElementById(PrvekNext)){
-                PrvekNext = PrvekBase + (tmp+1)
-              }
-              break;
-            }
-          }
-          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
-            document.getElementById(PrvekNext).focus()
-            break;
-          }
-        case 37:  //sipa vleft
-
-          setTimeout(function(){
-              document.getElementById(PrvekTxt).focus()
-            },50)
-        break;
-       case 39:  //sipa vright
-
-
-              setTimeout(function(){
-                e.target.click
-                alert("click"+ e.target)
-                f.stopka(e)
-              //document.getElementById(PrvekTxt).focus()
-            },150)
-            //f.stopka(e)
-
-        break;
-
-
-        case 13:
-            //f.stopka(e)
-            e.target.click
-            setTimeout(function(){
-              document.getElementById(PrvekTxt).focus()
-            },50)
-
-            break;
-
-     }
-
-     }
-
-//el.selectionEnd = el.selectionStart
-
-
-   },
 
    fokus(kdezejsem) {
      const self = this
@@ -1182,19 +1002,10 @@ getId() {
 }
 textarea:focus, input:focus{
     outline: 1px dashed;
-}
 
-a:focus {
 
-    color: black;
-    font-weight: 900;
-    background: white;
 
 }
-a {
-   text-decoration: none;
-}
-
 select option div {
 /*
     background: greenyellow !important;
@@ -1212,24 +1023,6 @@ select option div {
 }
 </style>
 <style scoped>
-textarea:focus, input:focus{
-    outline: 0px dashed;
-}
-
-a:focus {
-    color: black;
-    font-weight: 900;
-    background: white;
-
-}
-select:focus, option:focus {
-    color: black;
-    font-weight: 600;
-
-}
-a {
-   text-decoration: none;
-}
 .sloupec {
   vertical-align: text-top;
 }
@@ -1259,7 +1052,7 @@ input {
 }
 select option div {
 
-    background: greenyellow !important;
+  background: greenyellow !important;
     background-color: #fff !important;
     border: 1px dashed #d9d9d9  !important;
     border-radius: 6px !important;
