@@ -26,13 +26,15 @@
 
         </span>
        <!-- <draggable  v-model="iKalk.sloupecid"  :options="{group:{ name:'sloupce' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" > -->
-        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'">
 
-            <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id" >
+        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'">
+            <!-- {{iKalk.sloupecid}} -->
+            <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true">
                 <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i></button>
             </work-col>
 
         </div>
+
        <!-- </draggable> -->
 
 
@@ -156,6 +158,7 @@ export default {
  data () {
 
    return {
+     zobrazit:true,
      Navigace: 0,
      Hlavni: 0,
      Left: 0,
@@ -172,7 +175,7 @@ export default {
  },
  watch: {
   aKalkulace :function(a) {
-    console.log(a)
+    console.log("Sleduji kalkulace", a)
     try {
   //    this.$store.dispatch('setKalkulace', this.aKalkulace)
     } catch(err) {
@@ -220,6 +223,28 @@ export default {
             eventBus.$emit('enable')
         },1000)
       }
+
+      if (server.key == 555) {  //Guma sloupce 1
+        self.zobrazit=false
+
+
+
+      self.$store.dispatch('removeCol',{
+          kalkulaceid: server.kalkulaceid,
+          idxCol: server.idxCol,
+        })
+
+        self.aKalkulace = self.$store.state.Kalkulace
+
+
+
+        setTimeout(function(){
+        self.zobrazit=true
+             eventBus.$emit('enable')
+         },100)
+      }
+
+      eventBus.$emit('WorkLeft',{key: self.nRet })
 
       if (server.key == 777) {
         //self.aKalkulace=[]

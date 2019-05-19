@@ -255,6 +255,32 @@ export default new Vuex.Store({
       var idx = dataAll.kalkulaceid
       var idxCol = dataAll.idxCol
         state.Kalkulace[idx].sloupecid[idxCol].data = dataAll.data
+        return ;
+        /*
+        try {
+          state.Kalkulace[idx].sloupecid[idxCol].type = dataAll.type
+          state.Kalkulace[idx].sloupecid[idxCol].id = dataAll.id
+        } catch(e) {
+          alert('prdel')
+        }
+        */
+
+    },
+    changeColType (state, dataAll) {
+      //var idx = this.getters.getId(dataAll.kalkulaceid)
+      var idx = dataAll.kalkulaceid
+      var idxCol = dataAll.idxCol
+
+        state.Kalkulace[idx].sloupecid[idxCol].data = {}
+
+        try {
+          state.Kalkulace[idx].sloupecid[idxCol].type = dataAll.type
+        //  state.Kalkulace[idx].sloupecid[idxCol].id = dataAll.id
+        } catch(e) {
+          console.log('Chyba zmeny typu sloupec')
+        }
+
+
     },
 
     editKalk (state, kalkulaceidKeyValue) {
@@ -294,6 +320,30 @@ export default new Vuex.Store({
       if (idk > -1 && ids > -1 ) {
         state.Kalkulace[idk].sloupecid.splice(ids, 1)
       }
+    },
+    removeCol (state, pole) {
+      var kalkulaceid = pole.kalkulaceid
+      var sloupecidx = pole.idxCol
+
+      state.Kalkulace[kalkulaceid].sloupecid.splice(sloupecidx, 1)
+      return
+
+      // console.log('A :', JSON.stringify(kalkulaceid, sloupecid))
+      // state.Kalkulace.forEach((el, idxk) => {
+      //   if (el.kalkulaceid === kalkulaceid) {
+      //     console.log('C', sloupecid)
+      //     idk = idxk
+
+      //     el.sloupecid.forEach((el2, idx) => {
+      //       if (el2.id === sloupecid.id) {
+      //         ids = idx
+      //       }
+      //     })
+      //   }
+      // })
+      // if (idk > -1 && ids > -1 ) {
+      //   state.Kalkulace[idk].sloupecid.splice(ids, 1)
+      // }
     },
     removeKalkColID (state, pole) {
 
@@ -432,8 +482,10 @@ export default new Vuex.Store({
       // console.log('Actions- setWin -Dispatch', newWin)
       commit('replaceKalkCol', dataAll)
     },
-
-
+    changeColType ({commit}, dataAll) {
+      // console.log('Actions- setWin -Dispatch', newWin)
+      commit('changeColType', dataAll)
+    },
 
     editKalk ({commit}, kalkulaceidKeyValue) {
       // console.log('Actions- removeKalk ', kalkulaceid)
@@ -454,6 +506,11 @@ export default new Vuex.Store({
       // console.log('Actions- removeKalk ', kalkulaceid)
       // return
       commit('removeKalk', kalkulaceid)
+    },
+    removeCol ({commit}, kalkulaceid) {
+      // console.log('Actions- removeKalk ', kalkulaceid)
+      // return
+      commit('removeCol', kalkulaceid)
     },
     addKalkCol ({commit}, kalkulaceid) {
       console.log('Actions- addKalkCol -Dispatch', kalkulaceid)

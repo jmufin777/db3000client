@@ -714,7 +714,19 @@ if (document.getElementById(_obj1)){
       e.preventDefault()
       e.stopPropagation()
       e.stopImmediatePropagation()
-}
+},
+vyraz(ctxt=""){
+  try {
+    ctxt = ctxt.toUpperCase()
+    ctxt = ctxt.replace(/([\+\(\)\?\.\\t\*])|([ ,\-])|([\}\{\]\[])/g,"")
+    ctxt = ctxt.replace(/([\}\{\]\[])/g,"")
+    ctxt = ctxt.replace(/([\:=])/g,"")
+  } catch (e) {
+    ctxt='ERROR '
+  }
+  return ctxt
+},
+
 
 
 

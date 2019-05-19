@@ -40,7 +40,7 @@ export default {
           ${cq}
       ) b on a.idefix=b.idefix_mat join (select * from list2_matsubskup aa) c on a.idefix_matsubskup=c.idefix `
 
-      cq = `select a.*,b.cena_naklad_m2,b.cena_prodej_m2 from (${cq}) a join list_mat b on a.idefix_mat=b.idefix where a.zkratka !='X' order by nazev,zkratka`
+      cq = `select a.*,b.cena_naklad_m2,b.cena_prodej_m2 from (${cq}) a join list_mat b on a.idefix_mat=b.idefix where a.zkratka !='X' order by nazev,zkratka `
 
 
       //console.log("AAAAA", cq)
@@ -84,7 +84,6 @@ export default {
 
     return cq ;
 
-
    },
    getStrojOnly(cwhere = '')  {
 
@@ -113,13 +112,12 @@ export default {
 
     return cq ;
 
-
    },
    getLaminace() {
     return this.getStrojItems('%lam%','1'); // hleda jen v laminatorech
    },
    getRezani() {
-    return this.getStrojItems('%ez_n%');
+    return this.getStrojItems('%ez_n%','1');
    },
    getKasir() {
     return this.getStrojItems('%ka__r%');

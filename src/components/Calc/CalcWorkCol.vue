@@ -4,10 +4,11 @@
      :class="{'brown lighten-3': getType()=='Mat1','green lighten-1': getType()=='Laminace','orange lighten-1': getType()=='Kasir','yellow lighten-2': getType()=='Rezani','   lighten-2': getType()=='Rezani'
      , 'green lighten-2': getType()=='Baleni', 'red lighten-2': getType()=='Jine'}"
      @click="setKalk(kalkulaceid)"
+     v-if="isDeleted==false"
      >
      <!--- aboslutne pozicivany nabidky !-->
     <span v-if="kalkulaceid==KalkulaceThis">
-      <win-dow v-if="true && getType()=='Mat1'"
+      <win-dow v-if="true && getType()=='Rezani'"
           id="a"
           :id="'id_'+getIndex()+'_id'"
           :title="getType()"
@@ -22,6 +23,9 @@
           >
         <div>OKNO {{getType()}} / {{getId()}} {{ kalkulaceid}}</div>
         <div>budik {{ info }}</div>
+        <div>budik {{ filtrDataStro1 }}</div>
+
+
 
       </win-dow>
 
@@ -82,7 +86,7 @@
                 :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
                 class="ma-0 pa-0 pl-1"
                 >
-                     {{'list_'+i1}} : {{ item1['nazev'] }}
+                  {{ item1['nazev'] }}
                  </v-card-text>
                  </td></tr></table>
 
@@ -132,7 +136,34 @@
      <!--- aboslutne pozicivany nabidky !-->
     <form >
         <!-- jen rezani - je nehore, nebor stroj je prvni v nabicce je li pozadavekem//-->
-          <v-card style="width:100%;float:none" class="pa-0 ma-0" v-if="getType()!='Jine' && getType().match(/Rez/)">
+
+          <v-card style="width:100%;height:35px;float:none;border-radius:25px;border-top-right-radius:10px" class="pa-0 ma-0 grey lighten-3">
+          <v-card-text style="width:100%;z-index:900000; text-align:left " class="pa-0 pt-0 grey lighten-3" >
+          <div style="width:100%;float:none;border-radius:25px;border-top-right-radius:30px !important;border: solid 0px black !important">
+          <table class="pa-0 ma-0 grey lighten-3" style="width:100%;border:solid 0px black"> <tr class="pa-0 ma-0 grey lighten-3"><td width="80%" class="pa-0 ma-0 pt-0 pb-0 grey lighten-3" >
+
+           <el-dropdown split-button size="small" trigger="click" @command="zmenaType" class="grey lighten-3 " style="width:100;height:80% !important">
+            {{getType()}}
+            <el-dropdown-menu slot="dropdown" class="grey lighten-5" style="position:absolute;left:150px" >
+              <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
+              <el-dropdown-item  :command="'Laminace'">Laminace</el-dropdown-item>
+              <el-dropdown-item  :command="'Kasir'">Kasir</el-dropdown-item>
+              <el-dropdown-item  :command="'Rezani'">Rezani</el-dropdown-item>
+              <el-dropdown-item  :command="'Baleni'">Baleni</el-dropdown-item>
+              <el-dropdown-item  :command="'Jine'">Jine</el-dropdown-item>
+              <el-dropdown-item  :command="'Externi'">Externi</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          </td><td width="20%" class="pa-0 ma-0 grey lighten-3 pr-3" style="border-top-right-radius:30px;text-align:right">
+
+          <button type="button" style="width:20%;height:26px;text-align:right" class="  px-0 cell" @click="deleteCol()" ><i class="el-icon-delete" size="mini"></i></button>
+          </td></tr></table>
+          </div>
+
+          </v-card-text>
+
+          </v-card>
+          <v-card style="width:100%;float:none" class="pa-0 ma-0" v-if="false && getType()!='Jine' && getType().match(/Rez/)">
           <v-card-text style="width:100%;z-index:900000" class="pa-1" >
             <input type="text" v-model="form.txtStroj1" size="mini"  style="width:100%; height:15px" class="tdl tdn elevation-0" :placeholder="'Hledani Stroj1'+ getType()+ ' '+ID"
                 @focus="fokus('stroj1')"
@@ -174,8 +205,6 @@
                 :label="a.txt"
                 :value="a.val"
                 :id="'sel1opt_'+ID+'_'+a.val"
-
-
               >
               {{ a.txt }}
             </option>
@@ -188,7 +217,6 @@
           <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"       @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)" style="width:40%"
            class="green lighten-2  pl-1 pr-2"
           >
-
             <option v-for="(c,d ) in Baleni"
                 :key="c.val"
                 :label="c.txt"
@@ -229,7 +257,7 @@
         </v-card>
         <v-card style="width:20%;float:left;display;none" >
           <v-card-text style="text-align:left;width:100%;" class="pa-0">
-            <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
+            <!-- <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button> -->
           </v-card-text>
         </v-card>
         <v-card class="pa-0">
@@ -292,6 +320,7 @@ export default {
         dialogImageUrl: '',
         dialogVisible: false,
         info:'info',
+        isDeleted: false,
      //soubory
       MenuLeft: [
      ],
@@ -379,35 +408,26 @@ export default {
      filtrDataStro:[],
      filtrDataStro1:[], //Nazby strrojiu pro rezani
 
-
    }
  },
  async mounted () {
    const self = this
-     this.ID = Math.round(Math.random() * 198345813)
-       //self.Kalk.push(  f.cp(self.Kalkulace[self.k_id()]) )
-       //self.Kalk=  f.cp(self.Kalkulace[self.k_id()])
+     this.ID = Math.round(Math.random() * 198345813 *Math.random() )
        var neco=JSON.stringify(self.Kalkulace[self.k_id()])
        self.Kalk=JSON.parse(neco)
        self.readVuexData()
+       //alert("Pripjoj" + self.getType())
 
-       //return;
-     // console.log('tagtagtagtagtagtagtagtag',neco )
-     // console.log("COL ", JSON.stringify(self.Kalk[0].sloupecid))
-     // return
-     // self.Kalk.push([self.Kalkulace[self.k_id()]] )  //Nacteni kalkulace
-     //self.Cols.push(self.Kalk[0].sloupecid) // Sloupce do samostany promenny abych se neposral z tech tecek
-     //self.Cols=self.Kalk[0].sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
       self.Cols=self.Kalk.sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
-     //self.Col.push( self.Cols);
+
       self.Col=self.Cols[self.getIndex()] ;
 
-     //console.log("COL 2", JSON.stringify(self.Kalk[0].sloupecid))
-     console.log("COL 3", JSON.stringify(self.Col))
+
+
   var nNic=0;
   var nNic2=0;
 
-  self.Interval= setInterval(function()  {
+self.Interval= setInterval(function()  {
 
      if (nNic2<20){
       nNic++;
@@ -433,14 +453,38 @@ export default {
 
   },1500 )
 
-  setTimeout(function()  {
+  self.nactiDb()
+   return
+ },
+
+
+
+
+computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'xMenuMain',
+      'level',
+      'idefix',
+      'compaStore',
+      'Kalkulace',
+      'KalkulaceThis',
+      'user',
+    ]),
+},
+
+ methods: {
+  nactiDb(ihned=false){
+      const self = this
+
+      setTimeout(function()  {
     // alert(self.getType())
 
       var atmp=[]
 
-
       // self.info=self.Kalkulace[self.k_id()].data.FormatSirka
       if (
+        ihned ||
         self.SirkaLast!=self.Kalkulace[self.k_id()].data.FormatSirka  ||
         self.VyskaLast!=self.Kalkulace[self.k_id()].data.FormatVyska
        ) {
@@ -460,11 +504,14 @@ export default {
         console.log("COL 4", JSON.stringify(self.Col))
 
         var q1=SQL.getMatList(self.Kalkulace[self.k_id()].data.Menu1Value,self.Kalkulace[self.k_id()].data.FormatSirka ,self.Kalkulace[self.k_id()].data.FormatVyska )
-        self.q(q1)
+        if (q1>""){
+          self.q(q1)
+        }
         var q2=SQL.getStroj(self.getType())
         if (q2>""){
           //alert(q2)
           self.qStroj(q2)
+          //self.info=q2
         }
         //alert("Q#")
         var q3=SQL.getStroj1(self.getType())
@@ -475,36 +522,109 @@ export default {
 
         }
 
+        if (self.getType()=="Rezani"){
+          self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
+          //alert('rezba'+JSON.stringify(self.Col.dataStroj1))
+        }
+
+
       }
+
 
 
   },1500)
 
+  },
+   zmenaType(cSloup=""){
 
-   return
+      const self = this
+      // self.ID = Math.round(Math.random() * 198345813 *Math.random() )
+             self.form.txt= ''  //polozka hledaniho textu 1,  je vztazena k typu sloupce
+             self.form.txtStroj1=''
+             self.form.txtStroj=''
+             self.filtrDataStro1=[]
+             self.filtrDataStro=[]
+             self.filtrDataStro1=[] //Nazby strrojiu pro rezan
+             self.filtrDat=[]
+             self.form.showtxt= false
+             self.form.showtxtStroj= false  //mody stroje
+             self.form.showtxtStroj1= false
+             self.form.naklad=0,
+             self.form.naklad_mody=0
+             self.form.naklad_po=0
+             self.form.naklad_cena=0
+             self.form.poznamka=''
+             self.form.itemSelectedStroj= {}
+             self.form.itemSelectedStroj1= {}
+             self.form.itemSelectedMat= {}
+             //self.Kalk= []
+             //self.Cols= []
+             self.Col=  []
+             self.Mat=  []
+             self.MatVolba= 0
+     self.saveVuexData()
+
+     self.$store.dispatch('changeColType',{
+       kalkulaceid: self.k_id(),
+       idxCol: self.getIndex(),
+       type: cSloup,
+       data: {}
+     })
+
+     self.Cols=self.Kalk.sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
+
+     self.Col=self.Cols[self.getIndex()] ;
+
+     //self.Col.push( self.Cols);
+    // alert(self.getType())
+
+     self.readVuexData();
+
+     setTimeout(function(){
+
+     self.saveVuexData();
+
+             setTimeout(function(){
+               self.nactiDb(true)
 
 
- },
+
+             },100)
+
+     },100)
+
+
+   },
+   deleteCol(){
+      const self = this
+
+      //self.ID=0
+      if (confirm("Odtranit " + self.getType() +" ?")){
+        self.isDeleted=true
+        setTimeout(function(){
+          eventBus.$emit('MenuHlavni',
+        {
+          kalkulaceid: self.k_id(),
+          idxCol: self.getIndex(),
+          key: 555
+        }
+        )
+
+
+        },500)
+
+        //self.isDeleted=true
+        // self.$store.dispatch('removeCol',{
+        //   kalkulaceid: self.k_id(),
+        //   idxCol: self.getIndex(),
+        // })
+
+      }
 
 
 
-
-computed: {
-    ...mapState([
-      'isUserLoggedIn',
-      'xMenuMain',
-      'level',
-      'idefix',
-      'compaStore',
-      'Kalkulace',
-      'KalkulaceThis',
-      'user',
-    ]),
-
-},
-
- methods: {
-    seznam(id,kod,e, obsah="ahoj"){
+   },
+    seznam(id,kod,e, obsah=""){
      const self  = this
      var i=0;
      var aPrvek=id.split("_")
@@ -533,7 +653,7 @@ computed: {
         //self.info.push(PrvekBase)
 
      }
-      self.info.push({"PrvekTXT": PrvekTxt })
+      self.info.push({"PrvekTxt": PrvekTxt })
       self.info.push({"Pozice": idPoz })
       self.info.push({"base": PrvekBase })
 
@@ -561,19 +681,33 @@ computed: {
      self.info.push(e.keyCode)
      if (kod==0){
        switch (nKey) {
+       case 9:
+        setTimeout(function(){
+          self.form.showtxt=false
+          self.form.showtxtStroj=false
+          self.form.showtxtStroj1=false
+        },100)
+
+
+        //alert('nevidim jej')
+        //f.stopka(e)
+        //return true
+        break;
        case 40:
          f.stopka(e)
-         self.info.push("sipec")
+
          if (status) {
            objSeznam.focus()
            self.info.push(objSeznam.id)
+         } else {
+           return
          }
      }
 
      }
-     if (kod==1){
+   if (kod==1){
 
-       switch (nKey) {
+    switch (nKey) {
       case 38:
           f.stopka(e)
           if (PrvekBefore>"" &&  document.getElementById(PrvekBefore)){
@@ -659,18 +793,15 @@ computed: {
             },50)
         break;
        case 39:  //sipa vright
-
-
-              setTimeout(function(){
-                e.target.click
-                alert("click"+ e.target)
-                f.stopka(e)
-              //document.getElementById(PrvekTxt).focus()
-            },150)
+            setTimeout(function(){
+               //e.target.click()
+               f.stopka(e)
+               e.target.click()
+               document.getElementById(PrvekTxt).focus()
+               document.getElementById(PrvekTxt).change
+            },100)
             //f.stopka(e)
-
         break;
-
 
         case 13:
             //f.stopka(e)
@@ -680,9 +811,7 @@ computed: {
             },50)
 
             break;
-
      }
-
      }
 
 //el.selectionEnd = el.selectionStart
@@ -722,6 +851,7 @@ computed: {
         self.Col.dataStroj=atmp;
 
         console.log("DATA STROJ" , JSON.stringify(self.Col.dataStroj))
+        self.info=JSON.stringify(self.Col.dataStroj)
 
         //self.$store.dispatch('saveCols', {id: idK,data: self.Cols })
         //self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'sloupecid['+idCol+'].data' , value: 8822 })
@@ -836,10 +966,8 @@ computed: {
      }
    },
    setColStroj(itemSelected){
-
      const self = this
       self.form.itemSelectedStroj = itemSelected;
-
      if (self.getType()!=='Mat1'){
          self.saveVuexData();
       return
@@ -847,14 +975,11 @@ computed: {
      }
    },
    setColStroj1(itemSelected){
-
      const self = this
       self.form.itemSelectedStroj1 = itemSelected;
-
      if (self.getType()!=='Mat1'){
          self.saveVuexData();
       return
-
      }
    },
    filtrData() {
@@ -863,9 +988,11 @@ computed: {
       try {
       neco = self.Col.data.filter(el => (
           (
-          (el.nazev).toUpperCase().match(self.form.txt.toUpperCase())  || self.form.txt ==''
-                ||
-          (el.sub).toUpperCase().match(self.form.txt.toUpperCase())  || self.form.txt ==''  )
+          //(el.nazev).toUpperCase().match(self.form.txt.toUpperCase())  || self.form.txt ==''
+          self.vyraz(el.nazev).match(self.vyraz(self.form.txt))  || self.form.txt ==''
+        //        ||
+         // (el.sub).toUpperCase().match(self.form.txt.toUpperCase())  || self.form.txt ==''
+         )
           ))
 
        } catch (e) {
@@ -875,6 +1002,9 @@ computed: {
 
        }
       return neco
+   },
+   vyraz(ctxt){
+     return f.vyraz(ctxt)
    },
    filtrDataStroj() {
       const self = this
@@ -898,7 +1028,7 @@ computed: {
               self.filtrDataStro=[]
               //return ;
             } else
-            if (self.form.txtStroj > '' && (el.nazev).toUpperCase().indexOf(self.form.txtStroj.toUpperCase())>=0
+            if (self.form.txtStroj > '' && (self.vyraz(el.nazev)).indexOf(self.vyraz(self.form.txtStroj))>=0
             // &&  (el.nazev).toUpperCase().match(self.form.txtStroj.toUpperCase())
             ) {
               //self.form.showtxtStroj=true
@@ -949,7 +1079,7 @@ computed: {
               self.filtrDataStro1=[]
               //return ;
             } else
-            if (self.form.txtStroj1 > '' && (el.nazev_stroj).toUpperCase().indexOf(self.form.txtStroj1.toUpperCase())>=0
+            if (self.form.txtStroj1 > '' && (self.vyraz(el.nazev_stroj) ).indexOf(self.vyraz(self.form.txtStroj1))>=0
             // &&  (el.nazev).toUpperCase().match(self.form.txtStroj.toUpperCase())
             ) {
               //self.form.showtxtStroj=true

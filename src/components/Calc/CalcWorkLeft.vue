@@ -26,7 +26,7 @@
      <table style="width:100%" cols=2>
        <tr v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix">
        <td style="width:80%">
-         <v-card><v-text>
+         <v-card><v-card-text>
          <span @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )" style="width:80%;border:20px;cursor:pointer" class="neco">
 
 
@@ -38,7 +38,7 @@
            :: [ {{$store.state.Kalkulace[k_id()].data.Menu1Value}} ] -->
 
         </span>
-       </v-text></v-card>
+       </v-card-text></v-card>
        </td>
       <td style="width:20%">
         <span @click="idefixClick=itemStroj.idefix; MenuShow1(MenuShow, $event )">
