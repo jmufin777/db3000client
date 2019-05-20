@@ -2,13 +2,14 @@
   <!-- <tr style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
      <div style="font-size:100%; min-height:20px;border:1px solid black" class="pt-0 pl-0 ml-1 pb-1 "
      :class="{'brown lighten-3': getType()=='Mat1','green lighten-1': getType()=='Laminace','orange lighten-1': getType()=='Kasir','yellow lighten-2': getType()=='Rezani','   lighten-2': getType()=='Rezani'
-     , 'green lighten-2': getType()=='Baleni', 'red lighten-2': getType()=='Jine'}"
+     , 'pink lighten-5': getType()=='Baleni', 'red lighten-2': getType()=='Jine'}"
      @click="setKalk(kalkulaceid)"
      v-if="isDeleted==false"
      >
-     <!--- aboslutne pozicivany nabidky !-->
-    <span v-if="kalkulaceid==KalkulaceThis">
-      <win-dow v-if="true && getType()=='Rezani'"
+
+    <span v-if="true && kalkulaceid==KalkulaceThis">
+
+      <win-dow v-if="false && getType()=='Rezani'"
           id="a"
           :id="'id_'+getIndex()+'_id'"
           :title="getType()"
@@ -20,6 +21,7 @@
           :parent="false"
           :maximize="false"
           :demo="false"
+
           >
         <div>OKNO {{getType()}} / {{getId()}} {{ kalkulaceid}}</div>
         <div>budik {{ info }}</div>
@@ -537,7 +539,9 @@ computed: {
   },
    zmenaType(cSloup=""){
 
+
       const self = this
+      self.isDeleted=true
       // self.ID = Math.round(Math.random() * 198345813 *Math.random() )
              self.form.txt= ''  //polozka hledaniho textu 1,  je vztazena k typu sloupce
              self.form.txtStroj1=''
@@ -577,23 +581,14 @@ computed: {
 
      //self.Col.push( self.Cols);
     // alert(self.getType())
-
      self.readVuexData();
-
      setTimeout(function(){
-
      self.saveVuexData();
-
              setTimeout(function(){
                self.nactiDb(true)
-
-
-
+               self.isDeleted=false
              },100)
-
      },100)
-
-
    },
    deleteCol(){
       const self = this
@@ -679,6 +674,31 @@ computed: {
 
 
      self.info.push(e.keyCode)
+     switch (nKey) {
+       case 27:
+        setTimeout(function(){
+            self.form.showtxt=false
+            self.form.showtxtStroj=false
+            self.form.showtxtStroj1=false
+            document.getElementById(PrvekTxt).focus()
+            self.form.showtxt=false
+            self.form.showtxtStroj=false
+            self.form.showtxtStroj1=false
+          setTimeout(function(){
+            self.form.showtxt=false
+            self.form.showtxtStroj=false
+            self.form.showtxtStroj1=false
+
+          },100)
+
+        },100)
+
+
+        //alert('nevidim jej')
+        //f.stopka(e)
+        //return true
+        break;
+     }
      if (kod==0){
        switch (nKey) {
        case 9:

@@ -5,7 +5,7 @@
     <my-layout>
     <div slot="hlavni">
       {{ KalkulaceThis}} /Last {{ KalkulaceLast }}
-       {{ this.$store.state.KalkulaceThis }}
+       {{ $store.state.KalkulaceThis }}
       <menu-hlavni>
 
       </menu-hlavni>
@@ -29,11 +29,13 @@
 
         <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'">
             <!-- {{iKalk.sloupecid}} -->
+
             <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true">
                 <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i></button>
             </work-col>
 
         </div>
+      <div slot="mezera" class="red">AAAA</div>
 
        <!-- </draggable> -->
 
@@ -42,10 +44,31 @@
 
 
 
+
+
+
       <!-- <prehled slot="prehled" v-for="(itemP, iP) in aKalkulace" :key="iP"> -->
       <prehled slot="prehled" >
 
-        <span slot="obsah" >
+
+
+      <span slot="obsah" >
+     <div style="position:absolute;top:70%;right:1%;z-index:99999" class="grey lighten-5">
+
+         <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  >
+            <el-dropdown-menu slot="dropdown" class="grey lighten-5" >
+              <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
+              <el-dropdown-item  :command="'Laminace'">Laminace</el-dropdown-item>
+              <el-dropdown-item  :command="'Kasir'">Kasir</el-dropdown-item>
+              <el-dropdown-item  :command="'Rezani'">Rezani</el-dropdown-item>
+              <el-dropdown-item  :command="'Baleni'">Baleni</el-dropdown-item>
+              <el-dropdown-item  :command="'Jine'">Jine</el-dropdown-item>
+              <el-dropdown-item  :command="'Externi'">Externi</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+
+
+     </div>
           <!-- <v-btn-toggle v-if="showPrehled==1 && iP==0"> -->
           <v-btn-toggle >
               <v-btn flat value="vyroba">
@@ -84,7 +107,8 @@
 
                 </v-card-text></v-card>
               </div>
-              <div style="width:5%">aaaa</div>
+              <div style="width:1%">.</div>
+
 
 
               <!--
@@ -690,6 +714,16 @@ export default {
       console.log('Choos item: ', event.draggedRect, 'B', bEvent)
       // alert(Object.keys(bEvent))
     },
+    zmenaType(cSloup=""){
+
+      const self = this
+      self.KalkulaceThis = self.$store.state.KalkulaceThis
+      var idK = self.KalkulaceThis-1
+
+      var idK = this.k_id()
+
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: cSloup, id:Math.random()})
+    }
 
  },
  computed: {
