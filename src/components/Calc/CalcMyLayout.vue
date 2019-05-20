@@ -1,6 +1,6 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-       <div v-if="ukaz==true" class="white lighten-5 pt-4 px-2 mt-2" :style="'height:'+getHeight('d1_'+ID,100)+'px'" :id="'d1_'+ID" @click="s12(1,$event)">
+       <div v-if="ukaz==true" class="white lighten-5 pt-4 px-2 mt-2" :style="'height:'+getHeight('d1_'+ID,100)+'px'" :id="'d1_'+ID" @click="s12(1,$event)" @scroll="TestRend">
          <table cols="100" >
            <tr >
              <td v-for="n in 100" :key="n" style="font-size:1px">&nbsp;</td>
@@ -74,6 +74,9 @@ export default {
  },
 
 methods: {
+  TestRend() {
+    alert('aRend')
+  },
   getBottom(id,addPoz=10) {
      var neco=200
      var oNeco
@@ -82,7 +85,8 @@ methods: {
      if (oNeco = document.getElementById(id)) {
        neco = oNeco.offsetParent.offsetTop+oNeco.offsetHeight+ addPoz
        neco = neco - obal.scrollTop
-       //console.log("Parent Scroll", oNeco.parentElement.scrollTop," SCROLL 2 ", obal.scrollTop)
+
+       // console.log("Parent Scroll", oNeco.parentElement.scrollTop," SCROLL 2 ", obal.scrollTop)
 
        //oNeco.parentElement.style.background='pink'
 

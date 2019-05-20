@@ -3,8 +3,10 @@
      <div style="font-size:100%; min-height:20px;border:1px solid black" class="pt-0 pl-0 ml-1 pb-1 "
      :class="{'brown lighten-3': getType()=='Mat1','green lighten-1': getType()=='Laminace','orange lighten-1': getType()=='Kasir','yellow lighten-2': getType()=='Rezani','   lighten-2': getType()=='Rezani'
      , 'pink lighten-5': getType()=='Baleni', 'red lighten-2': getType()=='Jine'}"
-     @click="setKalk(kalkulaceid)"
+     @click="setKalk(kalkulaceid);"
+     @scroll="TestRend=TestRend+1"
      v-if="isDeleted==false"
+     :key="TestRend"
      >
 
     <span v-if="true && kalkulaceid==KalkulaceThis">
@@ -284,7 +286,7 @@ import {mapState} from 'vuex'
 import {getters} from 'vuex'
 
 import { eventBus } from '@/main.js'
-import { setTimeout, clearInterval } from 'timers'
+import { setTimeout, clearInterval, setInterval, clearTimeout } from 'timers'
 import ListStroj from '../../services/ListStrojService'
 import SQL from '../../services/fcesql'
 import Q from '../../services/query'
@@ -323,6 +325,8 @@ export default {
         dialogVisible: false,
         info:'info',
         isDeleted: false,
+        TestRend :0,
+        timeout: false,
      //soubory
       MenuLeft: [
      ],
@@ -410,7 +414,37 @@ export default {
      filtrDataStro:[],
      filtrDataStro1:[], //Nazby strrojiu pro rezani
 
+
    }
+ },
+ created () {
+   const self=this
+   eventBus.$on('Rend', (server) => {
+    //if (self.form.showtxt || self.form.showtxtStroj || self.form.showtxtStroj1)   {
+    //      self.TestRend++;
+    //     console.log("Render col ", self.TestRend )
+
+    // }
+   if (self.form.showtxt || self.form.showtxtStroj || self.form.showtxtStroj1)   {
+     if (self.timeout){
+       clearTimeout(self.timeout)
+       self.timeout=false
+     }
+       self.timeout=setTimeout(function() {
+
+         self.TestRend++;
+        console.log("Render col ", self.TestRend )
+
+
+
+     }, 500)
+    }
+
+
+
+   //  alert('Rederik'+ self.TestRend)
+   })
+
  },
  async mounted () {
    const self = this
@@ -1151,8 +1185,14 @@ computed: {
    getLeft(id,addPoz=10) {
      var neco=500
      var oNeco
+     var obal= document.getElementById("obal1_kalkulace")
      if (oNeco = document.getElementById(id)) {
        neco = oNeco.offsetParent.offsetLeft+addPoz
+
+       var r2 = oNeco.closest("#test_1");
+       neco = neco - r2.scrollLeft
+       console.log(neco," LEFT ", obal.scrollLeft, " Left Neco " , oNeco.scrollLeft, oNeco.parentElement.scrollLeft , " R2 ", r2.id , "scr ", r2.scrollLeft , " r ", r2.scrollWidth )
+
 
 
      } else {

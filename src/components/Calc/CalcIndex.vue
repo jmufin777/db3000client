@@ -27,10 +27,10 @@
         </span>
        <!-- <draggable  v-model="iKalk.sloupecid"  :options="{group:{ name:'sloupce' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" > -->
 
-        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'">
+        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'" >
             <!-- {{iKalk.sloupecid}} -->
 
-            <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true">
+            <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend">
                 <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i></button>
             </work-col>
 
@@ -53,9 +53,10 @@
 
 
       <span slot="obsah" >
-     <div style="position:absolute;top:70%;right:1%;z-index:99999" class="grey lighten-5">
+     <div style="position:fixed;top:30%;right:1%;z-index:99999" class="grey lighten-5">
 
-         <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  >
+         <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  :key="$store.state.KalkulaceThis" >
+            Typ sloupce {{ $store.state.KalkulaceThis }}
             <el-dropdown-menu slot="dropdown" class="grey lighten-5" >
               <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
               <el-dropdown-item  :command="'Laminace'">Laminace</el-dropdown-item>
@@ -194,6 +195,7 @@ export default {
      showPrehled: 1,
      qtest: [],
      ID: 0,
+     TestRend :0,
 
    }
  },
@@ -250,6 +252,7 @@ export default {
 
       if (server.key == 555) {  //Guma sloupce 1
         self.zobrazit=false
+        self.TestRend++
 
 
 

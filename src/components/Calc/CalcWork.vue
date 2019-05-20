@@ -1,6 +1,6 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-    <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pt-0 " >
+ <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pt-0 " id="test_1"  @scroll="TestRend">
 
 <table width="120%" border="0px" >
   <tr><td v-for="n in 95" :key="n" style="font-size:1px">&nbsp;</td></tr>
@@ -109,6 +109,12 @@ export default {
 
   //   })
 
+ },
+ methods: {
+   TestRend() {
+    //alert('aRend')
+     eventBus.$emit("Rend")
+  },
  }
 }
 </script>
