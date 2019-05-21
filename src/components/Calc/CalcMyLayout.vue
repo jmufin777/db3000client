@@ -1,6 +1,6 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-       <div v-if="ukaz==true" class="white lighten-5 pt-4 px-2 mt-2" :style="'height:'+getHeight('d1_'+ID,100)+'px'" :id="'d1_'+ID" @click="s12(1,$event)" @scroll="TestRend">
+       <div v-if="ukaz==true" class="white lighten-5 pt-4 px-2 mt-2" :style="'height:'+getHeight('d1_'+ID,100)+'px'" :id="'d1_'+ID" @click="s12(1,$event)" @scroll="TestRend" >
          <table cols="100" >
            <tr >
              <td v-for="n in 100" :key="n" style="font-size:1px">&nbsp;</td>
@@ -54,10 +54,17 @@ import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import f from '../../services/fce'
 
+
+
+
+
+//...
+
 export default {
   props: {
 
   },
+
  data () {
    return {
      ID:0,

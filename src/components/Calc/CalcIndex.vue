@@ -7,37 +7,40 @@
       {{ KalkulaceThis}} /Last {{ KalkulaceLast }}
        {{ $store.state.KalkulaceThis }}
       <menu-hlavni>
-
       </menu-hlavni>
     </div>
-
     <menu-left slot="menuleft"></menu-left>
-
       <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" >
-
      <!-- <work slot="kalkulace" v-for="na in (2 ,20) " :key="na"> -->
         <span slot="leva" >
-
-          <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
+        <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
               <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalk(iKalk.kalkulaceid)" >
                 <a :name="iKalk.kalkulaceid"></a>
                 <i class="el-icon-delete" size="mini"></i></button>
-          </work-left>
-
+        </work-left>
         </span>
-       <!-- <draggable  v-model="iKalk.sloupecid"  :options="{group:{ name:'sloupce' }}"  @start="drag=true" @end="drag=false" :move="chooseItem" > -->
+<!-- <draggable  v-model="iKalk.sloupecid"  :options="{group:{ name:'sloupce' }}"  @start="drag=true" @end="drag=false" :move="chooseItem"  >   -->
 
-        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'" >
+       <draggable v-model="iKalk.sloupecid"  :options="{group: 'people1' }" @start="drag=true" @end="chooseSloupce" slot="sloupce" class="prava mr-1 " 
+       style="wdth:110%;position:relative;left:20%">
+
+        <el-col v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :span="3" class="pa-1 mt-0 text-xs-center" style="cursor:pointer;border-left:10px solid white;" >
+          <div style="background:white;font-size:8px">
+           {{iSloupec.type}}
+          </div>
+           </el-col>
+
+
+       </draggable>
+
+        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'"  >
             <!-- {{iKalk.sloupecid}} -->
 
-            <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend">
+            <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend" style="z-index:889977">
                 <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i></button>
             </work-col>
-
         </div>
-      <div slot="mezera" class="red">AAAA</div>
-
-       <!-- </draggable> -->
+      <div slot="mezera" class="red">&nbsp;</div>
 
 
      </work>
@@ -85,7 +88,8 @@
                 Vl
               </v-btn>
             </v-btn-toggle>
-          <div v-for="(iK,i) in Kalkulace" :key="i" style="width:100%;">
+        <draggable v-model="aKalkulace"  :options="{group: 'people2' }" @start="drag=true" @end="chooseSloupce" >
+          <div v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;">
              <div style="width:2%;float:left">
                <v-card><v-card-text>
                   {{iK.kalkulaceid}}
@@ -98,16 +102,16 @@
                     <div class="white" style="float:left">Naklad</div><div>{{Kalkulace[i].data.FormatNakladKs}}</div>
                 </v-card-text></v-card>
               </div>
+              <draggable v-model="iK.sloupecid"  :options="{group: 'people1' }" @start="drag=true" @end="chooseSloupce" >
               <div v-for="(sl, iSloupce ) in iK.sloupecid" :key="iSloupec" style="float:left">
                  <v-card><v-card-title style="font-size:12px;height:14px">Typ: {{sl.type}}</v-card-title><v-card-text>
-                    <div class="white" style="font-size:12px;height:14px">Mat:{{ sl.mat}}</div>
-                    <div class="white" style="font-size:12px;height:14px">Stroj:{{ sl.stroj}}</div>
+                    <div class="white" style="font-size:12px;height:14px">Mat11:{{ getVal(sl.data.mat,"nazev")}}</div>
+                    <div class="white" style="font-size:12px;height:14px">Stroj:{{ getVal(sl.data.stroj, "nazev")}}</div>
                     <div class="white" style="float:left">Naklad:</div>
-                    <div class="white" style="float:left" >{{sl.naklad}}</div>
-
-
+                    <div class="white" style="float:left" >{{sl.data.naklad}}</div>
                 </v-card-text></v-card>
               </div>
+              </draggable>
               <div style="width:1%">.</div>
 
 
@@ -120,6 +124,8 @@
               //-->
 
           </div>
+        </draggable>
+
 
         </span>
      </prehled>
@@ -354,15 +360,26 @@ export default {
  },
  methods: {
    getVal(obj,klic) {
+     var cRet =""
 
      if (obj){
        if (obj[klic]){
               return obj[klic]
        }
      }
-     return ""
+     return "neni "+ klic
 
    },
+   chooseSloupce: function (event, bEvent) {
+//      console.log('Choos item: ', event.draggedRect, 'B', bEvent)
+/*
+      this.list.data.strojmod.forEach((el,i) =>{
+            this.list.data.strojmod[i].kod = i+1
+      })
+      this.IsZmena = true
+*/
+       alert(Object.keys(bEvent))
+    },
     async strojmod(type) {
      const self = this
      var atmp=[]

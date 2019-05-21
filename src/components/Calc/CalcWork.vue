@@ -1,6 +1,8 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
- <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pt-0 " id="test_1"  @scroll="TestRend">
+ <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pt-0 " id="test_1"  @scroll="TestRend" >
+   <slot name="sloupce">
+   </slot>
 
 <table width="120%" border="0px" >
   <tr><td v-for="n in 95" :key="n" style="font-size:1px">&nbsp;</td></tr>
@@ -12,12 +14,16 @@
    </td>
   <!-- <td colspan="1">A</td> -->
    <td colspan="10" class="sloupec">
+      <slot  name="sloupec1b"></slot>
       <slot  name="sloupec1"></slot>
+      
     </td>
     <td colspan="10" class="sloupec">
+      <slot name="sloupec2b"></slot>
         <slot name="sloupec2"></slot>
     </td>
     <td colspan="10" class="sloupec">
+      <slot name="sloupec3b"></slot>
         <slot name="sloupec3"></slot>
     </td>
     <td colspan="10" class="sloupec">
