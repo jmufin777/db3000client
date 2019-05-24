@@ -126,8 +126,13 @@ export default {
     return this.getStrojItems('%balen%');
    },
    getStroj1(colType="") {
-     if (colType=="Rezani")
-    return this.getStrojOnly('%ez_n%',"1");
+     if (colType=="Rezani"){
+      return this.getStrojOnly('%ez_n%',"1");
+     }
+     if (colType=="Kasir"){
+      return this.getStrojOnly('%ez_n%',"1");
+     }
+
    },
    getStroj(colType="") {
     if (colType=='Kasir') {

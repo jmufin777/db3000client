@@ -1,6 +1,6 @@
 <template>
   <!-- <tr style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-     <div style="font-size:100%; min-height:20px;border:1px solid black" class="pt-0 pl-0 ml-1 pb-1 "
+     <div style="font-size:100%; min-height:20px;border:1px solid black" class="pt-1 pl-0 ml-1 pb-0 "
      :class="{'brown lighten-3': getType()=='Mat1','green lighten-1': getType()=='Laminace','orange lighten-1': getType()=='Kasir','yellow lighten-2': getType()=='Rezani','   lighten-2': getType()=='Rezani'
      , 'pink lighten-5': getType()=='Baleni', 'red lighten-2': getType()=='Jine'}"
      @click="setKalk(kalkulaceid);"
@@ -562,6 +562,14 @@ computed: {
           self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
           //alert('rezba'+JSON.stringify(self.Col.dataStroj1))
         }
+        if (self.getType()=="Kasir"){
+          self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
+          //alert('rezba'+JSON.stringify(self.Col.dataStroj1))
+        }
+        if (self.getType()=="Laminace"){
+          self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
+          //alert('rezba'+JSON.stringify(self.Col.dataStroj1))
+        }
 
 
       }
@@ -636,8 +644,6 @@ computed: {
           key: 555
         }
         )
-
-
         },500)
 
         //self.isDeleted=true

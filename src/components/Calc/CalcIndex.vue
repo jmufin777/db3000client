@@ -24,7 +24,8 @@
         <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'"  >
             <!-- {{iKalk.sloupecid}} -->
             <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend" style="z-index:889977">
-                <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i></button>
+                <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i>
+                </button>
             </work-col>
         </div>
       <div slot="mezera" class="red">&nbsp;</div>
@@ -51,9 +52,13 @@
      :drag-handle="'.drag00'"
      :handles="[]"
       v-if="zobrazitPanel">
-      <div class="drag00" style="cursor:pointer">{{StatusMapy}}</div>
-      <div class=" pa-1">
-        <v-card><v-card-text class="blue pa-1">
+      <div class="drag00" style="cursor:pointer;height:20px">
+      <div style="width:10%;float:left" ><button class="mybutton pr-3 stred pl-3" @click="TestRend=TestRend+1">{{TestRend}}</button></div>
+      <div style="width:70%;float:left" >{{StatusMapy}}</div>
+      <div style="width:19%;float:right;text-align:right" ><button class="mybutton pr-3 stred pl-3" @click="zobrazitPanel=!zobrazitPanel">x</button></div>
+      </div>
+      <div class=" pa-0 pt-1">
+        <v-card><v-card-text class="grey pa-0">
         <draggable v-model="aKalkulace"  :options="{group: 'people2' }"  @start="drag=true" @end="drag=false" :move="chooseRadky" style="min-width:500px;">
           <div v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;float:none" class="grey lighten-2 pl-1 pt-1" @click.native="setKalk2(i)" >
               <div style="float:left;border:4px solid #eeeeee"
@@ -91,7 +96,8 @@
                 </div>
 
               </draggable>
-            <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  :key="iK.kalkulaceid" >
+
+            <!-- <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  :key="iK.kalkulaceid" >
             Typ sloupce {{ iK.kalkulaceid }}
               <el-dropdown-menu slot="dropdown" class="grey lighten-5" >
               <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
@@ -102,11 +108,10 @@
               <el-dropdown-item  :command="'Jine'">Jine</el-dropdown-item>
               <el-dropdown-item  :command="'Externi'">Externi</el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
-              <div style="width:10%;font-size:1px" >AA&nbsp;</div>
-
+            </el-dropdown> -->
+              <div style="width:10%;font-size:1px" >&nbsp;</div>
           </div>
-        </draggable>
+         </draggable>
         </v-card-text></v-card>
 
       </div>
@@ -501,7 +506,7 @@ export default {
     },
     copyCol(iK,iS) {
       const self = this
-      alert(iK+" : "+ iS)
+      //alert(iK+" : "+ iS)
       self.$store.dispatch('copyCol',{
           kalkulaceid: iK,
           sloupecid: iS,
@@ -805,13 +810,15 @@ export default {
 
   //  return
      //--self.setKalk(idK)
-
      //self.$store.dispatch('addColMat', {kalkulaceid: self.KalkulaceThis, type: 'Mat'})
-      self.$store.dispatch('addColMat',  {kalkulaceid: idK, type: 'Mat1'})
-      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Laminace', id:92})
-      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Kasir', id:93})
-      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Rezani', id:94})
-      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Baleni', id:95})
+      //self.$store.dispatch('addColMat',  {kalkulaceid: idK, type: 'Mat1'})
+      if (self.aKalkulace[idK].sloupecid.length>0) return
+
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Mat1', id:(Math.ceil(Math.random()*91000879))})
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Laminace', id:(Math.ceil(Math.random()*92000879))})
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Kasir', id:(Math.ceil(Math.random()*93000879))})
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Rezani', id:(Math.ceil(Math.random()*94000879))})
+      self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Baleni', id:(Math.ceil(Math.random()*95000879))})
      //self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Jine-Externi', id:96})
 
         /////self.addKalkCol("Mat");

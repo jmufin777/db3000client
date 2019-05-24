@@ -633,9 +633,11 @@ MenuStroj() {
       //self.Kalk.data.txtFormat =
       //self.$store.dispatch('replaceKalk',self.Kalk)
       //alert(self.Kalk.data.txtFormat)
-      alert("sypu 1")
+
 
       }
+
+      alert("sypu 1")
 
 
 
@@ -643,7 +645,7 @@ MenuStroj() {
       // var thisItem = self.$store.state.Kalkulace[this.k_id()].data.Menu1Value
       var thisItem = a
       //alert(thisItem);
-      self.$store.state.Kalkulace[self.k_id()].data.Format.forEach((el, idx) =>{
+      self.$store.state.Kalkulace[self.k_id()].data.Format.forEach((el, idx) => {
        if (idx == 0) {
 
          //self.form.sirka = el.sirka

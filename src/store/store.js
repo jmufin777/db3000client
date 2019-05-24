@@ -198,13 +198,13 @@ export default new Vuex.Store({
         console.log('Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
         if (state.Kalkulace[idK].sloupecid[0].type==type){
           console.log('Shoda:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
-          state.Kalkulace[idK].sloupecid[0] = {id: 91, type: type,  data: {}}
+          state.Kalkulace[idK].sloupecid[0] = {id: (Math.ceil(Math.random()*91000)) , type: type,  data: {}}
         } else {
-          state.Kalkulace[idK].sloupecid.splice(0,0,{id: 91, type: type ,  data: {}})
+          state.Kalkulace[idK].sloupecid.splice(0,0,{id: (Math.ceil(Math.random()*91000)) , type: type ,  data: {}})
         }
         //state.Kalkulace[idK].sloupecid[0] = {id: newId, type: kalkulacecoltype.type,  data: {}}
       } else {
-        state.Kalkulace[idK].sloupecid.push({id: 91, type: type ,  data: {}})
+        state.Kalkulace[idK].sloupecid.push({id: (Math.ceil(Math.random()*91000)) , type: type ,  data: {}})
         console.log('NE Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid))
         //state.Kalkulace[idK].sloupecid.push({id: 1, type: kalkulacecoltype.type,  data: {}})
       }
@@ -260,6 +260,7 @@ export default new Vuex.Store({
         var idx = dataAll.kalkulaceid
         var neco = JSON.parse(JSON.stringify(state.Kalkulace[idx]))
         var newId=-1
+        var newIdC=0
         state.Kalkulace.forEach((el, idx) => {
           if (el.kalkulaceid > newId) {
             newId = el.kalkulaceid
@@ -267,8 +268,16 @@ export default new Vuex.Store({
         })
         newId++
         neco.kalkulaceid = newId
+        if (neco.sloupecid.length>0){
+            newIdC=Math.ceil(Math.random()*5587515)
+            neco.sloupecid.forEach(el=>{
+            el.id = newIdC++
+        //    console.log("copyKalk ", neco)
+          })
+
+        }
         state.Kalkulace.push(neco)
-        console.log("copyKalk ", neco)
+
         //state.Kalkulace.push = dataAll
     },
     copyCol (state, dataAll) {
