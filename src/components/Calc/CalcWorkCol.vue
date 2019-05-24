@@ -284,12 +284,11 @@
           </v-card>
           </div>
 
-
         <v-card class="pa-0" style="max-height:500px">
           <v-card-text style="text-align:left" class="pa-0">
             <textarea
               type="textarea" v-model="form.poznamka"
-              style="width:100%; height:18px;max-height:160px;border:none;font-size:11px"
+              style="width:100%; min-height:18px;max-height:160px;border:none;font-size:11px"
               :style="'height:'+(20*f1.entrcount(form.poznamka))+'px'"
               class="nb elevation-0 pb-0 grey lighten-3"
               placeholder="poznamka"
@@ -998,6 +997,7 @@ computed: {
    saveVuexData(aa) {
      const self = this
 
+    self.form.poznamka = self.form.poznamka.trim()
 
 
      self.$store.dispatch('replaceKalkCol',{kalkulaceid: self.k_id(), idxCol: self.getIndex(),
