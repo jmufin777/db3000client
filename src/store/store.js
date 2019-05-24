@@ -152,7 +152,7 @@ export default new Vuex.Store({
     addKalkCol (state, kalkulacecoltype) {
       console.log('A :', JSON.stringify(kalkulacecoltype.kalkulaceid))
       var newId = -1
-      var idK = -1
+      var idK  = -1
       state.Kalkulace.forEach((el, idxk) => {
         if (el.kalkulaceid === kalkulacecoltype.kalkulaceid) {
           idK = idxk
@@ -178,6 +178,10 @@ export default new Vuex.Store({
       console.log('SAVE ' ,kalkulace.id)
       state.Kalkulace[kalkulace.id]= kalkulace.data
     },
+    saveKalkCela(state,kalkulace){
+      console.log('SAVE ' ,kalkulace.id)
+      state.Kalkulace= kalkulace.data
+    },
     saveCols(state,kalkulace){
       console.log('SAVE ' ,kalkulace.id)
        state.Kalkulace[kalkulace.id].sloupecid= []
@@ -187,11 +191,9 @@ export default new Vuex.Store({
         var idK = kalkulacecoltype.kalkulaceid
         var type= kalkulacecoltype.type
         // console.log('A 2aaaa2: IDK :',idK, " type ", JSON.stringify(kalkulacecoltype), "This ", state.KalkulaceThis )
-
-      // return
-
-//      var newId = -1
-  //    var idK = -1
+        // return
+        // var newId = -1
+        // var idK = -1
       if (state.Kalkulace[idK].sloupecid.length>0){
         console.log('Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
         if (state.Kalkulace[idK].sloupecid[0].type==type){
@@ -213,11 +215,6 @@ export default new Vuex.Store({
       var type= kalkulacecoltype.type
       var colid= kalkulacecoltype.id
       console.log('A 2aaaa2:', JSON.stringify(kalkulacecoltype))
-
-    // return
-
-//      var newId = -1
-//    var idK = -1
       var nfound=-1;
     if (state.Kalkulace[idK].sloupecid.length>0){
       state.Kalkulace[idK].sloupecid.forEach((el,idx) => {
@@ -225,7 +222,6 @@ export default new Vuex.Store({
           nfound=idx
           return
         }
-
       })
       if (nfound == -1){
         state.Kalkulace[idK].sloupecid.push({id: colid, type: type ,  data: {}})
@@ -242,13 +238,48 @@ export default new Vuex.Store({
         return el.kalkulaceid !== kalkulaceid
       })
     },
+    removeKalkAccId (state, kalkulaceid) {
+      console.log('RemoveAccID ', kalkulaceid.kalkulaceid)
+      state.Kalkulace.splice(kalkulaceid.kalkulaceid,1)
+    },
+
     setKalk (state, kalkulaceid) {
       console.log('Set ', kalkulaceid)
       state.KalkulaceThis = kalkulaceid
     },
+    setKalk2 (state, kalkulaceid) {
+      console.log('Set acc ID ', kalkulaceid)
+      state.KalkulaceThis = state.Kalkulace[kalkulaceid].kalkulaceid
+    },
     replaceKalk (state, dataAll) {
       var idx = this.getters.getId(dataAll.kalkulaceid)
         state.Kalkulace[idx] = dataAll
+    },
+    copyKalk (state, dataAll) {
+        //var idx = this.getters.getId(dataAll.kalkulaceid)
+        var idx = dataAll.kalkulaceid
+        var neco = JSON.parse(JSON.stringify(state.Kalkulace[idx]))
+        var newId=-1
+        state.Kalkulace.forEach((el, idx) => {
+          if (el.kalkulaceid > newId) {
+            newId = el.kalkulaceid
+          }
+        })
+        newId++
+        neco.kalkulaceid = newId
+        state.Kalkulace.push(neco)
+        console.log("copyKalk ", neco)
+        //state.Kalkulace.push = dataAll
+    },
+    copyCol (state, dataAll) {
+      //var idx = this.getters.getId(dataAll.kalkulaceid)
+      var idx = dataAll.kalkulaceid
+      var idc = dataAll.sloupecid
+      var neco = JSON.parse(JSON.stringify(state.Kalkulace[idx].sloupecid[idc]))
+      neco.id=Math.ceil(Math.random()*558755)
+      console.log("COPY: " , neco)
+      state.Kalkulace[idx].sloupecid.push(neco)
+      //state.Kalkulace[idx].sloupecid.push('ahoj')
     },
     replaceKalkCol (state, dataAll) {
       //var idx = this.getters.getId(dataAll.kalkulaceid)
@@ -470,9 +501,21 @@ export default new Vuex.Store({
       // console.log('Actions- setWin -Dispatch', newWin)
       commit('addKalk', kalkulaceid)
     },
+    copyKalk ({commit}, kalkulaceid) {
+      // console.log('Actions- setWin -Dispatch', newWin)
+      commit('copyKalk', kalkulaceid)
+    },
+    copyCol ({commit}, kalkulaceid) {
+      // console.log('Actions- setWin -Dispatch', newWin)
+      commit('copyCol', kalkulaceid)
+    },
     setKalk ({commit}, kalkulaceid) {
       // console.log('Actions- setWin -Dispatch', newWin)
       commit('setKalk', kalkulaceid)
+    },
+    setKalk2 ({commit}, kalkulaceid) {
+      // console.log('Actions- setWin -Dispatch', newWin)
+      commit('setKalk2', kalkulaceid)
     },
     replaceKalk ({commit}, dataAll) {
       // console.log('Actions- setWin -Dispatch', newWin)
@@ -537,6 +580,16 @@ export default new Vuex.Store({
       console.log('REMOVE ID', pole)
       commit('removeKalkColID', pole)
     }
+    ,saveKalkCela ({commit}, pole) {
+      console.log('saveKalkCela', pole)
+      commit('saveKalkCela', pole)
+    },
+    removeKalkAccId ({commit}, pole) {
+      console.log('Actions- setWin -Dispatch', pole)
+      commit('removeKalkAccId', pole)
+    }
+
+
   },
   getters: {
     infoTxt: state => {
@@ -554,12 +607,17 @@ export default new Vuex.Store({
     //getId - index kalkulace pro dane id Kalulace
     getId: state => (id) => {
       var idx = 0
-      state.Kalkulace.forEach((el, idxk) => {
-        if (el.kalkulaceid === id) {
-          idx = idxk
-          return idx
-        }
-      })
+      try {
+        state.Kalkulace.forEach((el, idxk) => {
+          if (el.kalkulaceid === id) {
+            idx = idxk
+            return idx
+          }
+        })
+      } catch(e){
+        console.log('chybka id')
+      }
+
       return idx
     },
 

@@ -23,10 +23,10 @@
 
   <div v-if="!MenuShow || true" style="width:100%;text-align:left" ref="menu1main" :id="'menu1main'+ID">
 
-     <table style="width:100%" cols=2>
+     <table style="width:100%" cols=2 >
        <tr v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix">
        <td style="width:80%">
-         <v-card><v-card-text>
+         <v-card :class="{'grey lighten-2': $store.state.KalkulaceThis== kalkulaceid }"><v-card-text>
          <span @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )" style="width:80%;border:20px;cursor:pointer" class="neco">
 
 
@@ -601,9 +601,12 @@ MenuStroj() {
       if(nTmp > -1) {
             self.idefixVidet=self.$store.state.Kalkulace[self.k_id()].data.Menu2[nTmp].idefix
             self.Kalk.data.txtStroj = self.Kalk.data.Menu2[nTmp].stroj + ' '+ self.Kalk.data.Menu2[nTmp].nazev
+
+
             // {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
          }
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtStroj' , value: self.Kalk.data.txtStroj })
       //self.Kalk.data.txtStroj="NAZDARBAZAR"
       self.$store.dispatch('setKalk',self.Kalk)
       //alert('memik ' + self.idefixVidet + '  ) ')

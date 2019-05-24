@@ -9,18 +9,19 @@
       <menu-hlavni>
       </menu-hlavni>
     </div>
+
     <menu-left slot="menuleft"></menu-left>
       <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" >
      <!-- <work slot="kalkulace" v-for="na in (2 ,20) " :key="na"> -->
         <span slot="leva" >
         <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
-              <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalk(iKalk.kalkulaceid)"
-              >
+              <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalk(iKalk.kalkulaceid)" >
                 <a :name="iKalk.kalkulaceid"></a>
                 <i class="el-icon-delete" size="mini"></i></button>
         </work-left>
         </span>
 <!-- <draggable  v-model="iKalk.sloupecid"  :options="{group:{ name:'sloupce' }}"  @start="drag=true" @end="drag=false" :move="chooseItem"  >   -->
+
         <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'"  >
             <!-- {{iKalk.sloupecid}} -->
             <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend" style="z-index:889977">
@@ -28,10 +29,13 @@
             </work-col>
         </div>
       <div slot="mezera" class="red">&nbsp;</div>
+
      </work>
-     <div style="right:1%;z-index:99999;opacity:0.7" class="grey lighten-5" slot="Plovouci2" > <!--2 = prepinac -->
-       <v-btn @click="panel(2,$event)" small class="yellow">MAPA</v-btn><br><br>
-             <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  :key="$store.state.KalkulaceThis" >
+
+     <div style="position:fixed;top:10%;right:1%;z-index:99999" class="grey lighten-5" slot="Plovouci2" > <!--2 = prepinac -->
+       <v-btn @click="panel(2,$event)" class="yellow">MAPA</v-btn><br>
+       <v-btn @click="panelPrehled(2,$event)" class="yellow">Prehled</v-btn><br><br><br>
+       <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  :key="$store.state.KalkulaceThis" >
             Typ sloupce {{ $store.state.KalkulaceThis }}
             <el-dropdown-menu slot="dropdown" class="grey lighten-5" >
               <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
@@ -44,6 +48,7 @@
             </el-dropdown-menu>
           </el-dropdown>
      </div>
+
   <transition name="fade" slot="PlovouciObsah">
      <vue-draggable-resizable  class="grey lighten-2 pa-0 elevation-10" style="opacity:1;max-width:2000px"
      :h="20" :w="1000" :x="-1000"
@@ -52,115 +57,72 @@
      :handles="[]"
       v-if="zobrazitPanel">
       <div class="drag00" style="cursor:pointer">{{StatusMapy}}</div>
-      <div class=" pa-1">
+      <!-- <div class=" pa-1"> -->
         <v-card><v-card-text class="blue pa-1">
-        <draggable v-model="aKalkulace"  :options="{group: 'people2' }"  @start="drag=true" @end="drag=false" :move="chooseRadky" style="min-width:500px;">
-          <div v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;float:none" class="grey lighten-2 pl-1 pt-1" @click.native="setKalk2(i)" >
-              <div style="float:left;border:4px solid #eeeeee"
+        <draggable v-model="aKalkulace"  :options="{group: 'people2' }" @start="drag=true" @end="chooseRadky" :move="chooseRadky" style="min-width:500px;">
+           <div style="width:100px;font-size:2px">&nbsp;</div>
+          <div v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;" class="grey lighten-2 pl-1">
+             <!-- <div style="width:50px;float:left;border-top:1px solid silver;border-bottom:1px solid silver;border-left:none;border-right:none" class="grey lighten-5 pl-2 pt-0 pr-0">
+               <v-card><v-card-text style="width:3em;font-size:12px;min-height:29px;cursor:pointer" class="pb-0 pt-0 grey lighten-1">{{iK.kalkulaceid}}</v-card-text>
+               </v-card>
+             </div> -->
 
-              >
+              <div style="float:left;border:1px solid silver">
                  <!-- <v-card><v-card-text style="width:10em;font-size:12px;min-height:29px;cursor:pointer" class="pb-1 pt-1 grey lighten-3" -->
-                <v-card @mouseover="setKalk2(i)"><v-card-text style="width:15em;font-size:12px;min-height:29px;cursor:pointer;text-align:left" class="pb-0 pt-0 grey lighten-3"
-                :class="{'green lighten-1': $store.state.KalkulaceThis*1 == iK.kalkulaceid*1 }"
+                <v-card><v-card-text style="width:15em;font-size:12px;min-height:29px;cursor:pointer;text-align:left" class="pb-0 pt-0 grey lighten-1"
                  >
-                 <a :href="'#'+iK.kalkulaceid" @click="setKalk(iK.kalkulaceid)" :ref="'ref_'+iK.kalkulaceid" :id="'ref_'+iK.kalkulaceid + ID">
-
-                 <span class="pr-2">{{iK.kalkulaceid}}</span>
-                 </a>
-
-                 <span class="pl-0 "
-
-                 >{{Kalkulace[i].data.txtStroj}}</span></span>
-                  <span style="position:absolute;top:0px;right:1px" ><button type="button" class="elevation-1 mybutton"   @click="removeKalkAccId(i)">x</button></span>
-                  <span style="position:absolute;bottom:0px;left:1px" class="elevation-1 mybutton" ><button type="button" @click="copyKalk(i)" >+</button></span>
+                 <span class="pr-2">{{iK.kalkulaceid}}</span><span>{{Kalkulace[i].data.txtStroj}}</span>
                  </v-card-text></v-card>
               </div>
-              <!-- <draggable v-model="iK.sloupecid"  :options="{group: 'people11' }"  @start="drag=true" @end="drag=false" :move="chooseSloupce" > -->
-                <draggable v-model="iK.sloupecid"  :options="{group: 'people11' }"  @start="drag=true" @end="drag=false" :move="chooseSloupce" >
-                <div v-for="(sl, iSloupcex ) in iK.sloupecid" :key="iSloupcex" style="float:left;border:2px solid white;width:8em;text-align:center" >
-                  <!-- <v-card><v-card-text style="font-size:12px;height:28px" class="pb-1 pt-1" -->
-                  <v-card><v-card-text style="font-size:12px;height:28px" class="pb-1 pt-1"
-                  :class="{'brown lighten-3': sl.type=='Mat1','green lighten-1': sl.type=='Laminace','orange lighten-1': sl.type=='Kasir','yellow lighten-2': sl.type=='Rezani','   lighten-2': sl.type=='Rezani'
-                    , 'pink lighten-5': sl.type=='Baleni', 'red lighten-2': sl.type=='Jine'}"
-                  ><span>{{sl.type}}</span>
-                  <span style="position:absolute;top:0px;right:1px" ><button type="button" class="elevation-1 mybutton" @click="deleteCol(i, iSloupcex)">x</button></span>
-                  <span style="position:absolute;bottom:0px;left:1px" class="elevation-1 mybutton" @click="copyCol(i, iSloupcex)">
-                    <button type="button" >+</button></span>
-                  </v-card-text>
-                  </v-card>
-                </div>
-
+              <draggable v-model="iK.sloupecid"  :options="{group: 'people1' }" @start="drag=true" @end="chooseSloupce" >
+              <div v-for="(sl, iSloupce ) in iK.sloupecid" :key="iSloupce" style="float:left;border:2px solid white;width:8em;text-align:center" >
+                 <!-- <v-card><v-card-text style="font-size:12px;height:28px" class="pb-1 pt-1" -->
+                 <v-card><v-card-text style="font-size:12px;height:28px" class="pb-1 pt-1"
+                 :class="{'brown lighten-3': sl.type=='Mat1','green lighten-1': sl.type=='Laminace','orange lighten-1': sl.type=='Kasir','yellow lighten-2': sl.type=='Rezani','   lighten-2': sl.type=='Rezani'
+                  , 'pink lighten-5': sl.type=='Baleni', 'red lighten-2': sl.type=='Jine'}"
+                 >{{sl.type}}</v-card-text>
+                </v-card>
+              </div>
               </draggable>
-            <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  :key="iK.kalkulaceid" >
-            Typ sloupce {{ iK.kalkulaceid }}
-              <el-dropdown-menu slot="dropdown" class="grey lighten-5" >
-              <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
-              <el-dropdown-item  :command="'Laminace'">Laminace</el-dropdown-item>
-              <el-dropdown-item  :command="'Kasir'">Kasir</el-dropdown-item>
-              <el-dropdown-item  :command="'Rezani'">Rezani</el-dropdown-item>
-              <el-dropdown-item  :command="'Baleni'">Baleni</el-dropdown-item>
-              <el-dropdown-item  :command="'Jine'">Jine</el-dropdown-item>
-              <el-dropdown-item  :command="'Externi'">Externi</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-              <div style="width:10%;font-size:1px" >AA&nbsp;</div>
+
+              <div style="width:100px;font-size:5px">&nbsp;</div>
 
           </div>
         </draggable>
         </v-card-text></v-card>
-
-      </div>
+      <!-- </div> -->
 
      </vue-draggable-resizable>
  </transition>
 
+
+
+
     <!-- <div style="position:absolute;top:20%;right:5%;z-index:99999;overflow:scroll;height:500px;border:solid 2px black" class="grey lighten-5" slot="obsah" v-if="zobrazitPanel" >  -->
 
-    <div  class="green lighten-1 elevation-12 pa-4" style="width:1500px; height:500px;z-index:1111111999999" slot="PlovouciObsaaah" v-if="true || zobrazitPanel" > <!--2 = prepinac -->
-
-          <draggable v-model="aKalkulace"  :options="{group: 'people5' }" @start="drag=true" @end="chooseSloupce" style="position:relative;top:10px">
-          <div v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;position:relative;">
-
-             <div style="float:left">
-               <v-card><v-card-text>
-                  {{iK.kalkulaceid}}
-                </v-card-text></v-card>
-                <v-card><v-card-title style="font-size:12px;height:14px">{{Kalkulace[i].data.txtStroj}}SSS</v-card-title></v-card>
-              </div>
-             <div style="float:none;position:relative">Zmetek</div>
-
-            </div>
-
-        </draggable>
 
 
 
-    </div>
+
+
 
 
       <!-- <prehled slot="prehled" v-for="(itemP, iP) in aKalkulace" :key="iP"> -->
 
 
  <!-- <div style="position:fixed;top:30%;right:1%;z-index:99999" class="grey lighten-5" slot="Plovouci"> -->
-   <div style="right:1%;z-index:99999" class="grey lighten-5" slot="Plovouci111">
-         <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  :key="$store.state.KalkulaceThis" >
-            Typ sloupce {{ $store.state.KalkulaceThis }}
-            <el-dropdown-menu slot="dropdown" class="grey lighten-5" >
-              <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
-              <el-dropdown-item  :command="'Laminace'">Laminace</el-dropdown-item>
-              <el-dropdown-item  :command="'Kasir'">Kasir</el-dropdown-item>
-              <el-dropdown-item  :command="'Rezani'">Rezani</el-dropdown-item>
-              <el-dropdown-item  :command="'Baleni'">Baleni</el-dropdown-item>
-              <el-dropdown-item  :command="'Jine'">Jine</el-dropdown-item>
-              <el-dropdown-item  :command="'Externi'">Externi</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-     </div>
-
-      <span slot="prehled" >
 
 
-
+      <!-- <span slot="prehled" > -->
+     <transition name="fade" slot="PlovouciObsah2">
+     <vue-draggable-resizable  class="grey lighten-2 pa-0 elevation-10" style="opacity:1;max-width:2000px"
+     :h="20" :w="1000" :x="-1000"
+     :parent="false"
+     :drag-handle="'.drag00'"
+     :handles="[]"
+      v-show="zobrazitPrehled">
+        <div class="drag00" style="cursor:pointer">Prehled Kalkulace</div>
+        <div  v-if="zobrazitPrehled" class="yellow" style="max-height:800px;overflow:scroll">
           <!-- <v-btn-toggle v-if="showPrehled==1 && iP==0"> -->
           <v-btn-toggle >
               <v-btn flat value="vyroba">
@@ -176,7 +138,7 @@
                 Vl
               </v-btn>
             </v-btn-toggle>
-        <draggable v-model="aKalkulace"  :options="{group: 'people2' }" @start="drag=true" @end="chooseSloupce" >
+        <draggable v-model="aKalkulace"  :options="{group: 'people22' }" @start="drag=true" @end="chooseSloupce" >
           <div v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;">
              <div style="width:2%;float:left">
                <v-card><v-card-text>
@@ -190,7 +152,7 @@
                     <div class="white" style="float:left">Naklad</div><div>{{Kalkulace[i].data.FormatNakladKs}}</div>
                 </v-card-text></v-card>
               </div>
-              <draggable v-model="iK.sloupecid"  :options="{group: 'people1' }" @start="drag=true" @end="chooseSloupce" >
+              <draggable v-model="iK.sloupecid"  :options="{group: 'people11' }" @start="drag=true" @end="chooseSloupce" >
               <div v-for="(sl, iSloupce ) in iK.sloupecid" :key="iSloupce" style="float:left">
                  <v-card><v-card-title style="font-size:12px;height:14px">Typ: {{sl.type}}</v-card-title><v-card-text>
                     <div class="white" style="font-size:12px;height:14px">Mat11:{{ getVal(sl.data.mat,"nazev")}}</div>
@@ -201,21 +163,13 @@
               </div>
               </draggable>
               <div style="width:1%">.</div>
-
-
-
-              <!--
-              {{(2==2)? itemP.sloupecid: 'prdel1'}} {{ KalkulaceThis  }}
-              {{ $store.state.Kalkulace[k_id()].data.Menu2 }}
-              {{ $store.state.Kalkulace[k_id()].data.Menu1Value }}<hr>
-              {{ $store.state.Kalkulace[k_id()] }}
-              //-->
-
           </div>
         </draggable>
 
+        </div>
+        </vue-draggable-resizable>
+     </transition>
 
-        </span>
      </prehled>
      <div slot="odkazy" v-if="aKalkulace.length">
      <!-- <v-pagination
@@ -231,7 +185,7 @@
       <a :href="'#'+iKalk0.kalkulaceid" @click="setKalk(iKalk0.kalkulaceid)" :ref="'ref_'+iKalk0.kalkulaceid" :id="'ref_'+iKalk0.kalkulaceid + ID">
         &nbsp;{{iKalk0.kalkulaceid}}
         </a>
-      </div>
+             </div>
       </span>
      </draggable>
       <div :ref="'neco11'"></div>
@@ -245,7 +199,6 @@
 <script>
 import {mapState} from 'vuex'
 import {getters} from 'vuex'
-import {mutations} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import MyLayout from './CalcMyLayout.vue'
@@ -259,6 +212,7 @@ import ListStroj from '../../services/ListStrojService'
 import f from '@/services/fce'
 import query from '../../services/query'
 //10411
+
 
 import Prehled from './CalcPrehled.vue' // Prehledova dole
 
@@ -278,16 +232,15 @@ export default {
 
    return {
      zobrazit:true,
-     zobrazitPanel:true,
+     zobrazitPanel:false,
      zobrazitPrehled:false,
      StatusMapy: 'Mapa',
      Navigace: 0,
      Hlavni: 0,
      Left: 0,
      aKalkulace: [],
-     lastIdK: -1,
-     KalkulaceThis: -1,
-     KalkulaceLast: -1,
+     KalkulaceThis: - 1,
+     KalkulaceLast: - 1,
      CalcCount: 0,
      ColCount: 0,
      showPrehled: 1,
@@ -334,6 +287,7 @@ export default {
       //self.addColMat(server)
 
 
+
     })
      eventBus.$on('MenuHlavni', (server) => {
       self.Hlavni=server.key
@@ -351,12 +305,15 @@ export default {
         self.zobrazit=false
         self.TestRend++
 
+
+
       self.$store.dispatch('removeCol',{
           kalkulaceid: server.kalkulaceid,
           idxCol: server.idxCol,
         })
 
         self.aKalkulace = self.$store.state.Kalkulace
+
 
 
         setTimeout(function(){
@@ -426,11 +383,8 @@ export default {
 
     }
 */
-  const self=this
-
    this.ID = Math.round(Math.random() * 198345813)
    this.aKalkulace = this.$store.state.Kalkulace
-   set
 
    return
    if (this.aKalkulace.length > 0 && this.aKalkulace[0].kalkulaceid >-1 ) {
@@ -461,6 +415,7 @@ export default {
      return "neni "+ klic
 
    },
+
    panel(zobraz=1,e=0){
      const self=this
      switch (zobraz){
@@ -475,88 +430,34 @@ export default {
        break;
      }
 
+
    },
-  panelPrehled(zobraz=1,e=0){
-      const self=this
-      switch (zobraz){
-        case 1:
-          self.zobrazitPrehled=true
-          break;
-        case 0:
-          self.zobrazitPrehled=false;
-          break;
-        case 2:
-          self.zobrazitPrehled=!self.zobrazitPrehled;
+   panelPrehled(zobraz=1,e=0){
+     const self=this
+     switch (zobraz){
+       case 1:
+        self.zobrazitPrehled=true
         break;
-      }
-    },
-    deleteCol(iK,iS) {
-      if (!confirm('Smazat sloupec') ) return ;
-      eventBus.$emit('MenuHlavni',
-        {
-          kalkulaceid: iK,
-          idxCol: iS,
-          key: 555
-        })
-    },
-    copyCol(iK,iS) {
-      const self = this
-      alert(iK+" : "+ iS)
-      self.$store.dispatch('copyCol',{
-          kalkulaceid: iK,
-          sloupecid: iS,
-      })
-      setTimeout(function(){
-        self.TestRend++;
+       case 0:
+        self.zobrazitPrehled=false;
+        break;
+       case 2:
+        self.zobrazitPrehled=!self.zobrazitPrehled;
+       break;
+     }
 
-      },1000)
-
-      return
-
-    },
-    copyKalk(iK) {
-      const self = this
-      self.$store.dispatch('copyKalk',{
-          kalkulaceid: iK,
-      })
-      setTimeout(function(){
-        self.TestRend++;
-
-      },1000)
-
-      return
-
-    },
-    removeKalkAccId(idK) {
-      const self=this
-      if (!confirm('Smazat radek') ) return ;
-       self.$store.dispatch('removeKalkAccId',{
-          kalkulaceid: idK,
-      })
-      setTimeout(function(){
-        self.TestRend++;
-
-      },1000)
 
    },
-  async chooseSloupce (event, bEvent) {
-    //alert("sloupy")
-    const self= this
-    // self.chooseRadky(event,bEvent)
-    try{
-      self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
-      setTimeout(function(){
-      //aKalkulace
 
-      self.TestRend++
-      //alert("jarda")
-    },3000)
-    } catch(e) {
-      alert("error")
-      self.chooseSloupce(event,bEvent)
-    }
-
-     //  alert(Object.keys(bEvent))
+   chooseSloupce: function (event, bEvent) {
+//      console.log('Choos item: ', event.draggedRect, 'B', bEvent)
+/*
+      this.list.data.strojmod.forEach((el,i) =>{
+            this.list.data.strojmod[i].kod = i+1
+      })
+      this.IsZmena = true
+*/
+       // alert(Object.keys(bEvent))
     },
    chooseRadky: function (event, bEvent) {
      const self= this
@@ -565,9 +466,8 @@ export default {
     setTimeout(function(){
       //aKalkulace
       self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
-         self.TestRend++
-      },1000)
-
+     // alert("jarda")
+    },1000)
 
        //alert(Object.keys(bEvent))
     },
@@ -907,7 +807,6 @@ export default {
           this.$store.dispatch('setKalk',idK)
 
 
-
            var neco = 'ref_'+idK+this.ID
 
 
@@ -916,11 +815,6 @@ export default {
            this.defaultStyle(idK)
 
           console.log('setKalk',idK)
-   },
-   setKalk2(idK) {
-     if (self.lastIdK==idK) return
-     this.lastIdK=idK
-     this.$store.dispatch('setKalk2',idK)
    },
    getKalk() {
      return this.$store.getters('getKalk')
@@ -964,23 +858,7 @@ export default {
 </script>
 
 <style >
-button:focus {
-    outline: 0px;
-    color: red;
-}
 
-
-.mybutton:hover  {
-    outline: 1px;
-    color: red;
-    padding: 1px;
-    border: 1px solid ;
-    box-shadow:  -1px 1px #eeeeee
-         -2px 2px #eeeeee,
-         -3px 3px #eeeeee,
-         -4px 4px #eeeeee,
-         -5px 5px #eeeeee;
-}
 .v-list__tile__title {
 
   font-size:13px;

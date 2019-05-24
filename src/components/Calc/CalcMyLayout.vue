@@ -36,13 +36,33 @@
            </tr>
           <tr <tr :style="'height:'+getHeight('d1_'+ID,50)+'px'" class="pt-0">
              <td colspan="100">
-               <div  class="orange lighten-5 pt-0 px-0 mt-0" :id="'d3_'+ID" :style="'height:'+getHeight('d1_'+ID,s2)+'px'" style="overflow:auto" @click="s12(2,$event)">
+               <div  v-if="false" class="orange lighten-5 pt-0 px-0 mt-0" :id="'d3_'+ID" :style="'height:'+getHeight('d1_'+ID,s2)+'px'" style="overflow:auto" @click="s12(2,$event)">
                <slot name="prehled">Prehled</slot>
                </div>
                </td>
            </tr>
 
          </table>
+        <div style="position:fixed;top:5%;right:1%" >
+          <slot name="Plovouci">
+          <!-- Plovouci1 -->
+          </slot>
+        </div>
+        <div style="position:fixed;top:15%;right:1%" >
+          <slot name="Plovouci2">
+          Plovouci2
+          </slot>
+        </div>
+      <div style="position:fixed;top:25%;right:5%" >
+         <slot name="PlovouciObsah">
+         <!-- PlovouciObsah -->
+         </slot>
+      </div>
+      <div style="position:fixed;top:15%;right:5%" >
+         <slot name="PlovouciObsah2">
+         <!-- PlovouciObsah2 -->
+         </slot>
+      </div>
      </div>
 
   <!-- </div> -->

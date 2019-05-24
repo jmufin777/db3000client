@@ -626,8 +626,6 @@ computed: {
    },
    deleteCol(){
       const self = this
-
-      //self.ID=0
       if (confirm("Odtranit " + self.getType() +" ?")){
         self.isDeleted=true
         setTimeout(function(){
@@ -650,9 +648,8 @@ computed: {
 
       }
 
-
-
    },
+
     seznam(id,kod,e, obsah=""){
      const self  = this
      var i=0;
