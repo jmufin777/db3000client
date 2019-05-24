@@ -637,7 +637,7 @@ MenuStroj() {
 
       }
 
-      alert("sypu 1")
+      // alert("sypu 1")
 
 
 

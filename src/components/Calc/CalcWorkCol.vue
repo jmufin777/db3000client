@@ -118,8 +118,6 @@
               <td class="ma-0 pa-0">
               <a :href="'#'" :id="'seek3_'+ID+'_list_'+i2"  @keydown="seznam('seek3_'+ID+'_list_'+i2,$event)" @click="form.txtStroj1= item2['nazev_stroj']; form.showtxtStroj1=false; setColStroj1(item2)">
               <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
-
-
                 <table style="width:100%"><tr><td style="width:100%" class="ma-0 pa-0 grey lighten-4">
                 <v-card-text style="font-size:90%;text-align:left;width:100%" @click="form.txtStroj1= item2['nazev_stroj']; form.showtxtStroj1=false; setColStroj1(item1)"
                 :class="{'blue lighten-5':1==1, 'orange lighten-5':1>1}"
@@ -128,7 +126,6 @@
                  {{ item2['nazev_stroj'] }}
                  </v-card-text>
                  </td></tr></table>
-
               </v-card>
                 </a>
               </td>
@@ -141,12 +138,24 @@
     <form >
         <!-- jen rezani - je nehore, nebor stroj je prvni v nabicce je li pozadavekem//-->
 
-          <v-card style="width:100%;height:35px;float:none;border-radius:25px;border-top-right-radius:10px" class="pa-0 ma-0 grey lighten-3">
-          <v-card-text style="width:100%;z-index:900000; text-align:left " class="pa-0 pt-0 grey lighten-3" >
-          <div style="width:100%;float:none;border-radius:25px;border-top-right-radius:30px !important;border: solid 0px black !important">
-          <table class="pa-0 ma-0 grey lighten-3" style="width:100%;border:solid 0px black"> <tr class="pa-0 ma-0 grey lighten-3"><td width="80%" class="pa-0 ma-0 pt-0 pb-0 grey lighten-3" >
+          <v-card style="width:100%;height:35px;float:none;border-radius:25px;border-top-right-radius:10px"
+          class="pa-0 ma-0"
+          :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
 
-           <el-dropdown split-button size="small" trigger="click" @command="zmenaType" class="grey lighten-3 " style="width:100;height:80% !important">
+          >
+          <v-card-text style="width:100%;z-index:900000; text-align:left " class="pa-0 pt-0 "
+          :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
+           >
+          <div style="width:100%;float:none;border-radius:25px;border-top-right-radius:30px !important;border: solid 0px black !important">
+          <table class="pa-0 ma-0 "
+          :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
+          style="width:100%;border:solid 0px black"> <tr class="pa-0 ma-0 grey lighten-3"><td width="80%" class="pa-0 ma-0 pt-0 pb-0 "
+          :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
+          >
+
+           <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  style="width:100;height:80% !important"
+           :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
+           >
             {{getType()}}
             <el-dropdown-menu slot="dropdown" class="grey lighten-5" style="position:absolute;left:150px" >
               <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
@@ -158,7 +167,10 @@
               <el-dropdown-item  :command="'Externi'">Externi</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          </td><td width="20%" class="pa-0 ma-0 grey lighten-3 pr-3" style="border-top-right-radius:30px;text-align:right">
+          </td><td width="20%" class="pa-0 ma-0  pr-3" style="border-top-right-radius:30px;text-align:right"
+          :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
+
+          >
 
           <button type="button" style="width:20%;height:26px;text-align:right" class="  px-0 cell" @click="deleteCol()" ><i class="el-icon-delete" size="mini"></i></button>
           </td></tr></table>
@@ -169,32 +181,51 @@
           </v-card>
           <v-card style="width:100%;float:none" class="pa-0 ma-0" v-if="false && getType()!='Jine' && getType().match(/Rez/)">
           <v-card-text style="width:100%;z-index:900000" class="pa-1" >
-            <input type="text" v-model="form.txtStroj1" size="mini"  style="width:100%; height:15px" class="tdl tdn elevation-0" :placeholder="'Hledani Stroj1'+ getType()+ ' '+ID"
+               <el-input
+                v-model="form.txtStroj1" size="mini"  class="tdl tdn nb elevation-0"
+
+                style="width:100%; height:15px"  :placeholder="'Hledani Stroj1'+ getType()+ ' '+ID"
                 @focus="fokus('stroj1')"
                 @click="fokus('stroj1')"
                 @keydown="fokus('stroj1');filtrDataStroj1();seznam('seek3_'+ID+'_list_0',0,$event)"
-                :id="'seek3_'+ID"  >
+                :id="'seek3_'+ID"
+
+               >
+              </el-input>
+            <el-input type="textarea" v-model="form.txtStroj1" size="mini"  style="width:100%; height:15px" class="tdl tdn elevation-0" :placeholder="'Hledani Stroj1'+ getType()+ ' '+ID"
+                rows="1" autosize
+                @focus="fokus('stroj1')"
+                @click="fokus('stroj1')"
+                @keydown="fokus('stroj1');filtrDataStroj1();seznam('seek3_'+ID+'_list_0',0,$event)"
+                :id="'seek3_'+ID"  ></el-input>
          </v-card-text>
          </v-card>
           <!-- jen rezani //-->
-         <v-card style="width:100%;float:none" class="pa-0" v-if="getType()!='Jine' && !getType().match(/Mat/)">
+         <v-card style="width:100%;max-height:60px;float:none" class="pa-0" v-if="getType()!='Jine' && !getType().match(/Mat/)  && !getType().match(/Laminace/)  && !getType().match(/Kasir/)">
          <v-card-text style="width:100%;" class="pa-1" >
-            <input type="text" v-model="form.txtStroj" size="mini"  style="width:100%; height:15px" class="tdl tdn elevation-0" :placeholder="'Hledani Stroj'+ getType()+ ' '+ID"
+            <textarea type="textarea" v-model="form.txtStroj"
+                size="mini"
+                style="width:100%; height:16px;max-height:60px;border:none"
+                class="nb elevation-0 pb-0"
+                :placeholder="'Hledani Stroj'+ getType()+ ' '+ID"
+                autosize rows="1"
+                :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'"
                 @focus="fokus('stroj')"
                 @click="fokus('stroj')"
                 @keydown="fokus('stroj');filtrDataStroj();seznam('seek2_'+ID+'_list_0',0,$event)"
-                :id="'seek2_'+ID"  >
+                :id="'seek2_'+ID"  ></textarea>
          </v-card-text>
          </v-card>
-         <v-card style="width:100%;float:none" class="pa-0"  v-if="getType()!='Jine' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
+         <v-card style="width:100%;float:none;max-height:60px" class="pa-0"  v-if="getType()!='Jine' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
             <v-card-text style="width:100%;" class="pa-1" >
-              <input type="text" v-model="form.txt" size="mini"
-              style="width:100%; height:15px" class="tdl tdn elevation-0"
+              <textarea-autosize type="text" v-model="form.txt" size="mini"
+              style="width:100%; height:16px;max-height:60px;border:none"
+              rows="1"
               :placeholder="'Hledani Mat'+ getType()+ ' '+ID"
-              @focus="fokus('mat');form.showtxt=true"
-              @click="fokus('mat');form.showtxt=true"
-              @keydown="fokus('mat');form.showtxt=true;seznam('seek1_'+ID+'_list_0',0,$event)"
-              :id="'seek1_'+ID"  >
+              @focus.native="fokus('mat');form.showtxt=true"
+              @click.native="fokus('mat');form.showtxt=true"
+              @keydown.native="fokus('mat');form.showtxt=true;seznam('seek1_'+ID+'_list_0',0,$event)"
+              :id="'seek1_'+ID"  ></textarea-autosize>
                 <!-- {{ getBottom2('seek2_'+ID) }} / {{ getBottom('seek1_'+ID) }} -->
                 <!-- {{ filtrDataStroj() }} -->
             </v-card-text>
@@ -202,7 +233,7 @@
          <v-card style="width:100%;float:none" class="pa-0"  v-if="getType()!='Jine' && !getType().match(/Rez/)  && !getType().match(/Baleni/)" >
           <v-card-text style="width:80%; text-align: left" class="pa-0 pl-1" >
           <select v-if="getType()!=='Mat1'" v-model="form.tisk"  @change="saveVuexData(); classJarda('sel1_'+ID)" :id="'sel1_'+ID"       @keydown="classJarda('sel1opt_'+ID+'_'+form.tisk)"
-            style="color:black;font-color:black;background:yellow;border: 1px solid green!important;" class="green lighten-2 pl-1 pr-2"
+            style="color:black;font-color:black;border: 1px solid white !important;" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
           >
             <option v-for="(a,b ) in Tisk"
                 :key="a.val"
@@ -218,8 +249,9 @@
         <div v-if="getType().match(/Baleni/)">
         <v-card style="width:100%;" class="pa-0"  v-if="getType().match(/Baleni/)" >
           <v-card-text style="width:100%;text-align:left" class="pa-0 pl-1" >
-          <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"       @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)" style="width:40%"
-           class="green lighten-2  pl-1 pr-2"
+          <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"
+          @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)"
+           style="width:40%;color:black;font-color:black;border: 1px solid white !important;" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
           >
             <option v-for="(c,d ) in Baleni"
                 :key="c.val"
@@ -250,13 +282,25 @@
               Naklad&nbsp;:&nbsp;<input type="number" v-model="form.naklad" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1"  @change="saveVuexData()">
           </v-card-text>
           </v-card>
-
           </div>
 
 
+        <v-card class="pa-0" style="max-height:500px">
+          <v-card-text style="text-align:left" class="pa-0">
+            <textarea
+              type="textarea" v-model="form.poznamka"
+              style="width:100%; height:18px;max-height:160px;border:none;font-size:11px"
+              :style="'height:'+(20*f1.entrcount(form.poznamka))+'px'"
+              class="nb elevation-0 pb-0 grey lighten-3"
+              placeholder="poznamka"
+              @change="saveVuexData()">
+            </textarea>
+          <!-- {{ entrcount(form.poznamka) }} {{ (form.poznamka.match(/\n/g) || []).length +1 }} / {{ 'height:'+(16*entrcount(form.poznamka))+'px' }} -->
+          </v-card-text>
+        </v-card>
         <v-card style="width:100%;float:none" v-if="!getType().match(/Baleni/)">
           <v-card-text style="text-align:left;width:100%;" class="pa-0">
-            Naklad&nbsp;:&nbsp;<input type="number" v-model="form.naklad" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1"  @change="saveVuexData()">
+            Naklad&nbsp;:&nbsp;<input type="number" v-model="form.naklad" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" readonly @change="saveVuexData()">
           </v-card-text>
         </v-card>
         <v-card style="width:20%;float:left;display;none" >
@@ -264,13 +308,10 @@
             <!-- <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button> -->
           </v-card-text>
         </v-card>
-        <v-card class="pa-0">
-          <v-card-text style="text-align:left" class="pa-0">
-            <input type="text" v-model="form.poznamka"   style="width:85%; height:20px" class="tdl tdn elevation-0 pa-0"  placeholder="Poznamka" @change="saveVuexData()">
-          </v-card-text>
-        </v-card>
+
 
         <slot name="obsah">
+          <!-- k: {{Kalkulace[k_id()].kalkulaceid}} / {{ k_id() }} /{{Kalkulace[k_id()].type}} -->
          <!-- Slot Menu Leve -->
        </slot>
 
@@ -291,6 +332,7 @@ import ListStroj from '../../services/ListStrojService'
 import SQL from '../../services/fcesql'
 import Q from '../../services/query'
 import f from '../../services/fce'
+// Vue.prototype.$f = f;
 import { stringify } from 'querystring';
 
 
@@ -327,6 +369,7 @@ export default {
         isDeleted: false,
         TestRend :0,
         timeout: false,
+        f1: f,
      //soubory
       MenuLeft: [
      ],
@@ -420,12 +463,7 @@ export default {
  created () {
    const self=this
    eventBus.$on('Rend', (server) => {
-    //if (self.form.showtxt || self.form.showtxtStroj || self.form.showtxtStroj1)   {
-    //      self.TestRend++;
-    //     console.log("Render col ", self.TestRend )
-
-    // }
-   if (self.form.showtxt || self.form.showtxtStroj || self.form.showtxtStroj1)   {
+  if (self.form.showtxt || self.form.showtxtStroj || self.form.showtxtStroj1)   {
      if (self.timeout){
        clearTimeout(self.timeout)
        self.timeout=false
@@ -462,7 +500,7 @@ export default {
 
   var nNic=0;
   var nNic2=0;
-
+return
 self.Interval= setInterval(function()  {
 
      if (nNic2<20){
@@ -510,6 +548,10 @@ computed: {
 },
 
  methods: {
+ entrcount(neco)   {
+   return f.entrcount(neco)
+ },
+
   nactiDb(ihned=false){
       const self = this
 
@@ -551,7 +593,7 @@ computed: {
         }
         //alert("Q#")
         var q3=SQL.getStroj1(self.getType())
-        //alert("Q#"+ q3)
+        // alert("Q#"+ q3)
         if (q3>""){
           //alert(q3)
           self.qStroj1(q3)
@@ -564,10 +606,12 @@ computed: {
         }
         if (self.getType()=="Kasir"){
           self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
+          self.form.itemSelectedStroj=self.Col.dataStroj[0]
           //alert('rezba'+JSON.stringify(self.Col.dataStroj1))
         }
         if (self.getType()=="Laminace"){
           self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
+          self.form.itemSelectedStroj=self.Col.dataStroj[0]
           //alert('rezba'+JSON.stringify(self.Col.dataStroj1))
         }
 
@@ -878,6 +922,7 @@ computed: {
 
    fokus(kdezejsem) {
      const self = this
+     self.$store.dispatch('KalkulaceColThis',self.getId()) //Jen nastavi KalkulaceThis
      console.log("Fokus ", kdezejsem ," ? ")
      //alert('a')
      self.filtrDataStroj();
@@ -1102,6 +1147,8 @@ computed: {
       } else {
         var q1=SQL.getStroj(self.getType())
           self.qStroj(q1)
+
+
           return []
       }
 
@@ -1327,7 +1374,10 @@ getId() {
 
 
    setKalk(idK) {
-            this.$store.dispatch('setKalk',idK) //Jen nastavi KalkulaceThis
+     const self=this
+       this.$store.dispatch('setKalk',idK) //Jen nastavi KalkulaceThis
+       self.$store.dispatch('KalkulaceColThis',self.getId()) //Jen nastavi KalkulaceThis
+
             //alert(idK)
             //self.$store.dispatch('replaceKalk',{dataAll: self.Kalk})
     },
@@ -1455,7 +1505,7 @@ select option div {
     background: greenyellow !important;
     background-color: #fff !important;
     border: 1px dashed #d9d9d9  !important;
-    border-radius: 6px !important;
+    border-radius: 0px !important;
     -webkit-box-sizing: border-box !important;
     box-sizing: border-box !important;
     width: 98% !important;
@@ -1465,7 +1515,7 @@ select option div {
     overflow: hidden !important;
 }
 .jarda {
-    background: greenyellow !important;
+    /* background: greenyellow !important; */
 }
 
 </style>

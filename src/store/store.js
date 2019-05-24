@@ -32,6 +32,7 @@ export default new Vuex.Store({
     seekFirma: null,
     Kalkulace: [],
     KalkulaceThis: -1,
+    KalkulaceColThis: -1,
     KalkulaceLast: -1
   },
   mutations: {
@@ -132,7 +133,7 @@ export default new Vuex.Store({
       if (state.Kalkulace.length>0) {
         var tmpId = kalkulace.kalkulaceid
         tmpIdNew = kalkulace.kalkulaceid
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i <= 3; i++) {
           state.Kalkulace.forEach(el => {
             if (el.kalkulaceid === tmpId) {
               tmpIdNew += 1
@@ -142,6 +143,8 @@ export default new Vuex.Store({
         }
       }
       kalkulace.kalkulaceid = tmpIdNew
+
+      // kalkulace.type=kalkulace //Prijde ve strukture pri zalozeni
       state.Kalkulace.push(kalkulace)
       state.KalkulaceLast = kalkulace.kalkulaceid
       // console.log("Vkladam : ", state.KalkulaceLast )
@@ -173,6 +176,10 @@ export default new Vuex.Store({
         //console.log('Add : ', state.Kalkulace[idK])
         state.Kalkulace[idK].sloupecid.push({id: newId, type: kalkulacecoltype.type,  data: {}})
       }
+    },
+    KalkulaceColThis(state,ColThis){
+
+      state.KalkulaceColThis = ColThis
     },
     saveKalk(state,kalkulace){
       console.log('SAVE ' ,kalkulace.id)
@@ -596,7 +603,12 @@ export default new Vuex.Store({
     removeKalkAccId ({commit}, pole) {
       console.log('Actions- setWin -Dispatch', pole)
       commit('removeKalkAccId', pole)
+    },
+    KalkulaceColThis ({commit}, pole) {
+      console.log('Actions- setWin -Dispatch', pole)
+      commit('KalkulaceColThis', pole)
     }
+
 
 
   },

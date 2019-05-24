@@ -727,7 +727,14 @@ vyraz(ctxt=""){
   return ctxt
 },
 
+entrcount(neco) {
+  try {
+    return (neco.match(/\n/g) || []).length +1
+  } catch (e) {
+    return 0
+  }
 
+},
 
 
 

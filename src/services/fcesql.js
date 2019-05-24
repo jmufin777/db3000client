@@ -119,7 +119,7 @@ export default {
    getRezani() {
     return this.getStrojItems('%ez_n%','1');
    },
-   getKasir() {
+   getKasir(kalkulace="") {
     return this.getStrojItems('%ka__r%');
    },
    getBaleni() {

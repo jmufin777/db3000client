@@ -85,9 +85,17 @@
                 <div v-for="(sl, iSloupcex ) in iK.sloupecid" :key="iSloupcex" style="float:left;border:2px solid white;width:8em;text-align:center" >
                   <!-- <v-card><v-card-text style="font-size:12px;height:28px" class="pb-1 pt-1" -->
                   <v-card><v-card-text style="font-size:12px;height:28px" class="pb-1 pt-1"
-                  :class="{'brown lighten-3': sl.type=='Mat1','green lighten-1': sl.type=='Laminace','orange lighten-1': sl.type=='Kasir','yellow lighten-2': sl.type=='Rezani','   lighten-2': sl.type=='Rezani'
-                    , 'pink lighten-5': sl.type=='Baleni', 'red lighten-2': sl.type=='Jine'}"
-                  ><span>{{sl.type}}</span>
+                  :class="{
+                    'blue lighten-4': $store.state.KalkulaceColThis==sl.id,
+                    'brown lighten-3': sl.type=='Mat1','green lighten-1': sl.type=='Laminace','orange lighten-1': sl.type=='Kasir','yellow lighten-2': sl.type=='Rezani','   lighten-2': sl.type=='Rezani'
+                    , 'pink lighten-5': sl.type=='Baleni', 'red lighten-2': sl.type=='Jine'
+
+                    }"
+
+                  ><span
+                  :class="{'elevation-12':$store.state.KalkulaceColThis==sl.id}"
+
+                  >{{sl.type}} </span>
                   <span style="position:absolute;top:0px;right:1px" ><button type="button" class="elevation-1 mybutton" @click="deleteCol(i, iSloupcex)">x</button></span>
                   <span style="position:absolute;bottom:0px;left:1px" class="elevation-1 mybutton" @click="copyCol(i, iSloupcex)">
                     <button type="button" >+</button></span>
@@ -435,15 +443,13 @@ export default {
 
    this.ID = Math.round(Math.random() * 198345813)
    this.aKalkulace = this.$store.state.Kalkulace
-   set
+
 
    return
    if (this.aKalkulace.length > 0 && this.aKalkulace[0].kalkulaceid >-1 ) {
      this.$store.dispatch('setKalk',this.aKalkulace[0].kalkulaceid)
      this.KalkulaceThis = this.$store.getters.getKalk
      this.KalkulaceLast = this.$store.getters.getKalkLast
-
-
 
      //alert(this.KalkulaceThis )
 
@@ -633,8 +639,6 @@ export default {
       }
     }
     return 0
-  //return
-
    },
 
    async addKalk (KalkType) {
@@ -668,64 +672,29 @@ export default {
         }
        })
 
-
        try {
-       tmpData = (await (self.strojmod(500)))   //MOdy pro V nebo A
-       oData.Format      =  tmpData
-       oData.FormatMenu1 =  []
-       oData.FormatValue =  ''
-       oData.FormatSirka =  0
-       oData.FormatVyska =  0
-       oData.FormatTisk  =  0   //Jednostranny,oboustranny, oboustranny ruzny
-       oData.FormatPanelovat =  0
-       oData.FormatSirkaPanel =  0
-       oData.FormatNakladKs =  0
+        tmpData = (await (self.strojmod(500)))   //MOdy pro V nebo A
 
 
-
-       /*
-       tmpData.forEach((el,idx) => {
-        nTmp =  _.findIndex(oData.FormatMenu1, function (o) { return o.nazev == el.nazev})
-        if (nTmp == -1 ) oData.FormatMenu1.push({'text': el.nazev })
-        if (idx == 0) oData.FormatValue =  el.idefix
-       })
-       */
-
-      //  self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
-      //  self.aKalkulace = self.$store.state.Kalkulace
-      //  self.setKalk(newId)
-       //self.KalkulaceThis = newId
-       self.KalkulaceLast = self.$store.getters.getKalkLast
-       setTimeout(function(){
-         if (self.KalkulaceLast != KalkulaceLast) {
-
-           eventBus.$emit('enable')
-           self.KalkulaceThis = self.KalkulaceLast
-           // self.defaultStyle(self.KalkulaceThis)
-           self.setKalk(self.KalkulaceThis)
+        oData.Format      =  tmpData
+        oData.FormatMenu1 =  []
+        oData.FormatValue =  ''
+        oData.FormatSirka =  0
+        oData.FormatVyska =  0
+        oData.FormatTisk  =  0   //Jednostranny,oboustranny, oboustranny ruzny
+        oData.FormatPanelovat =  0
+        oData.FormatSirkaPanel =  0
+        oData.FormatNakladKs =  0
+        self.KalkulaceLast = self.$store.getters.getKalkLast
+        setTimeout(function(){
+          if (self.KalkulaceLast != KalkulaceLast) {
+            eventBus.$emit('enable')
+            self.KalkulaceThis = self.KalkulaceLast
+            // self.defaultStyle(self.KalkulaceThis)
+            self.setKalk(self.KalkulaceThis)
             var neco = 'ref_'+self.KalkulaceThis + self.ID
-
-            if (document.getElementById(neco)) {
-              document.getElementById(neco).click()
-              setTimeout(function() {
-                return
-                self.addKalkCol('Mat')
-                self.addKalkCol('Dok')
-                self.addKalkCol('Dok1')
-                self.addKalkCol('Dok2')
-                self.addKalkCol('Dok3')
-              },20)
-
-
-          //    document.getElementById(neco).style.color='red'
-
-            }
-
-
-       }
-       },1500)
-
-
+        }
+        },150)
      } catch (e) {
        console.log(e)
      }
@@ -735,15 +704,6 @@ export default {
        oData.Mat      =  tmpData
        oData.MatMenu1 =  []
        oData.MatValue =  ''
-
-      /*
-       tmpData.forEach((el,idx) => {
-        nTmp =  _.findIndex(oData.MatMenu1, function (o) { return o.nazev == el.nazev})
-        if (nTmp == -1 ) oData.MatMenu1.push({'text': el.nazev })
-        if (idx == 0) oData.MatValue =  el.idefix_rozmer
-       })
-      */
-
 
        self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
 
@@ -820,11 +780,9 @@ export default {
       self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Rezani', id:(Math.ceil(Math.random()*94000879))})
       self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Baleni', id:(Math.ceil(Math.random()*95000879))})
      //self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Jine-Externi', id:96})
-
         /////self.addKalkCol("Mat");
      self.aKalkulace = self.$store.state.Kalkulace
      // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: 9999 })
-
      // alert("Pridma mat na prvni misto")
 
    },
@@ -833,25 +791,17 @@ export default {
      const self =this
      self.$store.dispatch('addKalkCol', {kalkulaceid: self.KalkulaceThis, type: type})
      self.aKalkulace = self.$store.state.Kalkulace
-
      return
-
         var newKalkColId = -1
-
         self.CalcCount++
    },
    removeKalkCol(kalkulaceid,sloupecid) {
-
      console.log('Mazu', JSON.stringify(sloupecid) )
      const self= this
      self.$store.dispatch('removeKalkCol', {kalkulaceid: kalkulaceid, sloupecid: sloupecid} )
      //self.KalkulaceThis = kalkulaceid
      self.setKalk(kalkulaceid)
-
-
-
    },
-
 
    dropKalk(kalkulaceid) {
      const self = this
@@ -902,7 +852,6 @@ export default {
 
             }
           })
-
        }
 
      });
@@ -912,16 +861,9 @@ export default {
 
    setKalk(idK) {
           this.$store.dispatch('setKalk',idK)
-
-
-
            var neco = 'ref_'+idK+this.ID
-
-
            //document.getElementById(neco).click()
-
            this.defaultStyle(idK)
-
           console.log('setKalk',idK)
    },
    setKalk2(idK) {

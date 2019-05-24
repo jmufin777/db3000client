@@ -59,6 +59,10 @@ Vue.component('vue-scrolling-table', VueScrollingTable)
 
 import VueBarcode from 'vue-barcode'
 
+import VueTextareaAutosize from 'vue-textarea-autosize'
+
+Vue.use(VueTextareaAutosize)
+
 
 
 Vue.component('panel', Panel)
