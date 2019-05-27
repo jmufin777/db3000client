@@ -69,7 +69,7 @@
   <div>
         <!-- <div  ref="seznam"  class="grid-content" style="height:500px"> -->
 <!-- <ta-ble3  :h="pof(Sirka,99)" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'"> -->
-<ta-ble3  :h="'660px;'+pof(Sirka,99)+';top:100px'" style="height:690px" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'">
+<ta-ble3  :h="'660px;'+pof(Sirka,99)+';top:100px'" style="height:690px" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'"  :key="TestRender">
    <table slot="head" :style="pof(Sirka*SirkaStred,100)">
         <thead  style="height:50px" >
 
@@ -113,7 +113,7 @@
   </thead>
 </table>
 
-<table slot="body" :style="pof(Sirka*SirkaStred,100)">
+<table slot="body" :style="pof(Sirka*SirkaStred,100)" >
 
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true"
 
@@ -325,6 +325,7 @@ export default {
   },
   data () {
     return {
+      TestRender:0,
       moduleName: 'list-stroj',
       saveNow: false,
       show: true,
@@ -450,6 +451,8 @@ export default {
 //       alert(self.Sirka)
     },500)
 
+
+
     // return
     var objlist = []
 /*
@@ -475,6 +478,7 @@ export default {
         //self.getData()
        setTimeout(function() {
          self.getWhere()
+         self.TestRender++
          //alert('a')
        },1000)
 

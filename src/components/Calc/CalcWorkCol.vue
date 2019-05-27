@@ -203,22 +203,42 @@
           <!-- jen rezani //-->
          <v-card style="width:100%;max-height:60px;float:none" class="pa-0" v-if="getType()!='Jine' && !getType().match(/Mat/)  && !getType().match(/Laminace/)  && !getType().match(/Kasir/)">
          <v-card-text style="width:100%;" class="pa-1" >
-            <textarea type="textarea" v-model="form.txtStroj"
+
+            <textarea-autosize type="text"
+                v-model="form.txtStroj"
                 size="mini"
                 style="width:100%; height:16px;max-height:60px;border:none"
                 class="nb elevation-0 pb-0"
-                :placeholder="'Hledani Stroj'+ getType()+ ' '+ID"
-                autosize rows="1"
+                :placeholder="'Hledani Stroj '+ getType()+ ' '+ID"
+                rows="1"
+                :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'"
+                @focus.native="fokus('stroj')"
+                @click.native="fokus('stroj')"
+                @keydown.native="fokus('stroj');filtrDataStroj();seznam('seek2_'+ID+'_list_0',0,$event)"
+
+                :id="'seek2_'+ID"
+              ></textarea-autosize>
+              <!-- <input type="text"
+                v-model="form.txtStroj"
+                size="mini"
+                style="width:100%; height:16px;max-height:60px;border:none"
+                class="nb elevation-0 pb-0"
+                :placeholder="'Hledani Stroj '+ getType()+ ' '+ID"
+                rows="1"
                 :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'"
                 @focus="fokus('stroj')"
-                @click="fokus('stroj')"
+                @click="f1.Alert('aaaa');fokus('stroj')"
                 @keydown="fokus('stroj');filtrDataStroj();seznam('seek2_'+ID+'_list_0',0,$event)"
-                :id="'seek2_'+ID"  ></textarea>
+
+                :id="'seek2_'+ID"
+              ></input> -->
          </v-card-text>
          </v-card>
          <v-card style="width:100%;float:none;max-height:60px" class="pa-0"  v-if="getType()!='Jine' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
             <v-card-text style="width:100%;" class="pa-1" >
-              <textarea-autosize type="text" v-model="form.txt" size="mini"
+              <textarea-autosize type="text"
+              v-model="form.txt"
+              size="mini"
               style="width:100%; height:16px;max-height:60px;border:none"
               rows="1"
               :placeholder="'Hledani Mat'+ getType()+ ' '+ID"
@@ -244,6 +264,7 @@
               {{ a.txt }}
             </option>
           </select>
+
           </v-card-text>
         </v-card>
         <div v-if="getType().match(/Baleni/)">
@@ -626,6 +647,10 @@ computed: {
 
 
       const self = this
+      if (cSloup == self.getType()) {
+        //self.f1.Alert("Prdlacky")
+        return
+      }
       self.isDeleted=true
       // self.ID = Math.round(Math.random() * 198345813 *Math.random() )
              self.form.txt= ''  //polozka hledaniho textu 1,  je vztazena k typu sloupce
@@ -672,6 +697,8 @@ computed: {
              setTimeout(function(){
                self.nactiDb(true)
                self.isDeleted=false
+               // self.f1.Alert(self.TestRend)
+               self.TestRend=self.TestRend+1
              },100)
      },100)
    },
@@ -922,9 +949,13 @@ computed: {
    fokus(kdezejsem) {
      const self = this
      self.$store.dispatch('KalkulaceColThis',self.getId()) //Jen nastavi KalkulaceThis
-     console.log("Fokus ", kdezejsem ," ? ")
-     //alert('a')
-     self.filtrDataStroj();
+     if (self.getType()=="Baleni"){
+       self.nactiDb(true)
+
+       //self.f1.Alert("Baleni", self.SQL.getStroj(self.getType()))
+     }
+     console.log("Fokus ", kdezejsem ," ? ", SQL.getStroj(self.getType()) )
+     //self.filtrDataStroj();
    },
    async q(qq) {
      const self = this
@@ -996,8 +1027,10 @@ computed: {
    },
    saveVuexData(aa) {
      const self = this
-
-    self.form.poznamka = self.form.poznamka.trim()
+    if (self.form.poznamka== undefined ){
+      self.form.poznamka=''
+       }
+    self.form.poznamka = (self.form.poznamka+'').trim()
 
 
      self.$store.dispatch('replaceKalkCol',{kalkulaceid: self.k_id(), idxCol: self.getIndex(),
@@ -1041,6 +1074,17 @@ computed: {
      }
 
      try  {
+       self.form.tisk             = neco.data.tisk
+       if (self.form.tisk== undefined) self.form.tisk =0
+
+       //alert( JSON.stringify(neco.data.mat.nazev))
+       //alert(neco.data.tisk)
+     } catch(e) {
+
+       //alert('nei nazev Matrose')
+     }
+
+     try  {
        self.form.txtStroj       = neco.data.stroj.nazev
        //self.form.txtStroj = "ahokj"
        //alert( JSON.stringify(neco.data.stroj) + " / " + neco.data.stroj.nazev)
@@ -1054,6 +1098,7 @@ computed: {
      } catch(e) {
        console.log('nei nazev stroje ve sloupci ' + self.getType())
      }
+
 
    },
    setCol(itemSelected){

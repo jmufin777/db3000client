@@ -46,19 +46,24 @@
           </el-dropdown>
      </div>
   <transition name="fade" slot="PlovouciObsah">
-     <vue-draggable-resizable  class="grey lighten-2 pa-0 elevation-10" style="opacity:1;max-width:2000px"
+     <vue-draggable-resizable  class="grey lighten-2 pa-0 elevation-12" style="opacity:1;max-width:2000px;max-height:550px"
      :h="20" :w="1000" :x="-1000"
      :parent="false"
      :drag-handle="'.drag00'"
      :handles="[]"
-      v-if="zobrazitPanel">
-      <div class="drag00" style="cursor:pointer;height:20px">
-      <div style="width:10%;float:left" ><button class="mybutton pr-3 stred pl-3" @click="TestRend=TestRend+1">{{TestRend}}</button></div>
+      v-if="zobrazitPanel"
+
+      >
+      <div class="drag00 blue lighten-4" style="cursor:pointer;height:20px">
+      <div style="width:10%;float:left" >
+        <button class="mybutton pr-3 stred pl-3" @click="TestRend=TestRend+1">{{TestRend}}</button></div>
       <div style="width:70%;float:left" >{{StatusMapy}}</div>
-      <div style="width:19%;float:right;text-align:right" ><button class="mybutton pr-3 stred pl-3" @click="zobrazitPanel=!zobrazitPanel">x</button></div>
+      <div style="width:19%;float:right;text-align:right" >
+        <button class="mybutton pr-3 stred pl-3" @click="zobrazitPanel=!zobrazitPanel">x</button>
+        </div>
       </div>
-      <div class=" pa-0 pt-1">
-        <v-card><v-card-text class="grey pa-0">
+      <div class="pa-0 pt-1" style="width:100%;max-height:550px;overflow-y:auto">
+        <v-card><v-card-text class="grey  pa-0">
         <draggable v-model="aKalkulace"  :options="{group: 'people2' }"  @start="drag=true" @end="drag=false" :move="chooseRadky" style="min-width:500px;">
           <div v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;float:none" class="grey lighten-2 pl-1 pt-1" @click.native="setKalk2(i)" >
               <div style="float:left;border:4px solid #eeeeee"

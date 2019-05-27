@@ -123,7 +123,7 @@ export default {
     return this.getStrojItems('%ka__r%');
    },
    getBaleni() {
-    return this.getStrojItems('%balen%');
+    return this.getStrojItems('%balen%','%%');
    },
    getStroj1(colType="") {
      if (colType=="Rezani"){

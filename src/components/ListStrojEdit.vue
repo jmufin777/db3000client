@@ -2071,19 +2071,26 @@ export default {
       //    return
         if (formName=='formstep'){
           self.step++
-          console.log("REC", self.rec)
+          console.log("REC 1 ", self.rec)
           this.list = []
           self.rec.Akce ='edit'
           self.getData(self.rec)
+          setTimeout(function(){
+            eventBus.$emit('dlg8210rec')
+          },1000)
           return
         }
 
         if (formName=='formstep0'){
           self.step = self.step
-          console.log("REC", self.rec)
+          console.log("REC 2 ", self.rec)
           this.list = []
           self.rec.Akce ='edit'
           self.getData(self.rec)
+          setTimeout(function(){
+            eventBus.$emit('dlg8210rec')
+          },1000)
+
           return
         }
 

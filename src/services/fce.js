@@ -736,6 +736,14 @@ entrcount(neco) {
 
 },
 
+Alert(ctxt1="",ctxt2="",ctxt3="") {
+  setTimeout(function(){
+
+    alert(ctxt1+"\n"+ctxt2+"\n"+ctxt3)
+  },500)
+
+}
+
 
 
 
