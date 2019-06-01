@@ -1,6 +1,6 @@
 <template>
   <!-- <tr style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-     <div style="font-size:100%; min-height:20px;border:1px solid black" class="pt-1 pl-0 ml-1 pb-0 "
+     <div style="position:relative;font-size:100%; border:1px solid black;border-right:none;min-height:18em" class="pt-1 pl-0 ml-1 pb-0 "
      :class="{'brown lighten-3': getType()=='Mat1','green lighten-1': getType()=='Laminace','orange lighten-1': getType()=='Kasir','yellow lighten-2': getType()=='Rezani','   lighten-2': getType()=='Rezani'
      , 'pink lighten-5': getType()=='Baleni', 'red lighten-2': getType()=='Jine'}"
      @click="setKalk(kalkulaceid);"
@@ -8,7 +8,7 @@
      v-if="isDeleted==false"
      :key="TestRend"
      >
-
+   <div style="position:absolute;width:100%;top:10px;height:90%;background:white" class="white"></div>
     <span v-if="true && kalkulaceid==KalkulaceThis">
 
       <win-dow v-if="false && getType()=='Rezani'"
@@ -33,13 +33,14 @@
 
       </win-dow>
 
+
 <!---Materialy - rezani nema k dispozici !!!1//-->
-     <div style="max-height:250px;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxt && (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir'  )
+     <div style="max-height:10em;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxt && (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' || getType()=='Jine'  )
             && (filtrData().length>1 || (filtrData().length==1 && filtrData()[0].nazev!=form.txt) )
         " class="elevation-12 yellow"
         :style="'top:'+ getBottom('seek1_'+ID)+'px;width:'+getWidth('seek1_'+ID,8)+'px;left:'+getLeft('seek1_'+ID,1)+'px'" >
         <!-- {{ filtrData()}} -->
-          <table  width="100%" v-if="form.showtxt &&  (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' )"  >
+          <table  width="100%" v-if="form.showtxt &&  (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir'|| getType()=='Jine' )"  >
              <tr class="mt-1 green" v-for="(item, i) in filtrData()" :key="i" >
               <td >
               <a :href="'#'" :id="'seek1_'+ID+'_list_'+i" @keydown="seznam('seek1_'+ID+'_list_'+i,1,$event)" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)">
@@ -72,15 +73,15 @@
 
         <!--LAMINACE, rezani, baleni - stroj mody!!!//-->
         <!--    // && ( filtrDataStroj().length>1|| (filtrDataStroj().length==1 && filtrDataStroj()[0].nazev!=form.txtStroj) //-->
-        <div style="min-height:5px;max-height:250px;overflow-y:scroll;position:absolute;z-index:51001"
-        v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni') && filtrDataStro.length > 0" class="elevation-12 teal"
+        <div style="min-height:5px;max-height:10em;overflow-y:scroll;position:absolute;z-index:51001"
+        v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni' || getType()=='Jine') && filtrDataStro.length > 0" class="elevation-12 teal"
           :style="'top:'+ getBottom('seek2_'+ID)+'px;width:'+getWidth('seek2_'+ID,8)+'px;left:'+getLeft('seek2_'+ID,0)+'px'">
           <span style="display:none">FF {{ filtrDataStro.length}}</span>
         <span style="display:none">
          {{ filtrDataStro}}
          <!-- {{ getBottom('seek2_'+ID) }} {{ Col.dataStroj}} -->
         </span>
-          <table  width="100%" v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni') " >
+          <table  width="100%" v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni' || getType()=='Jine' ) " >
              <tr class="mt-0 pa-0 grey lighten-4" v-for="(item1, i1) in filtrDataStro" :key="i1"  >
               <td class="pa-0 ma-0 pl-1 grey lighten-4">
               <a :href="'#'" :id="'seek2_'+ID+'_list_'+i1"  @keydown="seznam('seek2_'+ID+'_list_'+i1,1,$event)" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)">
@@ -104,7 +105,7 @@
 
       <!--Jen stroj - stroj//-->
         <!--    // && ( filtrDataStroj().length>1|| (filtrDataStroj().length==1 && filtrDataStroj()[0].nazev!=form.txtStroj) //-->
-        <div style="min-height:5px;max-height:250px;overflow-y:scroll;position:absolute;z-index:510015;border:1px solid silver"
+        <div style="min-height:5px;max-height:10em;overflow-y:scroll;position:absolute;z-index:510015;border:1px solid silver"
 
         v-if="form.showtxtStroj1 && ( getType()=='Rezani' ) && filtrDataStro1.length > 0 "  class="elevation-2 grey lighten-4 pa-0 ma-0"
         :style="'top:'+ getBottom('seek3_'+ID)+'px;width:'+getWidth('seek3_'+ID,8)+'px;left:'+getLeft('seek3_'+ID,0)+'px'">
@@ -141,7 +142,6 @@
           <v-card style="width:100%;height:35px;float:none;border-radius:25px;border-top-right-radius:10px"
           class="pa-0 ma-0"
           :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
-
           >
           <v-card-text style="width:100%;z-index:900000; text-align:left " class="pa-0 pt-0 "
           :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
@@ -201,7 +201,7 @@
          </v-card-text>
          </v-card>
           <!-- jen rezani //-->
-         <v-card style="width:100%;max-height:60px;float:none" class="pa-0" v-if="getType()!='Jine' && !getType().match(/Mat/)  && !getType().match(/Laminace/)  && !getType().match(/Kasir/)">
+         <v-card style="width:100%;max-height:60px;float:none" class="pa-0" v-if="getType()!='Externi' && !getType().match(/Mat/)  && !getType().match(/Laminace/)  && !getType().match(/Kasir/)">
          <v-card-text style="width:100%;" class="pa-1" >
 
             <textarea-autosize type="text"
@@ -234,7 +234,7 @@
               ></input> -->
          </v-card-text>
          </v-card>
-         <v-card style="width:100%;float:none;max-height:60px" class="pa-0"  v-if="getType()!='Jine' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
+         <v-card style="width:100%;float:none;max-height:60px" class="pa-0"  v-if="getType()!='Externi' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
             <v-card-text style="width:100%;" class="pa-1" >
               <textarea-autosize type="text"
               v-model="form.txt"
@@ -250,7 +250,7 @@
                 <!-- {{ filtrDataStroj() }} -->
             </v-card-text>
          </v-card>
-         <v-card style="width:100%;float:none" class="pa-0"  v-if="getType()!='Jine' && !getType().match(/Rez/)  && !getType().match(/Baleni/)" >
+         <v-card style="width:100%;float:none" class="pa-0"  v-if="getType()!='Externi' && !getType().match(/Rez/)  && !getType().match(/Baleni/)" >
           <v-card-text style="width:80%; text-align: left" class="pa-0 pl-1" >
           <select v-if="getType()!=='Mat1'" v-model="form.tisk"  @change="saveVuexData(); classJarda('sel1_'+ID)" :id="'sel1_'+ID"       @keydown="classJarda('sel1opt_'+ID+'_'+form.tisk)"
             style="color:black;font-color:black;border: 1px solid white !important;" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
@@ -264,6 +264,30 @@
               {{ a.txt }}
             </option>
           </select>
+
+          </v-card-text>
+        </v-card>
+        <v-card style="width:100%;float:none;height:7em;overflow:scroll" class="pa-0"  v-if="getType()=='Externi'" >
+          <v-card-text style="width:100%; text-align: left" class="pa-0 pl-1" >
+            <!-- {{ form.externi }} -->
+            <table style="width:100%;" class="pa-0">
+              <tr v-for="(radek,idradky) in form.externi" :key="idradky">
+                <td style="width:5%">{{idradky+1}}</td>
+                <td style="width:75%">
+                  <input type="hidden" v-model="formx" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1"  >
+                  <input type="text" v-model="form.externi[idradky].Popis" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1" 
+                  @change="formx=formx+1"
+                   >
+                </td>
+                <td style="width:20%">
+                  <input type="number" v-model="form.externi[idradky].Cena" size="mini" placeholder="Cena" style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  
+                  @change="formx=formx+1"
+                  >
+                  <!-- @change="saveVuexData()" -->
+                </td>
+              </tr>
+            </table>
+
 
           </v-card-text>
         </v-card>
@@ -298,19 +322,22 @@
           </span>
           </v-card-text>
           </v-card>
-          <v-card style="width:40%;float:left" class="pa-0"  v-if="getType().match(/Baleni/)" >
+          <v-card style="width:100%;float:left" class="pa-0 "  v-if="getType().match(/Baleni/)" >
           <v-card-text style="width:100%;text-align:left" class="pa-0 pl-0" >
-              Naklad&nbsp;:&nbsp;<input type="number" v-model="form.naklad" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1"  @change="saveVuexData()">
+              Naklad ks&nbsp;:&nbsp;
+              <input type="number" v-model="form.naklad_ks" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1" @click="readVuexData" @change="saveVuexData()">
+
           </v-card-text>
           </v-card>
           </div>
 
-        <v-card class="pa-0" style="max-height:500px">
+
+        <v-card class="pa-0" style="max-height:500px;position:absolute;bottom:2em;width:100%">
           <v-card-text style="text-align:left" class="pa-0">
             <textarea
               type="textarea" v-model="form.poznamka"
-              style="width:100%; min-height:18px;max-height:160px;border:none;font-size:11px"
-              :style="'height:'+(20*f1.entrcount(form.poznamka))+'px'"
+              style="width:100%; min-height:6em;max-height:160px;border:none;font-size:12px"
+
               class="nb elevation-0 pb-0 grey lighten-3"
               placeholder="poznamka"
               @change="saveVuexData()">
@@ -318,8 +345,9 @@
           <!-- {{ entrcount(form.poznamka) }} {{ (form.poznamka.match(/\n/g) || []).length +1 }} / {{ 'height:'+(16*entrcount(form.poznamka))+'px' }} -->
           </v-card-text>
         </v-card>
-        <v-card style="width:100%;float:none" v-if="!getType().match(/Baleni/)">
-          <v-card-text style="text-align:left;width:100%;" class="pa-0">
+
+        <v-card style="width:100%;float:none;position:absolute;bottom:0px;height:2em;vertical-align: text-bottom;" class="white" v-if="!getType().match(/Balenixx/)">
+          <v-card-text style="text-align:left;width:100%;vertical-align: text-bottom;" class="pa-0">
             Naklad&nbsp;:&nbsp;<input type="number" v-model="form.naklad" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" readonly @change="saveVuexData()">
           </v-card-text>
         </v-card>
@@ -330,12 +358,15 @@
         </v-card>
 
 
+
         <slot name="obsah">
           <!-- k: {{Kalkulace[k_id()].kalkulaceid}} / {{ k_id() }} /{{Kalkulace[k_id()].type}} -->
          <!-- Slot Menu Leve -->
        </slot>
 
+
        </form>
+
       </div>
 
   <!-- </div> -->
@@ -390,6 +421,7 @@ export default {
         TestRend :0,
         timeout: false,
         f1: f,
+        formx:0,
      //soubory
       MenuLeft: [
      ],
@@ -449,13 +481,25 @@ export default {
        naklad_mody:0,
        naklad_po:0,
        naklad_cena:0,
-
+       naklad_ks:0,
+//Baleni - polozku naklad
        poznamka:'',
-
+       externi: [{
+         Popis: '',
+         Cena: 0,
+       },
+       {
+         Popis: '',
+         Cena: 0,
+       },
+       {
+         Popis: '',
+         Cena: 0,
+       }
+        ],
        itemSelectedStroj: {},
        itemSelectedStroj1: {},
        itemSelectedMat: {},
-
        stroj: ''
      },
 
@@ -477,11 +521,14 @@ export default {
      filtrDataStro:[],
      filtrDataStro1:[], //Nazby strrojiu pro rezani
 
-
    }
  },
  created () {
    const self=this
+   var ie=0
+   for(ie=0 ;ie<17 ;ie++) {
+    self.form.externi.push( {Popis: '', Cena: 0 })
+   }
    eventBus.$on('Rend', (server) => {
   if (self.form.showtxt || self.form.showtxtStroj || self.form.showtxtStroj1)   {
      if (self.timeout){
@@ -491,9 +538,7 @@ export default {
        self.timeout=setTimeout(function() {
 
          self.TestRend++;
-        console.log("Render col ", self.TestRend )
-
-
+         console.log("Render col ", self.TestRend )
 
      }, 500)
     }
@@ -552,8 +597,21 @@ self.Interval= setInterval(function()  {
  },
 
 
+watch: {
+   formx: function() {
+     const self = this
+      //alert('ahoj')
+      self.form.naklad =0
+      var neco=0;
+      self.form.externi.forEach((el,id) =>{
+        neco+=(el.Cena*1)
+      })
+      self.form.naklad = neco
+      this.saveVuexData()
+      
+  },
 
-
+},
 computed: {
     ...mapState([
       'isUserLoggedIn',
@@ -565,7 +623,9 @@ computed: {
       'KalkulaceThis',
       'user',
     ]),
+
 },
+
 
  methods: {
  entrcount(neco)   {
@@ -602,6 +662,7 @@ computed: {
         console.log("COL 4", JSON.stringify(self.Col))
 
         var q1=SQL.getMatList(self.Kalkulace[self.k_id()].data.Menu1Value,self.Kalkulace[self.k_id()].data.FormatSirka ,self.Kalkulace[self.k_id()].data.FormatVyska )
+
         if (q1>""){
           self.q(q1)
         }
@@ -667,10 +728,16 @@ computed: {
              self.form.naklad_mody=0
              self.form.naklad_po=0
              self.form.naklad_cena=0
+             self.form.naklad_ks=0 //Naklda ks z levy strany
              self.form.poznamka=''
              self.form.itemSelectedStroj= {}
              self.form.itemSelectedStroj1= {}
              self.form.itemSelectedMat= {}
+             self.form.externi = []
+             var ie=0
+             for(ie=0 ;ie<20 ;ie++) {
+              self.form.externi.push( {Popis: '', Cena: 0 })
+             }
              //self.Kalk= []
              //self.Cols= []
              self.Col=  []
@@ -697,8 +764,10 @@ computed: {
              setTimeout(function(){
                self.nactiDb(true)
                self.isDeleted=false
-               // self.f1.Alert(self.TestRend)
+                //self.f1.Alert(self.TestRend)
+                self.ID = Math.round(Math.random() * 198345813 *Math.random() )
                self.TestRend=self.TestRend+1
+
              },100)
      },100)
    },
@@ -1025,12 +1094,14 @@ computed: {
      neco.className="jarda"
      //alert(neco)
    },
+
    saveVuexData(aa) {
      const self = this
     if (self.form.poznamka== undefined ){
       self.form.poznamka=''
        }
     self.form.poznamka = (self.form.poznamka+'').trim()
+    
 
 
      self.$store.dispatch('replaceKalkCol',{kalkulaceid: self.k_id(), idxCol: self.getIndex(),
@@ -1042,28 +1113,37 @@ computed: {
        naklad_mody: self.form.naklad_mody, //Baleni
        naklad_po: self.form.naklad_po,  //Baleni
        naklad_cena: self.form.naklad_cena, //Baleni
+       naklad_ks: self.form.naklad_ks, //pocet kusu zleva
 
        tisk: self.form.tisk,
        baleni: self.form.baleni,
-       poznamka: self.form.poznamka
+       poznamka: self.form.poznamka,
+       externi:  self.form.externi
         }} )
 
    },
    readVuexData() {
      const self = this
      var neco = self.$store.state.Kalkulace[self.k_id()].sloupecid[self.getIndex()]
-     self.form.itemSelectedStroj = neco.data.stroj
-     self.form.itemSelectedStroj1 = neco.data.stroj1
-     self.form.itemSelectedMat   = neco.data.mat
-     self.form.naklad           = neco.data.naklad
-     self.form.naklad_mody      = neco.data.naklad_mody //Baleni
-     self.form.naklad_po        = neco.data.naklad_po //Baleni
-     self.form.naklad_cena      = neco.data.naklad_cena //Baleni
-     self.form.tisk             = neco.data.tisk
-     self.form.baleni           = neco.data.baleni
-     self.form.poznamka       = neco.data.poznamka
+          self.form.itemSelectedStroj  = neco.data.stroj
+          self.form.itemSelectedStroj1 = neco.data.stroj1
+          self.form.itemSelectedMat    = neco.data.mat
+          self.form.naklad             = neco.data.naklad
+          self.form.naklad_mody        = neco.data.naklad_mody //Baleni
+          self.form.naklad_po          = neco.data.naklad_po //Baleni
+          self.form.naklad_cena        = neco.data.naklad_cena //Baleni
+          self.form.tisk               = neco.data.tisk
+          self.form.baleni             = neco.data.baleni
+          self.form.poznamka           = neco.data.poznamka
+          if (self.getType() == "Externi"){
+            if (neco.data.externi!==undefined) {
+              self.form.externi            = JSON.parse(JSON.stringify(neco.data.externi))
+            }
+
+          }
+
      if (self.getType() == "Baleni"){
-       self.form.naklad = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
+       self.form.naklad_ks = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
      }
 
      try  {
@@ -1255,10 +1335,10 @@ computed: {
       return neco
    },
 
-   getBottom(id,addPoz=10) {
+   getBottom(id,addPoz=10, idVztah="obal1_kalkulace") {
      var neco=200
      var oNeco
-     var obal= document.getElementById("obal1_kalkulace")
+     var obal= document.getElementById(idVztah)
    //   alert('A' + neco+ " X "+ id + ":"+document.getElementById(id) )
      if (oNeco = document.getElementById(id)) {
        neco = oNeco.offsetParent.offsetTop+oNeco.offsetHeight+ addPoz
@@ -1277,10 +1357,10 @@ computed: {
      return neco;
    },
 
-   getLeft(id,addPoz=10) {
+   getLeft(id,addPoz=10,idVztah="obal1_kalkulace") {
      var neco=500
      var oNeco
-     var obal= document.getElementById("obal1_kalkulace")
+     var obal= document.getElementById(idVztah)
      if (oNeco = document.getElementById(id)) {
        neco = oNeco.offsetParent.offsetLeft+addPoz
 

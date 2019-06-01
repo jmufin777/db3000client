@@ -28,6 +28,9 @@ export default {
   setTisk (user, id, anone = true) {
     return Api().post('list-stroj-settisk', { params: {  user: user,id: id, anone: anone }} )
   },
+  setMereni (user, id, anone = true) {
+    return Api().post('list-stroj-setmereni', { params: {  user: user,id: id, anone: anone }} )
+  },
 
   update (user,  form ) {
     return Api().put('list-stroj', { form: form,  user: user})

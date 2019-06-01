@@ -7,13 +7,17 @@
 <table width="120%" border="0px" >
   <tr><td v-for="n in 95" :key="n" style="font-size:1px">&nbsp;</td></tr>
     <tr>
-  <td colspan="20" rowspan="2" style="border-style: 0px " class="sloupec">
-    <slot name="leva">
+  <td colspan="20" rowspan="2" style="border-style: 0px;z-index:99999999 " class="sloupec pa-0">
+
+    <!-- <div style="position:fixed;top:25%;right:5%;z-index:999999" > -->
+    <div>
+    <slot name="leva" >
        Leva Cast
    </slot>
+    </div>
    </td>
   <!-- <td colspan="1">A</td> -->
-   <td colspan="10" class="sloupec">
+   <td colspan="10" class="sloupec pa-0" style="">
       <slot  name="sloupec1"></slot>
     </td>
     <td colspan="10" class="sloupec">
@@ -126,9 +130,11 @@ export default {
 table tr td  {
   border:none;
   border-collapse: collapse;
+  vertical-align: top;
 }
 .sloupec {
-  vertical-align: text-top;
+  vertical-align: top;
+
 }
 </style>
 

@@ -1,6 +1,6 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-       <div v-if="ukaz==true" class="white lighten-5 pt-4 px-2 mt-2" :style="'height:'+getHeight('d1_'+ID,100)+'px'" :id="'d1_'+ID" @click="s12(1,$event)" @scroll="TestRend" >
+       <div v-if="ukaz==true && ID > 0" class="white lighten-5 pt-4 px-2 mt-2" :style="'height:'+getHeight('d1_'+ID,100)+'px'" :id="'d1_'+ID" @click="s12(1,$event)" @scroll="TestRend" >
          <table cols="100" >
            <tr >
              <td v-for="n in 100" :key="n" style="font-size:1px">&nbsp;</td>
@@ -10,13 +10,15 @@
             <td colspan="10" style="text-align:center"><slot name="menuleft">Menu Leve</slot></td>
            </tr>
            <tr>
-             <td v-for="n in 100" :key="n" style="font-size:5px">&nbsp;</td>
+           <td v-for="n in 100" :key="n" style="font-size:5px">&nbsp;</td>
            </tr>
+           <tr  class="pa-0">
+             <td colspan="100" :style="'height:'+getHeight('d1_'+ID,s1)+'px'" class="pa-0" :id="'d2_'+ID" >
 
-           <tr :style="'height:'+getHeight('d1_'+ID,50)+'px'" class="pt-0">
-             <td colspan="100" :style="'height:'+getHeight('d1_'+ID,s1)+'px'" class="pt-0" :id="'d2_'+ID">
-               <div  class="green lighten-5 pt-0 px-0 mt-0 ml-2" style="overflow:scroll" id="obal1_kalkulace">
-                  <!-- aaAAAAAA{{ getBottom('d1_'+ID)}} /                 TOP{{ getTop('d1_'+ID)}} / {{getHeight('d1_'+ID,s1)}} / {{getHeight('d1_'+ID,s2)}} -->
+               <div  class="green lighten-5 pt-0 py-0 px-0 mt-0 ml-2" style="position:relative;overflow:scroll;max-height:100%" id="obal1_kalkulace">
+                  <!-- aaAAAAAA{{ getBottom('d1_'+ID)}} /                 TOP{{ getTop('d1_'+ID)}} / {{getHeight('d1_'+ID,s1)}} / {{getHeight('d1_'+ID,s2)}}
+                  {{getWHeight()}} ::: {{'d1_'+ID}} -->
+
                <slot name="kalkulace">Slot kalkulace</slot>
 
 
@@ -25,7 +27,7 @@
 
                </td>
            </tr>
-           <tr >
+           <tr v-if="false">
               <td colspan="100" style="font-size:10px;text-align:left;" class="pl-4">
                 <slot name="odkazy">
                 &nbsp;
@@ -34,7 +36,7 @@
               <!-- <td v-for="n in 100" :key="n" style="font-size:5px">&nbsp;</td> -->
 
            </tr>
-          <tr <tr :style="'height:'+getHeight('d1_'+ID,50)+'px'" class="pt-0">
+          <tr v-if=false :style="'height:'+getHeight('d1_'+ID,50)+'px'" class="pt-0">
              <td colspan="100">
                <div  v-if="false" class="orange lighten-5 pt-0 px-0 mt-0" :id="'d3_'+ID" :style="'height:'+getHeight('d1_'+ID,s2)+'px'" style="overflow:auto" @click="s12(2,$event)">
                <slot name="prehled">Prehled</slot>
@@ -53,12 +55,12 @@
           Plovouci2
           </slot>
         </div>
-      <div style="position:fixed;top:25%;right:5%" >
+      <div style="position:fixed;top:25%;right:5%;z-index:999999" >
          <slot name="PlovouciObsah">
          <!-- PlovouciObsah -->
          </slot>
       </div>
-      <div style="position:fixed;top:15%;right:5%" >
+      <div style="position:fixed;top:15%;right:5%;z-index:999999" >
          <slot name="PlovouciObsah2">
          <!-- PlovouciObsah2 -->
          </slot>
@@ -88,8 +90,8 @@ export default {
  data () {
    return {
      ID:0,
-     s1:50,
-     s2:50,
+     s1:100,
+     s2:0,
      ukaz:true
 
 
@@ -181,10 +183,10 @@ getTop(id,addPoz=10) {
      var neco=200
      var oNeco
      var obal= document.getElementById("obal1_kalkulace")
-   //   alert('A' + neco+ " X "+ id + ":"+document.getElementById(id) )
+    //  alert('A' + neco+ " X "+ id + ":"+document.getElementById(id) )
      if (oNeco = document.getElementById(id)) {
        neco = oNeco.offsetParent.offsetTop
-
+      //var r2 = oNeco.closest("#test_1");
        return Math.ceil((window.innerHeight - neco) * pomer / 100)
 
        //oNeco.parentElement.parentElement.style.display='none'
@@ -202,6 +204,17 @@ getTop(id,addPoz=10) {
 
      return neco;
    },
+   getWHeight() {
+     var neco=200
+
+   //   alert('A' + neco+ " X "+ id + ":"+document.getElementById(id) )
+
+      //var r2 = oNeco.closest("#test_1");
+       return window.innerHeight
+
+
+   },
+
 
    getLeft(id,addPoz=10) {
      var neco=500
@@ -243,6 +256,15 @@ td {
   border-collapse: collapse;
   padding: 0;
   background: white;
+}
+table tr td  {
+  border:none;
+  border-collapse: collapse;
+  vertical-align: top;
+}
+.sloupec {
+  vertical-align: top;
+
 }
 </style>
 

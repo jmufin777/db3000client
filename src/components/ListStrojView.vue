@@ -69,8 +69,8 @@
   <div>
         <!-- <div  ref="seznam"  class="grid-content" style="height:500px"> -->
 <!-- <ta-ble3  :h="pof(Sirka,99)" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'"> -->
-<ta-ble3  :h="'660px;'+pof(Sirka,99)+';top:100px'" style="height:690px" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'"  :key="TestRender">
-   <table slot="head" :style="pof(Sirka*SirkaStred,100)">
+<ta-ble3  :h="'660px;'+pof(Sirka,105)+';top:100px'" style="height:690px" :Sirka="1000" :Leva="'10%'" :Prava="'5%'" :Stred="'90%'" :TopA="'top:50px'" :TopB="'height:50px'"  :key="TestRender">
+   <table slot="head" :style="pof(Sirka*SirkaStred,102)">
         <thead  style="height:50px" >
 
 
@@ -92,11 +92,16 @@
   <i  @click="sortByKey('typ_kalkulace','asc')" class="el-icon-download"  ></i>
 
   Kalkulace</th>
-  <th :style="pof(Sirka*SirkaStred,5)">    <!--51 //-->
+  <th :style="pof(Sirka*SirkaStred,2)">    <!--51 //-->
   <i  @click="sortByKey('tisk','desc')" class="el-icon-upload2"   ></i>
   <i  @click="sortByKey('tisk','asc')" class="el-icon-download"  ></i>
 
     Tisk</th>
+  <th :style="pof(Sirka*SirkaStred,3)">    <!--51 //-->
+  <i  @click="sortByKey('mereni','desc')" class="el-icon-upload2"   ></i>
+  <i  @click="sortByKey('mereni','asc')" class="el-icon-download"  ></i>
+
+    Mereni</th>
 <th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">priprava cas minuta</th>
 <th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">Priprava celkem naklad</th>
 <th :style="pof(Sirka*SirkaStred,4)" style="font-size:80%">priprava celkem prodej</th>
@@ -113,7 +118,7 @@
   </thead>
 </table>
 
-<table slot="body" :style="pof(Sirka*SirkaStred,100)" >
+<table slot="body" :style="pof(Sirka*SirkaStred,102)" >
 
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true"
 
@@ -137,8 +142,11 @@
     <td  :style="pof(Sirka*SirkaStred,6)+';text-align:left'" class="px-2">
     {{ item1['typ_kalkulace'] }}
   </td>
-  <td :style="pof(Sirka*SirkaStred,5)" class="stred">
+  <td :style="pof(Sirka*SirkaStred,2)" class="stred">
         {{item1['tisk']?'Ano':'Ne'}}
+  </td>
+  <td :style="pof(Sirka*SirkaStred,3)" class="stred">
+        {{item1['mereni']?'Ano':'Ne'}}
   </td>
 <td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['priprava_cas_minuta']}}</td>
 <td :style="pof(Sirka*SirkaStred,4)" class="prava pr-2">{{ item1['priprava_celkem_naklad']}}</td>
@@ -200,21 +208,19 @@
 :id="'RadekL_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID"
 :ref="'RadekL_' + _max(irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID) "
 >
-  <td :style="pof(Sirka*SirkaLeva,100)"  class="bila" style="border-bottom: solid 1px #E3F2FD; ">
-  <div class='dcellx mx-1 bila'  style="width:10% ; background:white;float:left" >
+  <td :style="pof(Sirka*SirkaLeva,100)"  class="bila leva" style="border-bottom: solid 1px #E3F2FD; " >
+  <div class='dcellx mx-1 ml-0 pr-0 white'  style="width:10% ; background:white;float:left" >
   <input style="height:14px;width:14px" type="checkbox" :id="'check_'+objId1+'_'+item1['idefix']" :value="item1['idefix']" @change="chekListUpdate(irow1)">
   </div>
-  <div class='dcellx bila'  style="width:80% ; background:white;float:right"
+  <div class='dcellx  whitee'  style="width:80% ; background:white;float:right;text-align:center;pl-0"
     v-bind:class="{bila: irow1 % 2 ==0 , bila:  irow1 % 2 >0}"
   >
-     <!-- <el-tooltip  placement="left-start" effect="light">
-      <div slot="content">{{ item1['popis'] }}</div>
-       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="showPopis(irow1)" ><i class="el-icon-question" size="mini"></i></button>
-     </el-tooltip> -->
-       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
-       <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
+
+       <button type="button" style="width:20%;height:16px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
+       <button type="button" style="width:20%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
+       <button type="button" style="width:20%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
    </div>
-   <!-- <el-checkbox :id="'check2_'+objId1+'_'+item1['idefix']" :label="item1['idefix']">{{item1['idefix']}}</el-checkbox> -->
+
   </td>
 <!-- <td :style="pof(Sirka*SirkaLeva,0.3)"> -->
 
@@ -225,14 +231,14 @@
 </table>
 
 <!---Prava //-->
- <table slot="headr" :style="pof(Sirka*SirkaPrava,100)">
+ <table slot="headr" :style="pof(Sirka*SirkaPrava,10)">
         <thead  >
 
-<th :style="pof(Sirka*SirkaPrava,100)+';height:50px'" >Vymazat</th>
+<th :style="pof(Sirka*SirkaPrava,10)+';height:50px'" >&nbsp;</th>
   </thead>
 </table>
 
-<table slot="bodyr" :style="pof(Sirka*SirkaPrava,100)">
+<table slot="bodyr" :style="pof(Sirka*SirkaPrava,10)">
 
 <tr v-for="(item1, irow1) in list" :key="irow1.idefix" v-if="lastsub(irow1) || islastclick(item1['idefix_matsubskup']) || true"
 :id="'RadekR_' + irow1+''+ item1.idefix + '' + item1.idefix+ '' + '' + list.length +''+ID"
@@ -243,7 +249,8 @@
 
       <!-- item1['technologie']: item1['technologie_skup'] -->
   <td :style="pof(Sirka*SirkaPrava,100)" class="bila stred" style="border-bottom: solid 1px #E3F2FD; ">
-     <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button>
+    &nbsp;
+     <!-- <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete" size="mini"></i></button> -->
   </td>
 
 
@@ -383,6 +390,8 @@ export default {
       SubMemuItems: [
         { title:'Oznacit jako tiskove' ,akce: 'T1'},
         { title:'Zrusit jako tiskove' ,akce: 'T2'},
+        { title:'Měření' ,akce: 'M1'},
+        { title:'Měření Zrusit  ' ,akce: 'M2'},
         { title:'Vymazat oznacene' ,akce: 'del'},
 
         ],
@@ -691,6 +700,47 @@ async handleSubMenu(e) {
       try {
       await this.checkedList.forEach(idefix => {
         var prd= (ListStroj.setTisk(self.user,idefix,'N'))
+        self.getWhere()
+      });
+      this.handleUnCheckAllChange()
+      } catch (e) {
+        console.log(e)
+      }
+      setTimeout(function() {
+        self.getWhere()
+        this.IsWaiting =false
+      },1000)
+
+    }
+    //setTisk
+  }
+
+   else if (e== 'M1') {
+       if (confirm('Oznacit pro Měřeni  ?' )) {
+      this.IsWaiting =true
+      try {
+      await this.checkedList.forEach(idefix => {
+        var prd= (ListStroj.setMereni(self.user,idefix,'A'))
+
+
+      });
+      this.handleUnCheckAllChange()
+      } catch (e) {
+        console.log(e)
+      }
+      setTimeout(function() {
+        self.getWhere()
+        this.IsWaiting =false
+      },1000)
+
+    }
+    //setTisk
+  } else if (e== 'M2') {
+      if (confirm('Zrusit oznaceni pro Měrení ?' )) {
+      this.IsWaiting =true
+      try {
+      await this.checkedList.forEach(idefix => {
+        var prd= (ListStroj.setMereni(self.user,idefix,'N'))
         self.getWhere()
       });
       this.handleUnCheckAllChange()

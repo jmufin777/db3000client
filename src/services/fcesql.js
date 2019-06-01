@@ -69,6 +69,10 @@ export default {
       ,tisk
 
       from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix`
+      if (cwhere = 'Jine') {
+        cq+=` where not b.tisk `
+        cq+=` and not b.nazev_text ilike any(array['lam%','bal%','%ez_n%','%ka__r%'] ) `
+      } else
       if (technologie>''){
         cq+=` where b.nazev_text ilike '${cwhere}'`
       } else {
@@ -120,10 +124,13 @@ export default {
     return this.getStrojItems('%ez_n%','1');
    },
    getKasir(kalkulace="") {
-    return this.getStrojItems('%ka__r%');
+    return this.getStrojItems('%ka__r%','1');
    },
    getBaleni() {
-    return this.getStrojItems('%balen%','%%');
+    return this.getStrojItems('%balen%','1');
+   },
+   getJine() {
+    return this.getStrojItems('Jine','1');
    },
    getStroj1(colType="") {
      if (colType=="Rezani"){
@@ -147,6 +154,9 @@ export default {
     }
     if (colType=='Rezani') {
       return this.getRezani();
+    }
+    if (colType=='Jine') {
+      return this.getJine();
     }
     return ''
    }

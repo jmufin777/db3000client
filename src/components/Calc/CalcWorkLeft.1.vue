@@ -1,198 +1,136 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
     <!-- <v-hover> -->
-     <div style="position:relative;font-size:100%; min-height:120px;widht:100%;border: solid 1px black"
-     class="white lighten-2 pt-0 px-0 " v-if="$store.state.Kalkulace && $store.state.Kalkulace.length >0 "
-     v-on:mouseover="active=true"
-     v-bind:class="{'JsemVidet': active, 'JsemVidetMalo': !active }"
-     :class="{'blue lighten-2': $store.state.KalkulaceThis== kalkulaceid }"
+     <div style="font-size:100%; min-height:120px;widht:100%;border: solid 20px black"
+     class="white lighten-5 pt-0 px-0 " v-if="$store.state.Kalkulace && $store.state.Kalkulace.length >0 "
+     v-on:mouseover="active=true" v-bind:class="{'JsemVidet': active, 'JsemVidetMalo': !active }"
      v-on:mouseleave="active=false;MenuShowLeave()"
      @click="setKalk(kalkulaceid)"
      >
-     <v-card style="position:relative;top:0px;height:16em" class="white">
-       <v-card style="position:absolute;top:0px;height:3em;text-align:left;width:100%"
-       class="white"
-       :style="(idefixVidet>0)?'height:3em':'height:'+((aStroj.length)*2.6)+'em'"
-       >
-       <v-card v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix"
-        style="position:relative;text-align:left;z-index:10"
-        :class="{'brown lighten-2': $store.state.KalkulaceThis== kalkulaceid }"
-       >
-        <v-card-text class="pa-0 ma-0 pl-0 pr-1" style="position:relative;z-index:1;height:2.5em">
-         <v-card style="position:relative;z-index:1">
-          <v-card-text class="pa-0 ma-0 pl-1 pr-1 pb-1 pt-1" style="position:relative;z-index:1"> <!-- KARTA stroje //-->
-          <table style="width:100%;z-index:1"><tr>
-            <td style="width:90%;cursor:pointer" @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )">
-                {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
-            </td>
-            <!-- @mouseenter="idefixClick=itemStroj.idefix;MenuShow1(MenuShow, $event ); -->
-            <td style="width:10%;cursor:pointer" @click="idefixClick=itemStroj.idefix; MenuShow1(MenuShow, $event );" >
-                  <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light" style="cursor:pointer"
-                  ></i>
-            </td>
-          </tr></table>
-       </v-card-text>
-       </v-card>
-      </v-card-text>
-     </v-card>
-     </v-card>
+     <table cols="20">
+       <tr><td v-for="n in 20" :key="n" style="font-size:1px">&nbsp;</td></tr>
+       <tr>
+<td colspan="2">
+     <slot name="akce">
+      Slota akce
+   <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
+   </slot>
+</td>
 
-       <v-card v-if="idefixVidet>0" :class="{'grey lighten-2': $store.state.KalkulaceThis== kalkulaceid }" class="white pa-0" style="position:absolute;top:3em;height:15em;z-index:9;width:100%" >
-       <v-card-text class="pa-0">
-       <table style="width:100%" class="pink pa-0">
-         <tr><td style="width:40%">
-       <v-card @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;position:relative;left:0px;font-size:100%;;height:100%"><v-card-text class="pa-0" style="height:100%">
-        <input type="text" v-model="form.Format" size="mini"  style="width:100%; height:25px;" class="tdl tdn elevation-0 pl-1" :placeholder="'Format'"
-                @focus="MenuFormatShow=true"  :id="'seek'+ID" @blur="MenuFormatOpust()" @click="MenuFormatShow=true"
-                >
-               <!-- FORMATY {{ID}} {{f1.getBottom('seek'+ID)}} {{f1.getWidth('seek'+ID)}} {{f1.getLeft('seek'+ID)}} -->
-      <!-- </div> -->
-      </v-card-text></v-card>
-      </td><td style="width:60%" class="pa-0">
-      <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0">
-        <v-card-text  class="pa-0 pt-0  " style="height:100%">
-         <input type="number"    v-model="form.sirka" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="A"  @focus="$event.target.select()" @change="getFormatName()">
-         x<input type="number"   v-model="form.vyska" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="B" @focus="$event.target.select()" @change="getFormatName()">
-        </v-card-text>
-       </v-card>
-       </td></tr>
-       </table>
-       <!-- <v-card> -->
-       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0">
-         <!-- <v-card-text> -->
-         <v-card-text  class="pa-0 pt-0  " style="height:100%">
-         <table style="width:100%;"><tr>
-           <td style="width:15%">Panelovat</td>
-           <td style="width:10%"><input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)" style="text-align:right;width:100%" class="tdl tdn elevation-0 pr-0" @change="getFormatName()"></td>
-           <td style="width:10%">Po</td>
-           <td style="width:25%">
-             <input type="number"   v-model="form.sirkaPanel" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-1 pr-1"  @focus="$event.target.select()" @change="getFormatName();sirkaP()">
-           </td>
-           <td style="width:15%">
-             Naklad&nbsp;ks
-           </td>
-           <td>
-             <input type="number"   v-model="form.nakladks" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-1 pr-1" @focus="$event.target.select()" @change="ks();getFormatName()">
-           </td>
-         </tr>
-         </table>
+<td colspan="18" >
+<!-- Vychozi - Mody stroju //-->
+  <div v-if="!MenuShow || true" style="width:100%;text-align:left" ref="menu1main" :id="'menu1main'+ID">
+     <table style="width:100%" cols=2 >
+       <tr v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix">
+       <td style="width:80%">
+         <v-card :class="{'grey lighten-2': $store.state.KalkulaceThis== kalkulaceid }"><v-card-text>
+         <span @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )" style="width:80%;border:20px;cursor:pointer" class="neco">
+           <!-- {{ itemStroj.idefix }} : {{ idefixClick }} : {{ idefixVidet }} -->
+           {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
+             <!-- HUHU2 {{ idefixVidet }} {{ itemStroj.idefix_mod }} -->
+           <!-- : {{idefixVidet>0 ? itemStroj.stroj + ' ' + itemStroj.nazev : itemStroj.stroj }}
+           :: [ {{$store.state.Kalkulace[k_id()].data.Menu1Value}} ] -->
+        </span>
        </v-card-text></v-card>
+       </td>
+      <td style="width:20%">
+        <span @click="idefixClick=itemStroj.idefix; MenuShow1(MenuShow, $event )">
+                 <!-- <span @click="MenuFormatShow1(MenuFormatShow, $event )"> -->
+    <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light" style="cursor:pointer"></i>
 
-       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0 pt-1 ">
-          <v-card-text  class="pa-0 pt-0  " style="height:100%">
-           <table style="width:100%;"><tr>
-            <td style="width:40%" class="pl-0">
-              <select v-model="form.tisk" @change="getFormatName()" style="text-align:right;width:80%;height:90%;font-size:90%" class="white tdl tdn elevation-1 pr-1  pl-1 pr-2" >
-                <option v-for="(a,b ) in Tisk"
-                    :key="a.val"
-                    :label="a.txt"
-                    :value="a.val"
+    </span>
+       </td>
+     </tr>
+    </table>
+
+ <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menu1" :id="'menu1'+ID"  class="neco"
+ @mouseleave="MenuShowLeave()" @mouseover="MenuShowIn()"
+ >
+     <tr v-if="MenuShow" ><td colspan="2" border="0" style="border: solid 0px black" >
+   <ta-ble3  :h="'350px'" :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'"
+
+   >
+         <table slot="head" style="width:100%" >
+            <thead  >
+
+              <tr>
+                <th>Mod stroje </th>
+              </tr>
+            </thead>
+          </table>
+                   <table slot="body" style="width:100%">
+            <thead  >
+              <tr v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Menu2" :key="i1" v-if="m1.idefix == idefixClick">
+
+              <td class="leva pl-2" @click="setMenu1Value(m1.idefix_mod)" >
+                <button v-if="$store.state.Kalkulace[k_id()].data.Menu1Value == m1.idefix_mod" ref="menu1focus"  :id="'menu1focus'+ID" class="leva  elevation-1" style="width:90%;"
+                v-on:keyup.27="MenuShow1(MenuShow,$event)"
+
                 >
-                  {{ a.txt }}
-                </option>
-              </select>
-            </td>
-            <td style="width:10%" class="brown lighten-5">m2</td>
-            <td style="width:15%" class="brown lighten-5">{{$store.state.Kalkulace[k_id()].data.ResultM2}}</td>
-            <td style="width:15%" class="brown lighten-5">Hodiny</td>
-            <td style="width:20%" class="brown lighten-5">{{$store.state.Kalkulace[k_id()].data.ResultHod}}</td>
-           </tr>
+                 {{m1.stroj +' ' + m1.nazev }}
+                </button >
+                <button v-else  style="width:90%" class=" leva "
+                v-on:keyup.27="MenuShow1(MenuShow,$event)"
+
+                >
+                 {{m1.stroj +' ' + m1.nazev }}
+
+                </button >
+                 </td>
+              </tr>
+            </thead>
          </table>
-        </v-card-text>
-       </v-card>
+   </ta-ble3>
+   </td></tr>
+ </table>
 
-       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0 pt-1 ">
-         <v-card-text  class="pa-0 pt-0  " style="height:100%">
-           <table style="width:100%;" >
-             <tr>
-              <td style="text-align:left;widht:10%" class="pl-2" > Prilohy</td>
-              <td v-for="idx in 2" :key="idx" class="pb-1 pl-1 ">
-                <!-- <label class="custom-file-upload" style="height:25px;width:250px "> -->
-                <input type="file" />
-                <!-- </label> -->
-              </td>
-              <td>
-                <input type="file" />
-              </td>
-          </tr>
-          <tr>
-              <td style="text-align:left;widht:10%" class="pl-2" >
-                 <input type="file" />
-              </td>
-              <td v-for="idx in 2" :key="idx" class="pb-1 pl-1 ">
-                <!-- <label class="custom-file-upload" style="height:25px;width:250px "> -->
-                <input type="file" />
-                <!-- </label> -->
-              </td>
-              <td>
-                <slot name="akce">
-                  <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
-                </slot>
-              </td>
-          </tr>
-           </table>
-        </v-card-text></v-card>
-       </v-card-text>
-     </v-card>
-     </v-card>
+    <!-- {{ $store.state.Kalkulace[k_id()].data.Menu1Value}} -->
+ </div>
+
+    </td></tr>
+    <tr v-if="form.MenuRet > 0 ||  true "><td colspan="20">
+
+<!--Formaty -->
+<!-- $store.state.Kalkulace[k_id()].type==2 &&  -->
+    <div v-if="true" style="width:95%;text-align:left" ref="menuformat1main" :id="'menuformat1main'+ID" class="ml-4">
+     <table style="width:100%; position:relative;left:17px" cols=2><tr>
+       <td style="width:80%">
+         <div @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;postion:relative;left:80px;font-size:100%">
+        <!-- {{ form.Format }} -->
+        <input type="text" v-model="form.Format" size="mini"  style="width:100%; height:25px" class="tdl tdn elevation-1" :placeholder="'Format'"
+                @focus="MenuFormatShow=true"  :id="'seek'+ID">
+      <!-- A {{ getFormat() }} -->
+     </div>
+       </td>
 
 
-<!---nabidka stroj mod //-->
-<!-- :style="'left:'+clickX+'px'" -->
-<!-- :style="'top:'+ getBottom('seek'+ID)+'px;width:'+getWidth('seek'+ID,8)+'px;left:'+getLeft('seek'+ID,0)+'px'" -->
-  <v-card v-if="MenuShow && clickYN" class="white elevation-2" style="position:absolute;width:20em;left:20em;top:1em;z-index:10010;height:14em"
-   :style="'left:'+clickX+'px'"
-   @mouseleave="MenuShowLeave()" @mouseover="MenuShowIn()"
-  >
-  <v-card v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Menu2" :key="i1" v-if="m1.idefix == idefixClick" >
-    <v-card-text @click="setMenu1Value(m1.idefix_mod)" class="pa-0 pt-1">
-                <button v-if="$store.state.Kalkulace[k_id()].data.Menu1Value == m1.idefix_mod" ref="menu1focus"  :id="'menu1focus'+ID" class="leva" style="width:90%;"
-                  v-on:keyup.27="MenuShow1(MenuShow,$event)"
-                  ><b>
-                  {{m1.stroj +' ' + m1.nazev }}
-                  </b>
-                  </button >
-                  <button v-else  style="width:90%" class=" leva "
-                  v-on:keyup.27="MenuShow1(MenuShow,$event)"
-                  >
-                  {{m1.stroj +' ' + m1.nazev }}
-                  </button >
-    </v-card-text>
-  </v-card>
-  </v-card>
+      <td style="width:20%">
+<!--
+      <span @click="MenuFormatShow1(MenuFormatShow, $event )">
+      <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light" style="cursor:pointer"></i>
+      </span>
+//-->
+       </td>
+     </tr>
+    </table>
 
-<!---nabidka stroj mod //-->
-
-<!--manidka formaty //-->
-        <!-- :style="'left:'+(clickX+100)+'px'" -->
-        <!-- width:20em;left:20em;top:1em; -->
-<div
-style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
-:style="'top:'+ f1.getBottom('seek'+ID,50)+'px;width:'+f1.getWidth('seek'+ID,40)+'px;left:'+f1.getLeft('seek'+ID,10)+'px'"
-   v-if="MenuFormatShow" class="elevation-2 blue lighten-4 pl-0 pr-0"
-    @mouseleave="MenuFormatOpust()"
-       >
-
-          <table  width="100%" v-if="MenuFormatShow" class="pa-2">
-              <tr v-for="(m1b, i1b) in
-              $store.state.Kalkulace[k_id()].data.Format.filter(
-                el => (
-                  //el.nazev.toUpperCase().match(FormatSearch.toUpperCase()) || (el.sirka+'').match(FormatSearch) || (el.vyska+'').match(FormatSearch)) || FormatSearch==''
-                  el.nazev.toUpperCase().match((form.Format+'').toUpperCase()) || (el.sirka+'').match(form.Format+'') || (el.vyska+'').match(form.Format+'')) || form.Format==''
-
-                )" :key="i1b" >
-              <td class="pa-0">
-              <v-card class="silver pa-0" style="width:95%;" >
+      <div style="max-height:250px;overflow-y:scroll;position:absolute;z-index:1000"  v-if="MenuFormatShow" class="elevation-12 yellow"
+        :style="'top:'+ getBottom('seek'+ID,250)+'px;width:'+getWidth('seek'+ID,20)+'px;left:'+getLeft('seek'+ID,50)+'px'" >
+        <!-- {{ filtrData()}} -->
+          <table  width="100%" v-if="MenuFormatShow" >
+              <tr v-for="(m1b, i1b) in $store.state.Kalkulace[k_id()].data.Format.filter(el => (el.nazev.toUpperCase().match(FormatSearch.toUpperCase()) || (el.sirka+'').match(FormatSearch) || (el.vyska+'').match(FormatSearch)) || FormatSearch==''  )" :key="i1b" >
+              <td >
+              <v-card class="silver" style="width:95%;" >
                 <a>
                 <table style="width:100%"><tr><td style="width:70%">
-                <v-card-text style="font-size:90%;text-align:left;width:100%"  @click="setMenuFormat1Value(m1b.idefix)"
-                class="pa-0 pt-1"
+                <v-card-text style="font-size:80%;text-align:left;width:100%"  @click="setMenuFormat1Value(m1b.idefix)"
                 >
+                 <!-- {{ item['sub'] }}  -->
                  {{ m1b['nazev']}}
                  </v-card-text>
-                 </td><td style="width:30%;height:100" class="pa-0">
-                 <v-card-text style="font-size:90%;text-align:left;width:100%;height:100%"  @click="setMenuFormat1Value(m1b.idefix)"
-                 class="pa-0 pt-1">
+                 </td><td style="width:30%;height:100">
+                 <v-card-text style="font-size:80%;text-align:left;width:100%;height:100%"  @click="setMenuFormat1Value(m1b.idefix)"
+                >
                  {{ m1b['sirka']*1}}&nbsp;x&nbsp;{{ m1b['vyska']*1}}
                  </v-card-text>
                  </td>
@@ -202,7 +140,126 @@ style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
               </td>
             </tr>
           </table>
-  </div>
+        </div>
+
+<!--
+ <table style="width:100%;position:absolute;z-index:10000;border:solid 1px #DDDDDD"  ref="menuformat1" :id="'menuformat1'+ID"  class="neco">
+<tr v-if="MenuFormatShow" @mouseleave="MenuFormatShow = false"><td colspan="2">
+   <ta-ble3  :h="'350px'" :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'"   >
+         <table slot="head" style="width:100%">
+            <thead  >
+              <tr>
+              <th style="width:60%"> Format
+                <input v-model="FormatSearch" size="mini"  style="width:40%" class="tdl tdn bila" placeholder="format">
+                </th><th style="width:20%">Sirka</th><th style="width:20%">Vyska</th>
+              </tr>
+
+            </thead>
+         </table>
+         <table slot="body" style="width:100%">
+            <thead  >
+              <tr v-for="(m1b, i1b) in $store.state.Kalkulace[k_id()].data.Format.filter(el => (el.nazev.toUpperCase().match(FormatSearch.toUpperCase()) || (el.sirka+'').match(FormatSearch) || (el.vyska+'').match(FormatSearch)) || FormatSearch==''  )" :key="i1b" >
+              <td style="width:60%" class="leva pl-2" @click="setMenuFormat1Value(m1b.idefix)" >
+                <v-card><v-card-text>
+                <button v-if="$store.state.Kalkulace[k_id()].data.FormatValue == m1b.idefix" ref="menuformat1focus"  :id="'menuformat1focus'+ID" class="leva  elevation-1" style="width:90%;"
+                v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)"
+                >
+                 {{m1b.nazev }}
+                </button >
+                <button v-else  style="width:90%" class=" leva "
+                v-on:keyup.27="MenuFormatShow1(MenuFormatShow,$event)">
+                 {{ m1b.nazev }}
+                </button >
+                </v-card-text>
+                </v-card>
+                 </td >
+                 <td style="width:30%">{{m1b.sirka}}/</td><td style="width:20%">{{m1b.vyska}}</td>
+              </tr>
+            </thead>
+         </table>
+   </ta-ble3>
+   </td></tr>
+ </table>
+//-->
+ </div>
+
+<!--Formaty -->
+
+
+    </td></tr>
+    <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value >''" >
+      <td colspan="20"><hr></td>
+   </tr>
+    <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''">
+    <td colspan="20" >
+    <table>
+      <tr>
+     <td style="font-size:90%;text-align:left;border-bottom:0px solid;text-align:right;width:20%" class="pl-1">A x B</td>
+      <td  style="text-align:center;width:17%">
+        <input type="text"   v-model="form.sirka" style="text-align:right;width:90%;height:80%" class="tdl tdn elevation-1 pr-1" placeholder="A"  @focus="$event.target.select()" @change="getFormatName()">
+      </td>
+      <td style="width:3%">x</td>
+      <td style="width:17%">
+        <input type="text"   v-model="form.vyska" style="text-align:right;width:90%;height:80%" class="tdl tdn elevation-1 pr-1" @focus="$event.target.select()" @change="getFormatName()">
+      </td>
+
+      <td colspan="2" style="width:30%;">
+        <select v-model="form.tisk" @change="getFormatName()" style="text-align:right;width:80%;height:90%;font-size:90%" class="tdl tdn elevation-1 pr-1 green lighten-2  pl-1 pr-2"
+        >
+                <option v-for="(a,b ) in Tisk"
+                    :key="a.val"
+                    :label="a.txt"
+                    :value="a.val"
+                >
+                  {{ a.txt }}
+                </option>
+        </select>
+      </td>
+      </tr>
+      <tr>
+        <td style="width:20%;font-size:90%;pl-4">Panelovat</td>
+        <td style="width:5%"><input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)" style="text-align:right;width:100%" class="tdl tdn elevation-0 pr-0" @change="getFormatName()"></td>
+        <td style="width:10%;font-size:90%;">Po</td>
+        <td style="width:20%">
+          <input type="text"   v-model="form.sirkaPanel" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-1 pr-1"  @focus="$event.target.select()" @change="getFormatName();sirkaP()">
+        </td>
+        <td  style="width:10%;font-size:90%;" class="pl-1">Naklad&nbsp;ks:</td>
+        <td  style="width:25%;text-align:right">
+        <input type="text"   v-model="form.nakladks" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-1 pr-1" @focus="$event.target.select()" @change="ks();getFormatName()">
+        </td>
+      </tr>
+    </table>
+    </td>
+
+    </tr>
+    <tr v-if="$store.state.Kalkulace[k_id()].data.Menu1Value>''"><td colspan="20" style="text-align:left">
+     <label class="custom-file-upload" style="height:25px;width:150px ">
+            <input type="file" style="float:left"/>
+      </label>
+
+
+
+      <!-- upload-demo -->
+     <!-- <el-upload
+  class="el-upload-dragger1 upload-demo"
+  action="https://jsonplaceholder.typicode.com/posts/"
+  :on-preview="handlePreview"
+  :on-remove="handleRemove"
+  :before-remove="beforeRemove"
+  drag
+  multiple
+  :limit="3"
+  :on-exceed="handleExceed"
+  :file-list="form.filelist">
+
+  <el-button size="small" type="primary" style="position:relative;left:-0%;top:10%">Data</el-button>
+  <div slot="tip" class="el-upload__tip " >Prilohy</div>
+</el-upload> -->
+      </td></tr>
+      <!-- <tr><td colspan="20" style="border-bottom: dotted 1px silver" >&nbsp;</td></tr> -->
+
+    </table>
+
         <slot name="obsah">
          <!-- Slot Menu Leve -->
        </slot>
@@ -244,12 +301,6 @@ export default {
         dialogImageUrl: '',
         dialogVisible: false,
         nTimer: false,
-        clickX: 0,
-        clickY: 0,
-        clickYN: false,
-        f1: f,
-        timeout: 0 , //tOpusteni:0,
-
      //soubory
       MenuLeft: [
 
@@ -291,9 +342,6 @@ export default {
 
        Format: '',
        nakladks: 0,
-       ResultM2:0,
-       ResultHod: '',
-
        filelist:[]
 
      },
@@ -356,14 +404,7 @@ export default {
      self.idefixVidet = self.$store.state.Kalkulace[self.k_id()].data.idefixVidet
    //  this.$store.dispatch('setKalk',this.aKalkulace[0].kalkulaceid)
 
-     self.form.vyska = self.$store.state.Kalkulace[self.k_id()].data.FormatVyska
-     self.form.Format = self.$store.state.Kalkulace[self.k_id()].data.txtFormat
-
-     self.form.ResultHod = self.$store.state.Kalkulace[self.k_id()].data.ResultHod
-     self.form.ResultM2  = self.$store.state.Kalkulace[self.k_id()].data.ResultM2
-
-
-    // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
+    self.form.vyska = self.$store.state.Kalkulace[self.k_id()].data.FormatVyska
 
 
    },
@@ -434,7 +475,7 @@ export default {
     self.nTimer = setTimeout(function(){
        self.MenuShow = false
        // alert("Mizim")
-    },600)
+    },300)
 
     } else {
       self.MenuShow = false
@@ -451,108 +492,42 @@ export default {
     self.nTimer = setTimeout(function(){
        self.MenuShow = true
     //  alert("Zjeveni")
-    },500)
+    },300)
     } else {
       clearTimeout(self.nTimer)
       self.nTimer=false
     }
   },
-  MenuShow1(yesno,e) {
+   MenuShow1(yesno,e) {
+
     const self = this
-    self.clickYN = false
-    self.clickX = 0
-    self.clickY = 0
 
      if (yesno== 0) {
-      this.MenuShow = true
+       this.MenuShow = true
+
+        document.getElementById("menu1"+self.ID).style.left =(e.clientX - 300) +'px'
+        document.getElementById("menu1"+self.ID).style.top  =(e.clientY + 0) +'px'
+        self.MenuFormatShow = false;
+        setTimeout(function() {
+
+          document.getElementById("menu1"+self.ID).style.width = document.getElementById("menu1main"+self.ID).offsetWidth +'px'
+          document.getElementById("menu1"+self.ID).style.left = (document.getElementById("menu1main"+self.ID).offsetLeft + 100) + 'px'
+          if (  document.getElementById("menu1focus"+self.ID) )  {
+            document.getElementById("menu1focus"+self.ID).focus()
+            //alert('prdel2 OK')
+          } else {
+            // alert('prdel2')
+          }
+        },200)
+
      }
      if (yesno==1) {
        this.MenuShow = false
 
      }
-     try {
-       setTimeout(function(){
-         self.clickX = e.clientX
-         self.clickY = e.clientY
-         self.clickYN = true
-         setTimeout(function(){
-           if (  document.getElementById("menu1focus"+self.ID) )  {
-            document.getElementById("menu1focus"+self.ID).focus()
-
-         }
-         },100)
-
-       },200)
-
-     } catch (e) {
-       alert("chybka")
-       return 0
-     }
-     return 0
-  },
-  MenuFormatOpust() {
-    const self = this
-    if (self.timeout){
-        clearTimeout(self.timeout)
-        self.timeout=false
-        self.MenuFormatShow=true
-        return
-    }
-    self.timeout=setTimeout(function(){
-      self.MenuFormatShow=false
-    },1000)
-
-  },
-
-    MenuFormatShow1(yesno,e) {
-    const self = this
-    self.clickYN = false
-    self.clickX = 0
-    self.clickY = 0
-
-     if (yesno== 0) {
-       this.MenuFormatShow = true
-
-         self.MenuShow = false;
-
-        setTimeout(function() {
-
-
-          if (  document.getElementById("menuformat1focus"+self.ID) )  {
-            document.getElementById("menuformat1focus"+self.ID).focus()
-          //alert('prdel3 OK')
-         } else {
-            //alert('prdel3 BAD')
-          }
-        },200)
-     }
-     if (yesno==1) {
-       this.MenuFormatShow = false
-     }
-
-     try {
-       setTimeout(function(){
-         self.clickX = e.clientX
-         self.clickY = e.clientY
-         self.clickYN = true
-         setTimeout(function(){
-           if (  document.getElementById("menuformat1focus"+self.ID) )  {
-            document.getElementById("menuformat1focus"+self.ID).focus()
-
-         }
-         },100)
-
-       },200)
-
-     } catch (e) {
-       alert("chybka")
-       return 0
-     }
-     return 0
 
    },
-
-    MenuFormatShow1_old(yesno,e) {
+    MenuFormatShow1(yesno,e) {
     const self = this
 
      if (yesno== 0) {
@@ -969,7 +944,7 @@ input[type="file"] {
 .custom-file-upload {
     border: 1px solid #ccc;
     display: inline-block;
-    padding: 6px 6px;
+    padding: 6px 12px;
     cursor: pointer;
 }
 
@@ -980,7 +955,6 @@ input[type="file"] {
   padding: 1em;
 
 }
-
 
 select:focus, option:focus {
     color: black;
@@ -1010,18 +984,7 @@ input {
 }
 button:focus, input:focus{
     outline: none;
-    font-weight: bold;
-}
-button:focus{
-    font-weight: bold;
-    color: #616266;
-}
-button{
-
-    color: #616266;
-}
-button:hover {
-    font-weight: bold;
+    color: green;
 }
 
 
@@ -1030,30 +993,7 @@ button:hover {
                 top 0.4s cubic-bezier(.42,-0.3,.78,.25);
 }
 
-.em1 {
-  height: 1em;
-}
-.em2 {
-  height: 2em;
-}
-.em3 {
-  height: 3em;
-}
-.em4 {
-  height: 4em;
-}
-.em5 {
-  height: 5em;
-}
-.em6 {
-  height: 7em;
-}
-.em7 {
-  height: 7em;
-}
-.em8 {
-  height: 8em;
-}
+
 
 
 

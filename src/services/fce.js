@@ -742,9 +742,63 @@ Alert(ctxt1="",ctxt2="",ctxt3="") {
     alert(ctxt1+"\n"+ctxt2+"\n"+ctxt3)
   },500)
 
-}
+},
+
+getBottom(id,addPoz=10, idVztah="obal1_kalkulace") {
+  var neco=200
+  var oNeco
+  var obal= document.getElementById(idVztah)
+//   alert('A' + neco+ " X "+ id + ":"+document.getElementById(id) )
+  if (oNeco = document.getElementById(id)) {
+    neco = oNeco.offsetParent.offsetTop+oNeco.offsetHeight+ addPoz
+    neco = neco - obal.scrollTop
+    //console.log("Parent Scroll", oNeco.parentElement.scrollTop," SCROLL 2 ", obal.scrollTop)
+
+    //oNeco.parentElement.style.background='pink'
+
+    //neco = oNeco.offsetTop
+//    alert(neco+ " // "+ id )
+
+  } else {
+
+  }
+
+  return neco;
+},
+
+getLeft(id,addPoz=10,idVztah="obal1_kalkulace") {
+  var neco=500
+  var oNeco
+  var obal= document.getElementById(idVztah)
+  if (oNeco = document.getElementById(id)) {
+    neco = oNeco.offsetParent.offsetLeft+addPoz
+
+    var r2 = oNeco.closest("#test_1");
+    neco = neco - r2.scrollLeft
+    console.log(neco," LEFT ", obal.scrollLeft, " Left Neco " , oNeco.scrollLeft, oNeco.parentElement.scrollLeft , " R2 ", r2.id , "scr ", r2.scrollLeft , " r ", r2.scrollWidth )
 
 
+
+  } else {
+  }
+
+  return neco;
+},
+getWidth(id,addPoz=10) {
+  var neco=300
+  var oNeco
+  if (oNeco = document.getElementById(id)) {
+    neco = oNeco.offsetWidth+addPoz
+
+    //neco = oNeco.offsetTop
+    //alert(neco)
+
+  } else {
+
+  }
+
+  return neco;
+},
 
 
 }
