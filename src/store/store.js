@@ -33,7 +33,8 @@ export default new Vuex.Store({
     Kalkulace: [],
     KalkulaceThis: -1,
     KalkulaceColThis: -1,
-    KalkulaceLast: -1
+    KalkulaceLast: -1,
+    KalkulaceID: -1  //Aktivni id sloupce ....
   },
   mutations: {
     setToken (state, token) {
@@ -148,6 +149,12 @@ export default new Vuex.Store({
       state.Kalkulace.push(kalkulace)
       state.KalkulaceLast = kalkulace.kalkulaceid
       // console.log("Vkladam : ", state.KalkulaceLast )
+
+    },
+    setID(state, kalkulace) {
+      if (state.KalkulaceID!=kalkulace.ID) {
+        state.KalkulaceID = kalkulace.ID
+      }
 
     },
 
@@ -574,6 +581,10 @@ export default new Vuex.Store({
     addKalkCol ({commit}, kalkulaceid) {
       console.log('Actions- addKalkCol -Dispatch', kalkulaceid)
       commit('addKalkCol', kalkulaceid)
+    },
+    setID ({commit}, kalkulaceid) {
+      console.log('SET ID ', kalkulaceid)
+      commit('setID', kalkulaceid)
     },
 
 

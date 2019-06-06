@@ -7,47 +7,22 @@
      v-bind:class="{'JsemVidet': active, 'JsemVidetMalo': !active }"
      :class="{'blue lighten-2': $store.state.KalkulaceThis== kalkulaceid }"
      v-on:mouseleave="active=false;MenuShowLeave()"
-     @click="setKalk(kalkulaceid);setID()"
+     @click="setKalk(kalkulaceid)"
      >
-     <table style="width:100%;height:18em;;border:none"><tr>
-      <td style="width:20%;height:100%" class="white pr-1 pt-0" >
-      <v-card style="position:relative;top:0px;height:18em;width:100%;border: solid 1px silver"
-      :class="{'blue lighten-4': $store.state.KalkulaceThis== kalkulaceid }"
-      class="pa-0 pr-1 elevation-2">
-
-          <v-card-text>
-          <slot name="add">
-          </slot>
-          </v-card-text>
-          <v-card-text style="font-size:200%;font-weight:800">
-            {{ k_id() + 1 }}
-          </v-card-text>
-          <v-card-text>
-          <slot name="akce">
-                  <!-- <button type="button" style="width:30%;height:16px" class="white  px-0 " @click="1==1" ><i class="el-icon-delete " style="color:green" size="mini" ></i></button> -->
-                  <!-- <button type="button" style="width:30%;height:106px" class="white  px-0 " @click="1==1" >X</button> -->
-            </slot>
-
-        </v-card-text>
-
-
-      </v-card>
-      </td>
-     <td style="width:80;height:100%">
-     <v-card style="position:relative;top:0px;height:18em;width:100%" class="white ">
-       <v-card style="position:absolute;top:0px;height:3em;text-align:left;width:100%;border: none"
+     <v-card style="position:relative;top:0px;height:16em" class="white">
+       <v-card style="position:absolute;top:0px;height:3em;text-align:left;width:100%"
        class="white"
        :style="(idefixVidet>0)?'height:3em':'height:'+((aStroj.length)*2.6)+'em'"
        >
        <v-card v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix"
         style="position:relative;text-align:left;z-index:10"
-
+        :class="{'brown lighten-2': $store.state.KalkulaceThis== kalkulaceid }"
        >
-        <v-card-text class="pa-0 ma-0 pl-0 pr-1" style="position:relative;z-index:1;height:2.6em">
+        <v-card-text class="pa-0 ma-0 pl-0 pr-1" style="position:relative;z-index:1;height:2.5em">
          <v-card style="position:relative;z-index:1">
-          <v-card-text class="pa-0 ma-0 pl-1 pr-1 pb-1 pt-1" style="position:relative;z-index:1;border:none"> <!-- KARTA stroje //-->
-          <table style="width:100%;z-index:1;"><tr >
-            <td style="width:90%;cursor:pointer;" @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )">
+          <v-card-text class="pa-0 ma-0 pl-1 pr-1 pb-1 pt-1" style="position:relative;z-index:1"> <!-- KARTA stroje //-->
+          <table style="width:100%;z-index:1"><tr>
+            <td style="width:90%;cursor:pointer" @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )">
                 {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
             </td>
             <!-- @mouseenter="idefixClick=itemStroj.idefix;MenuShow1(MenuShow, $event ); -->
@@ -107,7 +82,7 @@
           <v-card-text  class="pa-0 pt-0  " style="height:100%">
            <table style="width:100%;"><tr>
             <td style="width:40%" class="pl-0">
-              <select v-model="form.tisk" @change="getFormatName()" style="text-align:right;width:80%;height:90%;font-size:90%" class="white tdl tdn elevation-0 pr-1  pl-0 pr-2" >
+              <select v-model="form.tisk" @change="getFormatName()" style="text-align:right;width:80%;height:90%;font-size:90%" class="white tdl tdn elevation-1 pr-1  pl-1 pr-2" >
                 <option v-for="(a,b ) in Tisk"
                     :key="a.val"
                     :label="a.txt"
@@ -126,45 +101,55 @@
         </v-card-text>
        </v-card>
 
-       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:8.5em" class="pa-0 pt-0 ">
+       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0 pt-1 ">
          <v-card-text  class="pa-0 pt-0  " style="height:100%">
            <table style="width:100%;" >
              <tr>
-              <td style="text-align:left;font-size:10%" colspan="4" class="pl-2" >&nbsp;</td>
-             </tr>
-             <tr>
-              <td style="text-align:left;" colspan="4" class="pl-2" > Prilohy</td>
-             </tr>
-             <tr>
-
-              <td v-for="idx in 4" :key="idx" class="pb-1 pl-1 ">
+              <td style="text-align:left;widht:10%" class="pl-2" > Prilohy</td>
+              <td v-for="idx in 2" :key="idx" class="pb-1 pl-1 ">
                 <!-- <label class="custom-file-upload" style="height:25px;width:250px "> -->
                 <input type="file" />
                 <!-- </label> -->
               </td>
-
+              <td>
+                <input type="file" />
+              </td>
           </tr>
-
+          <tr>
+              <td style="text-align:left;widht:10%" class="pl-2" >
+                 <input type="file" />
+              </td>
+              <td v-for="idx in 2" :key="idx" class="pb-1 pl-1 ">
+                <!-- <label class="custom-file-upload" style="height:25px;width:250px "> -->
+                <input type="file" />
+                <!-- </label> -->
+              </td>
+              <td>
+                <slot name="akce">
+                  <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button>
+                </slot>
+              </td>
+          </tr>
            </table>
         </v-card-text></v-card>
        </v-card-text>
      </v-card>
      </v-card>
-</td></tr></table>
+
 
 <!---nabidka stroj mod //-->
 <!-- :style="'left:'+clickX+'px'" -->
 <!-- :style="'top:'+ getBottom('seek'+ID)+'px;width:'+getWidth('seek'+ID,8)+'px;left:'+getLeft('seek'+ID,0)+'px'" -->
-  <v-card v-if="MenuShow && clickYN" class="white elevation-2" style="position:absolute;width:20em;left:20em;top:1em;z-index:1000010;max-height:14em"
+  <v-card v-if="MenuShow && clickYN" class="white elevation-2" style="position:absolute;width:20em;left:20em;top:1em;z-index:10010;height:14em"
    :style="'left:'+clickX+'px'"
    @mouseleave="MenuShowLeave()" @mouseover="MenuShowIn()"
   >
-  <v-card v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Menu2" :key="i1" v-if="m1.idefix == idefixClick" style="border:none">
-    <v-card-text @click="setMenu1Value(m1.idefix_mod)" class="pa-0 pt-1 elevation-0" style="border:solid 0px silver">
+  <v-card v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Menu2" :key="i1" v-if="m1.idefix == idefixClick" >
+    <v-card-text @click="setMenu1Value(m1.idefix_mod)" class="pa-0 pt-1">
                 <button v-if="$store.state.Kalkulace[k_id()].data.Menu1Value == m1.idefix_mod" ref="menu1focus"  :id="'menu1focus'+ID" class="leva" style="width:90%;"
                   v-on:keyup.27="MenuShow1(MenuShow,$event)"
                   ><b>
-                  {{m1.stroj +' ' + m1.nazev }} XX
+                  {{m1.stroj +' ' + m1.nazev }}
                   </b>
                   </button >
                   <button v-else  style="width:90%" class=" leva "
@@ -183,7 +168,7 @@
         <!-- width:20em;left:20em;top:1em; -->
 <div
 style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
-:style="'top:'+ f1.getBottom('seek'+ID,40)+'px;width:'+f1.getWidth('seek'+ID,40)+'px;left:'+f1.getLeft('seek'+ID, 100)+'px'"
+:style="'top:'+ f1.getBottom('seek'+ID,50)+'px;width:'+f1.getWidth('seek'+ID,40)+'px;left:'+f1.getLeft('seek'+ID,10)+'px'"
    v-if="MenuFormatShow" class="elevation-2 blue lighten-4 pl-0 pr-0"
     @mouseleave="MenuFormatOpust()"
        >
@@ -343,11 +328,7 @@ export default {
    self.MenuStroj()
    console.log("MenuStroj EOF")
    self.readVuexData()
-   /*
-   setInterval(function(){
-        self.hideAll()
-    },1000)
-   */
+
    return
 
    /*
@@ -847,7 +828,6 @@ getFormatName() {
      const self = this
       var idK = self.k_id()
       var nTmp = -1
-
        //self.form.sirka= (self.form.sirka+'').replace(/,/,".")
         //self.form.vyska= (self.form.vyska+'').replace(/,/,".")
           self.form.sirka = f.cislo(self.form.sirka)
@@ -884,7 +864,6 @@ getFormatName() {
 
 
         })
-
         if (nTmp >-1){
 
           self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
@@ -899,7 +878,20 @@ getFormatName() {
 
         }
 
+        //         nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return
+        //         (o.sirka*1 == self.form.vyska*1 && o.vyska*1 == self.form.sirka*1) ||(o.sirka*1 == self.form.sirka*1 && o.vyska*1 == self.form.vyska*1)
+        //         })
+        //       if (nTmp >-1){
+        //         self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
+        //         self.form.sirka = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka
+        //         self.form.vyska = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska
 
+        //       } else {
+        //           self.last.sirka =  f.cislo(self.form.sirka)
+        //           self.last.vyska =  f.cislo(self.form.vyska)
+        //           self.form.Format = 'Vlastní'
+        //       }
+        // }
 
         if (self.form.sirka*1 > self.form.vyska*1) {
           console.log("getFormatName 3 : ", self.form.sirka,"/", self.form.sirka)
@@ -911,11 +903,8 @@ getFormatName() {
         }
         //self.getFormat(1)
      }
-
-
      //console.log("Pridam jej")
      if (self.form.sirka > 0 && self.form.vyska > 0 ) {
-       //alert(idK)
 
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska' , value: self.form.vyska })
@@ -926,7 +915,7 @@ getFormatName() {
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
        //self.Kalk.data.txtFormat = self.form.Format
        //self.$store.dispatch('setKalk',self.Kalk)
-       //self.$store.dispatch('setKalk',idK)
+       self.$store.dispatch('setKalk',idK)
        //self.$store.dispatch('replaceKalk',self.Kalk)
       // alert(self.Kalk.data.txtFormat)
         // alert("sypu 2 idK : "+ idK )
@@ -935,31 +924,6 @@ getFormatName() {
        eventBus.$emit('MatCol', {key: idK  })
      }
    },
-   setID(){
-     const self = this
-    self.$store.dispatch('setID',{
-       ID: self.ID
-     })
-  },
-  getID(){
-     const self = this
-     return self.$store.state.KalkulaceID
-
-  },
-  hideAll(){
-       const self = this
-    if (self.getID()!= self.ID ){
-      //f.Alert('Schovam')
-//      console.log("Schovam ", self.ID)
-
-      if (self.form.showtxt )       self.form.showtxt=false
-      if (self.form.showtxtStroj )  self.form.showtxtStroj=false
-      if (self.form.showtxtStroj1 ) self.form.showtxtStroj1=false
-    } else {
-      console.log("drzim ", self.ID)
-    }
-
-  },
 
  //--Values
  Menu1 () {
@@ -1009,18 +973,18 @@ input[type="file"] {
     cursor: pointer;
 }
 
-::-webkit-file-upload-button1 {
+::-webkit-file-upload-button {
 
   background: yelllow;
   color: red;
-  padding: 0em;
+  padding: 1em;
 
 }
 
 
 select:focus, option:focus {
     color: black;
-    /* font-weight: 600; */
+    font-weight: 600;
 
 }
 

@@ -799,6 +799,11 @@ getWidth(id,addPoz=10) {
 
   return neco;
 },
-
+sleep(ms) {
+  return new Promise(resolve=>{
+      setTimeout(resolve,ms)
+  })
+}
 
 }
+

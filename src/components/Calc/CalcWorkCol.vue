@@ -2,8 +2,8 @@
   <!-- <tr style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
      <div style="position:relative;font-size:100%; border:1px solid black;border-right:none;min-height:18em" class="pt-1 pl-0 ml-1 pb-0 "
      :class="{'brown lighten-3': getType()=='Mat1','green lighten-1': getType()=='Laminace','orange lighten-1': getType()=='Kasir','yellow lighten-2': getType()=='Rezani','   lighten-2': getType()=='Rezani'
-     , 'pink lighten-5': getType()=='Baleni', 'red lighten-2': getType()=='Jine'}"
-     @click="setKalk(kalkulaceid);"
+     , 'pink lighten-5': getType()=='Baleni', 'cyan lighten-3': getType()=='DTP' , 'lime lighten-2': getType()=='Externi'}"
+     @click="setKalk(kalkulaceid);setID()"
      @scroll="TestRend=TestRend+1"
      v-if="isDeleted==false"
      :key="TestRend"
@@ -35,15 +35,21 @@
 
 
 <!---Materialy - rezani nema k dispozici !!!1//-->
-     <div style="max-height:10em;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxt && (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' || getType()=='Jine'  )
+     <!-- <div style="max-height:10em;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxt && (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' || getType()=='Jine'  )
             && (filtrData().length>1 || (filtrData().length==1 && filtrData()[0].nazev!=form.txt) )
         " class="elevation-12 yellow"
+        :style="'top:'+ getBottom('seek1_'+ID)+'px;width:'+getWidth('seek1_'+ID,8)+'px;left:'+getLeft('seek1_'+ID,1)+'px'" > -->
+        <div style="max-height:10em;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxt && (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' || getType()=='Jine'  )
+            && (filtrDat.length>1 || (filtrDat.length==1 && filtrDat[0].nazev!=form.txt) )
+        " class="elevation-12 yellow"
         :style="'top:'+ getBottom('seek1_'+ID)+'px;width:'+getWidth('seek1_'+ID,8)+'px;left:'+getLeft('seek1_'+ID,1)+'px'" >
+                  <span style="display:none">FF {{ filtrDat.length}}</span>
         <!-- {{ filtrData()}} -->
           <table  width="100%" v-if="form.showtxt &&  (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir'|| getType()=='Jine' )"  >
-             <tr class="mt-1 green" v-for="(item, i) in filtrData()" :key="i" >
+             <!-- <tr class="mt-1 green" v-for="(item, i) in filtrData()" :key="i" > -->
+              <tr class="mt-1 green" v-for="(item, i) in filtrDat" :key="i" >
               <td >
-              <a :href="'#'" :id="'seek1_'+ID+'_list_'+i" @keydown="seznam('seek1_'+ID+'_list_'+i,1,$event)" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)">
+              <a :href="'#'" :id="'seek1_'+ID+'_list_'+i" @keydown="seznam('seek1_'+ID+'_list_'+i,1,$event)" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)" @focus="lastFocus='seek1_'+ID">
               <v-card class="silver pa-0 ma-0 " style="width:99%;" >
                 <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:80%;height:100%" class="pa-0 ma-0 grey lighten-5">
                 <v-card-text style="font-size:90%;text-align:left;width:100%;height:100%" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)"
@@ -84,7 +90,7 @@
           <table  width="100%" v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni' || getType()=='Jine' ) " >
              <tr class="mt-0 pa-0 grey lighten-4" v-for="(item1, i1) in filtrDataStro" :key="i1"  >
               <td class="pa-0 ma-0 pl-1 grey lighten-4">
-              <a :href="'#'" :id="'seek2_'+ID+'_list_'+i1"  @keydown="seznam('seek2_'+ID+'_list_'+i1,1,$event)" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)">
+              <a :href="'#'" :id="'seek2_'+ID+'_list_'+i1"  @keydown="seznam('seek2_'+ID+'_list_'+i1,1,$event)" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)" @focus="lastFocus='seek2_'+ID">
               <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
                 <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
                 <v-card-text style="font-size:90%;text-align:left;width:100%" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)"
@@ -103,6 +109,68 @@
         </div>
       <!--LAMINACE//-->
 
+      <!--    Externi Prace //-->
+        <div style="min-height:5px;max-height:10em;overflow-y:scroll;position:absolute;z-index:51001"
+        v-if="form.showtxtPrace && (getType()=='Externi' ) && filtrDataPrac.length > 0" class="elevation-12 teal"
+          :style="'top:'+ getBottom('seek4_'+ID)+'px;width:'+getWidth('seek4_'+ID,8)+'px;left:'+getLeft('seek4_'+ID,0)+'px'">
+          <span style="display:none">FF {{ filtrDataPrac.length}}</span>
+        <span style="display:none">
+         {{ filtrDataPrac}}
+         <!-- {{ getBottom('seek2_'+ID) }} {{ Col.dataStroj}} -->
+        </span>
+          <table  width="100%" v-if="form.showtxtPrace && (getType()=='Externi'  ) " >
+             <tr class="mt-0 pa-0 grey lighten-4" v-for="(item1, i1) in filtrDataPrac" :key="i1"  >
+              <td class="pa-0 ma-0 pl-1 grey lighten-4">
+              <a :href="'#'" :id="'seek4_'+ID+'_list_'+i1"  @keydown="seznam('seek4_'+ID+'_list_'+i1,1,$event)" @click="form.txtPrace= item1['prace']; form.showtxtPrace=false; setColPrace(item1)" @focus="lastFocus='seek4_'+ID">
+              <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
+                <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
+                <v-card-text style="font-size:90%;text-align:left;width:100%" @click="form.txtPrace= item1['prace']; form.showtxtPrace=false; setColPrace(item1)"
+                :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
+                class="ma-0 pa-0 pl-1"
+                >
+                  {{ item1['prace'] }}
+                 </v-card-text>
+                 </td></tr></table>
+
+              </v-card>
+            </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      <!--    Externi Prace //-->
+
+      <!--    Externi Dod //-->
+        <div style="min-height:5px;max-height:10em;overflow-y:scroll;position:absolute;z-index:51001"
+        v-if="form.showtxtDod && (getType()=='Externi' ) && filtrDataDo.length > 0" class="elevation-12 teal"
+          :style="'top:'+ getBottom('seek5_'+ID)+'px;width:'+getWidth('seek5_'+ID,8)+'px;left:'+getLeft('seek5_'+ID,0)+'px'">
+          <span style="display:none">FF {{ filtrDataDo.length}}</span>
+        <span style="display:none">
+         {{ filtrDataDo}}
+         <!-- {{ getBottom('seek5_'+ID) }} {{ Col.dataStroj}} -->
+        </span>
+          <table  width="100%" v-if="form.showtxtDod && (getType()=='Externi'  ) " >
+             <tr class="mt-0 pa-0 grey lighten-4" v-for="(item1, i1) in filtrDataDo" :key="i1"  >
+              <td class="pa-0 ma-0 pl-1 grey lighten-4">
+              <a :href="'#'" :id="'seek5_'+ID+'_list_'+i1"  @keydown="seznam('seek5_'+ID+'_list_'+i1,1,$event)" @click="form.txtDod= item1['firma']; form.showtxtDod=false; setColDod(item1)" @focus="lastFocus='seek5_'+ID">
+              <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
+                <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
+                <v-card-text style="font-size:90%;text-align:left;width:100%" @click="form.txtDod= item1['firma']; form.showtxtDod=false; setColDod(item1)"
+                :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
+                class="ma-0 pa-0 pl-1"
+                >
+                  {{ item1['firma'] }}
+                 </v-card-text>
+                 </td></tr></table>
+
+              </v-card>
+            </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      <!--    Externi Prace //-->
+
       <!--Jen stroj - stroj//-->
         <!--    // && ( filtrDataStroj().length>1|| (filtrDataStroj().length==1 && filtrDataStroj()[0].nazev!=form.txtStroj) //-->
         <div style="min-height:5px;max-height:10em;overflow-y:scroll;position:absolute;z-index:510015;border:1px solid silver"
@@ -117,7 +185,7 @@
           <table  width="100%" v-if="form.showtxtStroj1 && (  getType()=='Rezani' || getType()=='Baleni') " >
              <tr class="mt-0 pa-0" v-for="(item2, i2) in filtrDataStro1" :key="i2" >
               <td class="ma-0 pa-0">
-              <a :href="'#'" :id="'seek3_'+ID+'_list_'+i2"  @keydown="seznam('seek3_'+ID+'_list_'+i2,$event)" @click="form.txtStroj1= item2['nazev_stroj']; form.showtxtStroj1=false; setColStroj1(item2)">
+              <a :href="'#'" :id="'seek3_'+ID+'_list_'+i2"  @keydown="seznam('seek3_'+ID+'_list_'+i2,$event)" @click="form.txtStroj1= item2['nazev_stroj']; form.showtxtStroj1=false; setColStroj1(item2)" @focus="lastFocus='seek3_'+ID">
               <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
                 <table style="width:100%"><tr><td style="width:100%" class="ma-0 pa-0 grey lighten-4">
                 <v-card-text style="font-size:90%;text-align:left;width:100%" @click="form.txtStroj1= item2['nazev_stroj']; form.showtxtStroj1=false; setColStroj1(item1)"
@@ -165,11 +233,11 @@
               <el-dropdown-item  :command="'Baleni'">Baleni</el-dropdown-item>
               <el-dropdown-item  :command="'Jine'">Jine</el-dropdown-item>
               <el-dropdown-item  :command="'Externi'">Externi</el-dropdown-item>
+              <el-dropdown-item  :command="'DTP'">DTP</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           </td><td width="20%" class="pa-0 ma-0  pr-3" style="border-top-right-radius:30px;text-align:right"
           :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
-
           >
 
           <button type="button" style="width:20%;height:26px;text-align:right" class="  px-0 cell" @click="deleteCol()" ><i class="el-icon-delete" size="mini"></i></button>
@@ -188,22 +256,18 @@
                 @focus="fokus('stroj1')"
                 @click="fokus('stroj1')"
                 @keydown="fokus('stroj1');filtrDataStroj1();seznam('seek3_'+ID+'_list_0',0,$event)"
+                @blur.native="blur1('seek3_'+ID)"
                 :id="'seek3_'+ID"
 
                >
               </el-input>
-            <el-input type="textarea" v-model="form.txtStroj1" size="mini"  style="width:100%; height:15px" class="tdl tdn elevation-0" :placeholder="'Hledani Stroj1'+ getType()+ ' '+ID"
-                rows="1" autosize
-                @focus="fokus('stroj1')"
-                @click="fokus('stroj1')"
-                @keydown="fokus('stroj1');filtrDataStroj1();seznam('seek3_'+ID+'_list_0',0,$event)"
-                :id="'seek3_'+ID"  ></el-input>
+
          </v-card-text>
          </v-card>
           <!-- jen rezani //-->
-         <v-card style="width:100%;max-height:60px;float:none" class="pa-0" v-if="getType()!='Externi' && !getType().match(/Mat/)  && !getType().match(/Laminace/)  && !getType().match(/Kasir/)">
+         <v-card style="width:100%;max-height:60px;float:none" class="pa-0" v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Mat/)  && !getType().match(/Laminace/)  && !getType().match(/Kasir/)">
          <v-card-text style="width:100%;" class="pa-1" >
-
+        <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
             <textarea-autosize type="text"
                 v-model="form.txtStroj"
                 size="mini"
@@ -211,30 +275,16 @@
                 class="nb elevation-0 pb-0"
                 :placeholder="'Hledani Stroj '+ getType()+ ' '+ID"
                 rows="1"
-                :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'"
-                @focus.native="fokus('stroj')"
-                @click.native="fokus('stroj')"
-                @keydown.native="fokus('stroj');filtrDataStroj();seznam('seek2_'+ID+'_list_0',0,$event)"
 
+                @focus.native="fokus('stroj');form.showtxtStroj=true"
+                @click.native="fokus('stroj');form.showtxtStroj=true"
+                @keydown.native="fokus('stroj');form.showtxtStroj=true;seznam('seek2_'+ID+'_list_0',0,$event)"
+                @blur.native="blur1('seek2_'+ID)"
                 :id="'seek2_'+ID"
               ></textarea-autosize>
-              <!-- <input type="text"
-                v-model="form.txtStroj"
-                size="mini"
-                style="width:100%; height:16px;max-height:60px;border:none"
-                class="nb elevation-0 pb-0"
-                :placeholder="'Hledani Stroj '+ getType()+ ' '+ID"
-                rows="1"
-                :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'"
-                @focus="fokus('stroj')"
-                @click="f1.Alert('aaaa');fokus('stroj')"
-                @keydown="fokus('stroj');filtrDataStroj();seznam('seek2_'+ID+'_list_0',0,$event)"
-
-                :id="'seek2_'+ID"
-              ></input> -->
          </v-card-text>
          </v-card>
-         <v-card style="width:100%;float:none;max-height:60px" class="pa-0"  v-if="getType()!='Externi' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
+         <v-card style="width:100%;float:none;max-height:60px" class="pa-0"  v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
             <v-card-text style="width:100%;" class="pa-1" >
               <textarea-autosize type="text"
               v-model="form.txt"
@@ -245,12 +295,13 @@
               @focus.native="fokus('mat');form.showtxt=true"
               @click.native="fokus('mat');form.showtxt=true"
               @keydown.native="fokus('mat');form.showtxt=true;seznam('seek1_'+ID+'_list_0',0,$event)"
+              @blur.native="blur1('seek1_'+ID)"
               :id="'seek1_'+ID"  ></textarea-autosize>
                 <!-- {{ getBottom2('seek2_'+ID) }} / {{ getBottom('seek1_'+ID) }} -->
                 <!-- {{ filtrDataStroj() }} -->
             </v-card-text>
          </v-card>
-         <v-card style="width:100%;float:none" class="pa-0"  v-if="getType()!='Externi' && !getType().match(/Rez/)  && !getType().match(/Baleni/)" >
+         <v-card style="width:100%;float:none" class="pa-0"  v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Rez/)  && !getType().match(/Baleni/)" >
           <v-card-text style="width:80%; text-align: left" class="pa-0 pl-1" >
           <select v-if="getType()!=='Mat1'" v-model="form.tisk"  @change="saveVuexData(); classJarda('sel1_'+ID)" :id="'sel1_'+ID"       @keydown="classJarda('sel1opt_'+ID+'_'+form.tisk)"
             style="color:black;font-color:black;border: 1px solid white !important;" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
@@ -267,7 +318,7 @@
 
           </v-card-text>
         </v-card>
-        <v-card style="width:100%;float:none;height:7em;overflow:scroll" class="pa-0"  v-if="getType()=='Externi'" >
+        <v-card style="width:100%;float:none;height:7em;overflow:scroll" class="pa-0"  v-if="false && getType()=='Externi'" > <!-- Puvodni externi //-->
           <v-card-text style="width:100%; text-align: left" class="pa-0 pl-1" >
             <!-- {{ form.externi }} -->
             <table style="width:100%;" class="pa-0">
@@ -275,15 +326,68 @@
                 <td style="width:5%">{{idradky+1}}</td>
                 <td style="width:75%">
                   <input type="hidden" v-model="formx" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1"  >
-                  <input type="text" v-model="form.externi[idradky].Popis" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1" 
+                  <input type="text" v-model="form.externi[idradky].Popis" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1"
                   @change="formx=formx+1"
                    >
                 </td>
                 <td style="width:20%">
-                  <input type="number" v-model="form.externi[idradky].Cena" size="mini" placeholder="Cena" style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  
+                  <input type="number" v-model="form.externi[idradky].Cena" size="mini" placeholder="Cena" style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"
                   @change="formx=formx+1"
                   >
                   <!-- @change="saveVuexData()" -->
+                </td>
+              </tr>
+            </table>
+          </v-card-text>
+        </v-card>
+
+        <v-card style="width:100%;float:none;height:7em;overflow:scroll" class="pa-0"  v-if="getType()=='Externi'" > <!-- Puvodni externi //-->
+          <v-card-text style="width:100%;" class="pa-1" >
+        <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
+            <textarea-autosize type="text"
+                v-model="form.txtPrace"
+                size="mini"
+                style="width:100%; height:16px;max-height:60px;border:none"
+                class="nb elevation-0 pb-0"
+                :placeholder="'Hledani Prace '+ getType()+ ' '+ID"
+                rows="1"
+
+                  @focus.native="fokus('prace');form.showtxtPrace=true"
+                  @click.native="fokus('prace');form.showtxtPrace=true"
+                @keydown.native="fokus('prace');form.showtxtPrace=true;seznam('seek4_'+ID+'_list_0',0,$event)"
+                @blur.native="blur1('seek4_'+ID)"
+                :id="'seek4_'+ID"
+              ></textarea-autosize>
+         </v-card-text>
+         <v-card-text style="width:100%;" class="pa-1" >
+        <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
+            <textarea-autosize type="text"
+                v-model="form.txtDod"
+                size="mini"
+                style="width:100%; height:16px;max-height:60px;border:none"
+                class="nb elevation-0 pb-0"
+                :placeholder="'Hledani Dod '+ getType()+ ' '+ID"
+                rows="1"
+
+                  @focus.native="fokus('dod');form.showtxtDod=true"
+                  @click.native="fokus('dod');form.showtxtDod=true"
+                @keydown.native="fokus('dod');form.showtxtDod=true;seznam('seek5_'+ID+'_list_0',0,$event)"
+                @blur.native="blur1('seek5_'+ID)"
+                :id="'seek5_'+ID"
+              ></textarea-autosize>
+         </v-card-text>
+        </v-card>
+
+        <v-card style="width:100%;float:none;height:7em;overflow:scroll" class="pa-0"  v-if="getType()=='DTP'" >
+          <v-card-text style="width:100%; text-align: left" class="pa-0 pl-1" >
+            <table style="width:100%;" class="pa-0">
+              <tr >
+                <td style="width:60%">Prodejni cena</td>
+                <td style="width:40%">
+                  <input type="hidden" v-model="formx" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1"  >
+                  <input type="number" v-model="form.prodejDTP" size="mini"  placeholder="Prodej DTP" style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-0 pl-1 "
+                  @change="formx=formx+1"
+                   >
                 </td>
               </tr>
             </table>
@@ -471,11 +575,16 @@ export default {
        txt: '',  //polozka hledaniho textu 1,  je vztazena k typu sloupce
        txtStroj1:'',
        txtStroj:'',
+       txtPrace:'',
+       txtDod:'',
 
        showtxt: false,
        showtxtStroj: false,  //mody stroje
        showtxtStroj1: false, //Jen stroj
+       showtxtDod: false, //Jen firma
+       showtxtPrace: false, //Jen prace
        naklad:0,
+       prodejDTP:0,
        //Baleni - polozku naklad
 
        naklad_mody:0,
@@ -497,9 +606,12 @@ export default {
          Cena: 0,
        }
         ],
+
        itemSelectedStroj: {},
        itemSelectedStroj1: {},
        itemSelectedMat: {},
+       itemSelectedDod: {},
+       itemSelectedPrace: {},
        stroj: ''
      },
 
@@ -520,6 +632,12 @@ export default {
      filtrDat:[],
      filtrDataStro:[],
      filtrDataStro1:[], //Nazby strrojiu pro rezani
+     filtrDataDo:[], //Nazby strrojiu pro rezani
+     filtrDataPrac:[], //Nazby strrojiu pro rezani
+     lastType:'',
+     lastFocus:'',
+     //filtrDataStroj:[],
+     //filtrDataStroj1:[], //Nazby strrojiu pro rezani
 
    }
  },
@@ -560,12 +678,15 @@ export default {
       self.Cols=self.Kalk.sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
 
       self.Col=self.Cols[self.getIndex()] ;
+      setInterval(function(){
+        self.hideAll()
+      },1000)
 
 
 
   var nNic=0;
   var nNic2=0;
-return
+//return
 self.Interval= setInterval(function()  {
 
      if (nNic2<20){
@@ -575,6 +696,7 @@ self.Interval= setInterval(function()  {
       if (nNic>=3) nNic = 0;
       nNic2++;
      }
+    //self.filtrData()
     if (self.getType()!=="Mat1"){
       if (self.filtrDataStro1.length==0 && self.txtStroj1==''){
           self.filtrDataStroj1()
@@ -608,7 +730,7 @@ watch: {
       })
       self.form.naklad = neco
       this.saveVuexData()
-      
+
   },
 
 },
@@ -632,9 +754,9 @@ computed: {
    return f.entrcount(neco)
  },
 
-  nactiDb(ihned=false){
+  async nactiDb(ihned=false){
       const self = this
-
+      //return
       setTimeout(function()  {
     // alert(self.getType())
 
@@ -647,7 +769,7 @@ computed: {
         self.VyskaLast!=self.Kalkulace[self.k_id()].data.FormatVyska
        ) {
         if (self.Kalkulace[self.k_id()].data.FormatSirka == 0 || self.Kalkulace[self.k_id()].data.FormatVyska == 0 ) {
-          return
+            return
         }
         self.countZmen++;
         // alert('COL 44 ' + JSON.stringify(self.Col)+" / "+ self.getIndex())
@@ -667,6 +789,7 @@ computed: {
           self.q(q1)
         }
         var q2=SQL.getStroj(self.getType())
+        // f.Alert("Q# "+ self.getType() + q2)
         if (q2>""){
           //alert(q2)
           self.qStroj(q2)
@@ -674,16 +797,25 @@ computed: {
         }
         //alert("Q#")
         var q3=SQL.getStroj1(self.getType())
-        // alert("Q#"+ q3)
+         //alert("Q# "+ self.getType() + q3)
         if (q3>""){
-          //alert(q3)
+
           self.qStroj1(q3)
 
         }
+        if (self.getType()=="Externi"){
+           var q4= SQL.getPrace()
+           self.filtrDataPrac= self.qPrace(q4)
+           var q5= SQL.getDod()
+           self.filtrDataPrac= self.qDod(q5)
+        }
+
+
 
         if (self.getType()=="Rezani"){
+          // alert('rezba'+JSON.stringify(self.Col.dataStroj1))
           self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
-          //alert('rezba'+JSON.stringify(self.Col.dataStroj1))
+
         }
         if (self.getType()=="Kasir"){
           self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
@@ -699,17 +831,15 @@ computed: {
 
       }
 
-
-
   },1500)
 
   },
-   zmenaType(cSloup=""){
+async   zmenaType(cSloup=""){
 
 
       const self = this
       if (cSloup == self.getType()) {
-        //self.f1.Alert("Prdlacky")
+         // self.f1.Alert("Prdlacky")
         return
       }
       self.isDeleted=true
@@ -717,14 +847,24 @@ computed: {
              self.form.txt= ''  //polozka hledaniho textu 1,  je vztazena k typu sloupce
              self.form.txtStroj1=''
              self.form.txtStroj=''
-             self.filtrDataStro1=[]
+
              self.filtrDataStro=[]
-             self.filtrDataStro1=[] //Nazby strrojiu pro rezan
+             self.filtrDataStro1=[]
              self.filtrDat=[]
+             self.filtrDataPrac=[]
+             self.filtrDataDo=[]
+/*
+            var q1=SQL.getStroj(cSloup)
+            self.filtrDataStro = (await self.qStroj(q1))
+            var q2=SQL.getStroj1(cSloup)
+            self.filtrDataStro1 = (await self.qStroj1(q2))
+*/
+
              self.form.showtxt= false
              self.form.showtxtStroj= false  //mody stroje
              self.form.showtxtStroj1= false
              self.form.naklad=0,
+             self.form.prodejDTP=0,
              self.form.naklad_mody=0
              self.form.naklad_po=0
              self.form.naklad_cena=0
@@ -759,14 +899,20 @@ computed: {
      //self.Col.push( self.Cols);
     // alert(self.getType())
      self.readVuexData();
+     //return
      setTimeout(function(){
      self.saveVuexData();
              setTimeout(function(){
-               self.nactiDb(true)
+               //self.nactiDb(true)
                self.isDeleted=false
                 //self.f1.Alert(self.TestRend)
-                self.ID = Math.round(Math.random() * 198345813 *Math.random() )
+               self.ID = Math.round(Math.random() * 198345813 *Math.random() )
                self.TestRend=self.TestRend+1
+               self.filtrDataStro=[]
+               self.filtrDataStro1=[]
+               self.filtrDat=[]
+               self.filtrDo=[]
+               self.filtrPrac=[]
 
              },100)
      },100)
@@ -860,10 +1006,14 @@ computed: {
             self.form.showtxt=false
             self.form.showtxtStroj=false
             self.form.showtxtStroj1=false
+            self.form.showtxtDod=false
+            self.form.showtxtPrace=false
           setTimeout(function(){
             self.form.showtxt=false
             self.form.showtxtStroj=false
             self.form.showtxtStroj1=false
+            self.form.showtxtDod=false
+            self.form.showtxtPrace=false
 
           },100)
 
@@ -882,6 +1032,8 @@ computed: {
           self.form.showtxt=false
           self.form.showtxtStroj=false
           self.form.showtxtStroj1=false
+          self.form.showtxtDod=false
+          self.form.showtxtPrace=false
         },100)
 
 
@@ -1014,15 +1166,155 @@ computed: {
 
 
    },
+  blur1(id) {
+    const self = this
+      // f.Alert(self.lastFocus, " ", id)
+      return
+      if (self.lastFocus == id) {
+        return
+      }
+    setTimeout(function(){
 
-   fokus(kdezejsem) {
+      self.form.showtxt=false
+      self.form.showtxtStroj=false
+      self.form.showtxtStroj1=false
+
+    },600)
+  },
+  setID(){
      const self = this
+    self.$store.dispatch('setID',{
+       ID: self.ID
+     })
+  },
+  getID(){
+     const self = this
+     return self.$store.state.KalkulaceID
+
+  },
+  hideAll(){
+       const self = this
+
+    if (self.getID()!= self.ID ){
+      //f.Alert('Schovam')
+//      console.log("Schovam ", self.ID)
+
+      if (self.form.showtxt )       self.form.showtxt=false
+      if (self.form.showtxtStroj )  self.form.showtxtStroj=false
+      if (self.form.showtxtStroj1 ) self.form.showtxtStroj1=false
+      if (self.form.showtxtPrace ) self.form.showtxtPrace=false
+      if (self.form.showtxtDod ) self.form.showtxtDod=false
+    } else {
+      console.log("drzim ", self.ID)
+    }
+
+  },
+   async fokus(kdezejsem) {
+     const self = this
+    //  self.$store.dispatch('setID',{
+    //    ID: kdezejsem
+    //  })
+
+     //self.lastFocus=''
      self.$store.dispatch('KalkulaceColThis',self.getId()) //Jen nastavi KalkulaceThis
+
+     if (self.lastType!= self.getType()){
+       // alert('zmane')
+       self.filtrDataStro =   []
+       self.filtrDataStro1 =  []
+       self.lastType = self.getType()
+
+       var q1=SQL.getStroj(self.getType())
+       self.filtrDataStro = (await self.qStroj(q1))
+       var q2=SQL.getStroj1(self.getType())
+       self.filtrDataStro1 = (await self.qStroj1(q2))
+       console.log("storj", JSON.stringify(self.filtrDataStro))
+
+
+
+
+      if (kdezejsem.match(/prace/) ){
+           var q2=SQL.getPrace()
+           self.filtrDataPrac = (await self.qPrace(q2))
+           //f.Alert(JSON.stringify(self.filtrDataPrac))
+      }
+     if (kdezejsem.match(/dod/) ){
+           var q2=SQL.getDod()
+           self.filtrDataDo = (await self.qDod(q2))
+           //f.Alert(JSON.stringify(self.filtrDataDo))
+      }
+      if (kdezejsem.match(/mat/) ){
+
+         var q1=SQL.getMatList(self.Kalkulace[self.k_id()].data.Menu1Value,self.Kalkulace[self.k_id()].data.FormatSirka ,self.Kalkulace[self.k_id()].data.FormatVyska )
+         //f.Alert(q1)
+
+         self.filtrDat=(await self.q(q1))
+
+         console.log("MAT \n", JSON.stringify(self.filtrDat))
+      }
+      }
+
+       //if (kdezejsem.match(/stroj$/) ){
+         //var q1=SQL.getMatList(self.Kalkulace[self.k_id()].data.Menu1Value,self.Kalkulace[self.k_id()].data.FormatSirka ,self.Kalkulace[self.k_id()].data.FormatVyska )
+         // self.q(q1)
+          if (kdezejsem.match(/stroj$/) ){
+            if (self.form.showtxt )       self.form.showtxt=false
+            //if (self.form.showtxtStroj )  self.form.showtxtStroj=false
+            if (self.form.showtxtStroj1 ) self.form.showtxtStroj1=false
+            if (self.form.showtxtPrace )  self.form.showtxtPrace=false
+            if (self.form.showtxtDod )    self.form.showtxtDod=false
+          } else
+          if (kdezejsem.match(/stroj1$/) ){
+            if (self.form.showtxt )       self.form.showtxt=false
+            if (self.form.showtxtStroj )  self.form.showtxtStroj=false
+            //if (self.form.showtxtStroj1 ) self.form.showtxtStroj1=false
+            if (self.form.showtxtPrace )  self.form.showtxtPrace=false
+            if (self.form.showtxtDod )    self.form.showtxtDod=false
+          } else
+          if (kdezejsem.match(/mat/) ){
+            //if (self.form.showtxt )       self.form.showtxt=false
+            if (self.form.showtxtStroj )  self.form.showtxtStroj=false
+            if (self.form.showtxtStroj1 ) self.form.showtxtStroj1=false
+            if (self.form.showtxtPrace )  self.form.showtxtPrace=false
+            if (self.form.showtxtDod )    self.form.showtxtDod=false
+          } else
+          if (kdezejsem.match(/prace/) ){
+            if (self.form.showtxt )       self.form.showtxt=false
+            if (self.form.showtxtStroj )  self.form.showtxtStroj=false
+            if (self.form.showtxtStroj1 ) self.form.showtxtStroj1=false
+            //if (self.form.showtxtPrace )  self.form.showtxtPrace=false
+            if (self.form.showtxtDod )    self.form.showtxtDod=false
+          } else
+          if (kdezejsem.match(/dod/) ){
+            if (self.form.showtxt )       self.form.showtxt=false
+            if (self.form.showtxtStroj )  self.form.showtxtStroj=false
+            if (self.form.showtxtStroj1 ) self.form.showtxtStroj1=false
+            if (self.form.showtxtPrace )  self.form.showtxtPrace=false
+            //if (self.form.showtxtDod )    self.form.showtxtDod=false
+          }
+       // }
+
+
+
+     // self.nactiDb(true)
      if (self.getType()=="Baleni"){
        self.nactiDb(true)
 
        //self.f1.Alert("Baleni", self.SQL.getStroj(self.getType()))
      }
+
+
+     if (kdezejsem.match(/stroj$/) ){
+        await (self.filtrDataStroj())
+        if (self.filtrDataStro.length == 0 ){
+          setTimeout(function() {
+
+          },200)
+        }
+       // f.Alert('stroj'+ self.filtrDataStro.length)
+     }
+     return
+
      console.log("Fokus ", kdezejsem ," ? ", SQL.getStroj(self.getType()) )
      //self.filtrDataStroj();
    },
@@ -1039,6 +1331,7 @@ computed: {
       } catch(e){
         console.log(e)
       }
+      return atmp
    },
    async qStroj(qq) {
      const self = this
@@ -1050,22 +1343,12 @@ computed: {
         var idCol = self.getIndex()
         var idK = self.k_id()
         self.Col.dataStroj=atmp;
-
         console.log("DATA STROJ" , JSON.stringify(self.Col.dataStroj))
         self.info=JSON.stringify(self.Col.dataStroj)
-
-        //self.$store.dispatch('saveCols', {id: idK,data: self.Cols })
-        //self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'sloupecid['+idCol+'].data' , value: 8822 })
-
-          // self.Kalkulace.push({"a" : 778899})
-//        self.Col.data=atmp;
-
-        //self.info = self.Col.data
-        //self.Mat=atmp;
-
       } catch(e){
         console.log(e)
       }
+      return atmp
 
    },
     async qStroj1(qq) { //Jen stroj
@@ -1086,12 +1369,58 @@ computed: {
       } catch(e){
         console.log(e)
       }
+      return atmp
+
+   },
+   async qDod(qq) { //Jen dodavatel
+     const self = this
+     var atmp=[]
+      self.info = qq
+      try {
+       atmp=(await Q.all(self.idefix,qq)).data.data
+        //self.info = atmp
+        var idCol = self.getIndex()
+        var idK = self.k_id()
+        self.Col.filtrDataDod=atmp; //Jen Stroj
+        self.form.dataDo = atmp;
+
+        //self.info=atmp;
+        console.log("DATA Dod" , JSON.stringify(self.Col.filtrDataDod))
+
+      } catch(e){
+        console.log(e)
+      }
+      return atmp
+
+   },
+   async qPrace(qq) { //Jen dodavatel
+     const self = this
+     var atmp=[]
+      self.info = qq
+      try {
+       atmp=(await Q.all(self.idefix,qq)).data.data
+        //self.info = atmp
+        var idCol = self.getIndex()
+        var idK = self.k_id()
+        self.Col.filtrDataPrace=atmp; //Jen Stroj
+        self.form.filtrDataPrac = atmp;
+
+        //self.info=atmp;
+        console.log("DATA Dod" , JSON.stringify(self.Col.filtrDataPrace))
+
+      } catch(e){
+        console.log(e)
+      }
+      return atmp
 
    },
    classJarda(xId){
 
      var neco = document.getElementById(xId)
-     neco.className="jarda"
+     if (neco) {
+       neco.className="jarda"
+     }
+
      //alert(neco)
    },
 
@@ -1101,7 +1430,7 @@ computed: {
       self.form.poznamka=''
        }
     self.form.poznamka = (self.form.poznamka+'').trim()
-    
+
 
 
      self.$store.dispatch('replaceKalkCol',{kalkulaceid: self.k_id(), idxCol: self.getIndex(),
@@ -1109,6 +1438,8 @@ computed: {
        mat: self.form.itemSelectedMat,
        stroj: self.form.itemSelectedStroj,
        stroj1: self.form.itemSelectedStroj1,
+       dod: self.form.itemSelectedDod,
+       prace: self.form.itemSelectedPrace,
        naklad: self.form.naklad,
        naklad_mody: self.form.naklad_mody, //Baleni
        naklad_po: self.form.naklad_po,  //Baleni
@@ -1118,7 +1449,8 @@ computed: {
        tisk: self.form.tisk,
        baleni: self.form.baleni,
        poznamka: self.form.poznamka,
-       externi:  self.form.externi
+       externi:  self.form.externi,
+       prodejDTP: self.form.prodejDTP
         }} )
 
    },
@@ -1128,7 +1460,11 @@ computed: {
           self.form.itemSelectedStroj  = neco.data.stroj
           self.form.itemSelectedStroj1 = neco.data.stroj1
           self.form.itemSelectedMat    = neco.data.mat
+          self.form.itemSelectedDod    = neco.data.dod
+          self.form.itemSelectedPrace  = neco.data.prace
           self.form.naklad             = neco.data.naklad
+          self.form.prodejDTP          = neco.data.prodejDTP
+
           self.form.naklad_mody        = neco.data.naklad_mody //Baleni
           self.form.naklad_po          = neco.data.naklad_po //Baleni
           self.form.naklad_cena        = neco.data.naklad_cena //Baleni
@@ -1143,7 +1479,9 @@ computed: {
           }
 
      if (self.getType() == "Baleni"){
+       //f.Alert(self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs)
        self.form.naklad_ks = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
+       //self.form.naklad_ks = 50000
      }
 
      try  {
@@ -1192,9 +1530,18 @@ computed: {
        return
      }
    },
-   setColStroj(itemSelected){
+   setColPrace(itemSelected){
      const self = this
-      self.form.itemSelectedStroj = itemSelected;
+      self.form.itemSelectedPrace = itemSelected;
+     if (self.getType()!=='Mat1'){
+         self.saveVuexData();
+      return
+
+     }
+   },
+   setColDod(itemSelected){
+     const self = this
+      self.form.itemSelectedDod = itemSelected;
      if (self.getType()!=='Mat1'){
          self.saveVuexData();
       return
@@ -1209,9 +1556,19 @@ computed: {
       return
      }
    },
-   filtrData() {
+   setColStroj(itemSelected){
+     const self = this
+      self.form.itemSelectedStroj = itemSelected;
+     if (self.getType()!=='Mat1'){
+         self.saveVuexData();
+      return
+     }
+   },
+
+   async filtrData() {
       const self = this
       var neco =[]
+
       try {
       neco = self.Col.data.filter(el => (
           (
@@ -1233,13 +1590,55 @@ computed: {
    vyraz(ctxt){
      return f.vyraz(ctxt)
    },
-   filtrDataStroj() {
+   async filtrDataPrace() {
       const self = this
       var neco =[]
       self.filtrDataStro=[]
       self.info+="B"
 
-      console.log('dataStroj')
+//      console.log('dataStroj', self.getType() )
+      if (self.Col.hasOwnProperty('dataPrace')){
+          self.Col.dataPrace.forEach(el=>{
+              //console.log(el.nazev);
+            if ( self.form.txtPrace ==''){
+              neco.push(el)
+              self.filtrDataPrac.push(el)
+              self.form.showtxtPrace=true
+            } else
+            if (self.form.txtPrace > '' &&  el.prace== self.form.txtPrace) {
+              self.form.showtxtPrace=true
+              console.log("Stejny " + self.form.txtPrace + " // " + el.prace )
+              neco=[]
+              self.filtrDataPrac=[]
+              //return ;
+            } else
+            if (self.form.txtPrace > '' && (self.vyraz(el.prace)).indexOf(self.vyraz(self.form.txtPrace))>=0
+            // &&  (el.nazev).toUpperCase().match(self.form.txtStroj.toUpperCase())
+            ) {
+              //self.form.showtxtStroj=true
+              self.filtrDataPrac.push(el)
+              neco.push(el)
+            }
+
+          })
+
+      } else {
+        var q1=SQL.getPrace()
+          //f.Alert('Ctu')
+          self.filtrDataPrac = (await self.qPrace(q1))
+
+       return []
+      }
+      console.log("Delke neco " , neco.length)
+      return neco
+   },
+   async filtrDataStroj() {
+      const self = this
+      var neco =[]
+      self.filtrDataStro=[]
+      self.info+="B"
+
+//      console.log('dataStroj', self.getType() )
       if (self.Col.hasOwnProperty('dataStroj')){
           self.Col.dataStroj.forEach(el=>{
               //console.log(el.nazev);
@@ -1261,26 +1660,17 @@ computed: {
               //self.form.showtxtStroj=true
               self.filtrDataStro.push(el)
               neco.push(el)
-              //console.log("Pozice" , (el.nazev).toUpperCase().indexOf(self.form.txtStroj.toUpperCase()) , " : ",(el.nazev).toUpperCase() ,  self.form.txtStroj.toUpperCase() )
-              //console.log("NECO " , neco)
             }
-            //el.nazev).toUpperCase().match(self.form.txtStroj.toUpperCase())  ||
 
           })
-      //   return self.Col.dataStroj
 
       } else {
         var q1=SQL.getStroj(self.getType())
-          self.qStroj(q1)
-
-
-          return []
+          //f.Alert('Ctu')
+          self.filtrDataStro = (await self.qStroj(q1))
+       return []
       }
-
-
       console.log("Delke neco " , neco.length)
-      // self.filtrDataStro=neco;
-      // neco = self.Col.dataStroj
       return neco
    },
    filtrDataStroj1() {
@@ -1592,7 +1982,7 @@ a:focus {
 }
 select:focus, option:focus {
     color: black;
-    font-weight: 600;
+    /* font-weight: 600; */
 
 }
 a {

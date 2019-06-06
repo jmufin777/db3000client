@@ -14,10 +14,26 @@
      <!-- <work slot="kalkulace" v-for="na in (2 ,20) " :key="na"> -->
         <span slot="leva" >
         <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
-              <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalk(iKalk.kalkulaceid)"
+              <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
+              :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
+               @click="removeKalk(iKalk.kalkulaceid)"
               >
+
                 <a :name="iKalk.kalkulaceid"></a>
-                <i class="el-icon-delete" size="mini"></i></button>
+                  <i class="el-icon-delete white" size="mini"
+                  :class="{'blue lighten-4': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
+                  ></i>
+                </button>
+               <button slot="add" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
+                :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
+                @click="copyKalk(iK)"
+              >
+                  <a :name="iKalk.kalkulaceid"></a>
+                  <i class="el-icon-plus white" size="mini"
+                  :class="{'blue lighten-4': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
+                  ></i>
+
+                </button>
         </work-left>
         </span>
 <!-- <draggable  v-model="iKalk.sloupecid"  :options="{group:{ name:'sloupce' }}"  @start="drag=true" @end="drag=false" :move="chooseItem"  >   -->
@@ -47,6 +63,7 @@
               <el-dropdown-item  :command="'Baleni'">Baleni</el-dropdown-item>
               <el-dropdown-item  :command="'Jine'">Jine</el-dropdown-item>
               <el-dropdown-item  :command="'Externi'">Externi</el-dropdown-item>
+              <el-dropdown-item  :command="'DTP'">DTP</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
      </div>
@@ -99,7 +116,8 @@
                   :class="{
                     'blue lighten-4': $store.state.KalkulaceColThis==sl.id,
                     'brown lighten-3': sl.type=='Mat1','green lighten-1': sl.type=='Laminace','orange lighten-1': sl.type=='Kasir','yellow lighten-2': sl.type=='Rezani','   lighten-2': sl.type=='Rezani'
-                    , 'pink lighten-5': sl.type=='Baleni', 'red lighten-2': sl.type=='Jine'
+                    , 'pink lighten-5': sl.type =='Baleni', 'red lighten-2': sl.type=='Jine'
+                    , 'cyan lighten-3': sl.type =='DTP' , 'lime lighten-3': sl.type =='Externi'
 
                     }"
 

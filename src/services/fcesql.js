@@ -69,7 +69,7 @@ export default {
       ,tisk
 
       from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix`
-      if (cwhere = 'Jine') {
+      if (cwhere == 'Jine') {
         cq+=` where not b.tisk `
         cq+=` and not b.nazev_text ilike any(array['lam%','bal%','%ez_n%','%ka__r%'] ) `
       } else
@@ -133,12 +133,15 @@ export default {
     return this.getStrojItems('Jine','1');
    },
    getStroj1(colType="") {
+//    alert(colType)
      if (colType=="Rezani"){
+
       return this.getStrojOnly('%ez_n%',"1");
      }
      if (colType=="Kasir"){
-      return this.getStrojOnly('%ez_n%',"1");
+      return this.getStrojOnly('%Ka__r%',"1");
      }
+
 
    },
    getStroj(colType="") {
@@ -150,9 +153,11 @@ export default {
     }
     else
     if (colType=='Baleni') {
+
       return this.getBaleni();
     }
     if (colType=='Rezani') {
+
       return this.getRezani();
     }
     if (colType=='Jine') {
@@ -161,7 +166,22 @@ export default {
     return ''
    }
 
+///Prace
 
+,getPraceDod(){
+  var q="select b.nazev as firma,c.nazev as prace, a.idefix_prace, a.idefix_firma from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix";
+  return q;
+}
+,getPrace(){
+  var q="select distinct c.nazev as prace, a.idefix_prace from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix order by c.nazev";
+  return q;
+}
+,getDod(idefix_prace=0){
+  var q=`select distinct b.nazev as firma, a.idefix_firma from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix
+          where ${idefix_prace} = 0  or a.idefix_prace = ${idefix_prace}
+  order by b.nazev`;
+  return q;
+}
 
 
 }
