@@ -34,7 +34,8 @@ export default new Vuex.Store({
     KalkulaceThis: -1,
     KalkulaceColThis: -1,
     KalkulaceLast: -1,
-    KalkulaceID: -1  //Aktivni id sloupce ....
+    KalkulaceID: -1, //Aktivni id sloupce ....
+    Strana: 15  //Default na stranku v tabulce
   },
   mutations: {
     setToken (state, token) {
@@ -155,6 +156,13 @@ export default new Vuex.Store({
       if (state.KalkulaceID!=kalkulace.ID) {
         state.KalkulaceID = kalkulace.ID
       }
+
+    },
+
+    setStrana(state, kalkulace) {
+      //if (state.Strana!=kalkulace.Strana) {
+          state.Strana = kalkulace.Strana
+      //}
 
     },
 
@@ -579,13 +587,19 @@ export default new Vuex.Store({
       commit('removeCol', kalkulaceid)
     },
     addKalkCol ({commit}, kalkulaceid) {
-      console.log('Actions- addKalkCol -Dispatch', kalkulaceid)
+      //console.log('Actions- addKalkCol -Dispatch', kalkulaceid)
       commit('addKalkCol', kalkulaceid)
     },
     setID ({commit}, kalkulaceid) {
-      console.log('SET ID ', kalkulaceid)
+      //console.log('SET ID ', kalkulaceid)
       commit('setID', kalkulaceid)
     },
+
+    setStrana ({commit}, kalkulaceid) {
+      console.log('SET STRANA ', kalkulaceid)
+      commit('setStrana', kalkulaceid)
+    },
+
 
 
     addColMat ({commit}, kalkulaceid) {

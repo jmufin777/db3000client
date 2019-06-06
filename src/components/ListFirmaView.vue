@@ -48,14 +48,18 @@
    <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="Stranka=(Stranka>1)?Stranka - 1:1" ><i class="el-icon-arrow-left" size="mini"></i></button>
 
 
-        <input type="number" v-model="Stranka" size="18"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" :max="Math.ceil(list.length / Zobrazit)" :min="1" class="elevation-0 pr-0 tdl tdn prava" style="width:3em">
+        <input type="number" v-model="Stranka" size="18"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" :max="Math.ceil(list.length / Zobrazit)" :min="1" class="elevation-0 pr-0 tdl tdn prava" style="width:3em"
+
+        >
         <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="StrankaNext()"                 ><i class="el-icon-arrow-right" size="mini"></i></button>
          <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="StrankaEnd()"                 ><i class="el-icon-d-arrow-right" size="mini"></i></button>
 
 
         <span class="elevation-0 pa-1 blue--text">Zobrazeno&nbsp;</span>
         <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="Zobrazit=(Zobrazit<list.length)?Zobrazit+1:list.length" ><i class="el-icon-arrow-up" size="mini"></i></button>
-        <input type="number" v-model="Zobrazit" :min="1" :max="list.length"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" @change="Stranka=1" size="6" class="prava elevation-0 pr-0 tdl tdn  " style="width:4em">
+        <input type="number" v-model="Zobrazit" :min="1" :max="list.length"  @mouseup="Sirka--" @keyup="Sirka--"  @blur="Sirka--" @change="Stranka=1;setStrana()" size="6" class="prava elevation-0 pr-0 tdl tdn  " style="width:4em"
+
+        >
         <button type="button" style="width:18px;height:18px;border:none" class="white blue--text px-0 cell" @click="Zobrazit=(Zobrazit>1)?Zobrazit-1:1" ><i class="el-icon-arrow-down" size="mini"></i></button>
 
 
@@ -216,6 +220,7 @@
      </el-tooltip>
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="copyLineToForm(irow1)" ><i class="el-icon-document" size="mini"></i></button>
        <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="editLineToForm(irow1)" ><i class="el-icon-edit" size="mini"></i></button>
+      <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete bila" size="mini" ></i></button>
    </div>
 
    </div>
@@ -225,7 +230,7 @@
   </tr>
 </table>
 
-<table slot="headr"  :style="pof(Sirka*SirkaPrava,100)">
+<table slot="headr"  :style="pof(Sirka*SirkaPrava,1)">
 
 
 <!-- <ta-ble3 v-if="true"  :h="'650px;width:100%'" :stylet1="'width:800px'" :stylet2="'width:100%'" :autosize="true" > -->
@@ -235,8 +240,8 @@
 </th>
 
 </tr> <tr>
-<th :style="pof(Sirka*SirkaPrava,100)" class="stred" >
-Vymazat
+<th :style="pof(Sirka*SirkaPrava,1)" class="stred" >
+<!-- Vymazat -->
 </th>
 </tr>
  </thead>
@@ -253,8 +258,10 @@ Vymazat
         :ref="'RadekR_' + _max(irow1+''+ item1.idefix  + '' + list.length +''+ID)"
 >
 
-  <td :style="pof(Sirka*SirkaPrava,100)" class="stred bila" style="border-bottom: solid 1px #E3F2FD; ">
-     <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete bila" size="mini" ></i></button>
+  <!-- <td :style="pof(Sirka*SirkaPrava,10)" class="stred bila" style="border-bottom: solid 1px #E3F2FD; "> -->
+    <td :style="pof(Sirka*SirkaPrava,1)" class="stred bila" style="border-bottom: solid 1px #ffffff; ">
+
+     <!-- <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow1)" ><i class="el-icon-delete bila" size="mini" ></i></button> -->
   </td>
 
   </tr>
@@ -384,7 +391,7 @@ export default {
       //ChekBox
        checkAll: false,
        checkedList: [],
-       Zobrazit: 15,
+       Zobrazit: 25,
        Zobrazit1: 15,
 
        Stranka: 1,
@@ -426,6 +433,7 @@ export default {
     self.objId1+=''+self.ID
     self.objId2+=''+self.ID
     self.objSearchBar+=''+self.ID
+    self.getStrana()
     var interv =setInterval(function() {
        self.sirka("sirka")
        // self.TestovaciCislo++
@@ -499,6 +507,18 @@ methods: {
       }
 
 
+  },
+  setStrana(){
+    const self=this;
+      self.$store.dispatch('setStrana',{
+       Strana: self.Zobrazit
+      })
+      console.log(self.Zobrazit)
+
+  },
+  getStrana() {
+     const self = this
+     self.Zobrazit =  self.$store.state.Strana
   },
   StrankaEnd(){
     const self= this

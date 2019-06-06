@@ -43,7 +43,7 @@
             && (filtrDat.length>1 || (filtrDat.length==1 && filtrDat[0].nazev!=form.txt) )
         " class="elevation-12 yellow"
         :style="'top:'+ getBottom('seek1_'+ID)+'px;width:'+getWidth('seek1_'+ID,8)+'px;left:'+getLeft('seek1_'+ID,1)+'px'" >
-                  <span style="display:none">FF {{ filtrDat.length}}</span>
+          <span style="display:none">FF {{ filtrDat.length}}</span>
         <!-- {{ filtrData()}} -->
           <table  width="100%" v-if="form.showtxt &&  (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir'|| getType()=='Jine' )"  >
              <!-- <tr class="mt-1 green" v-for="(item, i) in filtrData()" :key="i" > -->
@@ -143,8 +143,8 @@
       <!--    Externi Dod //-->
         <div style="min-height:5px;max-height:10em;overflow-y:scroll;position:absolute;z-index:51001"
         v-if="form.showtxtDod && (getType()=='Externi' ) && filtrDataDo.length > 0" class="elevation-12 teal"
-          :style="'top:'+ getBottom('seek5_'+ID)+'px;width:'+getWidth('seek5_'+ID,8)+'px;left:'+getLeft('seek5_'+ID,0)+'px'">
-          <span style="display:none">FF {{ filtrDataDo.length}}</span>
+          :style="'top:'+ getBottom('seek5_'+ID,40)+'px;width:'+getWidth('seek5_'+ID,8)+'px;left:'+getLeft('seek5_'+ID,0)+'px'">
+        <span style="display:none">FF {{ filtrDataDo.length}}</span>
         <span style="display:none">
          {{ filtrDataDo}}
          <!-- {{ getBottom('seek5_'+ID) }} {{ Col.dataStroj}} -->
@@ -280,6 +280,7 @@
                 @click.native="fokus('stroj');form.showtxtStroj=true"
                 @keydown.native="fokus('stroj');form.showtxtStroj=true;seznam('seek2_'+ID+'_list_0',0,$event)"
                 @blur.native="blur1('seek2_'+ID)"
+
                 :id="'seek2_'+ID"
               ></textarea-autosize>
          </v-card-text>
@@ -352,10 +353,11 @@
                 :placeholder="'Hledani Prace '+ getType()+ ' '+ID"
                 rows="1"
 
-                  @focus.native="fokus('prace');form.showtxtPrace=true"
-                  @click.native="fokus('prace');form.showtxtPrace=true"
+                @focus.native="fokus('prace');form.showtxtPrace=true"
+                @click.native="fokus('prace');form.showtxtPrace=true"
                 @keydown.native="fokus('prace');form.showtxtPrace=true;seznam('seek4_'+ID+'_list_0',0,$event)"
                 @blur.native="blur1('seek4_'+ID)"
+                @change.native="form.txtDod=''"
                 :id="'seek4_'+ID"
               ></textarea-autosize>
          </v-card-text>
@@ -376,6 +378,43 @@
                 :id="'seek5_'+ID"
               ></textarea-autosize>
          </v-card-text>
+         <v-card-text style="width:100%;text-align:left" class="pa-0 pl-0" >
+              <table>
+                <tr>
+                  <td class="pl-1">
+                    Naklad/ks
+                  </td>
+                  <td>
+                    <input type="number" v-model="form.ext_naklad_ks" size="mini"  style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1" @click="readVuexData"
+                    @change="form.ext_celkem=form.ext_naklad_ks*form.ext_pocet_ks ;saveVuexData()">
+                  </td>
+                  <td class="pl-1">
+                    Pocet
+                  </td>
+                  <td class=pl-1>
+                    <input type="number" v-model="form.ext_pocet_ks" size="mini"  style="width:100%; height:15px; text-align:right;" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
+                    @change="form.ext_celkem=form.ext_naklad_ks*form.ext_pocet_ks;saveVuexData()">
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Celkem
+                  </td>
+                  <td>
+                    <input type="number" v-model="form.ext_celkem" size="mini"  style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1" @click="readVuexData" @change="saveVuexData()">
+                  </td>
+                  <td class="pl-1">
+                    Prodej
+                  </td>
+                  <td >
+                    <input type="number" v-model="form.ext_prodej" size="mini"  style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1" @click="readVuexData" @change="saveVuexData()">
+                  </td>
+                </tr>
+              </table>
+
+
+          </v-card-text>
+
         </v-card>
 
         <v-card style="width:100%;float:none;height:7em;overflow:scroll" class="pa-0"  v-if="getType()=='DTP'" >
@@ -583,6 +622,14 @@ export default {
        showtxtStroj1: false, //Jen stroj
        showtxtDod: false, //Jen firma
        showtxtPrace: false, //Jen prace
+       //Externi
+       ext_naklad_ks:0, //cena za 1 kus
+       ext_pocet_ks:0, //pocet ks
+       ext_celkem:0, //pocet ks
+       ext_prodej:0, //pocet ks
+
+
+       //Externi
        naklad:0,
        prodejDTP:0,
        //Baleni - polozku naklad
@@ -592,6 +639,7 @@ export default {
        naklad_cena:0,
        naklad_ks:0,
 //Baleni - polozku naklad
+
        poznamka:'',
        externi: [{
          Popis: '',
@@ -805,9 +853,12 @@ computed: {
         }
         if (self.getType()=="Externi"){
            var q4= SQL.getPrace()
-           self.filtrDataPrac= self.qPrace(q4)
+           //self.filtrDataPrac= self.qPrace(q4)
+           self.Col.dataPrace= self.qPrace(q4)
+
            var q5= SQL.getDod()
-           self.filtrDataPrac= self.qDod(q5)
+           //self.filtrDataPrac= self.qDod(q5)
+           self.Col.DataDod= self.qDod(q5)
         }
 
 
@@ -842,11 +893,13 @@ async   zmenaType(cSloup=""){
          // self.f1.Alert("Prdlacky")
         return
       }
-      self.isDeleted=true
+            self.isDeleted=true
       // self.ID = Math.round(Math.random() * 198345813 *Math.random() )
              self.form.txt= ''  //polozka hledaniho textu 1,  je vztazena k typu sloupce
              self.form.txtStroj1=''
              self.form.txtStroj=''
+             self.form.txtDod=''
+             self.form.txtPrace=''
 
              self.filtrDataStro=[]
              self.filtrDataStro1=[]
@@ -860,9 +913,11 @@ async   zmenaType(cSloup=""){
             self.filtrDataStro1 = (await self.qStroj1(q2))
 */
 
-             self.form.showtxt= false
-             self.form.showtxtStroj= false  //mody stroje
-             self.form.showtxtStroj1= false
+             self.form.showtxt       = false
+             self.form.showtxtStroj  = false  //mody stroje
+             self.form.showtxtStroj1 = false
+             self.form.showtxtPrace  = false
+             self.form.showtxtDod    = false
              self.form.naklad=0,
              self.form.prodejDTP=0,
              self.form.naklad_mody=0
@@ -874,6 +929,12 @@ async   zmenaType(cSloup=""){
              self.form.itemSelectedStroj1= {}
              self.form.itemSelectedMat= {}
              self.form.externi = []
+
+             self.form.ext_naklad_ks = 0 //cena za 1 kus
+             self.form.ext_pocet_ks = 0 //pocet ks
+             self.form.ext_celkem = 0 //pocet ks
+             self.form.ext_prodej = 0 //pocet ks
+
              var ie=0
              for(ie=0 ;ie<20 ;ie++) {
               self.form.externi.push( {Popis: '', Cena: 0 })
@@ -919,7 +980,7 @@ async   zmenaType(cSloup=""){
    },
    deleteCol(){
       const self = this
-      if (confirm("Odtranit " + self.getType() +" ?")){
+      if (confirm("Odtsranit " + self.getType() +" ?")){
         self.isDeleted=true
         setTimeout(function(){
           eventBus.$emit('MenuHlavni',
@@ -958,8 +1019,8 @@ async   zmenaType(cSloup=""){
 
      var PrvekTxt=""
 
-     self.info=aPrvek
-     self.info.push({dele: aPrvek.length })
+    // self.info=aPrvek
+     // self.info.push({dele: aPrvek.length })
 
      for (i=0;i<(delka-1);i++) {
        if (i < delka -2){
@@ -970,9 +1031,9 @@ async   zmenaType(cSloup=""){
         //self.info.push(PrvekBase)
 
      }
-      self.info.push({"PrvekTxt": PrvekTxt })
-      self.info.push({"Pozice": idPoz })
-      self.info.push({"base": PrvekBase })
+      //self.info.push({"PrvekTxt": PrvekTxt })
+      //self.info.push({"Pozice": idPoz })
+      //self.info.push({"base": PrvekBase })
 
       tmp = idPoz*1;
       if (idPoz>0){
@@ -991,7 +1052,7 @@ async   zmenaType(cSloup=""){
       if (document.getElementById(id)) { //Id odkazuje na prvni radku seznamu = pokud existuje
           status= true;
           objSeznam= document.getElementById(id)
-          self.info.push("OK")
+        //  self.info.push("OK")
       }
 
 
@@ -1002,12 +1063,11 @@ async   zmenaType(cSloup=""){
             self.form.showtxt=false
             self.form.showtxtStroj=false
             self.form.showtxtStroj1=false
-            document.getElementById(PrvekTxt).focus()
-            self.form.showtxt=false
-            self.form.showtxtStroj=false
-            self.form.showtxtStroj1=false
             self.form.showtxtDod=false
             self.form.showtxtPrace=false
+            document.getElementById(PrvekTxt).focus()
+
+
           setTimeout(function(){
             self.form.showtxt=false
             self.form.showtxtStroj=false
@@ -1046,7 +1106,7 @@ async   zmenaType(cSloup=""){
 
          if (status) {
            objSeznam.focus()
-           self.info.push(objSeznam.id)
+           // self.info.push(objSeznam.id)
          } else {
            return
          }
@@ -1175,9 +1235,11 @@ async   zmenaType(cSloup=""){
       }
     setTimeout(function(){
 
-      self.form.showtxt=false
-      self.form.showtxtStroj=false
-      self.form.showtxtStroj1=false
+      self.form.showtxt       = false
+      self.form.showtxtStroj  = false
+      self.form.showtxtStroj1 = false
+      self.form.showtxtPrace  = false
+      self.form.showtxtDod    = false
 
     },600)
   },
@@ -1202,10 +1264,10 @@ async   zmenaType(cSloup=""){
       if (self.form.showtxt )       self.form.showtxt=false
       if (self.form.showtxtStroj )  self.form.showtxtStroj=false
       if (self.form.showtxtStroj1 ) self.form.showtxtStroj1=false
-      if (self.form.showtxtPrace ) self.form.showtxtPrace=false
-      if (self.form.showtxtDod ) self.form.showtxtDod=false
+      if (self.form.showtxtPrace )  self.form.showtxtPrace=false
+      if (self.form.showtxtDod )    self.form.showtxtDod=false
     } else {
-      console.log("drzim ", self.ID)
+      // console.log("drzim ", self.ID)
     }
 
   },
@@ -1229,30 +1291,41 @@ async   zmenaType(cSloup=""){
        var q2=SQL.getStroj1(self.getType())
        self.filtrDataStro1 = (await self.qStroj1(q2))
        console.log("storj", JSON.stringify(self.filtrDataStro))
+     }
 
 
 
 
       if (kdezejsem.match(/prace/) ){
-           var q2=SQL.getPrace()
-           self.filtrDataPrac = (await self.qPrace(q2))
-           //f.Alert(JSON.stringify(self.filtrDataPrac))
-      }
+           if (!self.Col.hasOwnProperty('dataPrace') || self.Col.dataPrace.length==0){
+             var q2=SQL.getPrace()
+             self.Col.dataPrace = (await self.qPrace(q2))
+           }
+           await self.filtrDataPrace()
+      } else
      if (kdezejsem.match(/dod/) ){
-           var q2=SQL.getDod()
-           self.filtrDataDo = (await self.qDod(q2))
-           //f.Alert(JSON.stringify(self.filtrDataDo))
-      }
+           if (!self.Col.hasOwnProperty('dataDod') || self.Col.dataDod.length==0){
+             var q2=SQL.getDod()
+             self.Col.dataDod = (await self.qDod(q2))
+           }
+           await self.filtrDataDod()
+           // f.Alert(JSON.stringify(self.filtrDataDo))
+      } else
       if (kdezejsem.match(/mat/) ){
-
+        if (!self.Col.hasOwnProperty('data') || self.Col.data.length== undefined ||  self.Col.data.length==0){
+         //f.Alert('heldam '+  self.Col.data )
          var q1=SQL.getMatList(self.Kalkulace[self.k_id()].data.Menu1Value,self.Kalkulace[self.k_id()].data.FormatSirka ,self.Kalkulace[self.k_id()].data.FormatVyska )
-         //f.Alert(q1)
+         // f.Alert(q1)
+         // self.filtrDat=(await self.q(q1))
+         self.Col.data=(await self.q(q1))
+         console.log("MAT 3 \n" , JSON.stringify(self.Col.data))
+        }
+        console.log("MAT 3 \n" , JSON.stringify(self.Col.data.length))
+        await self.filtrData()
+         //await self.filtrData()
 
-         self.filtrDat=(await self.q(q1))
+      }
 
-         console.log("MAT \n", JSON.stringify(self.filtrDat))
-      }
-      }
 
        //if (kdezejsem.match(/stroj$/) ){
          //var q1=SQL.getMatList(self.Kalkulace[self.k_id()].data.Menu1Value,self.Kalkulace[self.k_id()].data.FormatSirka ,self.Kalkulace[self.k_id()].data.FormatVyska )
@@ -1331,6 +1404,7 @@ async   zmenaType(cSloup=""){
       } catch(e){
         console.log(e)
       }
+      console.log("Q MAT2 \n",JSON.stringify(atmp))
       return atmp
    },
    async qStroj(qq) {
@@ -1381,7 +1455,7 @@ async   zmenaType(cSloup=""){
         //self.info = atmp
         var idCol = self.getIndex()
         var idK = self.k_id()
-        self.Col.filtrDataDod=atmp; //Jen Stroj
+        self.Col.DataDod=atmp; //Jen Stroj
         self.form.dataDo = atmp;
 
         //self.info=atmp;
@@ -1402,7 +1476,7 @@ async   zmenaType(cSloup=""){
         //self.info = atmp
         var idCol = self.getIndex()
         var idK = self.k_id()
-        self.Col.filtrDataPrace=atmp; //Jen Stroj
+        self.Col.DataPrace=atmp; //Jen Stroj
         self.form.filtrDataPrac = atmp;
 
         //self.info=atmp;
@@ -1450,7 +1524,12 @@ async   zmenaType(cSloup=""){
        baleni: self.form.baleni,
        poznamka: self.form.poznamka,
        externi:  self.form.externi,
-       prodejDTP: self.form.prodejDTP
+       prodejDTP: self.form.prodejDTP,
+       ext_naklad_ks: self.form.ext_naklad_ks,
+       ext_pocet_ks:  self.form.ext_pocet_ks,
+       ext_celkem: self.form.ext_celkem,
+       ext_prodej: self.form.ext_prodej,
+
         }} )
 
    },
@@ -1471,6 +1550,12 @@ async   zmenaType(cSloup=""){
           self.form.tisk               = neco.data.tisk
           self.form.baleni             = neco.data.baleni
           self.form.poznamka           = neco.data.poznamka
+
+          self.form.ext_naklad_ks = neco.data.ext_naklad_ks //cena za 1 kus
+          self.form.ext_pocet_ks  = neco.data.ext_pocet_ks //pocet ks
+          self.form.ext_celkem    = neco.data.ext_celkem   //pocet ks
+          self.form.ext_prodej    = neco.data.ext_prodej   //pocet ks
+
           if (self.getType() == "Externi"){
             if (neco.data.externi!==undefined) {
               self.form.externi            = JSON.parse(JSON.stringify(neco.data.externi))
@@ -1513,6 +1598,18 @@ async   zmenaType(cSloup=""){
       self.form.txtStroj1       = neco.data.stroj1.nazev_stroj
        //self.form.txtStroj = "ahokj"
        //alert( JSON.stringify(neco.data.stroj1) + " / " + neco.data.stroj1.nazev_stroj)
+     } catch(e) {
+       console.log('nei nazev stroje ve sloupci ' + self.getType())
+     }
+
+     try  {
+      self.form.txtDod       = neco.data.dod.firma
+     } catch(e) {
+       console.log('nei nazev stroje ve sloupci ' + self.getType())
+     }
+
+    try  {
+      self.form.txtPrace       = neco.data.prace.prace
      } catch(e) {
        console.log('nei nazev stroje ve sloupci ' + self.getType())
      }
@@ -1565,7 +1662,7 @@ async   zmenaType(cSloup=""){
      }
    },
 
-   async filtrData() {
+   async filtrDataOld() {
       const self = this
       var neco =[]
 
@@ -1590,14 +1687,36 @@ async   zmenaType(cSloup=""){
    vyraz(ctxt){
      return f.vyraz(ctxt)
    },
+   async filtrData() {
+      const self = this
+      var neco =[]
+      self.filtrDat=[]
+      if (self.Col.hasOwnProperty('data')){
+          self.Col.data.forEach((el, idx) => {
+            if (self.vyraz(el.nazev).match(self.vyraz(self.form.txt))  || self.form.txt =='') {
+              self.filtrDat.push(el)
+            }
+
+          })
+      } else {
+          var q1=SQL.getMatList(self.Kalkulace[self.k_id()].data.Menu1Value,self.Kalkulace[self.k_id()].data.FormatSirka ,self.Kalkulace[self.k_id()].data.FormatVyska )
+          neco =  (await self.q(q1))
+          self.filtrDat = neco
+          self.Col.data = neco
+      }
+      return
+
+   },
    async filtrDataPrace() {
       const self = this
       var neco =[]
-      self.filtrDataStro=[]
+      self.filtrDataPrac=[]
       self.info+="B"
 
 //      console.log('dataStroj', self.getType() )
-      if (self.Col.hasOwnProperty('dataPrace')){
+      if (self.Col.hasOwnProperty('DataPrace')){
+           //alert('heldcka')
+
           self.Col.dataPrace.forEach(el=>{
               //console.log(el.nazev);
             if ( self.form.txtPrace ==''){
@@ -1623,9 +1742,74 @@ async   zmenaType(cSloup=""){
           })
 
       } else {
+        // alert('heldcka 22')
         var q1=SQL.getPrace()
           //f.Alert('Ctu')
-          self.filtrDataPrac = (await self.qPrace(q1))
+          neco =  (await self.qPrace(q1))
+          self.filtrDataPrac = neco
+          self.Col.dataPrace = neco
+
+       return []
+      }
+      console.log("Delke neco " , neco.length)
+      return neco
+   },
+      async filtrDataDod() {
+      const self = this
+      var neco =[]
+      self.filtrDataDo=[]
+      self.info+="B"
+      //if (!self.Col.hasOwnProperty('DataPrace')) {
+        if (!self.form.itemSelectedPrace) {
+          f.Alert('Prace neni vybrana')
+          return
+        }else {
+          //f.Alert('Prace je vybrana',self.form.itemSelectedPrace.idefix_prace)
+        }
+//      console.log('dataStroj', self.getType() )
+      if (self.Col.hasOwnProperty('DataDod')){
+           //alert('heldcka')
+
+          self.Col.dataDod.forEach(el=>{
+            // console.log("Index PRACE \n ", _.indexOf(el.prace_seznam,self.form.itemSelectedPrace.idefix_prace), "  ", self.form.itemSelectedPrace.idefix_prace )
+            if (!(_.indexOf(el.prace_seznam,self.form.itemSelectedPrace.idefix_prace) >=0)){
+
+
+            } else
+              //console.log(el.nazev);
+            if ( self.form.txtDod =='' ){
+              neco.push(el)
+              console.log("Prace Seznam \n", " JSON.stringify(el.prace_seznam) " , el.prace_seznam[0])
+              self.filtrDataDo.push(el)
+              self.form.showtxtDod=true
+            } else
+            if (self.form.txtDod > '' &&  el.firma== self.form.txtDod) {
+              self.form.showtxtDod=true
+              console.log("Stejny " + self.form.txtDod + " // " + el.prace )
+              neco=[]
+              self.filtrDataDo=[]
+              //return ;
+            } else
+            if (self.form.txtDod > '' && (self.vyraz(el.firma)).indexOf(self.vyraz(self.form.txtDod))>=0
+            // &&  (el.nazev).toUpperCase().match(self.form.txtStroj.toUpperCase())
+            ) {
+              console.log(el.prace_seznam)
+              //self.form.showtxtStroj=true
+              self.filtrDataDo.push(el)
+              neco.push(el)
+            }
+
+          })
+
+      } else {
+        // alert('heldcka 22')
+        var q1=SQL.getDod()
+          //f.Alert('Ctu')
+          // console.log(q1)
+          neco =  (await self.qDod(q1))
+          self.filtrDataDo = neco
+          self.Col.dataDod = neco
+          //f.Alert(self.Col.dataDod)
 
        return []
       }
@@ -1638,8 +1822,11 @@ async   zmenaType(cSloup=""){
       self.filtrDataStro=[]
       self.info+="B"
 
+
 //      console.log('dataStroj', self.getType() )
       if (self.Col.hasOwnProperty('dataStroj')){
+
+
           self.Col.dataStroj.forEach(el=>{
               //console.log(el.nazev);
             if ( self.form.txtStroj ==''){
@@ -1667,10 +1854,13 @@ async   zmenaType(cSloup=""){
       } else {
         var q1=SQL.getStroj(self.getType())
           //f.Alert('Ctu')
+
           self.filtrDataStro = (await self.qStroj(q1))
+
        return []
       }
       console.log("Delke neco " , neco.length)
+
       return neco
    },
    filtrDataStroj1() {

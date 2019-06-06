@@ -177,8 +177,9 @@ export default {
   return q;
 }
 ,getDod(idefix_prace=0){
-  var q=`select distinct b.nazev as firma, a.idefix_firma from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix
+  var q=`select  b.nazev as firma, a.idefix_firma,array_agg(a.idefix_prace) as prace_seznam from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix
           where ${idefix_prace} = 0  or a.idefix_prace = ${idefix_prace}
+          group by b.nazev , a.idefix_firma
   order by b.nazev`;
   return q;
 }

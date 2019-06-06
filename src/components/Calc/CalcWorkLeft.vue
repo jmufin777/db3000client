@@ -69,6 +69,7 @@
        <v-card @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;position:relative;left:0px;font-size:100%;;height:100%"><v-card-text class="pa-0" style="height:100%">
         <input type="text" v-model="form.Format" size="mini"  style="width:100%; height:25px;" class="tdl tdn elevation-0 pl-1" :placeholder="'Format'"
                 @focus="MenuFormatShow=true"  :id="'seek'+ID" @blur="MenuFormatOpust()" @click="MenuFormatShow=true"
+                @keydown="MenuFormatShow=true;seznam('seek'+ID+'_list_'+0,1,$event)"
                 >
                <!-- FORMATY {{ID}} {{f1.getBottom('seek'+ID)}} {{f1.getWidth('seek'+ID)}} {{f1.getLeft('seek'+ID)}} -->
       <!-- </div> -->
@@ -181,11 +182,12 @@
 <!--manidka formaty //-->
         <!-- :style="'left:'+(clickX+100)+'px'" -->
         <!-- width:20em;left:20em;top:1em; -->
+        <!-- @mouseleave="MenuFormatOpust()" -->
 <div
 style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
 :style="'top:'+ f1.getBottom('seek'+ID,40)+'px;width:'+f1.getWidth('seek'+ID,40)+'px;left:'+f1.getLeft('seek'+ID, 100)+'px'"
    v-if="MenuFormatShow" class="elevation-2 blue lighten-4 pl-0 pr-0"
-    @mouseleave="MenuFormatOpust()"
+
        >
 
           <table  width="100%" v-if="MenuFormatShow" class="pa-2">
@@ -198,7 +200,7 @@ style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
                 )" :key="i1b" >
               <td class="pa-0">
               <v-card class="silver pa-0" style="width:95%;" >
-                <a>
+                <a :href="'#'" :id="'seek'+ID+'_list_'+i1b" @keydown="seznam('seek'+ID+'_list_'+i1b,1,$event)" @click="setMenuFormat1Value(m1b.idefix)">
                 <table style="width:100%"><tr><td style="width:70%">
                 <v-card-text style="font-size:90%;text-align:left;width:100%"  @click="setMenuFormat1Value(m1b.idefix)"
                 class="pa-0 pt-1"
@@ -960,6 +962,223 @@ getFormatName() {
     }
 
   },
+  seznam(id,kod,e, obsah=""){
+     const self  = this
+     var i=0;
+     var aPrvek=id.split("_")
+
+     var nKey=e.keyCode
+     var obj1= e.target  //kde stojim
+     var objSeznam="";
+     var delka=aPrvek.length
+     var idPoz= aPrvek[delka -1] ;
+     var PrvekBase=""
+     var PrvekNext=""
+     var PrvekBefore=""
+     var tmp=0;
+
+     var PrvekTxt=""
+
+    // self.info=aPrvek
+     // self.info.push({dele: aPrvek.length })
+
+     for (i=0;i<(delka-1);i++) {
+       if (i < delka -2){
+         if (PrvekTxt>"") PrvekTxt+="_"
+         PrvekTxt+=aPrvek[i]
+       }
+       PrvekBase+=aPrvek[i]+'_'
+        //self.info.push(PrvekBase)
+
+     }
+      //self.info.push({"PrvekTxt": PrvekTxt })
+      //self.info.push({"Pozice": idPoz })
+      //self.info.push({"base": PrvekBase })
+
+      tmp = idPoz*1;
+      if (idPoz>0){
+        tmp = tmp -1
+        PrvekBefore = PrvekBase + tmp
+      }
+        tmp = idPoz*1;
+        tmp = tmp +1
+        PrvekNext = PrvekBase + tmp
+
+
+
+     var status = false;
+
+
+      if (document.getElementById(id)) { //Id odkazuje na prvni radku seznamu = pokud existuje
+          status= true;
+          objSeznam= document.getElementById(id)
+        //  self.info.push("OK")
+      }
+
+
+     //self.info.push(e.keyCode)
+     switch (nKey) {
+       case 27:
+        setTimeout(function(){
+            self.MenuFormatShow=false
+
+            document.getElementById(PrvekTxt).focus()
+
+
+          setTimeout(function(){
+            self.MenuFormatShow=false
+
+          },100)
+
+        },100)
+
+
+        //alert('nevidim jej')
+        //f.stopka(e)
+        //return true
+        break;
+     }
+     if (kod==0){
+       switch (nKey) {
+       case 9:
+        setTimeout(function(){
+          self.form.showtxt=false
+          self.form.showtxtStroj=false
+          self.form.showtxtStroj1=false
+          self.form.showtxtDod=false
+          self.form.showtxtPrace=false
+        },100)
+
+
+        //alert('nevidim jej')
+        //f.stopka(e)
+        //return true
+        break;
+       case 40:
+         f.stopka(e)
+
+         if (status) {
+           objSeznam.focus()
+           // self.info.push(objSeznam.id)
+         } else {
+           return
+         }
+     }
+
+     }
+   if (kod==1){
+
+    switch (nKey) {
+      case 38:
+          f.stopka(e)
+          if (PrvekBefore>"" &&  document.getElementById(PrvekBefore)){
+            document.getElementById(PrvekBefore).focus()
+            break;
+          }
+      case 40:
+          f.stopka(e)
+          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
+            document.getElementById(PrvekNext).focus()
+            break;
+          }
+      case 36: //Houm
+          f.stopka(e)
+          PrvekNext = PrvekBase+"0"
+
+          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
+            document.getElementById(PrvekNext).focus()
+            break;
+          }
+
+      case 35: //End
+          f.stopka(e)
+            tmp = idPoz*1;
+          while (PrvekNext>"" &&  document.getElementById(PrvekNext)) {
+
+            tmp = tmp +1
+            PrvekNext = PrvekBase + tmp
+          }
+          PrvekNext = PrvekBase + (tmp-1)
+
+          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
+            document.getElementById(PrvekNext).focus()
+            break;
+          }
+      case 34: //PejdzDaun
+          f.stopka(e)
+          tmp = idPoz*1;
+          PrvekNext = PrvekBase + tmp
+          for (i=1;i<8;i++){
+            if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
+              tmp = tmp +1
+              PrvekNext = PrvekBase + tmp
+            } else {
+              if (!document.getElementById(PrvekNext)){
+                PrvekNext = PrvekBase + (tmp-1)
+              }
+              break;
+            }
+          }
+          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
+            document.getElementById(PrvekNext).focus()
+            break;
+          }
+         case 33: //PejdzAp
+          f.stopka(e)
+          tmp = idPoz*1;
+          PrvekNext = PrvekBase + tmp
+          for (i=1;i<8;i++){
+            if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
+              tmp = tmp - 1
+              if (tmp<=0){
+                PrvekNext = PrvekBase + "0"
+                break;
+              }
+              PrvekNext = PrvekBase + tmp
+
+            } else {
+              if (!document.getElementById(PrvekNext)){
+                PrvekNext = PrvekBase + (tmp+1)
+              }
+              break;
+            }
+          }
+          if (PrvekNext>"" &&  document.getElementById(PrvekNext)){
+            document.getElementById(PrvekNext).focus()
+            break;
+          }
+        case 37:  //sipa vleft
+
+          setTimeout(function(){
+              document.getElementById(PrvekTxt).focus()
+            },50)
+        break;
+       case 39:  //sipa vright
+            setTimeout(function(){
+               //e.target.click()
+               f.stopka(e)
+               e.target.click()
+               document.getElementById(PrvekTxt).focus()
+               document.getElementById(PrvekTxt).change
+            },100)
+            //f.stopka(e)
+        break;
+
+        case 13:
+            //f.stopka(e)
+            e.target.click
+            setTimeout(function(){
+              document.getElementById(PrvekTxt).focus()
+            },50)
+
+            break;
+     }
+     }
+
+//el.selectionEnd = el.selectionStart
+
+
+   },
 
  //--Values
  Menu1 () {
