@@ -173,7 +173,8 @@ export default {
   return q;
 }
 ,getPrace(){
-  var q="select distinct c.nazev as prace, a.idefix_prace from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix order by c.nazev";
+  var q=`select distinct c.nazev as prace, a.idefix_prace,array_agg(b.idefix) as dod_seznam from list_firmaprace a
+        join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix group by c.nazev,a.idefix_prace order by c.nazev`;
   return q;
 }
 ,getDod(idefix_prace=0){

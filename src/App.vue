@@ -91,10 +91,8 @@ th {
   background-color: #f5f7fa;
   opacity: 0.8;
   text-align:center;
-
-
-
 }
+
 .th {
   /* background-color: #f0f0f0; */
   background-color: #f5f7fa;
@@ -298,8 +296,6 @@ div[role="region"] {
    border-right: none;
 
 }
-
-
 .tdn {
   border-left: none;
   border-right: none;
@@ -312,7 +308,6 @@ div[role="region"] {
   border-right: none;
 
 }
-
 .nic {
   border-right: none;
   border-left: none;

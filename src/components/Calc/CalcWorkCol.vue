@@ -247,32 +247,16 @@
           </v-card-text>
 
           </v-card>
-          <v-card style="width:100%;float:none" class="pa-0 ma-0" v-if="false && getType()!='Jine' && getType().match(/Rez/)">
-          <v-card-text style="width:100%;z-index:900000" class="pa-1" >
-               <el-input
-                v-model="form.txtStroj1" size="mini"  class="tdl tdn nb elevation-0"
 
-                style="width:100%; height:15px"  :placeholder="'Hledani Stroj1'+ getType()+ ' '+ID"
-                @focus="fokus('stroj1')"
-                @click="fokus('stroj1')"
-                @keydown="fokus('stroj1');filtrDataStroj1();seznam('seek3_'+ID+'_list_0',0,$event)"
-                @blur.native="blur1('seek3_'+ID)"
-                :id="'seek3_'+ID"
-
-               >
-              </el-input>
-
-         </v-card-text>
-         </v-card>
           <!-- jen rezani //-->
-         <v-card style="width:100%;max-height:60px;float:none" class="pa-0" v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Mat/)  && !getType().match(/Laminace/)  && !getType().match(/Kasir/)">
-         <v-card-text style="width:100%;" class="pa-1" >
+         <v-card style="width:100%;max-height:60px;float:none" class="pa-0 elevation-0" v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Mat/)  && !getType().match(/Laminace/)  && !getType().match(/Kasir/)">
+         <v-card-text style="width:100%;" class="pa-0" >
         <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
             <textarea-autosize type="text"
                 v-model="form.txtStroj"
                 size="mini"
-                style="width:100%; height:16px;max-height:60px;border:none"
-                class="nb elevation-0 pb-0"
+                style="width:100%; height:16px;max-height:60px;border:none;font-size:12px"
+                class="nb elevation-0 pb-0 pt-0"
                 :placeholder="'Hledani Stroj '+ getType()+ ' '+ID"
                 rows="1"
 
@@ -285,12 +269,12 @@
               ></textarea-autosize>
          </v-card-text>
          </v-card>
-         <v-card style="width:100%;float:none;max-height:60px" class="pa-0"  v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
-            <v-card-text style="width:100%;" class="pa-1" >
+         <v-card style="width:100%;float:none;max-height:60px;border:none" class="pa-0 pt-0 elevation-0"  v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Rez/) && !getType().match(/Baleni/)" >
+            <v-card-text style="width:100%;border:none" class="pa-0 elevation-0" >
               <textarea-autosize type="text"
               v-model="form.txt"
               size="mini"
-              style="width:100%; height:16px;max-height:60px;border:none"
+              style="width:100%; height:16px;max-height:60px;border:none;font-size:12px"
               rows="1"
               :placeholder="'Hledani Mat'+ getType()+ ' '+ID"
               @focus.native="fokus('mat');form.showtxt=true"
@@ -302,10 +286,10 @@
                 <!-- {{ filtrDataStroj() }} -->
             </v-card-text>
          </v-card>
-         <v-card style="width:100%;float:none" class="pa-0"  v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Rez/)  && !getType().match(/Baleni/)" >
+         <v-card style="width:100%;float:none" class="pa-0 elevation-0"  v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Rez/)  && !getType().match(/Baleni/)" >
           <v-card-text style="width:80%; text-align: left" class="pa-0 pl-1" >
           <select v-if="getType()!=='Mat1'" v-model="form.tisk"  @change="saveVuexData(); classJarda('sel1_'+ID)" :id="'sel1_'+ID"       @keydown="classJarda('sel1opt_'+ID+'_'+form.tisk)"
-            style="color:black;font-color:black;border: 1px solid white !important;" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
+            style="color:black;font-color:black;border: 1px solid white !important" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
           >
             <option v-for="(a,b ) in Tisk"
                 :key="a.val"
@@ -319,36 +303,15 @@
 
           </v-card-text>
         </v-card>
-        <v-card style="width:100%;float:none;height:7em;overflow:scroll" class="pa-0"  v-if="false && getType()=='Externi'" > <!-- Puvodni externi //-->
-          <v-card-text style="width:100%; text-align: left" class="pa-0 pl-1" >
-            <!-- {{ form.externi }} -->
-            <table style="width:100%;" class="pa-0">
-              <tr v-for="(radek,idradky) in form.externi" :key="idradky">
-                <td style="width:5%">{{idradky+1}}</td>
-                <td style="width:75%">
-                  <input type="hidden" v-model="formx" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1"  >
-                  <input type="text" v-model="form.externi[idradky].Popis" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1"
-                  @change="formx=formx+1"
-                   >
-                </td>
-                <td style="width:20%">
-                  <input type="number" v-model="form.externi[idradky].Cena" size="mini" placeholder="Cena" style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"
-                  @change="formx=formx+1"
-                  >
-                  <!-- @change="saveVuexData()" -->
-                </td>
-              </tr>
-            </table>
-          </v-card-text>
-        </v-card>
 
-        <v-card style="width:100%;float:none;height:7em;overflow:scroll" class="pa-0"  v-if="getType()=='Externi'" > <!-- Puvodni externi //-->
-          <v-card-text style="width:100%;" class="pa-1" >
+        <v-card style="width:100%;float:none;height:8em;overflow:scroll;border:none" class="pa-0 elevation-0"  v-if="getType()=='Externi'" > <!-- Puvodni externi //-->
+          <v-card-text style="width:100%;" class="pa-0" >
         <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
+        <!-- @change.native="form.txtDod=''" -->
             <textarea-autosize type="text"
                 v-model="form.txtPrace"
                 size="mini"
-                style="width:100%; height:16px;max-height:60px;border:none"
+                style="width:100%; height:16px;max-height:60px;border:none;font-size:12px"
                 class="nb elevation-0 pb-0"
                 :placeholder="'Hledani Prace '+ getType()+ ' '+ID"
                 rows="1"
@@ -357,16 +320,16 @@
                 @click.native="fokus('prace');form.showtxtPrace=true"
                 @keydown.native="fokus('prace');form.showtxtPrace=true;seznam('seek4_'+ID+'_list_0',0,$event)"
                 @blur.native="blur1('seek4_'+ID)"
-                @change.native="form.txtDod=''"
+
                 :id="'seek4_'+ID"
               ></textarea-autosize>
          </v-card-text>
-         <v-card-text style="width:100%;" class="pa-1" >
+         <v-card-text style="width:100%;" class="pa-0" >
         <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
             <textarea-autosize type="text"
                 v-model="form.txtDod"
                 size="mini"
-                style="width:100%; height:16px;max-height:60px;border:none"
+                style="width:100%; height:16px;max-height:60px;border:none;font-size:12px"
                 class="nb elevation-0 pb-0"
                 :placeholder="'Hledani Dod '+ getType()+ ' '+ID"
                 rows="1"
@@ -378,36 +341,37 @@
                 :id="'seek5_'+ID"
               ></textarea-autosize>
          </v-card-text>
-         <v-card-text style="width:100%;text-align:left" class="pa-0 pl-0" >
-              <table>
+         <v-card-text style="width:100%;text-align:left;" class="pa-0 pl-0" >
+              <table class="pa-0">
                 <tr>
-                  <td class="pl-1">
+                  <td class="pl-1 pt-0 pb-0" style="width:20%">
                     Naklad/ks
                   </td>
-                  <td>
-                    <input type="number" v-model="form.ext_naklad_ks" size="mini"  style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1" @click="readVuexData"
+                  <td style="width:30%" class="prava">
+                    <input type="number" v-model="form.ext_naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right;border-bottom: dotted 1px black" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
                     @change="form.ext_celkem=form.ext_naklad_ks*form.ext_pocet_ks ;saveVuexData()">
                   </td>
-                  <td class="pl-1">
+                  <td class="pl-1" style="width:20%">
                     Pocet
                   </td>
-                  <td class=pl-1>
-                    <input type="number" v-model="form.ext_pocet_ks" size="mini"  style="width:100%; height:15px; text-align:right;" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
+                  <td class="prava" style="width:30%">
+                    <input type="number" v-model="form.ext_pocet_ks" size="mini"  style="width:90%; height:15px; text-align:right;" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
                     @change="form.ext_celkem=form.ext_naklad_ks*form.ext_pocet_ks;saveVuexData()">
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td class="pl-1" style="width:20%">
                     Celkem
                   </td>
-                  <td>
-                    <input type="number" v-model="form.ext_celkem" size="mini"  style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1" @click="readVuexData" @change="saveVuexData()">
+                  <td class="prava" style="width:30%">
+                    <input type="number" v-model="form.ext_celkem" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
                   </td>
-                  <td class="pl-1">
+                  <td class="pl-1" style="width:20%">
+                    <!-- <td class="nic bila prava pr-2 blue--text " style="width:20%"> -->
                     Prodej
                   </td>
-                  <td >
-                    <input type="number" v-model="form.ext_prodej" size="mini"  style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1" @click="readVuexData" @change="saveVuexData()">
+                  <td class="prava" style="width:30%">
+                    <input type="number" v-model="form.ext_prodej" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
                   </td>
                 </tr>
               </table>
@@ -435,43 +399,63 @@
           </v-card-text>
         </v-card>
         <div v-if="getType().match(/Baleni/)">
-        <v-card style="width:100%;" class="pa-0"  v-if="getType().match(/Baleni/)" >
-          <v-card-text style="width:100%;text-align:left" class="pa-0 pl-1" >
-          <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"
-          @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)"
-           style="width:40%;color:black;font-color:black;border: 1px solid white !important;" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
-          >
-            <option v-for="(c,d ) in Baleni"
-                :key="c.val"
-                :label="c.txt"
-                :value="c.val"
-                :id="'sel2opt_'+ID+'_'+c.val"
-              >
-              {{ c.txt }}
-            </option>
+        <v-card style="width:100%;" class="pa-0 elevation-0"  v-if="getType().match(/Baleni/)" >
+          <table style="width:100%" class="elevation-0">
+            <tr>
+              <td class="leva pl-1">Zpusob</td>
+              <td style="width:70%" class="pl-3">
+                <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"
+                  @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)"
+                  style="width:100%;color:black;font-color:black;border: 1px solid white !important;" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
+                >
+                  <option v-for="(c,d ) in Baleni"
+                      :key="c.val"
+                      :label="c.txt"
+                      :value="c.val"
+                      :id="'sel2opt_'+ID+'_'+c.val"
+                    >
+                    {{ c.txt }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+            <tr v-if="form.baleni==0">
+              <td  class="leva pl-1">Cena</td>
+              <td  class="prava">
+                <input type="number" v-model="form.naklad_mody" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+              </td>
+            </tr>
+            <tr v-if="form.baleni==1">
+              <td  class="leva pl-1">Po</td>
+              <td  class="prava">
+                <input type="number" v-model="form.naklad_po" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+              </td>
+            </tr>
+            <tr v-if="form.baleni==2">
+              <td  class="leva pl-1">Pocet</td>
+              <td  class="prava">
+                <input type="number" v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+              </td>
+            </tr>
+            <tr v-if="form.baleni==3">
+              <td  class="leva pl-1">Pocet</td>
+              <td  class="prava">
+                <input type="number" v-model="form.naklad_cena" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+              </td>
+            </tr>
+            <tr >
+              <td  class="leva pl-1">Naklad ks</td>
+              <td  class="prava">
+                <input type="number" v-model="form.naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
+              </td>
+            </tr>
+          </table>
 
-          </select>
-          <span style="width:50%" v-if="form.baleni==0">
-            Cena&nbsp;:&nbsp;<input type="number" v-model="form.naklad_mody" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1"  @change="saveVuexData()">
-          </span>
-          <span style="width:50%" v-if="form.baleni==1">
-            Po&nbsp;:&nbsp;<input type="number" v-model="form.naklad_po" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1"  @change="saveVuexData()">
-          </span>
-          <span style="width:50%" v-if="form.baleni==2">
-            Pocet&nbsp;:&nbsp;<input type="number" v-model="form.naklad" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1"  @change="saveVuexData()">
-          </span>
-          <span style="width:50%" v-if="form.baleni==3">
-            Cena&nbsp;:&nbsp;<input type="number" v-model="form.naklad_cena" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1"  @change="saveVuexData()">
-          </span>
-          </v-card-text>
-          </v-card>
-          <v-card style="width:100%;float:left" class="pa-0 "  v-if="getType().match(/Baleni/)" >
-          <v-card-text style="width:100%;text-align:left" class="pa-0 pl-0" >
-              Naklad ks&nbsp;:&nbsp;
-              <input type="number" v-model="form.naklad_ks" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-1 pr-1" @click="readVuexData" @change="saveVuexData()">
 
-          </v-card-text>
           </v-card>
+
+
+
           </div>
 
 
@@ -479,7 +463,7 @@
           <v-card-text style="text-align:left" class="pa-0">
             <textarea
               type="textarea" v-model="form.poznamka"
-              style="width:100%; min-height:6em;max-height:160px;border:none;font-size:12px"
+              style="width:100%; min-height:5em;max-height:160px;border:none;font-size:12px"
 
               class="nb elevation-0 pb-0 grey lighten-3"
               placeholder="poznamka"
@@ -822,11 +806,11 @@ computed: {
         self.countZmen++;
         // alert('COL 44 ' + JSON.stringify(self.Col)+" / "+ self.getIndex())
 
-        self.info="zmena " + self.countZmen;
+//        // self.info="zmena " + self.countZmen;
         self.SirkaLast = self.Kalkulace[self.k_id()].data.FormatSirka // this.$store.state.Kalkulace[self.k_id()].data.FormatSirka
         self.VyskaLast = self.Kalkulace[self.k_id()].data.FormatVyska // this.$store.state.Kalkulace[self.k_id()].data.FormatSirka
-        //self.info+=self.idefix+"juzr"
-        ///self.Col=self.Kalk[self.k_id()][0].sloupecid[self.getIndex()]
+        // self.info+=self.idefix+"juzr"
+        //self.Col=self.Kalk[self.k_id()][0].sloupecid[self.getIndex()]
 
         // console.log("COL ", JSON.stringify(self.Col[0].sloupecid))
         console.log("COL 4", JSON.stringify(self.Col))
@@ -841,7 +825,7 @@ computed: {
         if (q2>""){
           //alert(q2)
           self.qStroj(q2)
-          //self.info=q2
+          // self.info=q2
         }
         //alert("Q#")
         var q3=SQL.getStroj1(self.getType())
@@ -854,7 +838,7 @@ computed: {
         if (self.getType()=="Externi"){
            var q4= SQL.getPrace()
            //self.filtrDataPrac= self.qPrace(q4)
-           self.Col.dataPrace= self.qPrace(q4)
+           self.Col.DataPrace= self.qPrace(q4)
 
            var q5= SQL.getDod()
            //self.filtrDataPrac= self.qDod(q5)
@@ -1028,12 +1012,12 @@ async   zmenaType(cSloup=""){
          PrvekTxt+=aPrvek[i]
        }
        PrvekBase+=aPrvek[i]+'_'
-        //self.info.push(PrvekBase)
+        // self.info.push(PrvekBase)
 
      }
-      //self.info.push({"PrvekTxt": PrvekTxt })
-      //self.info.push({"Pozice": idPoz })
-      //self.info.push({"base": PrvekBase })
+      // self.info.push({"PrvekTxt": PrvekTxt })
+      // self.info.push({"Pozice": idPoz })
+      // self.info.push({"base": PrvekBase })
 
       tmp = idPoz*1;
       if (idPoz>0){
@@ -1052,11 +1036,11 @@ async   zmenaType(cSloup=""){
       if (document.getElementById(id)) { //Id odkazuje na prvni radku seznamu = pokud existuje
           status= true;
           objSeznam= document.getElementById(id)
-        //  self.info.push("OK")
+        //  // self.info.push("OK")
       }
 
 
-     self.info.push(e.keyCode)
+     // self.info.push(e.keyCode)
      switch (nKey) {
        case 27:
         setTimeout(function(){
@@ -1297,16 +1281,16 @@ async   zmenaType(cSloup=""){
 
 
       if (kdezejsem.match(/prace/) ){
-           if (!self.Col.hasOwnProperty('dataPrace') || self.Col.dataPrace.length==0){
+           if (!self.Col.hasOwnProperty('DataPrace') || self.Col.DataPrace.length==0){
              var q2=SQL.getPrace()
-             self.Col.dataPrace = (await self.qPrace(q2))
+             self.Col.DataPrace = (await self.qPrace(q2))
            }
            await self.filtrDataPrace()
       } else
      if (kdezejsem.match(/dod/) ){
-           if (!self.Col.hasOwnProperty('dataDod') || self.Col.dataDod.length==0){
+           if (!self.Col.hasOwnProperty('DataDod') || self.Col.DataDod.length==0){
              var q2=SQL.getDod()
-             self.Col.dataDod = (await self.qDod(q2))
+             self.Col.DataDod = (await self.qDod(q2))
            }
            await self.filtrDataDod()
            // f.Alert(JSON.stringify(self.filtrDataDo))
@@ -1397,7 +1381,7 @@ async   zmenaType(cSloup=""){
      // self.info = qq
       try {
        atmp=(await Q.all(self.idefix,qq)).data.data
-        //self.info = atmp
+        // self.info = atmp
         var idCol = self.getIndex()
         var idK = self.k_id()
         self.Col.data=atmp;
@@ -1413,12 +1397,12 @@ async   zmenaType(cSloup=""){
       // self.info = qq
       try {
        atmp=(await Q.all(self.idefix,qq)).data.data
-        //self.info = atmp
+        // self.info = atmp
         var idCol = self.getIndex()
         var idK = self.k_id()
         self.Col.dataStroj=atmp;
         console.log("DATA STROJ" , JSON.stringify(self.Col.dataStroj))
-        self.info=JSON.stringify(self.Col.dataStroj)
+        // self.info=JSON.stringify(self.Col.dataStroj)
       } catch(e){
         console.log(e)
       }
@@ -1428,16 +1412,16 @@ async   zmenaType(cSloup=""){
     async qStroj1(qq) { //Jen stroj
      const self = this
      var atmp=[]
-      self.info = qq
+      // self.info = qq
       try {
        atmp=(await Q.all(self.idefix,qq)).data.data
-        //self.info = atmp
+        // self.info = atmp
         var idCol = self.getIndex()
         var idK = self.k_id()
         self.Col.dataStroj1=atmp; //Jen Stroj
         self.form.dataStro1 = atmp;
 
-        //self.info=atmp;
+        // self.info=atmp;
         console.log("DATA STROJ" , JSON.stringify(self.Col.dataStroj1))
 
       } catch(e){
@@ -1449,16 +1433,16 @@ async   zmenaType(cSloup=""){
    async qDod(qq) { //Jen dodavatel
      const self = this
      var atmp=[]
-      self.info = qq
+      // self.info = qq
       try {
        atmp=(await Q.all(self.idefix,qq)).data.data
-        //self.info = atmp
+        // self.info = atmp
         var idCol = self.getIndex()
         var idK = self.k_id()
         self.Col.DataDod=atmp; //Jen Stroj
         self.form.dataDo = atmp;
 
-        //self.info=atmp;
+        // self.info=atmp;
         console.log("DATA Dod" , JSON.stringify(self.Col.filtrDataDod))
 
       } catch(e){
@@ -1470,16 +1454,16 @@ async   zmenaType(cSloup=""){
    async qPrace(qq) { //Jen dodavatel
      const self = this
      var atmp=[]
-      self.info = qq
+      // self.info = qq
       try {
        atmp=(await Q.all(self.idefix,qq)).data.data
-        //self.info = atmp
+        // self.info = atmp
         var idCol = self.getIndex()
         var idK = self.k_id()
         self.Col.DataPrace=atmp; //Jen Stroj
         self.form.filtrDataPrac = atmp;
 
-        //self.info=atmp;
+        // self.info=atmp;
         console.log("DATA Dod" , JSON.stringify(self.Col.filtrDataPrace))
 
       } catch(e){
@@ -1710,16 +1694,31 @@ async   zmenaType(cSloup=""){
    async filtrDataPrace() {
       const self = this
       var neco =[]
+      var idx = -1
+      var zadanDod = false
       self.filtrDataPrac=[]
-      self.info+="B"
 
-//      console.log('dataStroj', self.getType() )
-      if (self.Col.hasOwnProperty('DataPrace')){
-           //alert('heldcka')
+      if (self.Col.hasOwnProperty('DataDod') && self.form.itemSelectedDod && self.form.txtDod >'') {
+        zadanDod = true
+      }
+      if (self.Col.hasOwnProperty('DataPrace') && self.Col.DataPrace.length ){
+           // f.Alert('heldcka' ,self.Col.DataPrace.length )
 
-          self.Col.dataPrace.forEach(el=>{
+          self.Col.DataPrace.forEach(el=>{
               //console.log(el.nazev);
-            if ( self.form.txtPrace ==''){
+            if (self.Col.hasOwnProperty('DataDod') && self.form.itemSelectedDod) {
+
+              idx = _.indexOf(el.dod_seznam,self.form.itemSelectedDod.idefix_firma)   //console.log(el.nazev);
+              //if (idx >-1) f.Alert(idx)
+            }
+            if ( idx >=0 && self.form.txtPrace ==''){
+          //    el.prace+= "/ A " + idx
+              neco.push(el)
+              self.filtrDataPrac.push(el)
+              self.form.showtxtPrace=true
+            } else
+            if (!zadanDod &&  self.form.txtPrace ==''){
+      //        el.prace+= "/ B " + idx
               neco.push(el)
               self.filtrDataPrac.push(el)
               self.form.showtxtPrace=true
@@ -1731,9 +1730,10 @@ async   zmenaType(cSloup=""){
               self.filtrDataPrac=[]
               //return ;
             } else
-            if (self.form.txtPrace > '' && (self.vyraz(el.prace)).indexOf(self.vyraz(self.form.txtPrace))>=0
+            if (!zadanDod && self.form.txtPrace > '' && (self.vyraz(el.prace)).indexOf(self.vyraz(self.form.txtPrace))>=0
             // &&  (el.nazev).toUpperCase().match(self.form.txtStroj.toUpperCase())
             ) {
+        //      el.prace+= "/ C " + idx
               //self.form.showtxtStroj=true
               self.filtrDataPrac.push(el)
               neco.push(el)
@@ -1747,7 +1747,7 @@ async   zmenaType(cSloup=""){
           //f.Alert('Ctu')
           neco =  (await self.qPrace(q1))
           self.filtrDataPrac = neco
-          self.Col.dataPrace = neco
+          self.Col.DataPrace = neco
 
        return []
       }
@@ -1757,70 +1757,56 @@ async   zmenaType(cSloup=""){
       async filtrDataDod() {
       const self = this
       var neco =[]
+      var idx = -1
       self.filtrDataDo=[]
-      self.info+="B"
-      //if (!self.Col.hasOwnProperty('DataPrace')) {
-        if (!self.form.itemSelectedPrace) {
-          f.Alert('Prace neni vybrana')
-          return
-        }else {
-          //f.Alert('Prace je vybrana',self.form.itemSelectedPrace.idefix_prace)
-        }
-//      console.log('dataStroj', self.getType() )
       if (self.Col.hasOwnProperty('DataDod')){
-           //alert('heldcka')
-
-          self.Col.dataDod.forEach(el=>{
-            // console.log("Index PRACE \n ", _.indexOf(el.prace_seznam,self.form.itemSelectedPrace.idefix_prace), "  ", self.form.itemSelectedPrace.idefix_prace )
-            if (!(_.indexOf(el.prace_seznam,self.form.itemSelectedPrace.idefix_prace) >=0)){
-
-
-            } else
-              //console.log(el.nazev);
-            if ( self.form.txtDod =='' ){
+          self.Col.DataDod.forEach(el=>{
+            if (self.Col.hasOwnProperty('DataPrace') && self.form.itemSelectedPrace) {
+              idx = _.indexOf(el.prace_seznam,self.form.itemSelectedPrace.idefix_prace)   //console.log(el.nazev);
+            }
+            if ((!self.form.itemSelectedPrace || self.form.txtPrace =='') && self.form.txtDod =='' ) {
               neco.push(el)
-              console.log("Prace Seznam \n", " JSON.stringify(el.prace_seznam) " , el.prace_seznam[0])
               self.filtrDataDo.push(el)
               self.form.showtxtDod=true
             } else
-            if (self.form.txtDod > '' &&  el.firma== self.form.txtDod) {
+            if ((!self.form.itemSelectedPrace || self.form.txtPrace =='') && self.form.txtDod > '' && (self.vyraz(el.firma)).indexOf(self.vyraz(self.form.txtDod))>=0 ) {
+              neco.push(el)
+              self.filtrDataDo.push(el)
+              self.form.showtxtDod=true
+            } else
+            if (idx >=0  && self.form.txtDod =='' ){
+              neco.push(el)
+              self.filtrDataDo.push(el)
+              self.form.showtxtDod=true
+            } else
+            if (idx >=0  && self.form.txtDod > '' &&  el.firma== self.form.txtDod) {
               self.form.showtxtDod=true
               console.log("Stejny " + self.form.txtDod + " // " + el.prace )
               neco=[]
               self.filtrDataDo=[]
-              //return ;
             } else
-            if (self.form.txtDod > '' && (self.vyraz(el.firma)).indexOf(self.vyraz(self.form.txtDod))>=0
-            // &&  (el.nazev).toUpperCase().match(self.form.txtStroj.toUpperCase())
+            if (idx >=0  && self.form.txtDod > '' && (self.vyraz(el.firma)).indexOf(self.vyraz(self.form.txtDod))>=0
             ) {
               console.log(el.prace_seznam)
-              //self.form.showtxtStroj=true
               self.filtrDataDo.push(el)
               neco.push(el)
             }
-
           })
 
       } else {
-        // alert('heldcka 22')
         var q1=SQL.getDod()
-          //f.Alert('Ctu')
-          // console.log(q1)
           neco =  (await self.qDod(q1))
           self.filtrDataDo = neco
-          self.Col.dataDod = neco
-          //f.Alert(self.Col.dataDod)
-
+          self.Col.DataDod = neco
        return []
       }
-      console.log("Delke neco " , neco.length)
       return neco
    },
    async filtrDataStroj() {
       const self = this
       var neco =[]
       self.filtrDataStro=[]
-      self.info+="B"
+      // self.info+="B"
 
 
 //      console.log('dataStroj', self.getType() )
@@ -1871,12 +1857,12 @@ async   zmenaType(cSloup=""){
 
       console.log('dataStroj1')
       if (self.Col.hasOwnProperty('dataStroj1')){
-           self.info+= "A"
+           // self.info+= "A"
           self.Col.dataStroj1.forEach(el=>{
 
-              self.info+= self.form.txtStroj1 //console.log(el.nazev);
+              // self.info+= self.form.txtStroj1 //console.log(el.nazev);
             if ( self.form.txtStroj1 ==''){
-              self.info+= el.nazev_stroj
+              // self.info+= el.nazev_stroj
               neco.push(el)
               self.filtrDataStro1.push(el)
               self.form.showtxtStroj1=true
@@ -2060,7 +2046,7 @@ async   zmenaType(cSloup=""){
    },
    getIndex() {
   //   var idK = k_id()
-///     var cType = this.$store.state.Kalulace[idK].sloupecid[sloupecid]
+//     var cType = this.$store.state.Kalulace[idK].sloupecid[sloupecid]
   var kRet=   this.$store.getters.getIdCol(this.kalkulaceid,this.sloupecid)
   return kRet
      //{{ k_id() }} {{ kalkulaceid }} {{ sloupecid }}
@@ -2068,7 +2054,7 @@ async   zmenaType(cSloup=""){
 
 getId() {
   //   var idK = k_id()
-///     var cType = this.$store.state.Kalulace[idK].sloupecid[sloupecid]
+  //    var cType = this.$store.state.Kalulace[idK].sloupecid[sloupecid]
 
   return this.sloupecid
 
@@ -2163,6 +2149,19 @@ select option div {
 textarea:focus, input:focus{
     outline: 0px dashed;
 }
+.tdl .tdn {
+  background: green
+
+}
+input textarea {
+  border-bottom: dotted 1px black;
+
+}
+input[type="number"] {
+  border-bottom: dotted 1px black;
+
+}
+
 
 a:focus {
     color: black;
@@ -2170,11 +2169,19 @@ a:focus {
     background: white;
 
 }
+select, option {
+    color: black;
+    font-size:12px;
+
+    /* font-weight: 600; */
+
+}
 select:focus, option:focus {
     color: black;
     /* font-weight: 600; */
 
 }
+
 a {
    text-decoration: none;
 }

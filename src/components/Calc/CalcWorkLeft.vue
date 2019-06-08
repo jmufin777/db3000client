@@ -13,7 +13,7 @@
       <td style="width:20%;height:100%" class="white pr-1 pt-0" >
       <v-card style="position:relative;top:0px;height:18em;width:100%;border: solid 1px silver"
       :class="{'blue lighten-4': $store.state.KalkulaceThis== kalkulaceid }"
-      class="pa-0 pr-1 elevation-2">
+      class="pa-0 pr-1 elevation-0">
 
           <v-card-text>
           <slot name="add">
@@ -34,17 +34,18 @@
       </v-card>
       </td>
      <td style="width:80;height:100%">
-     <v-card style="position:relative;top:0px;height:18em;width:100%" class="white ">
+     <v-card style="position:relative;top:0px;height:18em;width:100%" class="white elevation-0">
        <v-card style="position:absolute;top:0px;height:3em;text-align:left;width:100%;border: none"
-       class="white"
+       class="white elevation-0"
        :style="(idefixVidet>0)?'height:3em':'height:'+((aStroj.length)*2.6)+'em'"
        >
        <v-card v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix"
         style="position:relative;text-align:left;z-index:10"
+        class="elevation-0"
 
        >
         <v-card-text class="pa-0 ma-0 pl-0 pr-1" style="position:relative;z-index:1;height:2.6em">
-         <v-card style="position:relative;z-index:1">
+         <v-card style="position:relative;z-index:1" class="elevation-0">
           <v-card-text class="pa-0 ma-0 pl-1 pr-1 pb-1 pt-1" style="position:relative;z-index:1;border:none"> <!-- KARTA stroje //-->
           <table style="width:100%;z-index:1;"><tr >
             <td style="width:90%;cursor:pointer;" @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )">
@@ -62,11 +63,11 @@
      </v-card>
      </v-card>
 
-       <v-card v-if="idefixVidet>0" :class="{'grey lighten-2': $store.state.KalkulaceThis== kalkulaceid }" class="white pa-0" style="position:absolute;top:3em;height:15em;z-index:9;width:100%" >
+       <v-card v-if="idefixVidet>0" :class="{'grey lighten-2': $store.state.KalkulaceThis== kalkulaceid }" class="white pa-0 elevation-0" style="position:absolute;top:3em;height:15em;z-index:9;width:100%" >
        <v-card-text class="pa-0">
        <table style="width:100%" class="pink pa-0">
          <tr><td style="width:40%">
-       <v-card @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;position:relative;left:0px;font-size:100%;;height:100%"><v-card-text class="pa-0" style="height:100%">
+       <v-card @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;position:relative;left:0px;font-size:100%;;height:100%" class="elevation-0"><v-card-text class="pa-0" style="height:100%">
         <input type="text" v-model="form.Format" size="mini"  style="width:100%; height:25px;" class="tdl tdn elevation-0 pl-1" :placeholder="'Format'"
                 @focus="MenuFormatShow=true"  :id="'seek'+ID" @blur="MenuFormatOpust()" @click="MenuFormatShow=true"
                 @keydown="MenuFormatShow=true;seznam('seek'+ID+'_list_'+0,1,$event)"
@@ -75,7 +76,7 @@
       <!-- </div> -->
       </v-card-text></v-card>
       </td><td style="width:60%" class="pa-0">
-      <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0">
+      <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0 elevation-0">
         <v-card-text  class="pa-0 pt-0  " style="height:100%">
          <input type="number"    v-model="form.sirka" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="A"  @focus="$event.target.select()" @change="getFormatName()">
          x<input type="number"   v-model="form.vyska" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="B" @focus="$event.target.select()" @change="getFormatName()">
@@ -84,27 +85,27 @@
        </td></tr>
        </table>
        <!-- <v-card> -->
-       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0">
+       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0 elevation-0">
          <!-- <v-card-text> -->
          <v-card-text  class="pa-0 pt-0  " style="height:100%">
-         <table style="width:100%;"><tr>
+         <table style="width:100%;font-size:12px"><tr>
            <td style="width:15%">Panelovat</td>
            <td style="width:10%"><input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)" style="text-align:right;width:100%" class="tdl tdn elevation-0 pr-0" @change="getFormatName()"></td>
            <td style="width:10%">Po</td>
            <td style="width:25%">
-             <input type="number"   v-model="form.sirkaPanel" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-1 pr-1"  @focus="$event.target.select()" @change="getFormatName();sirkaP()">
+             <input type="number"   v-model="form.sirkaPanel" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-0 pr-1"  @focus="$event.target.select()" @change="getFormatName();sirkaP()">
            </td>
            <td style="width:15%">
              Naklad&nbsp;ks
            </td>
            <td>
-             <input type="number"   v-model="form.nakladks" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-1 pr-1" @focus="$event.target.select()" @change="ks();getFormatName()">
+             <input type="number"   v-model="form.nakladks" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-0 pr-1" @focus="$event.target.select()" @change="ks();getFormatName()">
            </td>
          </tr>
          </table>
        </v-card-text></v-card>
 
-       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0 pt-1 ">
+       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0 pt-1 elevation-0">
           <v-card-text  class="pa-0 pt-0  " style="height:100%">
            <table style="width:100%;"><tr>
             <td style="width:40%" class="pl-0">
@@ -118,8 +119,8 @@
                 </option>
               </select>
             </td>
-            <td style="width:10%" class="brown lighten-5">m2</td>
-            <td style="width:15%" class="brown lighten-5">{{$store.state.Kalkulace[k_id()].data.ResultM2}}</td>
+            <td style="width:10%" class="brown lighten-5"> m2</td>
+            <td style="width:15%" class="brown lighten-5">{{l.round($store.state.Kalkulace[k_id()].data.ResultM2,2)}}</td>
             <td style="width:15%" class="brown lighten-5">Hodiny</td>
             <td style="width:20%" class="brown lighten-5">{{$store.state.Kalkulace[k_id()].data.ResultHod}}</td>
            </tr>
@@ -127,7 +128,7 @@
         </v-card-text>
        </v-card>
 
-       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:8.5em" class="pa-0 pt-0 ">
+       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:8.5em" class="pa-0 pt-0 elevation-0">
          <v-card-text  class="pa-0 pt-0  " style="height:100%">
            <table style="width:100%;" >
              <tr>
@@ -156,7 +157,7 @@
 <!---nabidka stroj mod //-->
 <!-- :style="'left:'+clickX+'px'" -->
 <!-- :style="'top:'+ getBottom('seek'+ID)+'px;width:'+getWidth('seek'+ID,8)+'px;left:'+getLeft('seek'+ID,0)+'px'" -->
-  <v-card v-if="MenuShow && clickYN" class="white elevation-2" style="position:absolute;width:20em;left:20em;top:1em;z-index:1000010;max-height:14em"
+  <v-card v-if="MenuShow && clickYN" class="white elevation-1" style="position:absolute;width:20em;left:20em;top:1em;z-index:1000010;max-height:14em"
    :style="'left:'+clickX+'px'"
    @mouseleave="MenuShowLeave()" @mouseover="MenuShowIn()"
   >
@@ -265,6 +266,7 @@ export default {
         clickY: 0,
         clickYN: false,
         f1: f,
+        l: _,
         timeout: 0 , //tOpusteni:0,
 
      //soubory
@@ -669,6 +671,8 @@ MenuStroj() {
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) ) })
+
       //self.Kalk.data.txtFormat =
       //self.$store.dispatch('replaceKalk',self.Kalk)
       //alert(self.Kalk.data.txtFormat)
@@ -926,6 +930,7 @@ getFormatName() {
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirkaPanel' , value: self.form.sirkaPanel })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
+       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) ) })
        //self.Kalk.data.txtFormat = self.form.Format
        //self.$store.dispatch('setKalk',self.Kalk)
        //self.$store.dispatch('setKalk',idK)
@@ -1249,6 +1254,11 @@ table tr td {
 
 input {
   border:none;
+}
+
+input[type="number"] {
+  border-bottom: dotted 1px black;
+
 }
 
 .el-upload-dragger1 {
