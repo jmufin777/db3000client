@@ -1,14 +1,33 @@
 <template >
   <v-app id="inspire">
-    <v-navigation-drawer v-if="true"
+    <!-- <v-navigation-drawer v-if="true"
       v-model="drawer"
       fixed
       app
       clipped
       light
       stateless
+    > -->
+    <v-navigation-drawer v-if="true"
+      v-model="drawer"
+      fixed
+      hide-overlay
+
+      absolute
+      clipped
+      light
+
+
+      style="z-index:100000"
+
+      floating
+      hide-overlay
+
+
+
+
     >
-     <menu-nav :xmenu="xMenuFinal" :xgroup="people1001"></menu-nav>
+     <menu-nav :xmenu="xMenuFinal" :xgroup="people1001" @click.native="drawer=false"></menu-nav>
     </v-navigation-drawer>
       <v-toolbar app fixed clipped-left >
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
@@ -302,6 +321,7 @@ import vuedraggableresizable from 'vue-draggable-resizable'
 import DbStatus from  '@/components/globals//DbStatus'
 
 import Calc from '../components/Calc/CalcIndex.vue'
+import f from '../services/fce'
 
 
 // import {ServerTable, ClientTable, Event} from 'vue-tables-2'
@@ -471,6 +491,7 @@ export default {
       demo: false,
       demo2: false,
       winpar: true,
+      f1:f,
 
       // Zobrazeni - checkboc
 
