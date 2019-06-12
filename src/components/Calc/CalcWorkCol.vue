@@ -49,7 +49,9 @@
              <!-- <tr class="mt-1 green" v-for="(item, i) in filtrData()" :key="i" > -->
               <tr class="mt-1 green" v-for="(item, i) in filtrDat" :key="i" >
               <td >
-              <a :href="'#'" :id="'seek1_'+ID+'_list_'+i" @keydown="seznam('seek1_'+ID+'_list_'+i,1,$event)" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)" @focus="lastFocus='seek1_'+ID">
+              <a :href="'#'" :id="'seek1_'+ID+'_list_'+i"
+              @keydown="seznam('seek1_'+ID+'_list_'+i,1,$event)"
+              @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)" @focus="lastFocus='seek1_'+ID">
               <v-card class="silver pa-0 ma-0 " style="width:99%;" >
                 <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:80%;height:100%" class="pa-0 ma-0 grey lighten-5">
                 <v-card-text style="font-size:90%;text-align:left;width:100%;height:100%" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)"
@@ -90,14 +92,16 @@
           <table  width="100%" v-if="form.showtxtStroj && (getType()=='Laminace' || getType()=='Kasir' ||  getType()=='Rezani' || getType()=='Baleni' || getType()=='Jine' ) " >
              <tr class="mt-0 pa-0 grey lighten-4" v-for="(item1, i1) in filtrDataStro" :key="i1"  >
               <td class="pa-0 ma-0 pl-1 grey lighten-4">
-              <a :href="'#'" :id="'seek2_'+ID+'_list_'+i1"  @keydown="seznam('seek2_'+ID+'_list_'+i1,1,$event)" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)" @focus="lastFocus='seek2_'+ID">
+              <a :href="'#'" :id="'seek2_'+ID+'_list_'+i1"
+              @keydown="seznam('seek2_'+ID+'_list_'+i1,1,$event)"
+              @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)" @focus="lastFocus='seek2_'+ID">
               <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
                 <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
                 <v-card-text style="font-size:90%;text-align:left;width:100%" @click="form.txtStroj= item1['nazev']; form.showtxtStroj=false; setColStroj(item1)"
                 :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
                 class="ma-0 pa-0 pl-1"
                 >
-                  {{ item1['nazev'] }}
+                  {{item1['nazev_stroj'] }} - {{ item1['nazev'] }}
                  </v-card-text>
                  </td></tr></table>
 
@@ -712,7 +716,7 @@ export default {
       self.Col=self.Cols[self.getIndex()] ;
       setInterval(function(){
         self.hideAll()
-      },1000)
+      },500)
 
 
 
@@ -849,17 +853,30 @@ computed: {
 
         if (self.getType()=="Rezani"){
           // alert('rezba'+JSON.stringify(self.Col.dataStroj1))
+          try {
           self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
+          } catch(e) {
+            console.log("sloupec rezani neni ")
+          }
 
-        }
+          }
         if (self.getType()=="Kasir"){
+          try{
           self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
           self.form.itemSelectedStroj=self.Col.dataStroj[0]
+          } catch(e) {
+            console.log("sloupec kasir neni ")
+          }
           //alert('rezba'+JSON.stringify(self.Col.dataStroj1))
         }
         if (self.getType()=="Laminace"){
-          self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
+          try{
+           self.form.itemSelectedStroj1=self.Col.dataStroj1[0]
           self.form.itemSelectedStroj=self.Col.dataStroj[0]
+          } catch(e) {
+            console.log("sloupec Laminace neni ")
+          }
+
           //alert('rezba'+JSON.stringify(self.Col.dataStroj1))
         }
 
@@ -1518,6 +1535,7 @@ async   zmenaType(cSloup=""){
 
    },
    readVuexData() {
+     // return
      const self = this
      var neco = self.$store.state.Kalkulace[self.k_id()].sloupecid[self.getIndex()]
           self.form.itemSelectedStroj  = neco.data.stroj
@@ -2123,6 +2141,7 @@ a:focus {
     color: black;
     font-weight: 900;
     background: white;
+    outline: 0px ;
 
 }
 a {

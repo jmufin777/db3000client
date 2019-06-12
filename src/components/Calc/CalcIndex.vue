@@ -5,14 +5,17 @@
     <my-layout>
     <div slot="hlavni">
       {{ KalkulaceThis}} /Last {{ KalkulaceLast }}
-       {{ $store.state.KalkulaceThis }}
+       {{ $store.state.KalkulaceThis }} {{ TestRend }}
       <menu-hlavni>
       </menu-hlavni>
     </div>
     <menu-left slot="menuleft"></menu-left>
+    {{aKalkulace}}
+
       <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" >
+
      <!-- <work slot="kalkulace" v-for="na in (2 ,20) " :key="na"> -->
-        <span slot="leva" >
+        <span slot="leva" :key="'L'+ TestRend">
         <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
               <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
               :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
@@ -77,7 +80,7 @@
       v-if="zobrazitPanel"
 
       >
-      <div class="drag00 blue lighten-4" style="cursor:pointer;height:20px">
+      <div class="drag00 blue lighten-4" style="cursor:pointer;height:20px" :key="'M'+ TestRend">
       <div style="width:10%;float:left" >
         <button class="mybutton pr-3 stred pl-3" @click="TestRend=TestRend+1">{{TestRend}}</button></div>
       <div style="width:70%;float:left" >{{StatusMapy}}</div>
@@ -98,7 +101,7 @@
                  >
                  <a :href="'#'+iK.kalkulaceid" @click="setKalk(iK.kalkulaceid)" :ref="'ref_'+iK.kalkulaceid" :id="'ref_'+iK.kalkulaceid + ID">
 
-                 <span class="pr-2">{{iK.kalkulaceid}}</span>
+                 <span class="pr-2" > {{iK.kalkulaceid}}</span>
                  </a>
 
                  <span class="pl-0 "
@@ -456,6 +459,16 @@ export default {
       if (server.key < 11) {
         var beforeK = self.KalkulaceLast
         self.addKalk(server.key)
+        if (server.key ==3) {
+          //self.KalkulaceThis = self.aKalkulace.length
+          //self.setKalk2(self.aKalkulace.length)
+          setTimeout(function(){
+
+           self.addKalkCol("DTP")
+
+          },500)
+
+        }
         //self.addKalkCol()
 
         var n = 0
@@ -484,6 +497,7 @@ export default {
       self.Left=server.key
       self.ColCount++
       //self.addCol(server.key)
+
 
     })
 
@@ -625,7 +639,7 @@ export default {
 
       self.TestRend++
       //alert("jarda")
-    },3000)
+    },1000)
     } catch(e) {
       alert("error")
       self.chooseSloupce(event,bEvent)
@@ -635,7 +649,25 @@ export default {
     },
    chooseRadky: function (event, bEvent) {
      const self= this
+     //alert('a')
 //      console.log('Choos item: ', event.draggedRect, 'B', bEvent)
+      self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
+    try {
+
+      setTimeout(function(){
+       self.aKalkulace.forEach((el,idx) => {
+         el.kalkulaceid = idx + 1
+       })
+      self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
+
+      self.TestRend++
+      //alert("jarda")
+    },1500)
+
+    } catch (e) {
+      alert('error presun radky')
+      self.chooseRadky(event,bEvent)
+    }
 
     setTimeout(function(){
       //aKalkulace
@@ -654,6 +686,8 @@ export default {
 //     return
      if ( type == 1 )   { id_query=10411 } //Velkoploch
      if ( type == 2 )   { id_query=10410 } //Archovy
+     if ( type == 3 )   { id_query=10412 } //Nova Jina
+     if ( type == 4 )   { id_query=10413 } //Nova Externi
      if ( type == 500 ) { id_query=500   } // Seznam formatu
      if ( type == 501 ) { id_query=501   } // Seznam formatu
 
@@ -767,8 +801,11 @@ export default {
      }
 
      try{
-       tmpData = (await (self.strojmod(501)))   //MOdy pro V nebo A
-       oData.Mat      =  tmpData
+
+       //tmpData = (await (self.strojmod(501)))   //MOdy pro V nebo A
+
+       //oData.Mat      =  tmpData
+       oData.Mat      =  []
        oData.MatMenu1 =  []
        oData.MatValue =  ''
 

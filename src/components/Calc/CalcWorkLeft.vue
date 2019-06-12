@@ -67,9 +67,14 @@
        <v-card-text class="pa-0">
        <table style="width:100%" class="pink pa-0">
          <tr><td style="width:40%">
+           <!-- @blur="MenuFormatOpust()" -->
        <v-card @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;position:relative;left:0px;font-size:100%;;height:100%" class="elevation-0"><v-card-text class="pa-0" style="height:100%">
-        <input type="text" v-model="form.Format" size="mini"  style="width:100%; height:25px;" class="tdl tdn elevation-0 pl-1" :placeholder="'Format'"
-                @focus="MenuFormatShow=true"  :id="'seek'+ID" @blur="MenuFormatOpust()" @click="MenuFormatShow=true"
+        <input type="text" v-model="form.Format" size="mini"
+               style="width:100%; height:25px;" class="tdl tdn elevation-0 pl-1" :placeholder="'Format'+ ' seek'+ID"
+                @focus="fokus('seek'+ID);setID();MenuFormatShow=true"
+                :id="'seek'+ID"
+                @blur="MenuFormatOpust()"
+                @click="MenuFormatShow=true"
                 @keydown="MenuFormatShow=true;seznam('seek'+ID+'_list_'+0,1,$event)"
                 >
                <!-- FORMATY {{ID}} {{f1.getBottom('seek'+ID)}} {{f1.getWidth('seek'+ID)}} {{f1.getLeft('seek'+ID)}} -->
@@ -78,8 +83,8 @@
       </td><td style="width:60%" class="pa-0">
       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0 elevation-0">
         <v-card-text  class="pa-0 pt-0  " style="height:100%">
-         <input type="number"    v-model="form.sirka" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="A"  @focus="$event.target.select()" @change="getFormatName()">
-         x<input type="number"   v-model="form.vyska" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="B" @focus="$event.target.select()" @change="getFormatName()">
+         <input type="number"    v-model="form.sirka" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="A"  @focus="fokus('sirka'+ID);$event.target.select()" @change="getFormatName()">
+         x<input type="number"   v-model="form.vyska" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="B" @focus="fokus('vyska');$event.target.select()" @change="getFormatName()">
         </v-card-text>
        </v-card>
        </td></tr>
@@ -166,7 +171,7 @@
                 <button v-if="$store.state.Kalkulace[k_id()].data.Menu1Value == m1.idefix_mod" ref="menu1focus"  :id="'menu1focus'+ID" class="leva" style="width:90%;"
                   v-on:keyup.27="MenuShow1(MenuShow,$event)"
                   ><b>
-                  {{m1.stroj +' ' + m1.nazev }} XX
+                  {{m1.stroj +' ' + m1.nazev }}
                   </b>
                   </button >
                   <button v-else  style="width:90%" class=" leva "
@@ -183,11 +188,25 @@
 <!--manidka formaty //-->
         <!-- :style="'left:'+(clickX+100)+'px'" -->
         <!-- width:20em;left:20em;top:1em; -->
-        <!-- @mouseleave="MenuFormatOpust()" -->
+<div v-if="false">
+  {{'top:'+ f1.getBottom('seek'+ID,40)+'px;width:'+f1.getWidth('seek'+ID,40)+'px;left:'+f1.getLeft('seek'+ID, 100)+'px'}}        <!-- @mouseleave="MenuFormatOpust()" -->
+  {{'f ' + form.Format }}
+  {{$store.state.Kalkulace[k_id()].data.Format.filter(
+                el => (
+                  //el.nazev.toUpperCase().match(FormatSearch.toUpperCase()) || (el.sirka+'').match(FormatSearch) || (el.vyska+'').match(FormatSearch)) || FormatSearch==''
+                  (el.nazev.toUpperCase().match((form.Format+'').toUpperCase())
+                  || (el.sirka+'').match(form.Format+'')
+                  || (el.vyska+'').match(form.Format+''))
+                  || form.Format==''
+                ) && (el.nazev+'') !== (form.Format+'')
+
+                )}}
+</div>
+
 <div
 style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
 :style="'top:'+ f1.getBottom('seek'+ID,40)+'px;width:'+f1.getWidth('seek'+ID,40)+'px;left:'+f1.getLeft('seek'+ID, 100)+'px'"
-   v-if="MenuFormatShow" class="elevation-2 blue lighten-4 pl-0 pr-0"
+   v-if="true || MenuFormatShow" class="elevation-2 blue lighten-4 pl-0 pr-0"
 
        >
 
@@ -196,12 +215,19 @@ style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
               $store.state.Kalkulace[k_id()].data.Format.filter(
                 el => (
                   //el.nazev.toUpperCase().match(FormatSearch.toUpperCase()) || (el.sirka+'').match(FormatSearch) || (el.vyska+'').match(FormatSearch)) || FormatSearch==''
-                  el.nazev.toUpperCase().match((form.Format+'').toUpperCase()) || (el.sirka+'').match(form.Format+'') || (el.vyska+'').match(form.Format+'')) || form.Format==''
+                  ( el.nazev.toUpperCase().match((form.Format+'').toUpperCase())
+                  || (el.sirka+'').match(form.Format+'')
+                  || (el.vyska+'').match(form.Format+''))
+                  || form.Format=='')  && (el.nazev+'') !== (form.Format+'')
 
                 )" :key="i1b" >
               <td class="pa-0">
               <v-card class="silver pa-0" style="width:95%;" >
-                <a :href="'#'" :id="'seek'+ID+'_list_'+i1b" @keydown="seznam('seek'+ID+'_list_'+i1b,1,$event)" @click="setMenuFormat1Value(m1b.idefix)">
+                <a :href="'#'" :id="'seek'+ID+'_list_'+i1b"
+                 @keydown="seznam('seek'+ID+'_list_'+i1b,1,$event)"
+                 @click="setMenuFormat1Value(m1b.idefix);MenuFormatShow=false"
+                 @focus="fokus('seek'+ID)"
+                 >
                 <table style="width:100%"><tr><td style="width:70%">
                 <v-card-text style="font-size:90%;text-align:left;width:100%"  @click="setMenuFormat1Value(m1b.idefix)"
                 class="pa-0 pt-1"
@@ -268,6 +294,8 @@ export default {
         f1: f,
         l: _,
         timeout: 0 , //tOpusteni:0,
+        lastFocus:'',
+
 
      //soubory
       MenuLeft: [
@@ -347,6 +375,19 @@ export default {
    self.MenuStroj()
    console.log("MenuStroj EOF")
    self.readVuexData()
+   setInterval(function(){
+        self.hideAll()
+   },500)
+   setTimeout(function(){
+    if (document.getElementById('seek'+self.ID)) {
+        //f.Alert('Jo ',document.getElementById('seek'+self.ID),'seek'+self.ID)
+        document.getElementById('seek'+self.ID).focus()
+      } else {
+     //f.Alert('Ne ',document.getElementById('seek'+self.ID),'seek'+self.ID)
+    }
+   },500)
+
+
    /*
    setInterval(function(){
         self.hideAll()
@@ -384,6 +425,8 @@ export default {
 
      self.form.ResultHod = self.$store.state.Kalkulace[self.k_id()].data.ResultHod
      self.form.ResultM2  = self.$store.state.Kalkulace[self.k_id()].data.ResultM2
+     if (self.form.Format == undefined) self.form.Format = ''
+
 
 
     // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
@@ -456,7 +499,7 @@ export default {
 
     self.nTimer = setTimeout(function(){
        self.MenuShow = false
-       // alert("Mizim")
+
     },600)
 
     } else {
@@ -473,7 +516,7 @@ export default {
     if (self.nTimer == false) {
     self.nTimer = setTimeout(function(){
        self.MenuShow = true
-    //  alert("Zjeveni")
+     //f.Alert("Zjeveni")
     },500)
     } else {
       clearTimeout(self.nTimer)
@@ -501,6 +544,7 @@ export default {
          setTimeout(function(){
            if (  document.getElementById("menu1focus"+self.ID) )  {
             document.getElementById("menu1focus"+self.ID).focus()
+            //f.Alert("chybka")
 
          }
          },100)
@@ -513,16 +557,40 @@ export default {
      }
      return 0
   },
+  fokus(lastFocus=''){
+    this.lastFocus=lastFocus
+  },
   MenuFormatOpust() {
     const self = this
-    if (self.timeout){
+  //  var x = document.activeElement.tagName
+
+    //console.log(x)
+    setTimeout(function(){
+    //f.Alert(self.lastFocus)
+    if (self.lastFocus.substr(0,4)=='seek'){
+       self.MenuFormatShow=true
+    } else {
+        self.MenuFormatShow=false
+    }
+
+  },100)
+
+    return
+
+    if (self.getID()!== self.ID  ){
+       self.MenuFormatShow=false
+    }
+
+    //return
+    if (self.timeout >0 ){
         clearTimeout(self.timeout)
-        self.timeout=false
+        self.timeout=0
         self.MenuFormatShow=true
         return
     }
     self.timeout=setTimeout(function(){
       self.MenuFormatShow=false
+  //    f.Alert("Opust")
     },1000)
 
   },
@@ -942,10 +1010,10 @@ getFormatName() {
        eventBus.$emit('MatCol', {key: idK  })
      }
    },
-   setID(){
+   setID(val = ''){
      const self = this
     self.$store.dispatch('setID',{
-       ID: self.ID
+       ID: (val>'')?val:self.ID
      })
   },
   getID(){
@@ -956,12 +1024,14 @@ getFormatName() {
   hideAll(){
        const self = this
     if (self.getID()!= self.ID ){
-      //f.Alert('Schovam')
+      //f.Alert('Schovam' , self.getID() , self.ID )
 //      console.log("Schovam ", self.ID)
 
-      if (self.form.showtxt )       self.form.showtxt=false
-      if (self.form.showtxtStroj )  self.form.showtxtStroj=false
-      if (self.form.showtxtStroj1 ) self.form.showtxtStroj1=false
+      if (self.MenuFormatShow )     self.MenuFormatShow     = false
+      if (self.form.showtxt )       self.form.showtxt       = false
+      if (self.form.showtxt )       self.form.showtxt       = false
+      if (self.form.showtxtStroj )  self.form.showtxtStroj  = false
+      if (self.form.showtxtStroj1 ) self.form.showtxtStroj1 = false
     } else {
       console.log("drzim ", self.ID)
     }
@@ -983,6 +1053,7 @@ getFormatName() {
      var tmp=0;
 
      var PrvekTxt=""
+     console.log("Seznam ",nKey, " ID: ", id)
 
     // self.info=aPrvek
      // self.info.push({dele: aPrvek.length })
@@ -1218,11 +1289,16 @@ textarea:focus, input:focus {
     outline: 1px dashed;
 
 }
+
 td th {
   font-size: 12px;
 }
 </style>
 <style scoped>
+a:focus {
+    outline: 0px solid;
+}
+
 input[type="file"] {
     display: block;
 }
@@ -1319,12 +1395,6 @@ button:hover {
 .em8 {
   height: 8em;
 }
-
-
-
-
-
-
 
 
 

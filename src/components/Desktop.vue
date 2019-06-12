@@ -23,14 +23,12 @@
       floating
       hide-overlay
 
-
-
-
     >
-     <menu-nav :xmenu="xMenuFinal" :xgroup="people1001" @click.native="drawer=false"></menu-nav>
+    <!-- @click.native="drawer=false" -->
+     <menu-nav :xmenu="xMenuFinal" :xgroup="people1001"  @mouseleave.native="opust()" class="grey lighten-5" ></menu-nav>
     </v-navigation-drawer>
       <v-toolbar app fixed clipped-left >
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer" @mouseenter="drawer = true" ></v-toolbar-side-icon>
       <v-toolbar-title class="pa-0 ma-0">
         <v-card class="pa-0 ma-0">
           <v-card-text class="px-1 mx-1 elevation-2" style="background:#f5f5f5">
@@ -483,6 +481,7 @@ export default {
   },
   data: () => {
     return {
+      opustMenuInterval: false,
       drawer: false,
       // Zobrazeni - checkboc
       checkDesk: [],
@@ -561,6 +560,23 @@ export default {
         this.compa= []
       }
       this.radio3 = a
+    },
+    opust(){
+      const self = this
+      self.drawer=false
+      return
+
+      //nevim :-(
+      if (!self.opustMenuInterval) {
+        self.opustMenuInterval = setInterval(() => {
+        self.drawer=false
+      },  1000)
+      } else {
+        clearInterval(self.opustMenuInterval)
+        self.opustMenuInterval = false
+
+      }
+
     },
 
     radio3_atab: function () {

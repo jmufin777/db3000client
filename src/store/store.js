@@ -203,6 +203,10 @@ export default new Vuex.Store({
     saveKalkCela(state,kalkulace){
       console.log('SAVE ' ,kalkulace.id)
       state.Kalkulace= kalkulace.data
+      // state.Kalkulace.forEach((el,idx) => {
+      //   el.kalkulaceid = idx+1
+      // })
+
     },
     saveCols(state,kalkulace){
       console.log('SAVE ' ,kalkulace.id)
@@ -271,7 +275,15 @@ export default new Vuex.Store({
     },
     setKalk2 (state, kalkulaceid) {
       console.log('Set acc ID ', kalkulaceid)
-      state.KalkulaceThis = state.Kalkulace[kalkulaceid].kalkulaceid
+      // state.Kalkulace.forEach((el,idx) => {
+      //   el.kalkulaceid = idx+1
+      // })
+      try {
+        state.KalkulaceThis = state.Kalkulace[kalkulaceid].kalkulaceid
+      } catch (e) {
+          console.log("Chyba sek Kalk2 ")
+      }
+
     },
     replaceKalk (state, dataAll) {
       var idx = this.getters.getId(dataAll.kalkulaceid)

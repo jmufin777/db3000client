@@ -1,9 +1,17 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
- <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pt-0 " id="test_1"  @scroll="TestRend" >
- <slot name="sloupce">
+ <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
 
-
+ <slot name="sloupce" class="pl-0">
+<div class="white pa-0 leva" >
+  <div style="border-round:20px">
+  <i class="el-icon-plus"></i>
+  </div>
+  <i class="el-icon-cross"></i>
+  <slot name="tlacitka" class="pl-0 ">
+  Tlacitka
+  </slot>
+  </div>
 <table width="120%" border="0px" >
   <tr><td v-for="n in 95" :key="n" style="font-size:1px">&nbsp;</td></tr>
     <tr>
@@ -75,7 +83,8 @@
    </tr>
 </table>
 </slot>
-<hr class="pb-1">
+<!-- <hr class="pa-0 red darken-4" style="height:1px"> -->
+<!-- <hr class="pa-0 red darken-4" style="height:1px"> -->
 
     </div>
  <!-- </div> -->
