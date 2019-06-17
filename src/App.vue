@@ -392,6 +392,10 @@ select:focus, input:focus {
     font-size: 20px;
    }
 
+button:focus {
+    outline: 0px;
+}
+
 
 
 

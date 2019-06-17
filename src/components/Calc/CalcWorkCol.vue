@@ -1594,26 +1594,26 @@ async   zmenaType(cSloup=""){
        //self.form.txtStroj = "ahokj"
        //alert( JSON.stringify(neco.data.stroj) + " / " + neco.data.stroj.nazev)
      } catch(e) {
-       console.log('nei nazev stroje ve sloupci ' + self.getType())
+       //console.log('nei nazev stroje ve sloupci ' + self.getType())
      }
      try  {
       self.form.txtStroj1       = neco.data.stroj1.nazev_stroj
        //self.form.txtStroj = "ahokj"
        //alert( JSON.stringify(neco.data.stroj1) + " / " + neco.data.stroj1.nazev_stroj)
      } catch(e) {
-       console.log('nei nazev stroje ve sloupci ' + self.getType())
+       //console.log('nei nazev stroje ve sloupci ' + self.getType())
      }
 
      try  {
       self.form.txtDod       = neco.data.dod.firma
      } catch(e) {
-       console.log('nei nazev stroje ve sloupci ' + self.getType())
+       //console.log('nei nazev stroje ve sloupci ' + self.getType())
      }
 
     try  {
       self.form.txtPrace       = neco.data.prace.prace
      } catch(e) {
-       console.log('nei nazev stroje ve sloupci ' + self.getType())
+       // console.log('nei nazev stroje ve sloupci ' + self.getType())
      }
 
 

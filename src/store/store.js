@@ -35,6 +35,7 @@ export default new Vuex.Store({
     KalkulaceColThis: -1,
     KalkulaceLast: -1,
     KalkulaceID: -1, //Aktivni id sloupce ....
+    KalkulaceIdefix: -1, //
     Strana: 15  //Default na stranku v tabulce
   },
   mutations: {
@@ -201,11 +202,9 @@ export default new Vuex.Store({
       state.Kalkulace[kalkulace.id]= kalkulace.data
     },
     saveKalkCela(state,kalkulace){
-      console.log('SAVE ' ,kalkulace.id)
+      // console.log('SAVE ' ,kalkulace.id)
+      state.Kalkulace = []
       state.Kalkulace= kalkulace.data
-      // state.Kalkulace.forEach((el,idx) => {
-      //   el.kalkulaceid = idx+1
-      // })
 
     },
     saveCols(state,kalkulace){
@@ -272,6 +271,10 @@ export default new Vuex.Store({
     setKalk (state, kalkulaceid) {
       console.log('Set ', kalkulaceid)
       state.KalkulaceThis = kalkulaceid
+    },
+    setKalkulaceIdefix (state, kalkulaceidefix) {
+      //console.log('Set ', kalkulaceidefix)
+      state.KalkulaceIdefix = kalkulaceidefix
     },
     setKalk2 (state, kalkulaceid) {
       console.log('Set acc ID ', kalkulaceid)
@@ -606,6 +609,10 @@ export default new Vuex.Store({
       //console.log('SET ID ', kalkulaceid)
       commit('setID', kalkulaceid)
     },
+    setKalkulaceIdefix ({commit}, kalkulaceidefix) {
+      console.log('SET ID ', kalkulaceidefix)
+      commit('setKalkulaceIdefix', kalkulaceidefix)
+    },
 
     setStrana ({commit}, kalkulaceid) {
       console.log('SET STRANA ', kalkulaceid)
@@ -685,7 +692,7 @@ export default new Vuex.Store({
       try{
       state.Kalkulace.forEach((el2,idx2) => {
         if (el2.kalkulaceid === id) {
-          console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2  )
+          // console.log("Hledam ", idCol , "v kalkulaci ", id, " idx2 ", idx2  )
         state.Kalkulace[idx2].sloupecid.forEach((el, idxk) => {
         if (el.id === idCol) {
           idx = idxk

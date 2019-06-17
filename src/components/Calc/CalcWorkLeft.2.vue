@@ -326,7 +326,7 @@ export default {
 
    console.log("MenuStroj TOP")
    self.MenuStroj()
-   console.log("MenuStroj EOF")
+   //console.log("MenuStroj EOF")
    self.readVuexData()
 
    return

@@ -2,8 +2,9 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
       <div style="font-size:100%; height:100%" class="white lighten-5 pt-0 " >
+
          <slot name="obsah">
-          <table width="100%" style="border:none"><tr><td style="width:30%;border:none">
+           <table width="100%" style="border:none"><tr><td style="width:30%;border:none">
            <v-btn small
             outline
            color="green"
@@ -74,6 +75,7 @@ export default {
        {key: 1 , value: 'Velkoploch'},
        {key: 2 , value: 'Archovy'},
        {key: 3 , value: 'Jine'},
+       {key: 43 , value: 'Externi'},
      ],
      lastSend: 0,
      disabled: false
@@ -100,7 +102,6 @@ export default {
      if ( key == 11) {
        self.lastSend = 0
      }
-
    }
  }
 }

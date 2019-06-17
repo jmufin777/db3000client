@@ -3,19 +3,37 @@
     <!-- Link:
   <router-link :to="{name: 'col', params: {ktery: 1 }}">Moduly</router-link> -->
     <my-layout>
-    <div slot="hlavni">
-      {{ KalkulaceThis}} /Last {{ KalkulaceLast }}
-       {{ $store.state.KalkulaceThis }} {{ TestRend }}
-      <menu-hlavni>
-      </menu-hlavni>
-    </div>
-    <menu-left slot="menuleft"></menu-left>
-    {{aKalkulace}}
+      <div slot="hlavninew" style="position:fixed;top:4.8em;left:10px;background:#fdf0f7;text-align:left;width:100%">
+    <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
+     <div >
+      <work-but-menu></work-but-menu>
+     </div>
 
+    <span v-if="false">
+
+      {{ KalkulaceThis}} /Last {{ KalkulaceLast }}
+      {{ $store.state.KalkulaceThis }} {{ TestRend }}
+    </span>
+      <!-- <menu-left slot="menuleft"></menu-left>
+         <menu-hlavni></menu-hlavni> -->
+
+    </div>
+
+
+    <!-- {{aKalkulace}} -->
+<div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%">
+<div v-for="idxK in 1" :key="idxK" slot="kalkulace" >
+
+      <work-but-plus v-if="aKalkulace.length==0" slot="nekalkulace" :ID="1"> </work-but-plus>
       <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" >
+        <work-but v-if="iK==0" :ID="'A_'+iK" slot="tlacitka" > </work-but>
+        <work-but-plus v-else slot="tlacitka" :ID="'B+'+iK"> </work-but-plus>
+
+
 
      <!-- <work slot="kalkulace" v-for="na in (2 ,20) " :key="na"> -->
         <span slot="leva" :key="'L'+ TestRend">
+
         <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
               <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
               :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
@@ -49,7 +67,8 @@
         </div>
       <div slot="mezera" class="red">&nbsp;</div>
      </work>
-
+</div>
+</div>
      <div style="right:1%;z-index:99999;" class="plovouci  grey lighten-1 pt-2 pb-2"  slot="Plovouci2"
 
      > <!--2 = prepinac -->
@@ -90,22 +109,26 @@
       </div>
       <div class="pa-0 pt-1" style="width:100%;max-height:550px;overflow-y:auto">
         <v-card><v-card-text class="grey  pa-0">
-        <draggable v-model="aKalkulace"  :options="{group: 'people2' }"  @start="drag=true" @end="drag=false" :move="chooseRadky" style="min-width:500px;">
+          <draggable v-model="aKalkulace"  :options="{group: 'people2' }"
+          @start="drag=true"
+          @end="drag=false"
+
+          :move="chooseRadky"
+          style="min-width:500px;">
+        <!-- <draggable v-model="aKalkulace"  :options="{group: 'people2' }"  @start="drag=true" @end="drag=false" :move="chooseRadky" style="min-width:500px;"> -->
           <div v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;float:none" class="grey lighten-2 pl-1 pt-1" @click.native="setKalk2(i)" >
               <div style="float:left;border:4px solid #eeeeee"
 
               >
                  <!-- <v-card><v-card-text style="width:10em;font-size:12px;min-height:29px;cursor:pointer" class="pb-1 pt-1 grey lighten-3" -->
-                <v-card @mouseover="setKalk2(i)"><v-card-text style="width:15em;font-size:12px;min-height:29px;cursor:pointer;text-align:left" class="pb-0 pt-0 grey lighten-3"
+                <v-card @mouseover="setKalk2(i)" @mouseenter="setKalk(iK.kalkulaceid)"><v-card-text style="width:15em;font-size:12px;min-height:29px;cursor:pointer;text-align:left" class="pb-0 pt-0 grey lighten-3"
                 :class="{'green lighten-1': $store.state.KalkulaceThis*1 == iK.kalkulaceid*1 }"
                  >
-                 <a :href="'#'+iK.kalkulaceid" @click="setKalk(iK.kalkulaceid)" :ref="'ref_'+iK.kalkulaceid" :id="'ref_'+iK.kalkulaceid + ID">
+                 <a :href="'#'+iK.kalkulaceid" @click="setKalk(iK.kalkulaceid)"   :ref="'ref_'+iK.kalkulaceid" :id="'ref_'+iK.kalkulaceid + ID">
 
                  <span class="pr-2" > {{iK.kalkulaceid}}</span>
                  </a>
-
                  <span class="pl-0 "
-
                  >{{Kalkulace[i].data.txtStroj}}</span></span>
                   <span style="position:absolute;top:0px;right:1px" ><button type="button" class="elevation-1 mybutton"   @click="removeKalkAccId(i)">x</button></span>
                   <span style="position:absolute;bottom:0px;left:1px" class="elevation-1 mybutton" ><button type="button" @click="copyKalk(i)" >+</button></span>
@@ -335,9 +358,16 @@ import MenuLeft from './CalcMenuLeft.vue'
 import Work from './CalcWork.vue'       // Pracovni cast nahore, obshahuje levou cast a sloupce
 import WorkLeft from './CalcWorkLeft.vue'       // Pracovni cast nahore
 import WorkCol from './CalcWorkCol.vue' // Prehledova dole
+import WorkBut from './CalcWorkButton.vue' // Prehledova dole
+import WorkButPlus from './CalcWorkButtonPlus.vue' // Prehledova dole
+import WorkButMenu from './CalcWorkButtonMenu.vue' // Prehledova dole
+
 import ListStroj from '../../services/ListStrojService'
 import f from '@/services/fce'
-import query from '../../services/query'
+// import query from '../../services/query'
+//import Q from '../../services/query'
+import queryKalk from '../../services/fcesqlKalkulace'
+
 //10411
 
 import Prehled from './CalcPrehled.vue' // Prehledova dole
@@ -351,6 +381,9 @@ export default {
     'work': Work,
     'work-left': WorkLeft,
     'work-col': WorkCol,
+    'work-but': WorkBut,
+    'work-but-plus': WorkButPlus,
+    'work-but-menu': WorkButMenu,
     'menu-hlavni': MenuHlavni,
 
  },
@@ -374,6 +407,7 @@ export default {
      qtest: [],
      ID: 0,
      TestRend :0,
+     timeoutDrag: null,
 
    }
  },
@@ -395,8 +429,11 @@ export default {
 //      alert('Tvorim')
      eventBus.$off('MenuHlavni')
      eventBus.$off('MenuLeft')
+     eventBus.$off('SAVETEMPLATE')
      eventBus.$on('kalkulaceDelete',(serverDel) => {
      eventBus.$off('MatCol')
+
+
      console.log(serverDel)
 
      })
@@ -415,6 +452,16 @@ export default {
 
 
     })
+     eventBus.$on('SAVETEMPLATE', (server) => {
+       if (server.data.nazev=='') {
+         f.Alert('Nazev je nutne vyplnit',self.user)
+       } else {
+         f.Alert('Template bude ulozen pod nazvem  ', server.data.nazev)
+         // JSON.stringify(self.aKalkulace)
+          queryKalk.setKalk(server.data,self.aKalkulace)
+       }
+       //f.Alert(JSON.stringify(server))
+     }),
      eventBus.$on('MenuHlavni', (server) => {
       self.Hlavni=server.key
       if (server.key == 666) {  //Guma
@@ -459,15 +506,18 @@ export default {
       if (server.key < 11) {
         var beforeK = self.KalkulaceLast
         self.addKalk(server.key)
-        if (server.key ==3) {
-          //self.KalkulaceThis = self.aKalkulace.length
-          //self.setKalk2(self.aKalkulace.length)
+        if (server.key == 3) {
           setTimeout(function(){
-
            self.addKalkCol("DTP")
-
           },500)
+        }
+        if (server.key == 4) {
+          //setKalk(iK.kalkulaceid)
 
+          setTimeout(function(){
+           // f.Alert(self.aKalkulace.length)
+           self.addKalkCol("Externi")
+          },500)
         }
         //self.addKalkCol()
 
@@ -650,19 +700,31 @@ export default {
    chooseRadky: function (event, bEvent) {
      const self= this
      //alert('a')
-//      console.log('Choos item: ', event.draggedRect, 'B', bEvent)
-      self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
+     if (self.timeoutDrag){
+        // console.log('Choos item: ', event.draggedRect, 'B', bEvent)
+        clearTimeout(self.timeoutDrag)
+        //return
+     }
+
+
+
+
     try {
 
-      setTimeout(function(){
-       self.aKalkulace.forEach((el,idx) => {
-         el.kalkulaceid = idx + 1
-       })
-      self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
+      self.timeoutDrag = setTimeout(function(){
+        self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
+        setTimeout(function(){
+          self.aKalkulace.forEach((el,idx) => {
+            el.kalkulaceid = idx + 1
+          })
+          self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
 
-      self.TestRend++
-      //alert("jarda")
-    },1500)
+          self.TestRend++
+          //alert("jarda")
+        },200)
+      },200)
+
+
 
     } catch (e) {
       alert('error presun radky')
@@ -967,8 +1029,12 @@ export default {
           this.$store.dispatch('setKalk',idK)
            var neco = 'ref_'+idK+this.ID
            //document.getElementById(neco).click()
+           if (document.getElementById(neco)) {
+             document.getElementById(neco).click()
+           }
+           //
            this.defaultStyle(idK)
-          console.log('setKalk',idK)
+          //console.log('setKalk',idK)
    },
    setKalk2(idK) {
      if (self.lastIdK==idK) return
@@ -1006,7 +1072,9 @@ export default {
       'idefix',
       'compaStore',
       'Kalkulace',
-      'KalkulaceThis'
+      'KalkulaceThis',
+      'user'
+
 
 
     ]),
@@ -1016,7 +1084,7 @@ export default {
 
 </script>
 
-<style >
+<style scoped>
 button:focus {
     outline: 0px;
     color: red;
@@ -1102,6 +1170,7 @@ div .v-select__slot {
 
 
 }
+
 
 input {
     width: 100%;

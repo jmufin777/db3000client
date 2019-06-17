@@ -25,7 +25,7 @@
 
     >
     <!-- @click.native="drawer=false" -->
-     <menu-nav :xmenu="xMenuFinal" :xgroup="people1001"  @mouseleave.native="opust()" class="grey lighten-5" ></menu-nav>
+     <menu-nav :xmenu="xMenuFinal" :xgroup="people1001"  @mouseenter.native="prijdi()"   @mouseleave.native="opust()" class="grey lighten-5" ></menu-nav>
     </v-navigation-drawer>
       <v-toolbar app fixed clipped-left >
       <v-toolbar-side-icon @click.stop="drawer = !drawer" @mouseenter="drawer = true" ></v-toolbar-side-icon>
@@ -68,9 +68,9 @@
 
 
 <!-- <div v-if="this.compa.length>0" style="background:f5f5f5;max-width:50%;border:solid 0px;border-color:white" class="ml-4 px-2 elevation-1"> -->
-<div v-if="this.compa.length>0" style="background:f5f5f5;max-width:50%;border:none" class="ml-4 px-2 elevation-0">
+<div v-if="this.compa.length>0" style="background:f5f5f5;max-width:50%;border:none;" class="ml-4 px-2 elevation-0">
 <el-tabs v-model="radio3t"  @tab-click="radio3_atab" closable @tab-remove="removeCompa"  style="background:f5f5f5" lazy>
-  <el-tab-pane v-for="(compaE, iE) in compa " :key="iE" :name="compaE[0].modul" :label="compaE[0].title"></el-tab-pane>
+  <el-tab-pane v-for="(compaE, iE) in compa " :key="iE" :name="compaE[0].modul" :label="compaE[0].title" ></el-tab-pane>
     <!-- <el-tab-pane label="Vse"   :name="'CloseAllWin'"  ></el-tab-pane> -->
  </el-tabs>
 </div>
@@ -104,7 +104,7 @@ Moduly:
 </div></div>
 <el-tooltip  placement="bottom" effect="light">
 
-      <div slot="content">
+     <div slot="content">
 
 
      <!-- <el-checkbox label="Demo2" v-if="level==3" v-model="demo2" border size="mini" ></el-checkbox> -->
@@ -144,13 +144,15 @@ Moduly:
 
     </v-toolbar>
 
-    <v-content v-if="cont" style="padding-top: 10px">
+    <v-content v-if="cont" style="padding-top: 5px">
 
    <v-container grid-list-md >
-    <v-layout v-if="lay" row wrap>
-   <div style="position:absolute;top:0px;left:0px;height:100%;width:99%;background-color:#f5f5f5;opacity:1">
 
-      <p v-for="(r, i ) in $route.path" :key="'zzz' + i">{{r.name}}</p>
+    <v-layout v-if="lay" row wrap>
+   <div style="position:absolute;top:0px;left:0px;height:100%;width:99%;background-color:#f5f5f5;opacity:1;z-index:1">
+
+
+   <!-- <p v-for="(r, i ) in $route.path" :key="'zzz' + i">{{r.name}}</p> -->
 <!-- :sticks="['tm','bm','ml','mr']
   {{compa}} [{{ openWins.join(',') }}]
 :isActive="true"
@@ -219,12 +221,14 @@ Moduly:
    <el-row   v-if="radio2==20 && this.compa.length>0" :gutter=0 style="background:#FFFFFF">
      <!-- plocha  -->
       <el-col  :span="23" >
-       <el-button   v-if="radio3>'' && radio2==20" type="error" icon="el-icon-upload2"  size="mini" class="elevation-20"
-      @click="moveModuleToWin(radio3,1)"
-      > {{ radio3 }}</el-button>
-     <el-button v-if="radio3>'' && radio2==20 " type="error" icon="el-icon-close"  size="mini" class="elevation-20"
-      @click="closeModule(radio3)" >
-  </el-button>
+       <div v-if="false">
+          <el-button   v-if="radio3>'' && radio2==20" type="error" icon="el-icon-upload2"  size="mini" class="elevation-20"
+          @click="moveModuleToWin(radio3,1)"
+          > {{ radio3 }}</el-button>
+        <el-button v-if="radio3>'' && radio2==20 " type="error" icon="el-icon-close"  size="mini" class="elevation-20"
+          @click="closeModule(radio3)" >
+          </el-button>
+      </div>
    <keep-alive >
        <component v-bind:is="radio3" ></component>
     </keep-alive>
@@ -239,7 +243,7 @@ Moduly:
   </v-content>
   <v-footer app fixed>
       <span>&copy; db3000 2018</span>
-     [ {{ StartRight }} ]
+      <!-- [ {{ StartRight }} ] -->
   </v-footer>
   </v-app>
 
@@ -561,22 +565,20 @@ export default {
       }
       this.radio3 = a
     },
-    opust(){
+    prijdi() {
       const self = this
-      self.drawer=false
-      return
-
-      //nevim :-(
-      if (!self.opustMenuInterval) {
-        self.opustMenuInterval = setInterval(() => {
-        self.drawer=false
-      },  1000)
-      } else {
-        clearInterval(self.opustMenuInterval)
-        self.opustMenuInterval = false
-
+      if (self.opustMenuInterval) {
+          clearTimeout(self.opustMenuInterval)
+       // console.log("Prichazim ", self.opustMenuInterval)
       }
+    },
+    opust() {
+      const self = this
 
+        self.opustMenuInterval = setTimeout(function(){
+          // console.log("Opustim ", self.opustMenuInterval)
+          self.drawer=false
+        },400)
     },
 
     radio3_atab: function () {

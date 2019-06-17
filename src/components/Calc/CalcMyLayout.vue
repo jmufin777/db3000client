@@ -1,12 +1,22 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-       <div v-if="ukaz==true && ID > 0" class="white lighten-5 pt-4 px-2 mt-2" :style="'height:'+getHeight('d1_'+ID,100)+'px'" :id="'d1_'+ID" @click="s12(1,$event)" @scroll="TestRend" >
+       <div v-if="ukaz==true && ID > 0" class="  lighten-5 pt-0 px-0 mt-0 py-0" :style="'height:'+getHeight('d1_'+ID,100)+'px'" :id="'d1_'+ID" @click="s12(1,$event)" @scroll="TestRend"
+         style="position:absolute;top:0px;background:white"
+         >
+         <div  style="position:relative;top:0px;width:100%;background:#ffffff;max-height:1000px">
+         <slot name="hlavninew">
+
+         </slot>
+         </div>
+
+
          <table cols="100" >
            <tr >
              <td v-for="n in 100" :key="n" style="font-size:1px">&nbsp;</td>
            </tr>
-           <tr>
-             <td colspan="90" ><slot name="hlavni"> Hlavni nabidka</slot></td>
+           <tr >
+             <td colspan="90" ><slot name="hlavni"> </slot></td>
+             <!-- Hlavni nabidka -->
             <td colspan="10" style="text-align:center"><slot name="menuleft">Menu Leve</slot></td>
            </tr>
            <tr>
@@ -18,8 +28,8 @@
                <div  class="green lighten-5 pt-0 py-0 px-0 mt-0 ml-2" style="position:relative;overflow:scroll;max-height:100%" id="obal1_kalkulace">
                   <!-- aaAAAAAA{{ getBottom('d1_'+ID)}} /                 TOP{{ getTop('d1_'+ID)}} / {{getHeight('d1_'+ID,s1)}} / {{getHeight('d1_'+ID,s2)}}
                   {{getWHeight()}} ::: {{'d1_'+ID}} -->
-
-               <slot name="kalkulace">Slot kalkulace</slot>
+              <slot name="nekalkulace"></slot>
+              <slot name="kalkulace"></slot>
 
 
                </div>

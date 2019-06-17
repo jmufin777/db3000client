@@ -206,7 +206,7 @@
 <div
 style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
 :style="'top:'+ f1.getBottom('seek'+ID,40)+'px;width:'+f1.getWidth('seek'+ID,40)+'px;left:'+f1.getLeft('seek'+ID, 100)+'px'"
-   v-if="true || MenuFormatShow" class="elevation-2 blue lighten-4 pl-0 pr-0"
+   v-if="MenuFormatShow" class="elevation-2 blue lighten-4 pl-0 pr-0"
 
        >
 
@@ -370,10 +370,9 @@ export default {
 
 
 
-
    console.log("MenuStroj TOP")
    self.MenuStroj()
-   console.log("MenuStroj EOF")
+   //console.log("MenuStroj EOF")
    self.readVuexData()
    setInterval(function(){
         self.hideAll()

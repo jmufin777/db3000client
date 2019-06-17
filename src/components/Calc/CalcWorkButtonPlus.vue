@@ -2,86 +2,22 @@
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
  <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
 
- <slot name="sloupce" class="pl-0">
+<table style="float:left" ><tr>
+  <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:5.5em;text-align:center">
+   <div class="honza_color" style="height:26px;padding-top:2px;text-align:center;width:5.2em;width:100%" >
+   <button class="kolecko2" >
+    <div class="kolecko" >
+      <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
+      </div>
+  </button>
+   </div>
+  </td>
 
-<slot name="tlacitka"></slot>
-
-
-<table width="120%" border="0px" >
-  <tr><td v-for="n in 95" :key="n" style="font-size:1px">&nbsp;</td></tr>
-    <tr>
-  <td colspan="20" rowspan="2" style="border-style: 0px;z-index:99999999 " class="sloupec pa-0">
-
-    <!-- <div style="position:fixed;top:25%;right:5%;z-index:999999" > -->
-    <div>
-    <slot name="leva" >
-       Leva Cast
-   </slot>
-    </div>
-   </td>
-  <!-- <td colspan="1">A</td> -->
-   <td colspan="10" class="sloupec pa-0" style="">
-      <slot  name="sloupec1"></slot>
-    </td>
-    <td colspan="10" class="sloupec">
-        <slot name="sloupec2"></slot>
-    </td>
-    <td colspan="10" class="sloupec">
-        <slot name="sloupec3"></slot>
-    </td>
-    <td colspan="10" class="sloupec">
-        <slot name="sloupec4"></slot>
-    </td>
-    <td colspan="10" class="sloupec">
-        <slot name="sloupec5"></slot>
-    </td>
-     <td colspan="10" class="sloupec">
-        <slot name="sloupec6"></slot>
-    </td>
-     <td colspan="10" class="sloupec">
-        <slot name="sloupec7"></slot>
-    </td>
-     <td colspan="10" class="sloupec">
-        <slot name="sloupec8"></slot>
-    </td>
-
-   </tr>
-   <tr>
-
-  <!-- <td colspan="1">.</td> -->
-
-   <td colspan="10" class="sloupec">
-      <slot  name="sloupec9"></slot>
-    </td>
-    <td colspan="10" class="sloupec">
-        <slot name="sloupec10"></slot>
-    </td>
-    <td colspan="10" class="sloupec">
-        <slot name="sloupec11"></slot>
-    </td>
-    <td colspan="10" class="sloupec">
-        <slot name="sloupec12"></slot>
-    </td>
-    <td colspan="10" class="sloupec">
-        <slot name="sloupec13"></slot>
-    </td>
-     <td colspan="10" class="sloupec">
-        <slot name="sloupec14"></slot>
-    </td>
-     <td colspan="10" class="sloupec">
-        <slot name="sloupec15"></slot>
-    </td>
-     <td colspan="10" class="sloupec">
-        <slot name="sloupec16"></slot>
-    </td>
-
-   </tr>
-</table>
-</slot>
-<!-- <hr class="pa-0 red darken-4" style="height:1px"> -->
-<!-- <hr class="pa-0 red darken-4" style="height:1px"> -->
-
-    </div>
+  </tr></table>
+     <div class="white " style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:100%" >
+       &nbsp;
+     </div>
+  </div>
  <!-- </div> -->
 </template>
 
@@ -103,11 +39,13 @@ export default {
 
  },
   props: {
+    ID:0
 
 
   },
  data () {
    return {
+     ID0: this.ID
 
    }
  },
@@ -169,7 +107,9 @@ textarea:focus, input:focus{
   border-radius:10px  !important;
   vertical-align: top  !important;
   text-align: center  !important;
-  font-size:14px;
+  font-size:15px;
+  font-weight: 900;
+  padding-top:0px !important;
   padding-top:0px !important;
   padding-bottom:0px !important;
   background: white;
