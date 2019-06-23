@@ -65,48 +65,80 @@
        &nbsp;
      </div>
 
-
   <div
-style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
-:style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,0)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'"
-   v-if="showTemplates " class="elevation-12 honza_color"
+style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:10000000"
+:style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,400)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'"
+   v-if="showTemplates " class="elevation-12 honza_color_seznam"
 
        >
         <!-- {{showTemplates}} {{dataTemplates.length}} -->
-          <table  width="100%" v-if="showTemplates " class="pa-2 ">
+          <table  width="100%" v-if="showTemplates " class="pa-2 honza_color_seznam" border="0">
               <tr v-for="(m1b, i1b) in
               dataTemplates.filter(
                 el =>
                   ( el.nazev.toUpperCase().match((form.nazev+'').toUpperCase()) && form.nazev+'' > '' && form.nazev !== el.nazev )
                   || (form.nazev+'').trim() == ''
-                )" :key="i1b" >
-              <td class="pa-0 ">
-              <v-card class="hpa-0 " style="width:115%;" >
+                )" :key="i1b" class="pa-0 honza_color_seznam">
+              <td class="pa-0 pl-1 honza_color_seznam" style="width:90%;border-bottom:solid 1px black">
+              <v-card class="pa-0 elevation-0 honza_color_seznam" style="width:100%;;border:solid 0px" >
                 <a :href="'#'" :id="'seek'+ID2+'_list_'+i1b"
                  @keydown="seznam('seek'+ID2+'_list_'+i1b,1,$event)"
                  @click="setTemplate(m1b);showTemplates=false"
                  @focus="fokus('seek'+ID)"
+                 class="honza_color_seznam"
 
                  >
-                <table style="width:100%" ><tr><td style="width:70%" class="honza_color">
-                <v-card-text style="font-size:90%;text-align:left;width:100%"  @click="setTemplate(m1b)"
-                class=" pa-0 pt-1"
+                <table style="width:100%;border:solid 0px;border-bottom: solid 0px #575756" class="honza_color_seznam" ><tr><td style="width:60%;border-bottom:solid 0px" class="honza_color_seznam" >
+               <v-card class="pa-0 elevation-0 honza_color_seznam"  >
+                <v-card-text style="font-size:100%;text-align:left;width:100%"  @click="setTemplate(m1b)"
+                class=" pa-0 pt-0 honza_color_seznam"
                 >
                  {{ m1b['nazev']}}
                  </v-card-text>
-                 </td><td style="width:30%;height:100" class="pa-0 honza_color">
-                 <v-card-text style="font-size:90%;text-align:left;width:100%;height:100%"  @click="setTemplate(m1b)"
-                 class=" pa-0 pt-1">
-                 {{m1b['login']}}
-
-                 </v-card-text>
+                 </v-card>
                  </td>
-                 </tr></table>
+                 <td style="width:20%" class="pa-0 honza_color_seznam">
+                 <v-card class="pa-0 elevation-0 honza_color_seznam">
+                 <v-card-text style="font-size:100%;text-align:left;width:100%;height:100%"  @click="setTemplate(m1b)"
+                 class=" pa-0 pt-0 honza_color_seznam">
+                 {{m1b['login']}}
+                 </v-card-text>
+                 </v-card>
+                 </td>
+
+                 </tr>
+                 </table>
               </a>
               </v-card>
               </td>
+              <td style="width:10%;border-bottom:solid 1px" class="honza_color_seznam">
+                <v-card class="pa-0  honza_color_seznam elevation-0">
+                  <v-card-text
+                  v-if="$store.state.idefix == m1b.user_update_idefix"
+                  style="font-size:100%;text-align:center;width:100%;height:100%;cursor:pointer"  @click="delTemplate(m1b,$event)"
+                  class=" pa-0 pt-0 pr-0 honza_color_seznam"
+                  >
+                  <i class="el-icon-delete honza_color_seznam"></i>
+                  </v-card-text>
+                  <v-card-text
+                  v-else
+                  style="font-size:100%;text-align:center;width:100%;height:100%;cursor:pointer"  @click="f1.Alert('Template muze smazat pouze jeho vlastnik');showTemplates=true;f1.setFocus('seek'+ID2)"
+                  class=" pa-0 pt-0 pr-0 honza_color_seznam"
+                  >
+                  <i class="el-icon-question honza_color_seznam"></i>
+
+
+                  </v-card-text>
+                  </v-card>
+
+
+              </td>
             </tr>
           </table>
+  </div>
+
+  <div :id="'box'+ID"  style="visibility:hidde">
+      AAAAA
   </div>
 
 
@@ -127,9 +159,12 @@ import WorkLeft from './CalcWorkLeft.vue'       // Pracovni cast nahore
 import WorkCol from './CalcWorkCol.vue' // Prehledova dole
 import queryKalk from '../../services/fcesqlKalkulace'
 
-import JQuery from 'jquery'
+
 import { locales } from 'moment';
-let $ = JQuery
+//import JQuery from 'jquery'
+//let $ = JQuery
+
+
 
 
 
@@ -157,6 +192,7 @@ export default {
      dataTemplates: [],
 
      form: {
+       idefix:0, // pri nacteni se aktualizuje na otevrenou kalkulaci
        nazev: '',
        kcks: null,
        ks: null,
@@ -175,13 +211,28 @@ export default {
 
   //   })
   const self = this
-    eventBus.$off('DATATEMPLATES')
+    eventBus.$off('DATATEMPLATES')  //Nacitani rolovaciho menu - seznam templatu
     eventBus.$on('DATATEMPLATES',(server)=>{
       self.dataTemplates=server.data
       self.showTemplates = true
       //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
+    })
+    eventBus.$off('DATATEMPLATE')  //Nacitenijedne jedina kompletni kalkulace z databaze
+    eventBus.$on('DATATEMPLATE',(server)=>{
 
-  })
+       self.form.obsah=server.data[0].obsah
+//       f.Alert('SET', JSON.stringify(self.form.obsah))
+       eventBus.$emit('MenuHlavni',
+        {
+          Kalkulace: server.data[0].obsah,
+          key: 667,
+
+        })
+
+      //self.setTemplate(server.data)
+
+      //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
+    })
   self.ID2 = Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983458)) / Math.round(Math.random() * 1983458))
   setTimeout(function(){
     $('#seek'+self.ID2).on('focus', function(){
@@ -195,6 +246,11 @@ export default {
     })
    },100)
   $(document).ready(function(){
+    $("*").click(function(){
+      //f.Alert(this)
+      //$(this).toggle(2000)
+      self.lastFocus=this.id
+    })
 
   });
 
@@ -212,6 +268,11 @@ export default {
         self.lastFocus = 'NemaID'
       }
     });
+    this.$nextTick(function () {
+    // Code that will run only after the entire view has been rendered
+      //$('input').hide(2000).show(2000);
+      //$('input').dialog();
+  })
  },
 
  methods: {
@@ -222,9 +283,12 @@ export default {
   fokus(lastFocus=''){
     this.lastFocus=lastFocus
   },
+
   setTemplate(cItem){
     const self = this
-      //f.Alert(cItem.nazev)
+       //f.Alert(cItem.idefix)
+       //return
+       self.form.idefix=cItem.idefix
        self.form.nazev=cItem.nazev
        self.form.kcks = cItem.kcks
        self.form.ks = cItem.ks
@@ -232,14 +296,29 @@ export default {
        self.form.marze = cItem.marze
        self.form.prodej = cItem.prodej
        self.form.marze_pomer = cItem.marze_pomer
-
-       self.$store.dispatch('saveKalkCela', {data: cItem.obsah })
-       location.reload()
+       queryKalk.getTemplate(self.form.idefix)
 
 
+       eventBus.$emit('MenuHlavni',
+        {
+          Kalkulace: cItem.obsah,
+          key: 667,
 
+        })
+  },
+  delTemplate(cItem,e){
+    const self = this
+      f.stopka(e)
+       //f.Alert(cItem.idefix)
+       //return
+       self.form.idefix=cItem.idefix
+       if (f.Confirm('Smazat template ', cItem.nazev + '?')) {
+         eventBus.$emit("DELETETEMPLATE",{idefix: cItem.idefix })
+       }
+       f.setFocus('seek'+self.ID2)
 
   },
+
   Opust(cid='') {
 
     const self = this
@@ -259,10 +338,39 @@ export default {
 
     return
   },
-  send(){
+  async send(){
     const self = this
+    $("#box"+self.ID).css('visibility','visible')
+    await self.dlg().then(res=>{
+
+    })
+    $("#box"+self.ID).css('visibility','hidden')
+    //$("#box"+self.ID).dialog()
+
     eventBus.$emit("SAVETEMPLATE",{data: self.form })
     //queryKalk.setKalk(server.data,self.aKalkulace)
+  },
+  async dlg(){
+    $("#box"+self.ID ).dialog({
+      modal: true,
+      buttons: {
+        Ok: function() {
+
+          $( this ).dialog( "close" );
+        },
+
+      },
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+
+    });
+
   },
   seznam(id,kod,e, obsah=""){
      const self  = this
@@ -518,6 +626,11 @@ a:focus {
 .honza_color{
   background: #93908e;
   color: #ffffff;
+}
+.honza_color_seznam{
+  background: #ececec;
+  color: #3c3c3a;
+  border-color:black;
 }
 .kolecko {
   height:16px;

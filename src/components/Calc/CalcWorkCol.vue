@@ -750,7 +750,7 @@ self.Interval= setInterval(function()  {
 
   },1500 )
 
-  self.nactiDb()
+ // self.nactiDb()
    return
  },
 

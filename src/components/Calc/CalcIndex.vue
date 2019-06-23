@@ -1,5 +1,5 @@
 <template>
-  <div style="height:400px">
+  <div style="height:400px" class="obal">
     <!-- Link:
   <router-link :to="{name: 'col', params: {ktery: 1 }}">Moduly</router-link> -->
     <my-layout>
@@ -76,7 +76,8 @@
        <v-btn @click="panel(2,$event)" small class="yellow">MAPA</v-btn><br>
        <v-btn @click="panelPrehled(2,$event)" small class="yellow">Kalkulace</v-btn><br>
              <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  :key="$store.state.KalkulaceThis"  class="px-1">
-            Typ sloupce {{ $store.state.KalkulaceThis }}
+              Typ sloupce
+               {{  $store.state.KalkulaceThis }}
             <el-dropdown-menu slot="dropdown" class="grey lighten-5" >
               <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
               <el-dropdown-item  :command="'Laminace'">Laminace</el-dropdown-item>
@@ -90,7 +91,7 @@
           </el-dropdown>
      </div>
 
-  <transition name="fade" slot="PlovouciObsah">
+  <transition name="fade" slot="PlovouciObsah" >
      <vue-draggable-resizable  class="grey lighten-2 pa-0 elevation-12" style="opacity:1;max-width:2000px;max-height:550px"
      :h="20" :w="1000" :x="-1000"
      :parent="false"
@@ -372,6 +373,9 @@ import queryKalk from '../../services/fcesqlKalkulace'
 
 import Prehled from './CalcPrehled.vue' // Prehledova dole
 
+import JQuery from 'jquery'
+let $ = JQuery
+
 export default {
 
  components: {
@@ -408,6 +412,7 @@ export default {
      ID: 0,
      TestRend :0,
      timeoutDrag: null,
+     $: $,
 
    }
  },
@@ -430,6 +435,7 @@ export default {
      eventBus.$off('MenuHlavni')
      eventBus.$off('MenuLeft')
      eventBus.$off('SAVETEMPLATE')
+     eventBus.$off('DELETETEMPLATE')
      eventBus.$on('kalkulaceDelete',(serverDel) => {
      eventBus.$off('MatCol')
 
@@ -456,22 +462,47 @@ export default {
        if (server.data.nazev=='') {
          f.Alert('Nazev je nutne vyplnit',self.user)
        } else {
+
          f.Alert('Template bude ulozen pod nazvem  ', server.data.nazev)
          // JSON.stringify(self.aKalkulace)
           queryKalk.setKalk(server.data,self.aKalkulace)
        }
        //f.Alert(JSON.stringify(server))
      }),
+     eventBus.$on('DELETETEMPLATE', (server) => {
+       //f.Alert("SERVER ", JSON.stringify(server), " IDEFIX: ", server.idefix )
+       //return
+       if (server.idefix=='') {
+         f.Alert('Chyba pri pokusu o smazani',self.user)
+       } else {
+         // f.Alert('Template bude ulozen pod nazvem  ', server.data.nazev)
+         // JSON.stringify(self.aKalkulace)
+          queryKalk.deleteTemplate  (server.idefix)
+       }
+       return
+       //f.Alert(JSON.stringify(server))
+     }),
      eventBus.$on('MenuHlavni', (server) => {
       self.Hlavni=server.key
       if (server.key == 666) {  //Guma
          self.$store.dispatch('cleanKalk')
-         self.aKalkulace = self.$store.state.Kalkulace
+         self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          self.KalkulaceThis = -1
          self.KalkulaceLast = -1
          setTimeout(function(){
             eventBus.$emit('enable')
         },1000)
+      }
+      if (server.key == 667) {  //Aplikuj novy template
+         self.$store.dispatch('cleanKalk')
+         self.$store.dispatch('saveKalkCela', {data: server.Kalkulace })
+         self.aKalkulace = server.Kalkulace
+         self.KalkulaceThis = -1
+         self.KalkulaceLast = -1
+         setTimeout(function(){
+            self.TestRend=self.TestRend+1
+            eventBus.$emit('enable')
+        },500)
       }
 
       if (server.key == 555) {  //Guma sloupce 1
@@ -483,7 +514,7 @@ export default {
           idxCol: server.idxCol,
         })
 
-        self.aKalkulace = self.$store.state.Kalkulace
+        self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
 
 
         setTimeout(function(){
@@ -655,13 +686,20 @@ export default {
     },
     copyKalk(iK) {
       const self = this
+      $( ".obal" ).animate({opacity: 0.7}, 200);
+
       self.$store.dispatch('copyKalk',{
           kalkulaceid: iK,
       })
       setTimeout(function(){
-        self.TestRend++;
 
-      },1000)
+        self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+
+        setTimeout(function(){
+          self.TestRend++;
+          $( ".obal" ).animate({opacity: 1}, 200);
+        },300)
+      },100)
 
       return
 
@@ -669,27 +707,36 @@ export default {
     removeKalkAccId(idK) {
       const self=this
       if (!confirm('Smazat radek') ) return ;
+      $( ".obal" ).animate({opacity: 0.7}, 200);
        self.$store.dispatch('removeKalkAccId',{
           kalkulaceid: idK,
       })
       setTimeout(function(){
-        self.TestRend++;
-
-      },1000)
+        self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+        setTimeout(function(){
+          self.TestRend++;
+          $( ".obal" ).animate({opacity: 1}, 200);
+        },300)
+      },100)
 
    },
   async chooseSloupce (event, bEvent) {
     //alert("sloupy")
     const self= this
+    $( ".obal" ).animate({opacity: 0.7}, 200);
     // self.chooseRadky(event,bEvent)
     try{
-      self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
-      setTimeout(function(){
-      //aKalkulace
 
-      self.TestRend++
-      //alert("jarda")
-    },1000)
+        self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
+        setTimeout(function(){
+        self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+        setTimeout(function(){
+          self.TestRend++;
+          $( ".obal" ).animate({opacity: 1}, 200);
+        },300)
+      },100)
+
+
     } catch(e) {
       alert("error")
       self.chooseSloupce(event,bEvent)
@@ -705,7 +752,7 @@ export default {
         clearTimeout(self.timeoutDrag)
         //return
      }
-
+     //return
 
 
 
@@ -714,10 +761,11 @@ export default {
       self.timeoutDrag = setTimeout(function(){
         self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
         setTimeout(function(){
-          self.aKalkulace.forEach((el,idx) => {
-            el.kalkulaceid = idx + 1
-          })
-          self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
+          // self.aKalkulace.forEach((el,idx) => {
+          //   el.kalkulaceid = idx + 1
+          // })
+       //   self.$store.dispatch('saveKalkCela', {data: self.aKalkulace})
+         // self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
 
           self.TestRend++
           //alert("jarda")
@@ -749,14 +797,14 @@ export default {
      if ( type == 1 )   { id_query=10411 } //Velkoploch
      if ( type == 2 )   { id_query=10410 } //Archovy
      if ( type == 3 )   { id_query=10412 } //Nova Jina
-     if ( type == 4 )   { id_query=10413 } //Nova Externi
+     if ( type == 4 )   { id_query=10411 } //Nova Externi - zatim jako V , nemam zadani
      if ( type == 500 ) { id_query=500   } // Seznam formatu
      if ( type == 501 ) { id_query=501   } // Seznam formatu
 
     if (type < 500) {
       try {
         atmp=[]
-        atmp=(await ListStroj.one(this.user,-1, id_query)).data.enum_strojmod_full
+     //   atmp=(await ListStroj.one(this.user,-1, id_query)).data.enum_strojmod_full
       //  alert(atmp[0].stroj+ ' '+ id_query )
         return atmp
         //console.log(JSON.stringify(atmp))
@@ -773,7 +821,7 @@ export default {
     if (type == 500) {
       try {
         atmp=[]
-        atmp=(await ListStroj.one(this.user,-1, id_query)).data.enum_format
+  //      atmp=(await ListStroj.one(this.user,-1, id_query)).data.enum_format
       //  alert(atmp[0].stroj+ ' '+ id_query )
         console.log(atmp)
         return atmp
@@ -833,10 +881,11 @@ export default {
        })
 
        try {
-        tmpData = (await (self.strojmod(500)))   //MOdy pro V nebo A
+        //tmpData = (await (self.strojmod(500)))   //MOdy pro V nebo A
 
 
-        oData.Format      =  tmpData
+        //oData.Format      =  tmpData
+        oData.Format      =  []
         oData.FormatMenu1 =  []
         oData.FormatValue =  ''
         oData.FormatSirka =  0
@@ -845,6 +894,9 @@ export default {
         oData.FormatPanelovat =  0
         oData.FormatSirkaPanel =  0
         oData.FormatNakladKs =  0
+        oData.stroj =  [],
+        oData.strojmod =  [],
+        oData.strojceny =  [],
         oData.ResultM2 =  0.0
         oData.ResultHod =  ''
 
@@ -873,7 +925,7 @@ export default {
 
        self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
 
-       self.aKalkulace = self.$store.state.Kalkulace
+       self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
 
        self.setKalk(newId)
        //self.KalkulaceThis = newId
@@ -911,7 +963,7 @@ export default {
       const self = this
      // alert(kalkulaceid)
       self.$store.dispatch('removeKalk', kalkulaceid )
-      self.aKalkulace = self.$store.state.Kalkulace
+      self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
       if (self.aKalkulace.length > 0 ) {
         self.setKalk(self.aKalkulace[0].kalkulaceid)
         //self.KalkulaceThis = self.aKalkulace[0].kalkulaceid
@@ -947,7 +999,7 @@ export default {
       self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Baleni', id:(Math.ceil(Math.random()*95000879))})
      //self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: 'Jine-Externi', id:96})
         /////self.addKalkCol("Mat");
-     self.aKalkulace = self.$store.state.Kalkulace
+     self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
      // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: 9999 })
      // alert("Pridma mat na prvni misto")
 
@@ -955,8 +1007,16 @@ export default {
 
    addKalkCol (type="X") {
      const self =this
+     self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
+
      self.$store.dispatch('addKalkCol', {kalkulaceid: self.KalkulaceThis, type: type})
-     self.aKalkulace = self.$store.state.Kalkulace
+      setTimeout(function(){
+        self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+        // f.Alert('a')
+      },1500)
+
+     //self.aKalkulace =  self.$store.state.Kalkulace
+     self.TestRend++
      return
         var newKalkColId = -1
         self.CalcCount++
@@ -1053,12 +1113,16 @@ export default {
     zmenaType(cSloup=""){
 
       const self = this
+      // f.Alert('a')
       self.KalkulaceThis = self.$store.state.KalkulaceThis
+
       var idK = self.KalkulaceThis-1
 
       var idK = this.k_id()
 
       self.$store.dispatch('addColMat2', {kalkulaceid: idK, type: cSloup, id:Math.random()})
+      self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+      //f.Alert('a')
 
 
     }

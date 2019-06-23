@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import _ from 'lodash'
+import ListStroj from '../services/ListStrojService'
 // https://vuex.vuejs.org/guide/structure.html
 // https://vuex.vuejs.org/guide/plugins.html
 
@@ -36,6 +37,12 @@ export default new Vuex.Store({
     KalkulaceLast: -1,
     KalkulaceID: -1, //Aktivni id sloupce ....
     KalkulaceIdefix: -1, //
+    KalkulaceFormat:[],
+    KalkulaceStrojeV:[],
+    KalkulaceStrojeA:[],
+    KalkulaceStrojeExterni:[],
+    KalkulaceStrojeJine:[],
+    KalkulaceMod:[],
     Strana: 15  //Default na stranku v tabulce
   },
   mutations: {
@@ -167,7 +174,66 @@ export default new Vuex.Store({
 
     },
 
+    async setFormat(state) {
+      if (state.Kalkulace.length==1 || !state.KalkulaceFormat.length || state.KalkulaceFormat.length==0 ){
+        //alert('For,aty')
+        var atmp=(await ListStroj.one(this.user,-1, 500)).data.enum_format
+        try{
+          state.KalkulaceFormat = atmp
+        } catch(e) {
+          console.log('Formaty STORE chyba')
+        }
 
+      }
+    },
+
+    async setStrojeV(state) {
+
+      if (state.Kalkulace.length==1 || !state.KalkulaceStrojeV.length || state.KalkulaceStrojeV.length==0 ){
+        //alert('For,aty')
+        let atmpV=[]
+        state.KalkulaceStrojeV=[]
+        atmpV=(await ListStroj.one(this.user,-1, 10411)).data.enum_strojmod_full
+        atmpV.forEach(elV => {
+          state.KalkulaceStrojeV.push(elV)
+        })
+
+
+      }
+    },
+    async setStrojeA(state) {
+      if (state.Kalkulace.length==1 || !state.KalkulaceStrojeA.length || state.KalkulaceStrojeA.length==0 ){
+        //alert('For,aty')
+        let atmpA=[]
+        atmpA=(await ListStroj.one(this.user,-1, 10410)).data.enum_strojmod_full
+        state.KalkulaceStrojeA=[]
+        atmpA.forEach(elA => {
+          state.KalkulaceStrojeA.push(elA)
+        })
+      }
+    },
+    async setStrojeJine(state) {
+      if (state.Kalkulace.length==1 || !state.KalkulaceStrojeJine.length || state.KalkulaceStrojeJine.length==0 ){
+        //alert('For,aty')
+        let atmpJ=[]
+        atmpJ=(await ListStroj.one(this.user,-1, 10412)).data.enum_strojmod_full
+        state.KalkulaceStrojeJine=[]
+        atmpJ.forEach(elJ => {
+          state.KalkulaceStrojeJine.push(elJ)
+        })
+      }
+    },
+    async setStrojeExterni(state) {
+      if (state.Kalkulace.length==1 || !state.KalkulaceStrojeExterni.length || state.KalkulaceStrojeExterni.length==0 ){
+        //alert('For,aty')
+        let atmpE=[]
+        atmpE=(await ListStroj.one(this.user,-1, 10413)).data.enum_strojmod_full
+        state.KalkulaceStrojeExterni=[]
+        atmpE.forEach(elE => {
+          state.KalkulaceStrojeExterni.push(elE)
+        })
+      }
+    },
     addKalkCol (state, kalkulacecoltype) {
       console.log('A :', JSON.stringify(kalkulacecoltype.kalkulaceid))
       var newId = -1
@@ -205,6 +271,10 @@ export default new Vuex.Store({
       // console.log('SAVE ' ,kalkulace.id)
       state.Kalkulace = []
       state.Kalkulace= kalkulace.data
+      return
+      state.Kalkulace.forEach((elx,idx) => {
+        elx.kalkulaceid = idx+1
+      })
 
     },
     saveCols(state,kalkulace){
@@ -322,7 +392,7 @@ export default new Vuex.Store({
       var idx = dataAll.kalkulaceid
       var idc = dataAll.sloupecid
       var neco = JSON.parse(JSON.stringify(state.Kalkulace[idx].sloupecid[idc]))
-      neco.id=Math.ceil(Math.random()*558755)
+      neco.id=Math.ceil(Math.random()*55875115)
       console.log("COPY: " , neco)
       state.Kalkulace[idx].sloupecid.push(neco)
       //state.Kalkulace[idx].sloupecid.push('ahoj')
@@ -609,6 +679,35 @@ export default new Vuex.Store({
       //console.log('SET ID ', kalkulaceid)
       commit('setID', kalkulaceid)
     },
+    setFormat ({commit}) {
+      //console.log('SET ID ', kalkulaceid)
+      commit('setFormat')
+    },
+
+    setStrojeA ({commit}) {
+      //console.log('SET ID ', kalkulaceid)
+      commit('setStrojeA')
+    },
+    setStrojeV ({commit}) {
+      //console.log('SET ID ', kalkulaceid)
+      commit('setStrojeV')
+    },
+    setStrojeJine ({commit}) {
+      //console.log('SET ID ', kalkulaceid)
+      commit('setStrojeJine')
+    },
+    setStrojeExterni ({commit}) {
+      //console.log('SET ID ', kalkulaceid)
+      commit('setStrojeExterni')
+    },
+    setStrojeAll ({commit}) {
+      //console.log('SET ID ', kalkulaceid)
+      commit('setStrojeA')
+      commit('setStrojeV')
+      commit('setStrojeJine')
+      commit('setStrojeExterni')
+    },
+
     setKalkulaceIdefix ({commit}, kalkulaceidefix) {
       console.log('SET ID ', kalkulaceidefix)
       commit('setKalkulaceIdefix', kalkulaceidefix)

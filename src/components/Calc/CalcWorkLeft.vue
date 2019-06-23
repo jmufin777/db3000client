@@ -34,12 +34,19 @@
       </v-card>
       </td>
      <td style="width:80;height:100%">
+
+     <p style="display:none">{{StrojeMenu.length}} {{ $store.state.Kalkulace[k_id()].type}} {{idefixVidet}} {{$store.state.Kalkulace[k_id()].data.stroj}}</p>
+     <p style="display:none">
+       {{StrojeMenu}} {{qStroje("V")}} {{initVar}}
+        <!-- {{ $store.state.Kalkulace[k_id()].type}} {{idefixVidet}}  {{aStroj}} :: {{form.stroj[0] }} :: {{initVar}} / {{k_id()}} -->
+     </p>
      <v-card style="position:relative;top:0px;height:18em;width:100%" class="white elevation-0">
        <v-card style="position:absolute;top:0px;height:3em;text-align:left;width:100%;border: none"
        class="white elevation-0"
        :style="(idefixVidet>0)?'height:3em':'height:'+((aStroj.length)*2.6)+'em'"
        >
-       <v-card v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix"
+       <!-- || idefixVidet == itemStroj.idefix  -->
+       <v-card v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix "
         style="position:relative;text-align:left;z-index:10"
         class="elevation-0"
 
@@ -47,9 +54,11 @@
         <v-card-text class="pa-0 ma-0 pl-0 pr-1" style="position:relative;z-index:1;height:2.6em">
          <v-card style="position:relative;z-index:1" class="elevation-0">
           <v-card-text class="pa-0 ma-0 pl-1 pr-1 pb-1 pt-1" style="position:relative;z-index:1;border:none"> <!-- KARTA stroje //-->
-          <table style="width:100%;z-index:1;"><tr >
+          <table style="width:100%;z-index:1;">
+            <tr >
             <td style="width:90%;cursor:pointer;" @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )">
                 {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
+
             </td>
             <!-- @mouseenter="idefixClick=itemStroj.idefix;MenuShow1(MenuShow, $event ); -->
             <td style="width:10%;cursor:pointer" @click="idefixClick=itemStroj.idefix; MenuShow1(MenuShow, $event );" >
@@ -61,6 +70,7 @@
        </v-card>
       </v-card-text>
      </v-card>
+
      </v-card>
 
        <v-card v-if="idefixVidet>0" :class="{'grey lighten-2': $store.state.KalkulaceThis== kalkulaceid }" class="white pa-0 elevation-0" style="position:absolute;top:3em;height:15em;z-index:9;width:100%" >
@@ -166,7 +176,9 @@
    :style="'left:'+clickX+'px'"
    @mouseleave="MenuShowLeave()" @mouseover="MenuShowIn()"
   >
-  <v-card v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Menu2" :key="i1" v-if="m1.idefix == idefixClick" style="border:none">
+  <!-- <v-card v-for="(m1, i1) in $store.state.Kalkulace[k_id()].data.Menu2" :key="i1" v-if="m1.idefix == idefixClick" style="border:none"> -->
+    <!-- {{ StrojeMenu }} -->
+    <v-card v-for="(m1, i1) in StrojeMenu" :key="i1" v-if="m1.idefix == idefixClick" style="border:none">
     <v-card-text @click="setMenu1Value(m1.idefix_mod)" class="pa-0 pt-1 elevation-0" style="border:solid 0px silver">
                 <button v-if="$store.state.Kalkulace[k_id()].data.Menu1Value == m1.idefix_mod" ref="menu1focus"  :id="'menu1focus'+ID" class="leva" style="width:90%;"
                   v-on:keyup.27="MenuShow1(MenuShow,$event)"
@@ -188,20 +200,7 @@
 <!--manidka formaty //-->
         <!-- :style="'left:'+(clickX+100)+'px'" -->
         <!-- width:20em;left:20em;top:1em; -->
-<div v-if="false">
-  {{'top:'+ f1.getBottom('seek'+ID,40)+'px;width:'+f1.getWidth('seek'+ID,40)+'px;left:'+f1.getLeft('seek'+ID, 100)+'px'}}        <!-- @mouseleave="MenuFormatOpust()" -->
-  {{'f ' + form.Format }}
-  {{$store.state.Kalkulace[k_id()].data.Format.filter(
-                el => (
-                  //el.nazev.toUpperCase().match(FormatSearch.toUpperCase()) || (el.sirka+'').match(FormatSearch) || (el.vyska+'').match(FormatSearch)) || FormatSearch==''
-                  (el.nazev.toUpperCase().match((form.Format+'').toUpperCase())
-                  || (el.sirka+'').match(form.Format+'')
-                  || (el.vyska+'').match(form.Format+''))
-                  || form.Format==''
-                ) && (el.nazev+'') !== (form.Format+'')
 
-                )}}
-</div>
 
 <div
 style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
@@ -209,10 +208,10 @@ style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
    v-if="MenuFormatShow" class="elevation-2 blue lighten-4 pl-0 pr-0"
 
        >
-
+<!-- $store.state.Kalkulace[k_id()].data.Format. -->
           <table  width="100%" v-if="MenuFormatShow" class="pa-2">
               <tr v-for="(m1b, i1b) in
-              $store.state.Kalkulace[k_id()].data.Format.filter(
+              $store.state.KalkulaceFormat.filter(
                 el => (
                   //el.nazev.toUpperCase().match(FormatSearch.toUpperCase()) || (el.sirka+'').match(FormatSearch) || (el.vyska+'').match(FormatSearch)) || FormatSearch==''
                   ( el.nazev.toUpperCase().match((form.Format+'').toUpperCase())
@@ -261,6 +260,9 @@ import {getters} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval, clearTimeout } from 'timers'
 import f from '@/services/fce'
+//import queryKalk from '../../services/fcesqlKalkulace' //neni potreba
+import Q from '@/services/query'
+import ListStroj from '../../services/ListStrojService'
 
 
 export default {
@@ -341,7 +343,11 @@ export default {
        ResultM2:0,
        ResultHod: '',
 
-       filelist:[]
+       filelist:[],
+
+       stroj:[],
+       strojmod:[],
+       strojceny:[]
 
      },
      last: {
@@ -355,20 +361,24 @@ export default {
     ID: 0,
     idefixVidet: 0,  //Nasypat do vuexu idefixVidet
     idefixClick: 0,
+    StrojeMenu: [], // Nacte menu stroju v zavislosti na typu z vuexu
+    initVar: 0,
 
    }
  },
 
- mounted () {
+ async mounted () {
    const self = this
 
    self.k_id()
+   self.initVar = self.k_id()
    self.ID = Math.round(Math.random() * 1983458)+self.k_id()
-   var neco=JSON.stringify(self.Kalkulace[self.k_id()])
+   //var neco=JSON.stringify(self.Kalkulace[self.k_id()])
+   var neco=JSON.stringify(self.$store.state.Kalkulace[self.k_id()])
    self.Kalk=JSON.parse(neco)
+
+
    // alert(self.k_id())
-
-
 
    console.log("MenuStroj TOP")
    self.MenuStroj()
@@ -380,12 +390,37 @@ export default {
    setTimeout(function(){
     if (document.getElementById('seek'+self.ID)) {
         //f.Alert('Jo ',document.getElementById('seek'+self.ID),'seek'+self.ID)
-        document.getElementById('seek'+self.ID).focus()
+        // document.getElementById('seek'+self.ID).focus()
       } else {
      //f.Alert('Ne ',document.getElementById('seek'+self.ID),'seek'+self.ID)
     }
    },500)
 
+self.$store.dispatch('setFormat')
+//self.$store.dispatch('setStrojeAll')
+//self.$store.dispatch('setStrojeV')
+//self.$store.dispatch('setStrojeA')
+//self.$store.dispatch('setStrojeJine')
+//self.$store.dispatch('setStrojeExterni')
+
+/*
+if (self.idefixVidet == 0) {
+      //f.Alert('Nactu - stvorim')
+  if (self.Kalkulace[self.k_id()].type == 1){
+    self.StrojeMenu = self.$store.state.KalkulaceStrojeV
+  }
+  if (self.Kalkulace[self.k_id()].type == 2){
+    self.StrojeMenu = self.$store.state.KalkulaceStrojeA
+  }
+  if (self.Kalkulace[self.k_id()].type == 3){
+    self.StrojeMenu = self.$store.state.KalkulaceStrojeJine
+  }
+  if (self.Kalkulace[self.k_id()].type == 4){
+    self.StrojeMenu = self.$store.state.KalkulaceStrojeExterni
+  }
+}
+*/
+//f.Alert(JSON.stringify(self.StrojeMenu))
 
    /*
    setInterval(function(){
@@ -422,14 +457,15 @@ export default {
      self.form.vyska = self.$store.state.Kalkulace[self.k_id()].data.FormatVyska
      self.form.Format = self.$store.state.Kalkulace[self.k_id()].data.txtFormat
 
-     self.form.ResultHod = self.$store.state.Kalkulace[self.k_id()].data.ResultHod
-     self.form.ResultM2  = self.$store.state.Kalkulace[self.k_id()].data.ResultM2
+     self.form.ResultHod  = self.$store.state.Kalkulace[self.k_id()].data.ResultHod
+     self.form.ResultM2   = self.$store.state.Kalkulace[self.k_id()].data.ResultM2
+     self.form.stroj      = self.$store.state.Kalkulace[self.k_id()].data.stroj
+     self.form.strojmod   = self.$store.state.Kalkulace[self.k_id()].data.strojmod
+     self.form.strojceny  = self.$store.state.Kalkulace[self.k_id()].data.strojceny
+
      if (self.form.Format == undefined) self.form.Format = ''
 
-
-
     // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
-
 
    },
    ks() {
@@ -469,11 +505,8 @@ export default {
      var oNeco
      if (oNeco = document.getElementById(id)) {
        neco = oNeco.offsetParent.offsetLeft+addPoz
-
-
      } else {
      }
-
      return neco;
    },
    getWidth(id,addPoz=10) {
@@ -673,20 +706,76 @@ export default {
      if (self.idefixVidet == 0) {
      self.idefixVidet = idefixVidet
      self.setMenu1Value(idefix_mod)
+     // f.Alert(1,idefixVidet, idefix_mod )
+
      //alert('vide')
 
 
      } else {
        self.idefixVidet =0
+       self.form.stroj=[]
+       self.form.strojmod=[]
+       self.form.strojceny=[]
        //alert('vide  2')
      }
    },
 
-MenuStroj() {
+qStroje(cType="V") {
+
+  if (cType=="A" || cType=="V"){
+    return `select a.idefix ,b.idefix as idefix_mod,a.nazev as stroj,b.nazev,b.nazev_text, b.mod_priorita from list_stroj a join list_strojmod b on a.idefix=b.idefix_stroj
+       where a.idefix in (select a.idefix  from list_stroj a join list2_strojskup b on a.idefix_strojskup = b.idefix  where b.typ_kalkulace ~ '${cType}' and tisk )
+      order by case when b.mod_priorita then 1 else 2 end`;
+  } else
+  if (cType=="Jine") {
+      return `select a.idefix ,b.idefix as idefix_mod,a.nazev as stroj,b.nazev,b.nazev_text, b.mod_priorita from list_stroj a join list_strojmod b on a.idefix=b.idefix_stroj
+       where a.idefix in (select a.idefix  from list_stroj a join list2_strojskup b on a.idefix_strojskup = b.idefix  where a.nazev_text like 'DTP' ) `
+  }
+},
+async MenuStroj() {
   const self = this
   var nTmp;
+  var q=""
 
-  self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach(el => {
+  // self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach(el => {
+//    f.Alert('Nactu - stvorim')
+// self.idefixVidet == 0 ||
+  if (self.StrojeMenu.length==0 ) {
+  if (self.Kalkulace[self.k_id()].type == 1){
+    //self.$store.dispatch('setStrojeV')
+     //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10411)).data.enum_strojmod_full
+    q=self.qStroje('V')
+    self.StrojeMenu=(await Q.all(self.idefix,q)).data.data
+ //   self.initVar = "V : " +q + JSON.stringify(self.StrojeMenu[0])
+    //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeV))
+  } else
+  if (self.Kalkulace[self.k_id()].type == 2){
+    //self.$store.dispatch('setStrojeA')
+    q=self.qStroje('A')
+    self.StrojeMenu=(await Q.all(self.idefix,q)).data.data
+    //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10410)).data.enum_strojmod_full
+    self.initVar = "A"
+    //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeA))
+  } else
+  if (self.Kalkulace[self.k_id()].type == 3){
+     //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10412)).data.enum_strojmod_full
+     q=self.qStroje('Jine')
+     self.StrojeMenu=(await Q.all(self.idefix,q)).data.data
+    //self.$store.dispatch('setStrojeJine')
+    //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeJine))
+  } else
+  if (self.Kalkulace[self.k_id()].type == 4){
+    //self.$store.dispatch('setStrojeExterni')
+    //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10411)).data.enum_strojmod_full
+     q=self.qStroje('V')
+     self.StrojeMenu=(await Q.all(self.idefix,q)).data.data
+    //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeExterni))
+  }
+  // f.Alert('Nactu - stvorim', JSON.stringify(self.StrojeMenu))
+}
+
+  //  f.Alert('MenuStroj', JSON.stringify(self.StrojeMenu), self.$store.state.Kalkulace[self.k_id()].type)
+   self.StrojeMenu.forEach(el => {
     nTmp =  _.findIndex(self.aStroj, function (o) { return o.idefix  == el.idefix })
     if (nTmp < 0){
       self.aStroj.push({idefix: el.idefix, stroj: el.stroj,idefix_mod: el.idefix_mod, nazev: el.nazev})
@@ -696,27 +785,44 @@ MenuStroj() {
 },
 
 
-   setMenu1Value (a, b) {
+   async setMenu1Value (a, b) {
       const self = this
       var idK = this.k_id()
       self.setKalk(idK)
-
-
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Menu1Value' , value: a })
-
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Menu1Value' , value: a }) //stroj mod
+      //f.Alert(JSON.stringify(self.StrojeMenu))
       self.MenuShow1(1,0)
-      var nTmp =  _.findIndex(self.$store.state.Kalkulace[self.k_id()].data.Menu2, function (o) { return o.idefix_mod  == a })
+      // var nTmp =  _.findIndex(self.$store.state.Kalkulace[self.k_id()].data.Menu2, function (o) { return o.idefix_mod  == a })
+      var nTmp =  _.findIndex(self.StrojeMenu, function (o) { return o.idefix_mod  == a })
       if(nTmp > -1) {
-            self.idefixVidet=self.$store.state.Kalkulace[self.k_id()].data.Menu2[nTmp].idefix
-            self.Kalk.data.txtStroj = self.Kalk.data.Menu2[nTmp].stroj + ' '+ self.Kalk.data.Menu2[nTmp].nazev
-
-
+            // self.idefixVidet=self.$store.state.Kalkulace[self.k_id()].data.Menu2[nTmp].idefix
+            self.idefixVidet=self.StrojeMenu[nTmp].idefix
+            self.Kalk.data.txtStroj = self.StrojeMenu[nTmp].stroj + ' '+ self.StrojeMenu[nTmp].nazev
+            // self.Kalk.data.txtStroj = self.Kalk.data.Menu2[nTmp].stroj + ' '+ self.Kalk.data.Menu2[nTmp].nazev
             // {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
          }
+      //f.Alert(self.idefix)
+      var qtmp=`select * from list_stroj where idefix = ${self.idefixVidet}`
+      var aStroj = (await Q.all(self.idefix,qtmp)).data.data
+      var qtmp=`select * from list_strojmod where idefix = ${a}`
+      var aMod = (await Q.all(self.idefix,qtmp)).data.data
+      var qtmp=`select * from list_strojceny where idefix_stroj = ${self.idefixVidet} order by kod`
+      var aCeny = (await Q.all(self.idefix,qtmp)).data.data
+
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'stroj' , value: aStroj })
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'strojmod' , value: aMod})
+      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'strojceny' , value: aCeny })
+
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtStroj' , value: self.Kalk.data.txtStroj })
+
+      // self.setKalk(idK)
+
+
+      // f.Alert(2,a,b)
+
       //self.Kalk.data.txtStroj="NAZDARBAZAR"
-      self.$store.dispatch('setKalk',self.Kalk)
+      //self.$store.dispatch('setKalk',self.k_id())
       //alert('memik ' + self.idefixVidet + '  ) ')
    },
   setMenuFormat1Value (a, b) {
@@ -740,6 +846,7 @@ MenuStroj() {
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) ) })
 
+
       //self.Kalk.data.txtFormat =
       //self.$store.dispatch('replaceKalk',self.Kalk)
       //alert(self.Kalk.data.txtFormat)
@@ -755,7 +862,8 @@ MenuStroj() {
       // var thisItem = self.$store.state.Kalkulace[this.k_id()].data.Menu1Value
       var thisItem = a
       //alert(thisItem);
-      self.$store.state.Kalkulace[self.k_id()].data.Format.forEach((el, idx) => {
+      // self.$store.state.Kalkulace[self.k_id()].data.Format.forEach((el, idx) => {
+        self.$store.state.KalkulaceFormat.forEach((el, idx) => {
        if (idx == 0) {
 
          //self.form.sirka = el.sirka
@@ -885,7 +993,9 @@ MenuStroj() {
     var thisItem = self.$store.state.Kalkulace[this.k_id()].data.Menu1Value
     var cRet =''
     var cDefRet =''
-    self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach((el, idx) =>{
+    var FinalRet=''
+    self.StrojeMenu.forEach((el, idx) =>{
+    // self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach((el, idx) =>{
        if (idx == 0) {
     //     cDefRet = el.stroj +' ' + el.nazev
          cDefRet = el.nazev
@@ -896,8 +1006,10 @@ MenuStroj() {
           cRet =  el.nazev
       }
     })
-
-    return (cRet>'')?cRet:cDefRet
+    FinalRet =   (cRet>'')?cRet:cDefRet
+    if (FinalRet == '') FinalRet='XX'
+    //FinalRet='XXXX'
+    return FinalRet
     //return this.$store.state.Kalkulace[this.k_id()].data.Menu1Value
   },
 
@@ -940,7 +1052,8 @@ getFormatName() {
         // nTmp =  _.findIndex(self.$store.state.Kalkulace[idK].data.Format, function (o) { return
         // (o.sirka*1 == self.form.sirka*1 )
         // })
-        self.$store.state.Kalkulace[idK].data.Format.forEach((el,idx) => {
+        // self.$store.state.Kalkulace[idK].data.Format.forEach((el,idx) => {
+          self.$store.state.KalkulaceFormat.forEach((el,idx) => {
           if (self.form.sirka*1==el.sirka*1 && self.form.vyska*1==el.vyska*1  ) {
             nTmp=idx
             return
@@ -960,9 +1073,12 @@ getFormatName() {
 
         if (nTmp >-1){
 
-          self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
-          self.form.sirka  = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka*1
-          self.form.vyska  = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska*1
+          // self.form.Format = self.$store.state.Kalkulace[idK].data.Format[nTmp].nazev
+          // self.form.sirka  = self.$store.state.Kalkulace[idK].data.Format[nTmp].sirka*1
+          // self.form.vyska  = self.$store.state.Kalkulace[idK].data.Format[nTmp].vyska*1
+          self.form.Format = self.$store.state.KalkulaceFormat[nTmp].nazev
+          self.form.sirka  = self.$store.state.KalkulaceFormat[nTmp].sirka*1
+          self.form.vyska  = self.$store.state.KalkulaceFormat[nTmp].vyska*1
 
 
         } else {
@@ -1257,6 +1373,7 @@ getFormatName() {
 
  //--Values
  Menu1 () {
+
    return this.$store.Kalulace[this.k_id()].data.Menu1
  }
 

@@ -736,14 +736,18 @@ entrcount(neco) {
 
 },
 
-Alert(ctxt1="",ctxt2="",ctxt3="") {
+Alert(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
   setTimeout(function(){
 
-    alert(ctxt1+"\n"+ctxt2+"\n"+ctxt3)
+    alert(ctxt1+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6)
   },500)
 
 },
 
+Confirm(ctxt1="",ctxt2="") {
+  return confirm(ctxt1,ctxt2)
+
+},
 getBottom(id,addPoz=10, idVztah="obal1_kalkulace") {
   var neco=200
   var oNeco
@@ -798,6 +802,11 @@ getWidth(id,addPoz=10) {
   }
 
   return neco;
+},
+setFocus(id) {
+  if (document.getElementById(id)) {
+    document.getElementById(id).focus()
+  }
 },
 sleep(ms) {
   return new Promise(resolve=>{

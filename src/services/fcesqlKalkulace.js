@@ -36,7 +36,7 @@ async setKalk(data,kalkulace,_idefix=0) {
     // f.Alert(qover)
     try {
       atmp= (await Q.all(idefix,qover)).data.data
-      f.Alert(JSON.stringify(atmp) )
+      // f.Alert(JSON.stringify(atmp) )
       if (atmp.length >= 1 ){
         _idefix = atmp[0].idefix
          //f.Alert('Nalezen ', _idefix )
@@ -48,6 +48,10 @@ async setKalk(data,kalkulace,_idefix=0) {
   }
 
 
+  if (data.idefix > 0) {
+    _idefix = data.idefix
+    f.Alert('Prirazuji')
+  }
 
 
 
@@ -57,7 +61,11 @@ async setKalk(data,kalkulace,_idefix=0) {
   data.prodej*=1
   data.marze*=1 // Spocitat z prodej naklad
   data.marze_pomer*=1 // Spocitat take z prodej naklad
-  kalkulace= JSON.stringify(kalkulace)
+  // kalkulace.forEach(element => {
+  //   element.data.Format=[]
+
+  // });
+  var kalkulace2= JSON.stringify(kalkulace)
   var idefix=store.state.idefix
   var atmp=[]
   var nret = 0
@@ -66,7 +74,7 @@ async setKalk(data,kalkulace,_idefix=0) {
 if (_idefix == 0 ) {
     q = `insert into calc_templates ( ${cols},user_insert_idefix,user_update_idefix)
     values (
-      trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace}','${idefix}','${idefix}'
+      trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${idefix}','${idefix}'
 
     ) `;
     await Q.post(0,q)
@@ -79,7 +87,7 @@ if (_idefix == 0 ) {
       }
       //f.Alert(atmp.length,' :: ',JSON.stringify(atmp))
     } catch (e) {
-      f.Alert('nevim neniv',e)
+      f.Alert('ERR Vklad kalkulace ',e)
       console.log("ERR Kalk1", e)
     }
     //console.log(store)
@@ -94,7 +102,7 @@ if (_idefix > 0) {
   marze      = '${data.marze}',
   prodej     = '${data.prodej}',
   marze_pomer= '${data.marze_pomer}',
-
+  obsah      = '${kalkulace2}',
   user_update_idefix='${idefix}',
   time_update = now()
    where idefix = ${_idefix}
@@ -110,11 +118,11 @@ if (_idefix > 0) {
       if (atmp.length == 1 ){
         nret = atmp[0].idefix
         //f.Alert(nret)
-        store.dispatch('setKalkulaceIdefix',nret)
+        store.dispatch('setKalkulaceIdefix',_idefix)
       }
       //f.Alert(atmp.length,' :: ',JSON.stringify(atmp))
     } catch (e) {
-      f.Alert('nevim neniv',e)
+      f.Alert('Err Zmena Kalkulace',e)
       console.log("ERR Kalk1", e)
     }
     //console.log(store)
@@ -122,22 +130,82 @@ if (_idefix > 0) {
 }
 },
 async getTemplates() {
-  var q= 'select a.*,b.login  from calc_templates a join list_users b on a.user_update_idefix = b.idefix';
+
   var idefix=store.state.idefix
+  var q= `select
+          a.idefix,
+          a.nazev,
+          a.kcks,
+          a.ks,
+          a.naklad ,
+          a.marze ,
+          a.prodej ,
+          a.marze_pomer,
+          a.user_update_idefix,
+          b.login  from calc_templates a join list_users b on a.user_update_idefix = b.idefix `;
+  q= `${q} order by  case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev`
   var atmp=[]
   //f.Alert("BUS ",Vue2)
   try {
     atmp= (await Q.all(idefix,q)).data.data
-
     eventBus.$emit('DATATEMPLATES',{data: atmp})
+    return atmp
+    //
+  } catch (e) {
+    f.Alert('nevidim templats',e, q)
+    console.log("ERR pozadavek na templates", e)
+  }
+  ///f.Alert(JSON.stringify(atmp))
+},
+
+async getTemplate(_idefix=0) {
+
+  var idefix=store.state.idefix
+  var q= 'select a.*,b.login  from calc_templates a join list_users b on a.user_update_idefix = b.idefix ';
+  q= `${q} where a.idefix= ${_idefix} `
+  var atmp=[]
+  //f.Alert("BUS ",Vue2)
+  try {
+    atmp= (await Q.all(idefix,q)).data.data
+    eventBus.$emit('DATATEMPLATE',{data: atmp})
+    return atmp
+    //
+  } catch (e) {
+    f.Alert('nevidim templats',e, q)
+    console.log("ERR pozadavek na templates", e)
+  }
+  ///f.Alert(JSON.stringify(atmp))
+},
+
+
+async deleteTemplate(_idefix) {
+  const self=this
+  var idefix=store.state.idefix
+  var q= '';
+
+  var atmp=[]
+  //f.Alert("BUS ",Vue2)
+  var q= `delete  from calc_templates where idefix = ${_idefix} returning *`;
+  //f.Alert("BUS ",q)
+  try {
+    atmp= (await Q.post(idefix,q)).data.data
+
+    self.getTemplates()
     return atmp
 
     //
   } catch (e) {
-    f.Alert('nevidim templats',e)
+    f.Alert('nevidim templates',e, q)
     console.log("ERR pozadavek na templates", e)
   }
   ///f.Alert(JSON.stringify(atmp))
+
+},
+
+
+//Stroj
+async getStrojDetail(idefixmod){
+var atmp=[]
 
 },
 

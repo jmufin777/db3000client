@@ -61,6 +61,27 @@ import VueBarcode from 'vue-barcode'
 
 import VueTextareaAutosize from 'vue-textarea-autosize'
 
+//import $ from 'jquery-ui'
+import $ from 'jquery'
+//import jQuery from 'jquery'
+
+import 'jquery-ui/themes/base/all.css';
+
+window.$ = window.jQuery = $;
+///Users/mares/Documents/node/fx/client/node_modules/jquery-ui/ui/widgets/datepicker.js
+
+
+import datepicker from 'jquery-ui/ui/widgets/datepicker';
+import dialog from 'jquery-ui/ui/widgets/dialog';
+// import dialog from 'jquery-ui/ui/widgets/dialog';
+
+//window.jQuery = $
+// import 'jquery-ui/ui/widgets/datepicker.js';
+//require("jquery-ui/datepicker")
+//import qq from 'jquery-ui'
+
+//import 'jquery-ui/ui/widgets/datepicker.js';
+
 Vue.use(VueTextareaAutosize)
 
 
