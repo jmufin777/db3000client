@@ -463,7 +463,7 @@ export default {
          f.Alert('Nazev je nutne vyplnit',self.user)
        } else {
 
-         f.Alert('Template bude ulozen pod nazvem  ', server.data.nazev)
+
          // JSON.stringify(self.aKalkulace)
           queryKalk.setKalk(server.data,self.aKalkulace)
        }

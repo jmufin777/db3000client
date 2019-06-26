@@ -73,6 +73,17 @@ window.$ = window.jQuery = $;
 
 import datepicker from 'jquery-ui/ui/widgets/datepicker';
 import dialog from 'jquery-ui/ui/widgets/dialog';
+import tooltip from 'jquery-ui/ui/widgets/tooltip';
+import explode from 'jquery-ui/ui/effects/effect-explode';
+import blind from 'jquery-ui/ui/effects/effect-blind';
+import bounce from 'jquery-ui/ui/effects/effect-bounce';
+import clip from 'jquery-ui/ui/effects/effect-clip';
+import drop from 'jquery-ui/ui/effects/effect-drop';
+import highlight from 'jquery-ui/ui/effects/effect-highlight';
+import slide from 'jquery-ui/ui/effects/effect-slide';
+import fade from 'jquery-ui/ui/effects/effect-fade';
+import fold from 'jquery-ui/ui/effects/effect-fold';
+import size from 'jquery-ui/ui/effects/effect-size';
 // import dialog from 'jquery-ui/ui/widgets/dialog';
 
 //window.jQuery = $

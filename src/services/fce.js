@@ -743,6 +743,84 @@ Alert(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
   },500)
 
 },
+Alert2(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
+  var obj=document.createElement("DIV")
+  obj.id="myAlert"
+  var defer = $.Deferred();
+  document.body.appendChild(obj)
+  var $dlg=$('#myAlert').dialog({
+    modal: true,
+    title: ctxt1,
+    text: 'aaaa',
+      buttons: {
+        OK: function() {
+          defer.resolve("AHOOJ");
+          $( this ).dialog( "close" );
+        },
+      },
+      show: {
+        effect: "fade",
+        duration: 500
+      },
+      hide: {
+        effect: "fade",
+        duration: 500
+      },
+      });
+      $dlg.html(ctxt1+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6);
+      setTimeout(function(){
+        $('.ui-dialog :button').focus();
+      },1000)
+      return defer.promise();
+
+},
+
+setCislo(ctxt1="",cval="0") {
+  var defer = $.Deferred();
+
+  var obj=document.createElement("DIV")
+  obj.id="myValue"
+  $("#myCislo").remove();
+  $("#myValue").remove();
+  document.body.appendChild(obj)
+  var otxt=document.createElement("input")
+  otxt.type="number"
+  otxt.value=cval
+  otxt.id="myCislo"
+  obj.appendChild(otxt)
+  //var $dlg=$("<div><input type='number' id='myCislo'></div>").dialog({
+  var $dlg=$('#myValue').dialog({
+    modal: true,
+    title: ctxt1,
+      buttons: {
+        OK: function() {
+          alert($("#myCislo").val())
+          defer.resolve($("#myCislo").val());
+          //$("#myCislo").remove();
+          //$("#myValue").remove();
+          $( this ).dialog( "close" );
+
+
+          //$("#myValue").dialog('destroy');
+        },
+      },
+      show: {
+        effect: "fade",
+        duration: 500
+      },
+      hide: {
+        effect: "fade",
+        duration: 500
+      },
+      });
+
+  //    $dlg.html(ctxt1+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6);
+      setTimeout(function(){
+        $('#myCislo').focus();
+      },500)
+      return defer.promise();
+
+},
 
 Confirm(ctxt1="",ctxt2="") {
   return confirm(ctxt1,ctxt2)

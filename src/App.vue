@@ -396,6 +396,31 @@ button:focus {
     outline: 0px;
 }
 
+.ui-widget-header,.ui-state-default, ui-button {
+            background:#c1ddf8;
+            border: 1px solid #c1ddf8;
+            color: #191d20;
+            font-weight: bold;
+  }
+
+ .ui-dialog-title {
+    /* color:red; */
+  }
+
+  .ui-dialog-titlebar,.ui-corner-all, .ui-widget-header, .ui-helper-clearfix, .ui-draggable-handle {
+    /*
+    color: #aaaaaa;
+    background: green;
+    */
+  }
+ .ui-button:focus, ui-widget:focus, ui-corner-all:focus {
+   background: #c6dcf5;
+   font-weight: 900;
+ }
+
+ /* , ui-widget:focus, ui-corner-all:  */
+
+
 
 
 

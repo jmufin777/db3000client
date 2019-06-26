@@ -31,29 +31,10 @@ export default {
 async setKalk(data,kalkulace,_idefix=0) {
   const self=this
   var q=""
-  if (_idefix ==0) {
-    var qover=`select * from calc_templates where nazev = trim('${data.nazev}')`
-    // f.Alert(qover)
-    try {
-      atmp= (await Q.all(idefix,qover)).data.data
-      // f.Alert(JSON.stringify(atmp) )
-      if (atmp.length >= 1 ){
-        _idefix = atmp[0].idefix
-         //f.Alert('Nalezen ', _idefix )
-      }
-    }catch(e) {
-      f.Alert('Nelze zjistit obsah templates',e)
-      console.log("ERR Kalk1", e)
-    }
-  }
-
-
-  if (data.idefix > 0) {
-    _idefix = data.idefix
-    f.Alert('Prirazuji')
-  }
-
-
+  var idefix=store.state.idefix
+  var qover ='NIC'
+  //self.Vklad()
+  //return
 
   data.kcks*=1
   data.ks*=1
@@ -61,40 +42,230 @@ async setKalk(data,kalkulace,_idefix=0) {
   data.prodej*=1
   data.marze*=1 // Spocitat z prodej naklad
   data.marze_pomer*=1 // Spocitat take z prodej naklad
+
+  var kalkulace2= JSON.stringify(kalkulace)
+
+  var atmp=[]
+
+  //   title: "Success" + data.idefix+ ' '+ data.nazev + '/ ' + data.nazevOrig + data.user_update_idefix + ' '+ idefix,
+
+  if (data.user_update_idefix*1 > 0 && idefix*1 !== data.user_update_idefix*1){
+  //  f.Alert('Cizi vynalez -VLOZIT',idefix , data.user_update_idefix)
+    $("#box"+data.ID ).dialog({
+      modal: false,
+      buttons: {
+        Vlozit: function() {
+          data.Vlozit=1
+          self.Vklad(data, kalkulace2)
+
+          $( this ).dialog( "close" );
+        },
+        Zrusit: function() {
+          data.Vlozit=-1
+
+          $( this ).dialog( "close" );
+        },
+      },
+      title: "Vklad - kopie",
+
+      show: {
+        effect: "fade",
+        duration: 500
+      },
+      hide: {
+        effect: "fade",
+        duration: 500
+      },
+      // position:
+      //   {
+      //       my: 'left',
+      //       at: 'right',
+      //       of: event
+      //   }
+
+    });
+    return
+  }
+
+
+
+
+  var idefixOver=0
+  if (data.user_update_idefix ==0) {
+    qover=`select * from calc_templates where nazev = trim('${data.nazev}') and user_update_idefix = ${idefix} `
+    // f.Alert(qover)
+    try {
+      atmp= (await Q.all(idefix,qover)).data.data
+      // f.Alert(JSON.stringify(atmp) )
+      if (atmp.length >= 1 ){
+        idefixOver = atmp[0].idefix
+
+
+
+        //f.Alert('Trefa',"#box"+data.ID , _idefix, data.user_update_idefix)
+
+         //f.Alert('Nalezen ', _idefix )
+      }
+    }catch(e) {
+      f.Alert('Nelze zjistit obsah templates',e)
+      console.log("ERR Kalk1", e)
+    }
+  }
+ if (idefixOver > 0 ) {
+  $("#box"+data.ID ).dialog({
+    modal: false,
+    buttons: {
+      Ulozit: function() {
+        data.Vlozit=1
+        self.Zmena(data, kalkulace2,idefixOver)
+        $( this ).dialog( "close" );
+      },
+      Zrusit: function() {
+        data.Vlozit=-1
+        $( this ).dialog( "close" );
+      },
+    },
+    title: "Nalezen stejny nazev",
+
+    show: {
+      effect: "fade",
+      duration: 500
+    },
+    hide: {
+      effect: "fade",
+      duration: 500
+    },
+    // position:
+    //     {
+    //         my: 'left',
+    //         at: 'right',
+    //         of: event
+    //     }
+
+  });
+} else
+
+if (data.idefix > 0) {
+
+    if (data.nazev !== data.nazevOrig){
+      $("#box"+data.ID ).dialog({
+        modal: false,
+        buttons: {
+          Prepis: function() {
+            data.Vlozit=1
+            self.Zmena(data, kalkulace2,data.idefix)
+            $( this ).dialog( "close" );
+          },
+          Vlozit: function() {
+            data.Vlozit=1
+            self.Vklad(data, kalkulace2)
+            $( this ).dialog( "close" );
+          },
+          Zrusit: function() {
+            data.Vlozit=-1
+            $( this ).dialog( "close" );
+          },
+        },
+        title: "Zmena nazvu",
+
+        show: {
+          effect: "fade",
+          duration: 500
+        },
+        hide: {
+          effect: "fade",
+          duration: 500
+        },
+        // position:
+        // {
+        //     my: 'left',
+        //     at: 'right',
+        //     of: event
+        // }
+      });
+    } else
+    if (data.nazev == data.nazevOrig){
+      $("#box"+data.ID ).dialog({
+        modal: false,
+        buttons: {
+          Prepis: function() {
+            data.Vlozit=1
+            self.Zmena(data, kalkulace2,data.idefix)
+            $( this ).dialog( "close" );
+          },
+
+          Zrusit: function() {
+            data.Vlozit=-1
+            $( this ).dialog( "close" );
+          },
+        },
+        title: "Ulozeni ",
+
+        show: {
+          effect: "fade",
+          duration: 500
+        },
+        hide: {
+          effect: "fade",
+          duration: 500
+        },
+        // position:
+        // {
+        //     my: 'left',
+        //     at: 'right',
+        //     of: event
+        // }
+      });
+    }
+  }
+
+
   // kalkulace.forEach(element => {
   //   element.data.Format=[]
 
   // });
-  var kalkulace2= JSON.stringify(kalkulace)
+
+
+
+if (_idefix > 0 && data.nazev==data.nazevOrig) {
+
+ self.Zmena(data,kalkulace2,_idefix)
+}
+},
+async Vklad(data, kalkulace2 ){
+  var idefix=store.state.idefix
+  var atmp=[]
+  var nret = 0
+  var q = `insert into calc_templates ( ${cols},user_insert_idefix,user_update_idefix)
+  values (
+    trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${idefix}','${idefix}'
+
+  ) `;
+  await Q.post(0,q)
+  try {
+    atmp= (await Q.all(idefix,'select max(idefix) as idefix  from calc_templates')).data.data
+    if (atmp.length == 1 ){
+      nret = atmp[0].idefix
+      //f.Alert(nret)
+      store.dispatch('setKalkulaceIdefix',nret)
+    }
+    //f.Alert(atmp.length,' :: ',JSON.stringify(atmp))
+  } catch (e) {
+    f.Alert('ERR Vklad kalkulace ',e)
+    console.log("ERR Kalk1", e)
+  }
+
+
+  f.Alert('Funkce vklad')
+
+},
+
+async Zmena(data,kalkulace2,_idefix){
   var idefix=store.state.idefix
   var atmp=[]
   var nret = 0
 
-
-if (_idefix == 0 ) {
-    q = `insert into calc_templates ( ${cols},user_insert_idefix,user_update_idefix)
-    values (
-      trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${idefix}','${idefix}'
-
-    ) `;
-    await Q.post(0,q)
-    try {
-      atmp= (await Q.all(idefix,'select max(idefix) as idefix  from calc_templates')).data.data
-      if (atmp.length == 1 ){
-        nret = atmp[0].idefix
-        //f.Alert(nret)
-        store.dispatch('setKalkulaceIdefix',nret)
-      }
-      //f.Alert(atmp.length,' :: ',JSON.stringify(atmp))
-    } catch (e) {
-      f.Alert('ERR Vklad kalkulace ',e)
-      console.log("ERR Kalk1", e)
-    }
-    //console.log(store)
-    return nret
-}
-if (_idefix > 0) {
-  q = `update calc_templates set
+  var q = `update calc_templates set
   nazev      = trim('${data.nazev}'),
   kcks       = '${data.kcks}',
   ks         = '${data.ks}',
@@ -127,7 +298,7 @@ if (_idefix > 0) {
     }
     //console.log(store)
     return nret
-}
+
 },
 async getTemplates() {
 

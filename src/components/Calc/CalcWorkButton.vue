@@ -27,37 +27,37 @@
       @blur="Opust('seek')"
       @click="showTemplates=true"
       @keydown="showTemplates=true;seznam('seek'+ID2+'_list_'+0,1,$event)"
+      :title="(form.nazev>'')?'Text na fakture':''"
       >
     </td>
     <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em" >
    <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%" >
-    <button class="kolecko2" @click="send()" >
+    <button class="kolecko2" @click="send()" title="Ulozit">
       <div class="kolecko" >
       <i class="el-icon-upload" style="color:#93908e;position:absolute;top:-0px;left:0px"
-
       ></i>
       </div>
     </button>
    </div>
     </td>
      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white" >
-      <input type="number" v-model="form.kcks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="Kc/ks" class="honza_text honza_color pr-1 ">
+      <input type="number" v-model="form.kcks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="Kc/ks" class="honza_text honza_color pr-1 " title="Kc/ks">
     </td>
     <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white" >
-      <input type="number" v-model="form.ks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1">
+      <input type="number" v-model="form.ks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1" title="Pocet kusu">
     </td>
     <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em" >
-      <input type="number" v-model="form.naklad" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="NAKLADY CELKEM" class="honza_text honza_color pr-1">
+      <input type="number" v-model="form.naklad" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="NAKLADY CELKEM" class="honza_text honza_color pr-1" title="Naklady celkem">
     </td>
     <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em" >
-      <input type="number" v-model="form.marze" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE" class="honza_text honza_color pr-1">
+      <input type="number" v-model="form.marze" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE" class="honza_text honza_color pr-1" title="Marze">
     </td>
     <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em" >
-      <input type="number" v-model="form.marze_pomer" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE POMER" class="honza_text honza_color pr-1">
+      <input type="number" v-model="form.marze_pomer" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE POMER" class="honza_text honza_color pr-1" title="Marze Pomer">
     </td>
 
     <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em" >
-      <input type="number" v-model="form.prodej" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="PRODEJ CELKEM" class="honza_text honza_color pr-1">
+      <input type="number" v-model="form.prodej" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="PRODEJ CELKEM" class="honza_text honza_color pr-1" title="Prodej">
     </td>
 
   </tr></table>
@@ -67,7 +67,7 @@
 
   <div
 style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:10000000"
-:style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,400)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'"
+:style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'"
    v-if="showTemplates " class="elevation-12 honza_color_seznam"
 
        >
@@ -122,10 +122,12 @@ style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:1
                   </v-card-text>
                   <v-card-text
                   v-else
-                  style="font-size:100%;text-align:center;width:100%;height:100%;cursor:pointer"  @click="f1.Alert('Template muze smazat pouze jeho vlastnik');showTemplates=true;f1.setFocus('seek'+ID2)"
+                  style="font-size:100%;text-align:center;width:100%;height:100%;cursor:pointer"
+                  @click="showTemplateVar()"
                   class=" pa-0 pt-0 pr-0 honza_color_seznam"
                   >
-                  <i class="el-icon-question honza_color_seznam"></i>
+                  <!-- <i class="el-icon-question honza_color_seznam"></i> -->
+                  &nbsp;
 
 
                   </v-card-text>
@@ -137,8 +139,8 @@ style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:1
           </table>
   </div>
 
-  <div :id="'box'+ID"  style="visibility:hidde">
-      AAAAA
+  <div :id="'box'+ID2"  style="display:none">
+    Ulozeni kalkulace
   </div>
 
 
@@ -200,6 +202,11 @@ export default {
        marze: null,
        prodej:null,
        marze_pomer: null,
+       user_update_idefix: 0,
+       nazevOrig:'',
+       vlozit: 0,
+       idefixuser:0,
+       ID: 0,
      }
    }
  },
@@ -251,7 +258,9 @@ export default {
       //$(this).toggle(2000)
       self.lastFocus=this.id
     })
-
+    // $( function() {
+    //   $( document ).tooltip();
+    // });
   });
 
  },
@@ -284,19 +293,37 @@ export default {
     this.lastFocus=lastFocus
   },
 
-  setTemplate(cItem){
+  async setTemplate(cItem){
     const self = this
+      var neco
+      var ksOrig = cItem.ks
+       neco=await(f.setCislo('Pocet kusu pro kalkulaci',cItem.ks))
+//       alert(neco)
+
+
        //f.Alert(cItem.idefix)
        //return
        self.form.idefix=cItem.idefix
        self.form.nazev=cItem.nazev
        self.form.kcks = cItem.kcks
-       self.form.ks = cItem.ks
+       self.form.ks = neco
        self.form.naklad = cItem.naklad
        self.form.marze = cItem.marze
        self.form.prodej = cItem.prodej
        self.form.marze_pomer = cItem.marze_pomer
+       //Polozky pro praci
+       self.form.user_update_idefix = cItem.user_update_idefix
+       self.form.nazevOrig=cItem.nazev
+       self.form.ID = self.ID2
+
        queryKalk.getTemplate(self.form.idefix)
+       //alert('cek')
+      setTimeout(function(){
+        //self.form.ks = neco
+        //alert(neco)
+
+      },2000)
+
 
 
        eventBus.$emit('MenuHlavni',
@@ -305,6 +332,7 @@ export default {
           key: 667,
 
         })
+
   },
   delTemplate(cItem,e){
     const self = this
@@ -312,10 +340,52 @@ export default {
        //f.Alert(cItem.idefix)
        //return
        self.form.idefix=cItem.idefix
-       if (f.Confirm('Smazat template ', cItem.nazev + '?')) {
-         eventBus.$emit("DELETETEMPLATE",{idefix: cItem.idefix })
-       }
+       $("#box"+self.ID2 ).dialog({
+        modal: false,
+        buttons: {
+          Smazat: function() {
+
+            eventBus.$emit("DELETETEMPLATE",{idefix: cItem.idefix })
+            $( this ).dialog( "close" );
+          },
+
+          Zrusit: function() {
+
+            $( this ).dialog( "close" );
+          },
+        },
+        title: 'Smazat template ' + cItem.nazev + '?',
+
+        show: {
+          effect: "fade",
+          duration: 500
+        },
+        hide: {
+          effect: "fade",
+          duration: 500
+        },
+        // position:
+        // {
+        //     my: 'left',
+        //     at: 'right',
+        //     of: event
+        // }
+      });
+       return
+
        f.setFocus('seek'+self.ID2)
+
+  },
+  showTemplateVar(){
+    const self = this
+    this.showTemplates=true;
+
+    //f.setFocus('seek'+self.ID2)
+    setTimeout(function(){
+      $('#seek'+self.ID2).trigger('click')
+    },500)
+
+
 
   },
 
@@ -340,14 +410,52 @@ export default {
   },
   async send(){
     const self = this
-    $("#box"+self.ID).css('visibility','visible')
-    await self.dlg().then(res=>{
+    var idefixuser=self.$store.state.idefix
+  //  alert(self.form.ID)
+    self.form.ID=self.ID2
+    //f.Alert(self.form.ID)
+    //return
+    eventBus.$emit("SAVETEMPLATE",{data: self.form })
 
-    })
-    $("#box"+self.ID).css('visibility','hidden')
+
+    return
+
+
+    //$("#box"+self.ID ).innerHTML ='AAA<b>BBB'
+    $("#box"+self.ID ).dialog({
+      modal: false,
+      buttons: {
+        Vlozit: function() {
+          self.form.Vlozit=1
+          eventBus.$emit("SAVETEMPLATE",{data: self.form })
+          $( this ).dialog( "close" );
+        },
+        Prepsat: function() {
+          self.form.Vlozit=2
+          eventBus.$emit("SAVETEMPLATE",{data: self.form })
+          $( this ).dialog( "close" );
+        },
+
+
+      },
+       title: "Success" + self.idefix+ ' '+self.form.idefix + ' /' + self.form.nazev + '/ ' + self.form.nazevOrig + self.form.user_update_idefix + ' '+ idefixuser,
+      show: {
+        effect: "fade",
+        duration: 500
+      },
+      hide: {
+        effect: "fade",
+        duration: 500
+      }
+
+    });
+
+    //$("#box"+self.ID).css('visibility','visible')
+
+
     //$("#box"+self.ID).dialog()
 
-    eventBus.$emit("SAVETEMPLATE",{data: self.form })
+    //eventBus.$emit("SAVETEMPLATE",{data: self.form })
     //queryKalk.setKalk(server.data,self.aKalkulace)
   },
   async dlg(){
@@ -686,6 +794,8 @@ table tr td  {
 ::-ms-input-placeholder { /* Microsoft Edge */
   color: #ffffff;
 }
+
+
 </style>
 
 
