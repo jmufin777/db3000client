@@ -236,7 +236,7 @@ export default {
   methods: {
     w_zindex: function() {
       //console.log('Click na tlacitko')
-      alert('a')
+      alert('w_zindex')
 
     },
   idxx: function() {

@@ -954,7 +954,15 @@ async MenuStroj() {
  },
 
  setKalk(idK) {  //Je potreba prevzit ID z CalcIndex
+ const self=this
+          //f.Alert(self.$store.state.KalkulaceThis, idK)
+          if (self.$store.state.KalkulaceThis !== idK ) {
+            this.$store.dispatch('KalkulaceColThis',0) //Jen nastavi KalkulaceThis
+          }
+
           this.$store.dispatch('setKalk',idK)
+
+
            var neco = 'ref_'+idK+this.ID2
            this.defaultStyle(idK)
    },

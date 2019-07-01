@@ -2,9 +2,15 @@
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
  <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
 
+
 <table style="float:left" ><tr>
+<td class="leva white pt-1 prava pr-1" style="width:1em;">
+  <v-icon size="medium">fa-lock</v-icon>
+</td>
   <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:5.5em">
+
      <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:5.2em;width:100%" >
+
    <button class="kolecko2" >
     <div class="kolecko" >
       <!-- <i class="el-icon-plus" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
@@ -47,7 +53,10 @@
       <input type="number" v-model="form.ks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1" title="Pocet kusu">
     </td>
     <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em" >
-      <input type="number" v-model="form.naklad" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="NAKLADY CELKEM" class="honza_text honza_color pr-1" title="Naklady celkem">
+      <input type="number" v-model="form.naklad"  style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important"
+      :placeholder="'NAKLADY CELKEM' "
+      class="honza_text honza_color pr-1" title="Naklady celkem">
+      <!-- <input type="text" :value="f1.getCislo(form.naklad)" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" class="honza_text honza_color pr-1"> -->
     </td>
     <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em" >
       <input type="number" v-model="form.marze" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE" class="honza_text honza_color pr-1" title="Marze">
@@ -66,7 +75,7 @@
      </div>
 
   <div
-style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:10000000"
+style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:100000000"
 :style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'"
    v-if="showTemplates " class="elevation-12 honza_color_seznam"
 
@@ -86,9 +95,8 @@ style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:1
                  @click="setTemplate(m1b);showTemplates=false"
                  @focus="fokus('seek'+ID)"
                  class="honza_color_seznam"
-
                  >
-                <table style="width:100%;border:solid 0px;border-bottom: solid 0px #575756" class="honza_color_seznam" ><tr><td style="width:60%;border-bottom:solid 0px" class="honza_color_seznam" >
+               <table style="width:100%;border:solid 0px;border-bottom: solid 0px #575756" class="honza_color_seznam" ><tr><td style="width:60%;border-bottom:solid 0px" class="honza_color_seznam" >
                <v-card class="pa-0 elevation-0 honza_color_seznam"  >
                 <v-card-text style="font-size:100%;text-align:left;width:100%"  @click="setTemplate(m1b)"
                 class=" pa-0 pt-0 honza_color_seznam"
@@ -105,9 +113,8 @@ style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:1
                  </v-card-text>
                  </v-card>
                  </td>
-
                  </tr>
-                 </table>
+               </table>
               </a>
               </v-card>
               </td>
@@ -160,6 +167,8 @@ import f from '@/services/fce'
 import WorkLeft from './CalcWorkLeft.vue'       // Pracovni cast nahore
 import WorkCol from './CalcWorkCol.vue' // Prehledova dole
 import queryKalk from '../../services/fcesqlKalkulace'
+import prepocty from '../../services/fceKalkulacePrepocty'
+
 
 
 import { locales } from 'moment';
@@ -235,9 +244,7 @@ export default {
           key: 667,
 
         })
-
       //self.setTemplate(server.data)
-
       //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
     })
   self.ID2 = Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983458)) / Math.round(Math.random() * 1983458))
@@ -300,7 +307,6 @@ export default {
        neco=await(f.setCislo('Pocet kusu pro kalkulaci',cItem.ks))
 //       alert(neco)
 
-
        //f.Alert(cItem.idefix)
        //return
        self.form.idefix=cItem.idefix
@@ -316,24 +322,49 @@ export default {
        self.form.nazevOrig=cItem.nazev
        self.form.ID = self.ID2
 
-       queryKalk.getTemplate(self.form.idefix)
+       var nK= await(queryKalk.getTemplate(self.form.idefix))
+       //,
+       //await (f.Alert2('Ahoj //',JSON.stringify(nK[0].obsah.length) ," // ") )
+       //alert('tEd ')
+       var obsah = await(self.KalkulacePrepocetKusy(nK[0].obsah,neco))
+       self.form.naklad = await(prepocty.getNaklad(obsah))
+       //alert('spoceteno', self.form.naklad)
+       //self.form.naklad = 2000
+       //f.Alert2("OBSAH : " , JSON.stringify(obsah))
        //alert('cek')
-      setTimeout(function(){
-        //self.form.ks = neco
-        //alert(neco)
 
-      },2000)
 
 
 
        eventBus.$emit('MenuHlavni',
         {
-          Kalkulace: cItem.obsah,
+          //Kalkulace: cItem.obsah,
+          Kalkulace: nK[0].obsah,
           key: 667,
 
         })
 
   },
+async KalkulacePrepocetKusy(k, ks=1){
+  //f.Alert("K" , k.length)
+  //return
+  var defer = $.Deferred();
+  //f.Alert("Propocet 1")
+  k.forEach(element => {
+
+      //f.Alert("E :: " , f.isEmpty(element.data.FormatNakladKs ), f.isEmpty(10))
+      if (f.isEmpty(element.data.FormatNakladKs)) {
+        element.data.FormatNakladKs = ks
+      } else {
+        element.data.FormatNakladKs = element.data.FormatNakladKs * ks
+      }
+  });
+
+  defer.resolve(k);
+
+  return defer.promise();
+
+},
   delTemplate(cItem,e){
     const self = this
       f.stopka(e)
@@ -711,26 +742,26 @@ a:focus {
   background: #93908e;
   color: #ffffff;
   height:14px;
-  font-size:12px;
-  font-weight:400;
+  font-size:13px;
+  font-weight: 900;
   opacity: 1;
   caret-color: #ffffff !important;
   padding-left:10px;
   padding-right:10px;
-
 }
+
 .honza_cislo{
   background: #93908e;
   color: #ffffff !important;
   height:14px;
-  font-size:12px;
+  font-size:13px;
   font-weight:900;
-  opacity: 1;
+  opacity:1;
   caret-color: #ffffff !important;
   padding-left:10px;
   padding-right:5px;
-
 }
+
 .honza_color{
   background: #93908e;
   color: #ffffff;

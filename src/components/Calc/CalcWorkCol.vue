@@ -479,12 +479,23 @@
 
         <v-card style="width:100%;float:none;position:absolute;bottom:0px;height:2em;vertical-align: text-bottom;" class="white" v-if="!getType().match(/Balenixx/)">
           <v-card-text style="text-align:left;width:100%;vertical-align: text-bottom;" class="pa-0">
-            Naklad&nbsp;:&nbsp;<input type="number" v-model="form.naklad" size="mini"  style="width:30%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" readonly @change="saveVuexData()">
+            <table><tr><td style="width:20%">
+            Naklad&nbsp;&nbsp;
+            </td><td  style="width:30%">
+            <input type="number" v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" readonly @change="saveVuexData()">
+            </td><td  style="width:20%">
+            <span v-if="level==3" >Korekce&nbsp;&nbsp;</span>
+            <span v-else>&nbsp;</span>
+            </td><td  style="width:30%">
+
+            <input v-if="level==3" type="number" v-model="form.nakladkorekce" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+            <span v-else>&nbsp;</span>
+            </td></tr></table>
           </v-card-text>
         </v-card>
-        <v-card style="width:20%;float:left;display;none" >
+        <v-card style="width:20%;float:left;display:none" >
           <v-card-text style="text-align:left;width:100%;" class="pa-0">
-            <!-- <button type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="1==1" ><i class="el-icon-delete" size="mini"></i></button> -->
+
           </v-card-text>
         </v-card>
 
@@ -619,6 +630,7 @@ export default {
 
        //Externi
        naklad:0,
+       nakladkorekce:0,
        prodejDTP:0,
        //Baleni - polozku naklad
 
@@ -920,6 +932,7 @@ async   zmenaType(cSloup=""){
              self.form.showtxtPrace  = false
              self.form.showtxtDod    = false
              self.form.naklad=0,
+             self.form.nakladkorekce=11110,
              self.form.prodejDTP=0,
              self.form.naklad_mody=0
              self.form.naklad_po=0
@@ -1516,6 +1529,7 @@ async   zmenaType(cSloup=""){
        dod: self.form.itemSelectedDod,
        prace: self.form.itemSelectedPrace,
        naklad: self.form.naklad,
+       nakladkorekce: self.form.nakladkorekce,
        naklad_mody: self.form.naklad_mody, //Baleni
        naklad_po: self.form.naklad_po,  //Baleni
        naklad_cena: self.form.naklad_cena, //Baleni
@@ -1544,6 +1558,7 @@ async   zmenaType(cSloup=""){
           self.form.itemSelectedDod    = neco.data.dod
           self.form.itemSelectedPrace  = neco.data.prace
           self.form.naklad             = neco.data.naklad
+          self.form.nakladkorekce      = neco.data.nakladkorekce
           self.form.prodejDTP          = neco.data.prodejDTP
 
           self.form.naklad_mody        = neco.data.naklad_mody //Baleni

@@ -3,7 +3,7 @@
     <!-- Link:
   <router-link :to="{name: 'col', params: {ktery: 1 }}">Moduly</router-link> -->
     <my-layout>
-      <div slot="hlavninew" style="position:fixed;top:4.8em;left:10px;background:#fdf0f7;text-align:left;width:100%">
+      <div slot="hlavninew" style="position:fixed;top:4.8em;left:10px;background:#fdf0f7;text-align:left;width:100%" id="hlavninabidka" class="HlavniNabidka">
     <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
      <div >
       <work-but-menu></work-but-menu>
@@ -21,25 +21,26 @@
 
 
     <!-- {{aKalkulace}} -->
-<div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%">
+<div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
 <div v-for="idxK in 1" :key="idxK" slot="kalkulace" >
 
-      <work-but-plus v-if="aKalkulace.length==0" slot="nekalkulace" :ID="1"> </work-but-plus>
-      <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" >
-        <work-but v-if="iK==0" :ID="'A_'+iK" slot="tlacitka" > </work-but>
-        <work-but-plus v-else slot="tlacitka" :ID="'B+'+iK"> </work-but-plus>
+      <!-- <work-but-plus v-if="aKalkulace.length==0" slot="nekalkulace" :ID="1"> </work-but-plus> -->
+      <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska">
 
-
-
-     <!-- <work slot="kalkulace" v-for="na in (2 ,20) " :key="na"> -->
-        <span slot="leva" :key="'L'+ TestRend">
-
+        <!-- <work-but v-if="iK==0" :ID="'A_'+iK" slot="tlacitka" style="position:relative;left:4px"> </work-but>
+        <work-but-plus v-else slot="tlacitka" :ID="'B+'+iK" style="position:relative;left:30px"> </work-but-plus> -->
+        <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
+         <work-but  :ID="'A_'+iK"  ></work-but>
+        </span>
+        <span v-else style="position:relative;left:30px" slot="tlacitka" >
+        <work-but-plus  :ID="'B+'+iK"> </work-but-plus>
+        </span>
+        <span slot="leva" :key="'L'+ TestRend" style="position:relative;left:30px" >
         <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
               <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
               :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
                @click="removeKalk(iKalk.kalkulaceid)"
-              >
-
+                >
                 <a :name="iKalk.kalkulaceid"></a>
                   <i class="el-icon-delete white" size="mini"
                   :class="{'blue lighten-4': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
@@ -58,7 +59,7 @@
         </work-left>
         </span>
 <!-- <draggable  v-model="iKalk.sloupecid"  :options="{group:{ name:'sloupce' }}"  @start="drag=true" @end="drag=false" :move="chooseItem"  >   -->
-        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block'"  >
+        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block;position:relative;left:30px'"  >
             <!-- {{iKalk.sloupecid}} -->
             <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend" style="z-index:889977">
                 <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i>
@@ -69,15 +70,14 @@
      </work>
 </div>
 </div>
-     <div style="right:1%;z-index:99999;" class="plovouci  grey lighten-1 pt-2 pb-2"  slot="Plovouci2"
 
-     > <!--2 = prepinac -->
-
+   <div style="right:1%;;top:216px;z-index:99999;" class="plovouci  grey lighten-1 pt-2 pb-2"  slot="Plovouci2" id="plovoucimapa11">
+     <!--2 = prepinac -->
        <v-btn @click="panel(2,$event)" small class="yellow">MAPA</v-btn><br>
        <v-btn @click="panelPrehled(2,$event)" small class="yellow">Kalkulace</v-btn><br>
              <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  :key="$store.state.KalkulaceThis"  class="px-1">
               Typ sloupce
-               {{  $store.state.KalkulaceThis }}
+              {{  $store.state.KalkulaceThis }}
             <el-dropdown-menu slot="dropdown" class="grey lighten-5" >
               <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
               <el-dropdown-item  :command="'Laminace'">Laminace</el-dropdown-item>
@@ -87,9 +87,9 @@
               <el-dropdown-item  :command="'Jine'">Jine</el-dropdown-item>
               <el-dropdown-item  :command="'Externi'">Externi</el-dropdown-item>
               <el-dropdown-item  :command="'DTP'">DTP</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-     </div>
+             </el-dropdown-menu>
+            </el-dropdown>
+   </div>
 
   <transition name="fade" slot="PlovouciObsah" >
      <vue-draggable-resizable  class="grey lighten-2 pa-0 elevation-12" style="opacity:1;max-width:2000px;max-height:550px"
@@ -458,9 +458,14 @@ export default {
 
 
     })
-     eventBus.$on('SAVETEMPLATE', (server) => {
+
+     await eventBus.$on('SAVETEMPLATE', (server) => {
        if (server.data.nazev=='') {
-         f.Alert('Nazev je nutne vyplnit',self.user)
+
+
+            f.Alert2('Nazev je nutne vyplnit',self.user)
+
+
        } else {
 
 
@@ -473,7 +478,7 @@ export default {
        //f.Alert("SERVER ", JSON.stringify(server), " IDEFIX: ", server.idefix )
        //return
        if (server.idefix=='') {
-         f.Alert('Chyba pri pokusu o smazani',self.user)
+         f.Alert2('Chyba pri pokusu o smazani',self.user)
        } else {
          // f.Alert('Template bude ulozen pod nazvem  ', server.data.nazev)
          // JSON.stringify(self.aKalkulace)
@@ -502,6 +507,7 @@ export default {
          setTimeout(function(){
             self.TestRend=self.TestRend+1
             eventBus.$emit('enable')
+
         },500)
       }
 
@@ -602,6 +608,83 @@ export default {
 
    this.ID = Math.round(Math.random() * 198345813)
    this.aKalkulace = this.$store.state.Kalkulace
+
+   //$(document).on('click', function(e){
+     $(document).ready(function(){
+
+       $(document).ready(function () {
+        var x;
+        var y;
+        $(document).mousemove(function (e) {
+            x = e.pageX;
+            y = e.pageY;
+        });
+      /*
+        var $dlg=$("#plovoucimapa11").dialog({
+            autoOpen: true,
+            show: "blind",
+            hide: "explode",
+
+        });
+        */
+        $(".myska").bind("mouseenter", function () {
+          return
+
+          var idObal="obalKalkulace"
+          var idVztah="hlavninabidka"
+
+          var vztah= document.getElementById(idVztah)
+          //$("#hlavninabidka").hide()
+          var poz=$("#hlavninabidka").offset()
+          var top=Math.ceil(poz.top)  //konec hlavninabidky
+          var thistop=this.offsetTop
+          var h= $("#hlavninabidka").height()
+          var posun = $("#"+idObal).scrollTop()
+
+
+
+            //+ top
+            if (posun > 0){
+           //   f.Alert2(top+ "  /  "+ h + " / " + (thistop + poz ) , posun )
+            }
+
+          //$("#hlavninabidka").css("border","solid 20px blue")
+           $("#plovoucimapa11").css("top",(thistop  ) +"px")
+
+        //    $dlg.dialog('open'); // open
+
+            //  $dlg.position({
+            //             my: "center",
+            //             at: "center",
+            //             of: window,
+            //             collision: "fit",
+            //             // Ensure the titlebar is always visible
+            //             using: function (pos) {
+            //                 var topOffset = $(this).css(pos).offset().top;
+            //                 if (topOffset < 0) {
+            //                     $(this).css("top", pos.top - topOffset);
+            //                 }
+            //             }
+            //   });
+
+            //alert(x)
+        });
+
+
+        $(".myska").bind("mouseleave", function () {
+
+            //$dlg.dialog('close'); // open
+        });
+
+
+
+    });
+
+     })
+
+    //$("#plovoucimapa").css('top', e.pageY);
+    //$("#plovoucimapa").css('left', e.pageX);
+   //});
 
 
    return
@@ -1087,10 +1170,14 @@ export default {
 
    setKalk(idK) {
           this.$store.dispatch('setKalk',idK)
+          this.$store.dispatch('KalkulaceColThis',0) //Jen nastavi KalkulaceThis
+
+
            var neco = 'ref_'+idK+this.ID
            //document.getElementById(neco).click()
            if (document.getElementById(neco)) {
              document.getElementById(neco).click()
+
            }
            //
            this.defaultStyle(idK)
@@ -1154,9 +1241,14 @@ button:focus {
     color: red;
 }
 .plovouci {
-  opacity:0.1;
+  opacity:0.91;
   z-index:10;
+  position:absolute;
+
+
+
 }
+
 .plovouci:hover {
   opacity:1;
   z-index:1000;
@@ -1263,6 +1355,7 @@ input {
   transform: translateX(10px);
   opacity: 0;
 }
+
 
 
 </style>

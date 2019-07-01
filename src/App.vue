@@ -407,19 +407,23 @@ button:focus {
     /* color:red; */
   }
 
-  .ui-dialog-titlebar,.ui-corner-all, .ui-widget-header, .ui-helper-clearfix, .ui-draggable-handle {
-    /*
-    color: #aaaaaa;
-    background: green;
-    */
-  }
+
  .ui-button:focus, ui-widget:focus, ui-corner-all:focus {
    background: #c6dcf5;
    font-weight: 900;
  }
 
- /* , ui-widget:focus, ui-corner-all:  */
+ .my-dialog-1 .ui-widget-header {
+    background:#c1ddf8;
+}
 
+ /* , ui-widget:focus, ui-corner-all:  */
+.no-title .ui-dialog-titlebar {
+
+    height:15px;
+    width:200px;
+
+}
 
 
 

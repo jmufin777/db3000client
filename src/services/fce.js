@@ -737,11 +737,12 @@ entrcount(neco) {
 },
 
 Alert(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
+  var defer = $.Deferred();
   setTimeout(function(){
 
     alert(ctxt1+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6)
   },500)
-
+  return defer.promise()
 },
 Alert2(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
   var obj=document.createElement("DIV")
@@ -758,6 +759,7 @@ Alert2(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
           $( this ).dialog( "close" );
         },
       },
+      dialogClass: "my-dialog-1",
       show: {
         effect: "fade",
         duration: 500
@@ -780,6 +782,7 @@ setCislo(ctxt1="",cval="0") {
 
   var obj=document.createElement("DIV")
   obj.id="myValue"
+
   $("#myCislo").remove();
   $("#myValue").remove();
   document.body.appendChild(obj)
@@ -787,6 +790,10 @@ setCislo(ctxt1="",cval="0") {
   otxt.type="number"
   otxt.value=cval
   otxt.id="myCislo"
+  $(otxt).addClass("tdl tdn elevation-0 pr-1 prava")
+  $(otxt).css("outline", "none");
+  //$(otxt).css("border","none")
+  //style="width:90%; height:15px; text-align:right"
   obj.appendChild(otxt)
   //var $dlg=$("<div><input type='number' id='myCislo'></div>").dialog({
   var $dlg=$('#myValue').dialog({
@@ -794,7 +801,7 @@ setCislo(ctxt1="",cval="0") {
     title: ctxt1,
       buttons: {
         OK: function() {
-          alert($("#myCislo").val())
+          // alert($("#myCislo").val())
           defer.resolve($("#myCislo").val());
           //$("#myCislo").remove();
           //$("#myValue").remove();
@@ -804,6 +811,7 @@ setCislo(ctxt1="",cval="0") {
           //$("#myValue").dialog('destroy');
         },
       },
+      dialogClass: "my-dialog-1",
       show: {
         effect: "fade",
         duration: 500
@@ -818,6 +826,13 @@ setCislo(ctxt1="",cval="0") {
       setTimeout(function(){
         $('#myCislo').focus();
       },500)
+      $('#myCislo').keypress(function( event ) {
+        if ( event.which == 13 ) {
+           //event.preventDefault();
+           defer.resolve($("#myCislo").val());
+           $dlg.dialog('close')
+        }
+      })
       return defer.promise();
 
 },
@@ -866,6 +881,11 @@ getLeft(id,addPoz=10,idVztah="obal1_kalkulace") {
 
   return neco;
 },
+getCislo(cislo=0) {
+  var numberFormat1 = new Intl.NumberFormat('ru-RU');
+  return numberFormat1.format(cislo)
+
+},
 getWidth(id,addPoz=10) {
   var neco=300
   var oNeco
@@ -890,7 +910,11 @@ sleep(ms) {
   return new Promise(resolve=>{
       setTimeout(resolve,ms)
   })
+},
+isEmpty(str) {
+  return (!str || 0 === str.length);
 }
+
 
 }
 

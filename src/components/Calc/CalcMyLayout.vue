@@ -3,7 +3,7 @@
        <div v-if="ukaz==true && ID > 0" class="  lighten-5 pt-0 px-0 mt-0 py-0" :style="'height:'+getHeight('d1_'+ID,100)+'px'" :id="'d1_'+ID" @click="s12(1,$event)" @scroll="TestRend"
          style="position:absolute;top:0px;background:white"
          >
-         <div  style="position:relative;top:0px;width:100%;background:#ffffff;max-height:1000px">
+         <div  style="position:relative;top:0px;width:100%;background:#ffffff;max-height:1000px" >
          <slot name="hlavninew">
 
          </slot>
@@ -55,7 +55,7 @@
            </tr>
 
          </table>
-        <div style="position:fixed;top:5%;right:1%" >
+        <div style="position:absolute;top:5%;right:1%" id="plovoucimapa">
           <slot name="Plovouci">
           <!-- Plovouci1 -->
           </slot>

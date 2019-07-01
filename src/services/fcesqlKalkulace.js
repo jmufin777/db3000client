@@ -67,6 +67,7 @@ async setKalk(data,kalkulace,_idefix=0) {
         },
       },
       title: "Vklad - kopie",
+      dialogClass: "my-dialog-1",
 
       show: {
         effect: "fade",
@@ -126,6 +127,7 @@ async setKalk(data,kalkulace,_idefix=0) {
       },
     },
     title: "Nalezen stejny nazev",
+    dialogClass: "my-dialog-1",
 
     show: {
       effect: "fade",
@@ -167,7 +169,7 @@ if (data.idefix > 0) {
           },
         },
         title: "Zmena nazvu",
-
+        dialogClass: "my-dialog-1",
         show: {
           effect: "fade",
           duration: 500
@@ -200,7 +202,7 @@ if (data.idefix > 0) {
           },
         },
         title: "Ulozeni ",
-
+        dialogClass: "my-dialog-1",
         show: {
           effect: "fade",
           duration: 500
@@ -330,7 +332,7 @@ async getTemplates() {
 },
 
 async getTemplate(_idefix=0) {
-
+  var defer = $.Deferred();
   var idefix=store.state.idefix
   var q= 'select a.*,b.login  from calc_templates a join list_users b on a.user_update_idefix = b.idefix ';
   q= `${q} where a.idefix= ${_idefix} `
@@ -338,13 +340,16 @@ async getTemplate(_idefix=0) {
   //f.Alert("BUS ",Vue2)
   try {
     atmp= (await Q.all(idefix,q)).data.data
-    eventBus.$emit('DATATEMPLATE',{data: atmp})
-    return atmp
+    defer.resolve(atmp);
+  //  eventBus.$emit('DATATEMPLATE',{data: atmp})
+    //return atmp
     //
   } catch (e) {
     f.Alert('nevidim templats',e, q)
     console.log("ERR pozadavek na templates", e)
+    defer.resolve(false);
   }
+  return defer.promise();
   ///f.Alert(JSON.stringify(atmp))
 },
 
