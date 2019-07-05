@@ -461,15 +461,8 @@ export default {
 
      await eventBus.$on('SAVETEMPLATE', (server) => {
        if (server.data.nazev=='') {
-
-
             f.Alert2('Nazev je nutne vyplnit',self.user)
-
-
        } else {
-
-
-         // JSON.stringify(self.aKalkulace)
           queryKalk.setKalk(server.data,self.aKalkulace)
        }
        //f.Alert(JSON.stringify(server))
@@ -624,9 +617,8 @@ export default {
             autoOpen: true,
             show: "blind",
             hide: "explode",
-
         });
-        */
+      */
         $(".myska").bind("mouseenter", function () {
           return
 
@@ -640,8 +632,6 @@ export default {
           var thistop=this.offsetTop
           var h= $("#hlavninabidka").height()
           var posun = $("#"+idObal).scrollTop()
-
-
 
             //+ top
             if (posun > 0){

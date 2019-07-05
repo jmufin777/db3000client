@@ -56,8 +56,10 @@ export default {
     return moment(String(value)).format('MM/DD/YYYY')
   },
   datum2(value) {
-
     return moment(String(value)).format('MM.DD.YY hh:mm')
+  },
+  datum3(value) {
+    return moment(String(value)).format('DD.MM.YYYY')
   },
   dnes () {
     var xd = new Date()

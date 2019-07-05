@@ -34,6 +34,7 @@
     "p-iteration": "^1.1.8",
     "request": "^2.88.0",
     "sortablejs": "^1.9.0",
+    "timepicker": "^1.11.15",
     "v-chip": "^0.2.5",
     "v-tooltip": "^2.0.2",
     "v-treeview": "^0.2.1",

@@ -70,7 +70,7 @@ import 'jquery-ui/themes/base/all.css';
 window.$ = window.jQuery = $;
 ///Users/mares/Documents/node/fx/client/node_modules/jquery-ui/ui/widgets/datepicker.js
 
-
+import timepicker from 'timepicker'
 import datepicker from 'jquery-ui/ui/widgets/datepicker';
 import dialog from 'jquery-ui/ui/widgets/dialog';
 import tooltip from 'jquery-ui/ui/widgets/tooltip';
@@ -84,6 +84,7 @@ import slide from 'jquery-ui/ui/effects/effect-slide';
 import fade from 'jquery-ui/ui/effects/effect-fade';
 import fold from 'jquery-ui/ui/effects/effect-fold';
 import size from 'jquery-ui/ui/effects/effect-size';
+
 // import dialog from 'jquery-ui/ui/widgets/dialog';
 
 //window.jQuery = $

@@ -17,7 +17,10 @@ const cols = `
   marze ,
   prodej ,
   marze_pomer,
-  obsah
+  obsah,
+  exedice_datum,
+  expedice_cas
+
   `
 
   //--obsah,
@@ -33,6 +36,7 @@ async setKalk(data,kalkulace,_idefix=0) {
   var q=""
   var idefix=store.state.idefix
   var qover ='NIC'
+
   //self.Vklad()
   //return
 
@@ -240,7 +244,7 @@ async Vklad(data, kalkulace2 ){
   var nret = 0
   var q = `insert into calc_templates ( ${cols},user_insert_idefix,user_update_idefix)
   values (
-    trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${idefix}','${idefix}'
+    trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${data.expedice_datum}','${data.expedice_cas}','${idefix}','${idefix}'
 
   ) `;
   await Q.post(0,q)
@@ -258,7 +262,7 @@ async Vklad(data, kalkulace2 ){
   }
 
 
-  f.Alert('Funkce vklad')
+  // f.Alert('Funkce vklad')
 
 },
 
@@ -268,14 +272,16 @@ async Zmena(data,kalkulace2,_idefix){
   var nret = 0
 
   var q = `update calc_templates set
-  nazev      = trim('${data.nazev}'),
-  kcks       = '${data.kcks}',
-  ks         = '${data.ks}',
-  naklad     = '${data.naklad}',
-  marze      = '${data.marze}',
-  prodej     = '${data.prodej}',
-  marze_pomer= '${data.marze_pomer}',
-  obsah      = '${kalkulace2}',
+  nazev          = trim('${data.nazev}'),
+  kcks           = '${data.kcks}',
+  ks             = '${data.ks}',
+  naklad         = '${data.naklad}',
+  marze          = '${data.marze}',
+  prodej         = '${data.prodej}',
+  marze_pomer    = '${data.marze_pomer}',
+  obsah          = '${kalkulace2}',
+  expedice_datum = '${data.expedice_datum}',
+  expedice_cas   = '${data.expedice_cas}',
   user_update_idefix='${idefix}',
   time_update = now()
    where idefix = ${_idefix}
@@ -314,6 +320,8 @@ async getTemplates() {
           a.marze ,
           a.prodej ,
           a.marze_pomer,
+          a.expedice_datum,
+          a.expedice_cas,
           a.user_update_idefix,
           b.login  from calc_templates a join list_users b on a.user_update_idefix = b.idefix `;
   q= `${q} order by  case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev`
