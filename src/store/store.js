@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import _ from 'lodash'
 import ListStroj from '../services/ListStrojService'
+import f from '@/services/fce'
 // https://vuex.vuejs.org/guide/structure.html
 // https://vuex.vuejs.org/guide/plugins.html
 
@@ -166,7 +167,6 @@ export default new Vuex.Store({
       }
 
     },
-
     setStrana(state, kalkulace) {
       //if (state.Strana!=kalkulace.Strana) {
           state.Strana = kalkulace.Strana
@@ -174,17 +174,19 @@ export default new Vuex.Store({
 
     },
 
-    async setFormat(state) {
+    setFormat(state) {
+      const self = this
       if (state.Kalkulace.length==1 || !state.KalkulaceFormat.length || state.KalkulaceFormat.length==0 ){
-        //alert('For,aty')
-        var atmp=(await ListStroj.one(this.user,-1, 500)).data.enum_format
-        try{
-          state.KalkulaceFormat = atmp
-        } catch(e) {
-          console.log('Formaty STORE chyba')
-        }
-
-      }
+          //var atmp=(await ListStroj.one(this.user,-1, 500)).data.enum_format
+          ListStroj.one(this.user,-1, 500)
+          .then(res => {
+            self.commit('setFormatState',res.data.enum_format)
+          })
+          }
+    },
+    setFormatState(state,b2) {
+      state.KalkulaceFormat = []
+      state.KalkulaceFormat = b2
     },
 
     async setStrojeV(state) {
@@ -337,26 +339,21 @@ export default new Vuex.Store({
       console.log('RemoveAccID ', kalkulaceid.kalkulaceid)
       state.Kalkulace.splice(kalkulaceid.kalkulaceid,1)
     },
-
-    setKalk (state, kalkulaceid) {
-      console.log('Set ', kalkulaceid)
-      state.KalkulaceThis = kalkulaceid
-    },
     setKalkulaceIdefix (state, kalkulaceidefix) {
       //console.log('Set ', kalkulaceidefix)
       state.KalkulaceIdefix = kalkulaceidefix
     },
     setKalk2 (state, kalkulaceid) {
-      console.log('Set acc ID ', kalkulaceid)
-      // state.Kalkulace.forEach((el,idx) => {
-      //   el.kalkulaceid = idx+1
-      // })
+      f.Alert2('Set acc ID ', kalkulaceid)
       try {
         state.KalkulaceThis = state.Kalkulace[kalkulaceid].kalkulaceid
       } catch (e) {
           console.log("Chyba sek Kalk2 ")
       }
-
+    },
+    setKalk (state, kalkulaceid) {
+      //      f.Alert2('Set ', kalkulaceid)
+            state.KalkulaceThis = kalkulaceid
     },
     replaceKalk (state, dataAll) {
       var idx = this.getters.getId(dataAll.kalkulaceid)

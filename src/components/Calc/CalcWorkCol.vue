@@ -23,13 +23,10 @@
           :parent="false"
           :maximize="false"
           :demo="false"
-
           >
         <div>OKNO {{getType()}} / {{getId()}} {{ kalkulaceid}}</div>
         <div>budik {{ info }}</div>
         <div>budik {{ filtrDataStro1 }}</div>
-
-
 
       </win-dow>
 
@@ -720,7 +717,15 @@ export default {
      this.ID = Math.round(Math.random() * 198345813 *Math.random() )
        var neco=JSON.stringify(self.Kalkulace[self.k_id()])
        self.Kalk=JSON.parse(neco)
-       self.readVuexData()
+       try {
+         setTimeout(function(){
+           self.readVuexData()
+         },500)
+
+       } catch(e) {
+         f.Alert2('Data potiz')
+       }
+
        //alert("Pripjoj" + self.getType())
 
       self.Cols=self.Kalk.sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
@@ -1551,7 +1556,12 @@ async   zmenaType(cSloup=""){
    readVuexData() {
      // return
      const self = this
+     if (self.getIndex()  < 0) {
+       return
+     }
      var neco = self.$store.state.Kalkulace[self.k_id()].sloupecid[self.getIndex()]
+
+       try {
           self.form.itemSelectedStroj  = neco.data.stroj
           self.form.itemSelectedStroj1 = neco.data.stroj1
           self.form.itemSelectedMat    = neco.data.mat
@@ -1572,6 +1582,10 @@ async   zmenaType(cSloup=""){
           self.form.ext_pocet_ks  = neco.data.ext_pocet_ks //pocet ks
           self.form.ext_celkem    = neco.data.ext_celkem   //pocet ks
           self.form.ext_prodej    = neco.data.ext_prodej   //pocet ks
+
+       } catch (e) {
+         f.Alert2('Nelze jsit data pro index ', self.getIndex() ,JSON.stringify(neco)  )
+       }
 
           if (self.getType() == "Externi"){
             if (neco.data.externi!==undefined) {

@@ -5,7 +5,7 @@
 <table style="float:left" ><tr>
   <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:5.5em;text-align:center">
    <div class="honza_color" style="height:26px;padding-top:2px;text-align:center;width:5.2em;width:100%" >
-   <button class="kolecko2" >
+   <button class="kolecko2" @click="f.Alert2('Rozdeleni',ID,st.KalkulaceThis)">
     <div class="kolecko" >
       <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
       </div>
@@ -28,6 +28,7 @@ import { setTimeout, clearInterval } from 'timers'
 
 import WorkLeft from './CalcWorkLeft.vue'       // Pracovni cast nahore
 import WorkCol from './CalcWorkCol.vue' // Prehledova dole
+import f from '@/services/fce'
 
 
 
@@ -45,11 +46,18 @@ export default {
   },
  data () {
    return {
-     ID0: this.ID
+     ID0: this.ID,
+     ID2: 0,
+     f: f,
+     st: [],
 
    }
  },
  created() {
+   const self=this
+   self.ID2 = Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983458)) / Math.round(Math.random() * 1983458))
+   self.st = self.$store.state
+   // f.Alert(self.st.KalkulaceThis)
 
   //  eventBus.$on('MenuLeft', (server) => {
   //     self.Left=server.key

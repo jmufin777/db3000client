@@ -18,7 +18,7 @@ const cols = `
   prodej ,
   marze_pomer,
   obsah,
-  exedice_datum,
+  expedice_datum,
   expedice_cas
 
   `
@@ -52,6 +52,7 @@ async setKalk(data,kalkulace,_idefix=0) {
   var atmp=[]
 
   //   title: "Success" + data.idefix+ ' '+ data.nazev + '/ ' + data.nazevOrig + data.user_update_idefix + ' '+ idefix,
+//  f.Alert2(data.user_update_idefix,data.nazev, idefix)
 
   if (data.user_update_idefix*1 > 0 && idefix*1 !== data.user_update_idefix*1){
   //  f.Alert('Cizi vynalez -VLOZIT',idefix , data.user_update_idefix)
@@ -104,12 +105,34 @@ async setKalk(data,kalkulace,_idefix=0) {
       // f.Alert(JSON.stringify(atmp) )
       if (atmp.length >= 1 ){
         idefixOver = atmp[0].idefix
+      } else {
+        //Vloziti
+        $("#box"+data.ID ).dialog({
+          modal: false,
+          buttons: {
 
-
-
-        //f.Alert('Trefa',"#box"+data.ID , _idefix, data.user_update_idefix)
-
-         //f.Alert('Nalezen ', _idefix )
+            Vlozit: function() {
+              data.Vlozit=1
+              self.Vklad(data, kalkulace2)
+              $( this ).dialog( "close" );
+            },
+            Zrusit: function() {
+              data.Vlozit=-1
+              $( this ).dialog( "close" );
+            },
+          },
+          title: "Zmena nazvu",
+          dialogClass: "my-dialog-1",
+          show: {
+            effect: "fade",
+            duration: 500
+          },
+          hide: {
+            effect: "fade",
+            duration: 500
+          },
+        });
+        //Vloziti
       }
     }catch(e) {
       f.Alert('Nelze zjistit obsah templates',e)
@@ -182,12 +205,6 @@ if (data.idefix > 0) {
           effect: "fade",
           duration: 500
         },
-        // position:
-        // {
-        //     my: 'left',
-        //     at: 'right',
-        //     of: event
-        // }
       });
     } else
     if (data.nazev == data.nazevOrig){

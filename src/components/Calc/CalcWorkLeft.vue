@@ -397,47 +397,8 @@ export default {
    },500)
 
 self.$store.dispatch('setFormat')
-//self.$store.dispatch('setStrojeAll')
-//self.$store.dispatch('setStrojeV')
-//self.$store.dispatch('setStrojeA')
-//self.$store.dispatch('setStrojeJine')
-//self.$store.dispatch('setStrojeExterni')
 
-/*
-if (self.idefixVidet == 0) {
-      //f.Alert('Nactu - stvorim')
-  if (self.Kalkulace[self.k_id()].type == 1){
-    self.StrojeMenu = self.$store.state.KalkulaceStrojeV
-  }
-  if (self.Kalkulace[self.k_id()].type == 2){
-    self.StrojeMenu = self.$store.state.KalkulaceStrojeA
-  }
-  if (self.Kalkulace[self.k_id()].type == 3){
-    self.StrojeMenu = self.$store.state.KalkulaceStrojeJine
-  }
-  if (self.Kalkulace[self.k_id()].type == 4){
-    self.StrojeMenu = self.$store.state.KalkulaceStrojeExterni
-  }
-}
-*/
-//f.Alert(JSON.stringify(self.StrojeMenu))
-
-   /*
-   setInterval(function(){
-        self.hideAll()
-    },1000)
-   */
    return
-
-   /*
-   self.FormatJoin.forEach(element => {
-     self.Format.push({text: element.text})
-   });
-
-    self.MenuLeftJoin.forEach(element => {
-     self.MenuLeft.push({text: element.text})
-   });
-   */
 
 
 
@@ -542,7 +503,7 @@ if (self.idefixVidet == 0) {
 
     }
   },
-    MenuShowIn() {
+  MenuShowIn() {
     const self = this
   //  alert("Zjeveni")
     if (self.nTimer == false) {

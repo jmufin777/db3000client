@@ -4,18 +4,18 @@
     <table style="float:left;max-width:100%" >
       <tr style="height:28px" class="honza_color" >
       <td class="leva white pt-1 prava pr-1 honza_color" style="width:1em;;height:28px" >
-        <v-icon size="medium">fa-lock</v-icon>
+        <v-icon size="medium" @click.native="f1.Alert2('Uzmaceno')">fa-lock</v-icon>
       </td>
       <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:5.5em;height:28px" class="honza_color" >
         <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:5.2em;width:100%" >
-       <button class="kolecko2" >
+       <button class="kolecko2" @click="f1.Alert2('Rozbaleni radky')">
         <div class="kolecko" >
           <!-- <i class="el-icon-plus" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
            <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
           </div>
       </button>
       <span>&nbsp;</span>
-      <button class="kolecko2" >
+      <button class="kolecko2"  @click="f1.Alert2('Smazani tohoto VL ')">
         <div class="kolecko" >
           <!-- <i class="el-icon-close" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
          <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:monospace">x</span>
@@ -102,7 +102,9 @@
       </tr>
       </table>
          <div class="honza_color" style="height:29px;padding-top:2px;text-align:left;padding-left:7px;width:100%;text-align:right;padding-right:15%" title="Odeslat do vyroby">
-           <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2">
+           <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
+           @click="f1.Alert2('Odeslani do vyroby','pripravuje se')"
+           >
            <v-icon size="medium" class="white--text" style="cursor:pointer" >rotate_right</v-icon>
            </button>
          </div>
@@ -351,6 +353,12 @@ export default {
         switch (String.fromCharCode(event.which).toLowerCase()) {
         case 's':
             //f.Alert2( $("#seek"+self.ID2).value )
+            //$(window).trigger('blur')
+            $(":focus").each(function() {
+              // alert("Focused Elem_id = "+ this.id );
+              $(this).trigger('blur')
+            });
+
             event.preventDefault();
             /*
             var ctest = $("#seek"+self.ID2).val()
@@ -365,7 +373,9 @@ export default {
             }
             */
             self.send().then(
+
               setTimeout(function(){
+
                 $("#seek"+self.ID2).focus()
               },3000)
 
