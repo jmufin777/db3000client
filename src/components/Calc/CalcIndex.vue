@@ -401,6 +401,7 @@ export default {
      eventBus.$off('DELETETEMPLATE')
      eventBus.$on('kalkulaceDelete',(serverDel) => {
      eventBus.$off('MatCol')
+     eventBus.$off('Rend')
      console.log(serverDel)
      })
      //eventBus.$off()
@@ -410,6 +411,12 @@ export default {
       setTimeout(function(){
         self.addColMat(server);
       },1000)
+      //self.addColMat(server)
+    })
+    eventBus.$on('Rend', (server) => {
+
+      self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+      self.TestRend++
       //self.addColMat(server)
     })
      await eventBus.$on('SAVETEMPLATE', (server) => {

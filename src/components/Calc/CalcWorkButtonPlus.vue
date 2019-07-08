@@ -5,7 +5,7 @@
 <table style="float:left" ><tr>
   <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:5.5em;text-align:center">
    <div class="honza_color" style="height:26px;padding-top:2px;text-align:center;width:5.2em;width:100%" >
-   <button class="kolecko2" @click="f.Alert2('Rozdeleni',ID,st.KalkulaceThis)">
+   <button class="kolecko2" @click="Rozdel()">
     <div class="kolecko" >
       <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
       </div>
@@ -71,7 +71,35 @@ export default {
     //alert('aRend')
      eventBus.$emit("Rend")
   },
- }
+  Rozdel(){
+    const self=this
+
+    var stAll = JSON.parse(JSON.stringify(self.st.Kalkulace))
+    var idxCut=-1
+    if (self.ID<1){
+      f.Alert2('Prvni kalkulace .. co s tim ?')
+      return
+    }
+      f.Alert2('Rozdeleni',self.ID,self.st.KalkulaceThis)
+      var stBackup= stAll.filter((el,idx2) => {   //Zalozit do db
+        return idx2 < self.ID
+      })
+      var stNew= stAll.filter((el,idx3) => {  //Zbytek pro praci
+        return idx3 >= self.ID
+      })
+      stNew.forEach((element,idx) => {
+          element.kalkulaceid=idx+1
+      });
+
+
+      self.$store.dispatch('saveKalkCela', {data: stNew })
+      self.TestRend()
+
+
+    }
+
+ },
+
 }
 </script>
 
