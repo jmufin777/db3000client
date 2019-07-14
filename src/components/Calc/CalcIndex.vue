@@ -19,48 +19,80 @@
 
     </div>
     <!-- {{aKalkulace}} -->
-<div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
-<div v-for="idxK in 1" :key="idxK" slot="kalkulace" >
-      <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska">
-        <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
-         <work-but  :ID="'A_'+iK"  ></work-but>
-        </span>
-        <span v-else style="position:relative;left:30px" slot="tlacitka" >
-        <work-but-plus  :ID="iK"> </work-but-plus>
-        </span>
-        <span slot="leva" :key="'L'+ TestRend" style="position:relative;left:30px" >
-        <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
-              <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
-              :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
-               @click="removeKalk(iKalk.kalkulaceid)"
-                >
-                <a :name="iKalk.kalkulaceid"></a>
-                  <i class="el-icon-delete white" size="mini"
-                  :class="{'blue lighten-4': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
-                  ></i>
-                </button>
-               <button slot="add" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
-                :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
-                @click="copyKalk(iK)"
-              >
-                  <a :name="iKalk.kalkulaceid"></a>
-                  <i class="el-icon-plus white" size="mini"
-                  :class="{'blue lighten-4': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
-                  ></i>
-                </button>
-        </work-left>
-        </span>
 
-        <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block;position:relative;left:30px'"  >
-            <!-- {{iKalk.sloupecid}} -->
-            <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend" style="z-index:889977">
-                <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i>
-                </button>
-            </work-col>
-        </div>
-      <div slot="mezera" class="red">&nbsp;</div>
-     </work>
-</div>
+<div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
+   <div  slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2">
+         <work-but  :ID="'A_'+1" style="position:relative;left:4px" ></work-but>
+        <hr>
+        <work-but  :ID="'B_'+2" style="position:relative;left:4px" ></work-but>
+        <hr>
+        <work-but  :ID="'C_'+3" style="position:relative;left:4px" ></work-but>
+        <hr>
+  </div>
+
+
+  <div v-for="idxK in 1" :key="idxK" slot="kalkulace"  >
+
+        <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska">
+          <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
+          <work-but  :ID="'AB_'+iK" :ZobrazMenu="true" ></work-but>
+
+          </span>
+          <span v-else style="position:relative;left:30px" slot="tlacitka" >
+          <work-but-plus  :ID="iK"> </work-but-plus>
+          </span>
+          <span slot="leva" :key="'L'+ TestRend" style="position:relative;left:30px" >
+          <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
+                <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
+                :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
+                @click="removeKalk(iKalk.kalkulaceid)"
+                  >
+                  <a :name="iKalk.kalkulaceid"></a>
+                    <i class="el-icon-delete white" size="mini"
+                    :class="{'blue lighten-4': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
+                    ></i>
+                  </button>
+                <button slot="add" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
+                  :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
+                  @click="copyKalk(iK)"
+                >
+                    <a :name="iKalk.kalkulaceid"></a>
+                    <i class="el-icon-plus white" size="mini"
+                    :class="{'blue lighten-4': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
+                    ></i>
+                  </button>
+          </work-left>
+          </span>
+
+          <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block;position:relative;left:30px'"  >
+              <!-- {{iKalk.sloupecid}} -->
+              <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend" style="z-index:889977">
+                  <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i>
+                  </button>
+              </work-col>
+          </div>
+        <div slot="mezera" class="red">&nbsp;</div>
+
+      </work>
+  </div>
+
+
+  <div style="z-indeX:999999;background:black">
+    <!--
+    <hr>
+
+
+    <work-but  :ID="'DX_'+10" style="position:relative;left:4px" ></work-but>
+    <hr>
+    HUHU
+
+    <work-but  :ID="'EE_'+9" style="position:relative;left:4px" ></work-but>
+    <hr>
+    <work-but  :ID="'FF_'+8" style="position:relative;left:4px" ></work-but>
+    <hr>
+    //-->
+  </div>
+
 </div>
 
    <div style="right:1%;;top:216px;z-index:99999;" class="plovouci  grey lighten-1 pt-2 pb-2"  slot="Plovouci2" id="plovoucimapa11">

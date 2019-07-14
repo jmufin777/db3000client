@@ -307,7 +307,6 @@ async Zmena(data,kalkulace2,_idefix){
    //  f.Alert('Update ' ,q)
      console.log('Update ' ,q)
 
-
     await Q.post(0,q)
     try {
       atmp= (await Q.all(idefix,'select max(idefix) as idefix  from calc_templates')).data.data

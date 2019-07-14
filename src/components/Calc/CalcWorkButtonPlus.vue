@@ -30,9 +30,6 @@ import WorkLeft from './CalcWorkLeft.vue'       // Pracovni cast nahore
 import WorkCol from './CalcWorkCol.vue' // Prehledova dole
 import f from '@/services/fce'
 
-
-
-
 export default {
    components: {
     'work-left': WorkLeft,
@@ -80,10 +77,11 @@ export default {
       f.Alert2('Prvni kalkulace .. co s tim ?')
       return
     }
-      f.Alert2('Rozdeleni',self.ID,self.st.KalkulaceThis)
+      //f.Alert2('Rozdeleni',self.ID,self.st.KalkulaceThis)
       var stBackup= stAll.filter((el,idx2) => {   //Zalozit do db
         return idx2 < self.ID
       })
+
       var stNew= stAll.filter((el,idx3) => {  //Zbytek pro praci
         return idx3 >= self.ID
       })
@@ -91,8 +89,10 @@ export default {
           element.kalkulaceid=idx+1
       });
 
-
       self.$store.dispatch('saveKalkCela', {data: stNew })
+      eventBus.$emit("NulujRadek")
+      f.Alert('a')
+
       self.TestRend()
 
 

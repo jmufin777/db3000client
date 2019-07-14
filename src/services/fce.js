@@ -746,6 +746,44 @@ Alert(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
   },500)
   return defer.promise()
 },
+Info(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
+  var ID="InfoJarda"
+  var el=""
+  var txt =   ctxt1+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6
+  var chtml="<textarea cols=80 rows=8 >"+txt+"</textarea>"
+  if (!document.getElementById(ID) ){
+    el=document.createElement("div")
+
+    $('body').append(el);
+    el.id=ID
+    $("#"+ID).attr('id',ID)
+    $("#"+ID).html(chtml);
+    $("#"+ID).css("position","absolute")
+    $("#"+ID).css("top","10%")
+    $("#"+ID).css("right","200px")
+    $("#"+ID).css("background","#cccccc")
+    $("#"+ID).css("z-index","100000000")
+
+  }  else  {
+    if (this.isEmpty(ctxt1)){
+      $("#"+ID).remove()
+      //this.Alert('ke tu')
+    } else {
+      //this.Alert($("#"+IDtxt).attr("id")) ;
+      $("#"+ID).html(chtml);
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+},
 Alert2(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
   var obj=document.createElement("DIV")
   obj.id="myAlert"

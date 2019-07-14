@@ -6,30 +6,42 @@
       <td class="leva white pt-1 prava pr-1 honza_color" style="width:1em;;height:28px" >
         <v-icon size="medium" @click.native="f1.Alert2('Uzmaceno')">fa-lock</v-icon>
       </td>
-      <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:5.5em;height:28px" class="honza_color" >
-        <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:5.2em;width:100%" >
-       <button class="kolecko2" @click="f1.Alert2('Rozbaleni radky')">
-        <div class="kolecko" >
-          <!-- <i class="el-icon-plus" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
-           <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
-          </div>
-      </button>
-      <span>&nbsp;</span>
-      <button class="kolecko2"  @click="f1.Alert2('Smazani tohoto VL ')">
-        <div class="kolecko" >
-          <!-- <i class="el-icon-close" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
-         <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:monospace">x</span>
-          </div>
-      </button>
+      <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:8.5em;height:28px" class="honza_color" >
+       <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:17.2em;width:100%" >
+       <table  class="honza_color" border="0"><tr><td  class="honza_color pa-0" style="text-align:left">
+        <button class="kolecko2" @click="f1.Alert2('Kopie radky')">
+          <div class="kolecko" >
+            <!-- <i class="el-icon-plus" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
+            <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
+            </div>
+        </button>
+        </td><td  class="honza_color pa-0" style="text-align:left">
+        <button class="kolecko2"  @click="f1.Alert2('Smazani tohoto VL ')">
+          <div class="kolecko" >
+            <!-- <i class="el-icon-close" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
+          <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:monospace">x</span>
+            </div>
+        </button>
+        </td><td  class="honza_color pa-0" style="text-align:left">
+         <button class="kolecko2"  @click="f1.Alert2('Rozbaleni,zableneni ')" title="Ulozit">
+           <div class="kolecko" >
+           <i class="el-icon-arrow-right" style="color:#93908e;position:absolute;top:-0px;left:0px"
+           ></i>
+           </div>
+         </button>
+
+        </td>
+        </tr></table>
        </div>
       </td>
+      <!-- ;seznamPoz('seek'+ID2) //-->
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 0px white;width:40em;height:28px" class="honza_color" >
           <input type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '+ ID2" class="honza_text"
         :id="'seek'+ID2"
         @focus="fokus('seek'+ID2);showTemplates=true"
         @blur="Opust('seek')"
-        @click="showTemplates=true"
-        @keydown="showTemplates=true;seznam('seek'+ID2+'_list_'+0,1,$event)"
+        @click="showTemplates=ZobrazMenu"
+        @keydown="showTemplates=ZobrazMenu;ZobrazMenu ? seznam('seek'+ID2+'_list_'+0,1,$event) : false"
         :title="(form.nazev>'')?'Text na fakture':''"
         >
       </td>
@@ -43,22 +55,35 @@
          </button>
         </div>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;height:28px" class="honza_color" >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;height:28px;width:15em" class="honza_color" >
+        <table><tr><td style="width:75%" class="honza_color">
         <input type="number" v-model="form.kcks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="Kc/ks" class="honza_text honza_color pr-1 " title="Kc/ks"
         :id="'kcks'+ID2"
         >
+        </td><td style="width:25%;" class="honza_color pt-1">
+        <span style="font-size:14px">Kč/ks</span>
+        </td></tr></table>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;height:28px" class="honza_color" >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;height:28px;width:15em" class="honza_color" >
+        <table><tr><td style="width:80%" class="honza_color">
         <input type="number" v-model="form.ks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1" title="Pocet kusu"
         :id="'ks'+ID2"
         >
+        </td><td style="width:20%;" class="honza_color pt-1">
+        <span style="font-size:14px">ks</span>
+        </td></tr></table>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em;height:28px" class="honza_color" >
-        <input type="number" v-model="form.naklad"  style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important"
-        :placeholder="'NAKLADY CELKEM' "
-        class="honza_text honza_color pr-1" title="Naklady celkem"
-        :id="'naklad'+ID2"
-        >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:24em;height:28px" class="honza_color" >
+          <table><tr><td style="width:20%" class="honza_color">
+            <span style="font-size:20px">&#931;</span><span>N</span>
+            </td><td stylee="width:80%"  class="honza_color">
+            <input type="number" v-model="form.naklad"  style="width:100%;text-align:right;height:26px;border:none;color:#ffffff !important"
+                   :placeholder="'NAKLADY CELKEM' "
+                   class="honza_text honza_color pr-1" title="Naklady celkem"
+                   :id="'naklad'+ID2"
+            >
+        </td></tr></table>
+
         <!-- <input type="text" :value="f1.getCislo(form.naklad)" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" class="honza_text honza_color pr-1"> -->
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em;height:28px" class="honza_color" >
@@ -66,25 +91,38 @@
         :id="'marze'+ID2"
         >
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em;height:28px" class="honza_color" >
-        <input type="number" v-model="form.marze_pomer" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE POMER" class="honza_text honza_color pr-1" title="Marze Pomer"
-        :id="'marze_pomer'+ID2"
-        >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:8em;height:28px;visibility:wisible" class="honza_color"  >
+          <table border="0"><tr>
+
+          <td style="width:80%" class="honza_color">
+          <input type="text" v-model="form.marze_pomer" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="" class="honza_text honza_color pr-1" title="Marze Pomer"
+            :id="'marze_pomer'+ID2"
+            readonly
+          >
+          </td>
+          <td style="width:20%" class="honza_color">
+            <span style="font-size:20px">%</span><span></span>
+          </td>
+          </tr></table>
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:24em;height:28px" class="honza_color" >
-         <input type="number" v-model="form.prodej" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="PRODEJ CELKEM" class="honza_text honza_color pr-1" title="Prodej"
+           <table border="0"><tr><td style="width:15%" class="honza_color">
+            <span style="font-size:20px">&#931;</span><span>P</span>
+            </td><td stylee="width:80%"  class="honza_color">
+         <input type="number" v-model="form.prodej" style="width:100%;text-align:right;height:26px;border:none;color:#ffffff !important" placeholder="PRODEJ CELKEM" class="honza_text honza_color pr-1 " title="Prodej"
              :id="'prodej'+ID2"
          >
+        </td></tr></table>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:29em;height:28px" class="honza_color" >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:29em;height:28px" class="honza_color2" >
          <input type="text" v-model="form.expedice_datum"
         :id="'expedice_datum'+ID2"
-        style="text-align:center;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="DATUM" class="datum_expedice honza_text honza_color pr-1 " title="DATUM EXPEDICE">
+        style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="DATUM" class="datum_expedice honza_text2 honza_color2 pr-1 " title="DATUM EXPEDICE">
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:29em;height:28px" class="honza_color" >
-        <!-- <input type="text" v-model="form.expedice_cas" style="text-align:center;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="A HOD. EXPEDICE" class="honza_text honza_color pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"> -->
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:29em;height:28px" class="honza_color2" >
+        <!-- <input type="text" v-model="form.expedice_cas" style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE" class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"> -->
       <select v-model="form.expedice_cas"
-      style="text-align:center;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="A HOD. EXPEDICE" class="honza_text honza_color pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"
+      style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE" class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"
       >
         <option v-for="(tItem,i) in timelist"
         :key="i"
@@ -93,25 +131,29 @@
          >{{tItem}}</option>
       </select>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;width:20em;height:28px" class="honza_color" >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;width:20em;height:28px" class="honza_color2" >
         &nbsp;
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;height:26px;height:28px" class="honza_color" >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;height:26px;height:28px" class="honza_color2" >
         VL seznam:
       </td>
       </tr>
       </table>
-         <div class="honza_color" style="height:29px;padding-top:2px;text-align:left;padding-left:7px;width:100%;text-align:right;padding-right:15%" title="Odeslat do vyroby">
+         <div class="honza_color2" style="height:29px;padding-top:2px;text-align:left;padding-left:7px;width:100%;text-align:right;padding-right:15%" title="Odeslat do vyroby">
            <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
            @click="f1.Alert2('Odeslani do vyroby','pripravuje se')"
            >
-           <v-icon size="medium" class="white--text" style="cursor:pointer" >rotate_right</v-icon>
+           <v-icon size="medium" class="honza_color2" style="cursor:pointer" >rotate_right</v-icon>
            </button>
+         </div>
+         <div>
+           {{showTemplates }} /{{ID2}} / {{ f1.getBottom('seek'+ID2,0) }} :: {{ ZobrazMenu }}
          </div>
       <div
         style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:100000000"
         :style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'"
-        v-if="showTemplates " class="elevation-12 honza_color_seznam"
+        :id="'seek'+ID2+'_list2'"
+        v-if="showTemplates && ZobrazMenu  " class="elevation-12 honza_color_seznam"
       >
             <!-- {{showTemplates}} {{dataTemplates.length}} -->
               <table  width="100%" v-if="showTemplates " class="pa-2 honza_color_seznam" border="0">
@@ -175,6 +217,7 @@
               </table>
   </div>
 
+
   <div :id="'box'+ID2"  style="display:none">
     Ulozeni kalkulace
   </div>
@@ -207,7 +250,12 @@ export default {
 
  },
   props: {
-    ID:0
+    ID:0,
+    ZobrazMenu: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
 
 
   },
@@ -433,9 +481,52 @@ export default {
      eventBus.$emit("Rend")
   },
   fokus(lastFocus=''){
+    const self = this
+    if (self.ZobrazMenu == false)  return
+    this.lastFocus=lastFocus
+    var oSeznam="#"+lastFocus+"_list2"
+     $(oSeznam).css("z-index",99999999999)
+
+      $(oSeznam).show(1000)
+      if (self.ZobrazMenu) {
+        console.log(self.ZobrazMenu)
+      }
+      //f.Info(self.ZobrazMenu)
+      //f.Info(oSeznam, self.ZobrazMenu)
+
+    return
+
+    // f.Alert(lastFocus);
+  //f.Alert($("#"+lastFocus).offset().top - $(document).scrollTop()) ;
+    this.seznamPoz(lastFocus)
+
+    //$("#"+lastFocus+'_list').css
+
     this.lastFocus=lastFocus
   },
+  seznamPoz(lastFocus=''){
+    var oSeznam="#"+lastFocus+"_list2"
+    try {
+      var x=$("#"+lastFocus).offset().top
+      var pozTop = Math.ceil($("#"+lastFocus).offset().top - $(document).scrollTop())
+      var pozLeft = Math.ceil($("#"+lastFocus).offset().left - $(document).scrollLeft())
+      $("#"+lastFocus).attr("autocomplete", "off");
+      $(oSeznam).css("position","absolute")
+      $(oSeznam).css("top",pozTop+"px")
+      $(oSeznam).css("left",pozLeft+"px")
+      $(oSeznam).css("z-index",99999999)
 
+  //$(oSeznam).show(1000);
+
+  //$(oSeznam).css("top",)
+      f.Info( pozTop+"px",pozLeft);
+
+    } catch (e) {
+      //f.Alert("Pokazena pozice")
+    }
+
+
+  },
   async setTemplate(cItem){
     const self = this
       var neco
@@ -686,7 +777,8 @@ async KalkulacePrepocetKusy(k, ks=1){
      var tmp=0;
 
      var PrvekTxt=""
-     console.log("Seznam ",nKey, " ID: ", id)
+     // seznamPoz(self.lastFocus );
+     console.log("Seznam ",nKey, " ID: ", id, self.showTemplates)
 
     // self.info=aPrvek
      // self.info.push({dele: aPrvek.length })
@@ -925,6 +1017,25 @@ a:focus {
   background: #93908e;
   color: #ffffff;
 }
+
+.honza_text2{
+  background: #e4e4e3;
+  color: #1d1d1b;
+  height:14px;
+  font-size:14px;
+  font-weight: 900;
+  opacity: 1;
+  caret-color: #ffffff !important;
+  padding-left:10px;
+  padding-right:10px;
+}
+
+.honza_color2{
+  background: #e4e4e3;
+  color: #1d1d1b;
+}
+
+
 .honza_color_seznam{
   background: #ececec;
   color: #3c3c3a;
