@@ -108,6 +108,10 @@ export default {
 textarea:focus, input:focus{
     outline: 0px dashed;
 }
+button:focus, button:hover {
+  zoom: 105%;
+  opacity: 1;
+}
 .honza_text{
   background: #93908e;
   color: #ffffff;

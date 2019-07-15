@@ -361,15 +361,15 @@ import WorkButMenu from './CalcWorkButtonMenu.vue' // Prehledova dole
 import ListStroj from '../../services/ListStrojService'
 import f from '@/services/fce'
 // import query from '../../services/query'
-//import Q from '../../services/query'
+import Q from '../../services/query'
 import queryKalk from '../../services/fcesqlKalkulace'
 
 //10411
 
 import Prehled from './CalcPrehled.vue' // Prehledova dole
 
-import JQuery from 'jquery'
-let $ = JQuery
+// import JQuery from 'jquery'
+// let $ = JQuery
 
 export default {
 
@@ -409,7 +409,8 @@ export default {
      timeoutDrag: null,
      $: $,
      f: f,
-     drag: false
+     drag: false,
+     cTable :'',
    }
  },
  watch: {
@@ -426,6 +427,7 @@ export default {
 
  async created () {
       const self = this
+     self.cTable = 'calc_my_' + self.idefix
 //      alert('Tvorim')
      eventBus.$off('MenuHlavni')
      eventBus.$off('MenuLeft')
@@ -436,6 +438,7 @@ export default {
      eventBus.$off('Rend')
      console.log(serverDel)
      })
+
      //eventBus.$off()
 
     eventBus.$on('MatCol', (server) => {
@@ -479,6 +482,20 @@ export default {
          self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          self.KalkulaceThis = -1
          self.KalkulaceLast = -1
+
+         //f.Alert2(self.idefix)
+
+         Q.post(0,`drop table if exists ${self.cTable} ; create table ${self.cTable} without oids as select * from calc_templates limit 0;alter table ${self.cTable} add poradi serial`)
+         .then (res => {
+           f.Alert2('Vytvorena nova databaze pro tvorbu VL', JSON.stringify(res))
+         })
+         .catch(e => {
+           f.Alert2('Doslo k chybal pri komunikaci s databazi')
+         })
+
+
+
+
          setTimeout(function(){
             eventBus.$emit('enable')
         },1000)
@@ -492,8 +509,21 @@ export default {
          setTimeout(function(){
             self.TestRend=self.TestRend+1
             eventBus.$emit('enable')
+              if (!f.isEmpty(server.id2)){
+                $("#seek"+server.id2).focus()
+                //f.Alert2('mam ID2', server.id2)
+                setTimeout(function() {
+                  var press = jQuery.Event("keypress");
+                  press.ctrlKey = false;
+                  press.which = 9;
+                  press.keyCode = 9;
+                  ///... any other event properties ...
+                  $("#seek"+server.id2).trigger(press);
 
-        },500)
+                },200)
+              }
+
+        },200)
       }
 
       if (server.key == 555) {  //Guma sloupce 1
@@ -575,6 +605,7 @@ export default {
 
  },
  async mounted () {
+   f.Info(queryKalk)
 
 /* Vzor query
     try {

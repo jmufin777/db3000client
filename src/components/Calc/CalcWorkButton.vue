@@ -239,7 +239,8 @@ import WorkCol from './CalcWorkCol.vue' // Prehledova dole
 import queryKalk from '../../services/fcesqlKalkulace'
 import prepocty from '../../services/fceKalkulacePrepocty'
 
-import { locales } from 'moment';
+import { locales } from 'moment'
+//import Q from '../../services/query'
 //import JQuery from 'jquery'
 //let $ = JQuery
 
@@ -269,6 +270,7 @@ export default {
      timeout: 0 , //tOpusteni:0,
      lastFocus:'',
      dataTemplates: [],
+
 
      form: {
        idefix:0, // pri nacteni se aktualizuje na otevrenou kalkulaci
@@ -324,11 +326,9 @@ export default {
       try {
         queryKalk.getTemplates()
         //f.Alert('a')
-
       } catch(e) {
         f.Alert('Chyba data templajtes')
       }
-
     })
    },100)
   $(document).ready(function(){
@@ -341,12 +341,23 @@ export default {
     //   $( document ).tooltip();
     // });
   });
-
  },
 
  async mounted () {
    const self = this
    var cvar = 'seek'+self.ID2+''
+
+
+   //f.Info(self.idefix)
+
+   //var atmp= (await Q.all(self.idefix,'select * from calc_templates')).data.data
+
+   //f.Info(JSON.stringify(atmp))
+   $("#seek"+self.ID2).on('keypress', function(e){
+             if (e.keyCode==9) {
+               $('#kcks'+self.ID2).focus()
+             }
+        })
   $('input,button').on('focus',function(){
       if (this.id>'') {
         self.lastFocus = this.id
@@ -429,8 +440,6 @@ export default {
 
             )
 
-
-
             //alert('ctrl-s');
             break;
         case 'f':
@@ -474,6 +483,21 @@ export default {
 
   //} );
  },
+ computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'xMenuMain',
+      'level',
+      'idefix',
+      'compaStore',
+      'Kalkulace',
+      'KalkulaceThis',
+      'user'
+
+
+
+    ]),
+  },
 
  methods: {
    TestRend() {
@@ -532,9 +556,12 @@ export default {
       var neco
       var ksOrig = cItem.ks
        neco=await(f.setCislo('Pocet kusu pro kalkulaci',cItem.ks))
+
 //       alert(neco)
 
        //f.Alert(cItem.idefix)
+       //f.Info('seek'+self.ID2)
+
        //return
        self.form.idefix=cItem.idefix
        self.form.nazev=cItem.nazev
@@ -571,6 +598,7 @@ export default {
          }
 
 
+
        //}
 
 
@@ -589,6 +617,7 @@ export default {
           //Kalkulace: cItem.obsah,
           Kalkulace: nK[0].obsah,
           key: 667,
+          id2: self.ID2
 
         })
 
@@ -976,6 +1005,7 @@ async KalkulacePrepocetKusy(k, ks=1){
 
 
    },
+
  }
 }
 </script>
@@ -987,6 +1017,10 @@ textarea:focus, input:focus{
 }
 a:focus {
   color:red;
+}
+button:focus, button:hover {
+  zoom: 105%;
+  opacity: 1;
 }
 
 .honza_text{
@@ -1080,6 +1114,7 @@ table tr td  {
   vertical-align: top;
 
 }
+
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   background-color: #93908e;
   font-size:12px;
