@@ -490,7 +490,8 @@ export default {
 
          //f.Alert2(self.idefix)
 
-         Q.post(0,`drop table if exists ${self.cTable} ; create table ${self.cTable} without oids as select * from calc_templates limit 0;alter table ${self.cTable} add poradi serial`)
+         Q.post(0,`drop table if exists ${self.cTable} ; create table ${self.cTable} without oids as select * from calc_templates limit 0
+         ;alter table ${self.cTable} add poradi serial; alter table ${self.cTable} alter idefix  set default nextval('list2_seq')`)
          .then (res => {
            f.Alert2('Vytvorena nova databaze pro tvorbu VL', JSON.stringify(res))
          })

@@ -313,7 +313,7 @@ async VkladUser(data, kalkulace2, cTable ){
   // return
   await Q.post(0,q)
   .then ( res=>{
-    f.Alert('pokus')
+    //f.Alert('pokus')
   })
   return;
   try {
@@ -408,6 +408,7 @@ async getTemplates() {
 async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
 
   var idefix=store.state.idefix
+
   var q= `select
           a.idefix,
           a.nazev,
@@ -422,7 +423,12 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
           a.user_update_idefix,
           a.poradi,
           b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix `;
+
+
   q= `${q} where true `
+
+
+
   if (poradiFrom > 0) {
     q= `${q} and poradi>= ${poradiFrom} `
   }
@@ -430,13 +436,15 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
     q= `${q} and poradi<= ${poradiTo} `
   }
   q= `${q} order by  case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev`
-  //f.Alert('aaaa',q)
+
   //return;
   var atmp=[]
   //f.Alert("BUS ",q)
   try {
     atmp= (await Q.all(idefix,q)).data.data
-    eventBus.$emit('DATATEMPLATES',{data: atmp})
+    f.Info('Get User',JSON.stringify(atmp))
+  return ;
+    //eventBus.$emit('DATATEMPLATES',{data: atmp})
     return atmp
     //
   } catch (e) {
