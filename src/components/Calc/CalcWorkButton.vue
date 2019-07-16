@@ -257,6 +257,12 @@ export default {
       required: false,
       default: false
     },
+    Poradi: {
+      type: Number,
+      required: false,
+      default: 0
+    },
+
 
 
   },
@@ -543,7 +549,7 @@ export default {
   //$(oSeznam).show(1000);
 
   //$(oSeznam).css("top",)
-      f.Info( pozTop+"px",pozLeft);
+      // f.Info( pozTop+"px",pozLeft);
 
     } catch (e) {
       //f.Alert("Pokazena pozice")
@@ -596,20 +602,6 @@ export default {
          if (self.form.expedice_datum.match(/Invalid/) ) {
            self.form.expedice_datum='05.07.2019'
          }
-
-
-
-       //}
-
-
-
-       //$(".cas_expedice").val('09:00')
-       //alert(self.form.expedice_cas)
-       //self.form.naklad = 2000
-       //f.Alert2("OBSAH : " , JSON.stringify(obsah))
-       //alert('cek')
-
-
 
 
        eventBus.$emit('MenuHlavni',

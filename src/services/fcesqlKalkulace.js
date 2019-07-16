@@ -283,6 +283,57 @@ async Vklad(data, kalkulace2 ){
 
 },
 
+async VkladUser(data, kalkulace2, cTable ){
+
+  var idefix=store.state.idefix
+  var atmp=[]
+  var nret = 0
+  if (f.isEmpty(data.nazev)) {
+    data.nazev=''
+    data.kcks=0
+    data.ks=0
+    data.naklad=0
+    data.marze=0
+    data.prodej=0
+    data.marze_pomer=0
+    data.expedice_datum='2019-01-01'
+    data.expedice_cas='12:00'
+
+
+    //f.Alert('Data nejsou ')
+    //return;
+  }
+    kalkulace2 = JSON.stringify(kalkulace2)
+  var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix)
+  values (
+    trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${data.expedice_datum}','${data.expedice_cas}','${idefix}','${idefix}'
+
+  ) `;
+  //f.Info("Q", q)
+  // return
+  await Q.post(0,q)
+  .then ( res=>{
+    f.Alert('pokus')
+  })
+  return;
+  try {
+    atmp= (await Q.all(idefix,'select max(idefix) as idefix  from calc_templates')).data.data
+    if (atmp.length == 1 ){
+      nret = atmp[0].idefix
+      //f.Alert(nret)
+      store.dispatch('setKalkulaceIdefix',nret)
+    }
+    //f.Alert(atmp.length,' :: ',JSON.stringify(atmp))
+  } catch (e) {
+    f.Alert('ERR Vklad kalkulace ',e)
+    console.log("ERR Kalk1", e)
+  }
+
+
+  // f.Alert('Funkce vklad')
+
+},
+
 async Zmena(data,kalkulace2,_idefix){
   var idefix=store.state.idefix
   var atmp=[]
@@ -343,6 +394,46 @@ async getTemplates() {
   q= `${q} order by  case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev`
   var atmp=[]
   //f.Alert("BUS ",Vue2)
+  try {
+    atmp= (await Q.all(idefix,q)).data.data
+    eventBus.$emit('DATATEMPLATES',{data: atmp})
+    return atmp
+    //
+  } catch (e) {
+    f.Alert('nevidim templats',e, q)
+    console.log("ERR pozadavek na templates", e)
+  }
+  ///f.Alert(JSON.stringify(atmp))
+},
+async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
+
+  var idefix=store.state.idefix
+  var q= `select
+          a.idefix,
+          a.nazev,
+          a.kcks,
+          a.ks,
+          a.naklad ,
+          a.marze ,
+          a.prodej ,
+          a.marze_pomer,
+          a.expedice_datum,
+          a.expedice_cas,
+          a.user_update_idefix,
+          a.poradi,
+          b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix `;
+  q= `${q} where true `
+  if (poradiFrom > 0) {
+    q= `${q} and poradi>= ${poradiFrom} `
+  }
+  if (poradiTo > 0) {
+    q= `${q} and poradi<= ${poradiTo} `
+  }
+  q= `${q} order by  case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev`
+  //f.Alert('aaaa',q)
+  //return;
+  var atmp=[]
+  //f.Alert("BUS ",q)
   try {
     atmp= (await Q.all(idefix,q)).data.data
     eventBus.$emit('DATATEMPLATES',{data: atmp})

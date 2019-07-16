@@ -89,9 +89,22 @@ export default {
           element.kalkulaceid=idx+1
       });
 
-      self.$store.dispatch('saveKalkCela', {data: stNew })
-      eventBus.$emit("NulujRadek")
-      f.Alert('a')
+      // self.$store.dispatch('saveKalkCela', {data: stNew })
+      // eventBus.$emit("NulujRadek")
+      eventBus.$emit('MenuHlavni',
+        {
+          //Kalkulace: cItem.obsah,
+          Kalkulace1: stBackup,
+          Kalkulace2: stNew,
+          key: 668,
+          id2: self.ID2,
+          Poradi: 0,
+          data:{}
+
+        })
+
+
+      //f.Alert('a')
 
       self.TestRend()
 

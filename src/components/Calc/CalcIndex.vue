@@ -22,18 +22,20 @@
 
 <div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
    <div  slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2">
+     <!--
          <work-but  :ID="'A_'+1" style="position:relative;left:4px" ></work-but>
         <hr>
         <work-but  :ID="'B_'+2" style="position:relative;left:4px" ></work-but>
         <hr>
         <work-but  :ID="'C_'+3" style="position:relative;left:4px" ></work-but>
         <hr>
+        //-->
   </div>
 
 
   <div v-for="idxK in 1" :key="idxK" slot="kalkulace"  >
 
-        <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska">
+        <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska">
           <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
           <work-but  :ID="'AB_'+iK" :ZobrazMenu="true" ></work-but>
 
@@ -367,6 +369,7 @@ import queryKalk from '../../services/fcesqlKalkulace'
 //10411
 
 import Prehled from './CalcPrehled.vue' // Prehledova dole
+import { stringify } from 'querystring';
 
 // import JQuery from 'jquery'
 // let $ = JQuery
@@ -411,6 +414,8 @@ export default {
      f: f,
      drag: false,
      cTable :'',
+     aKalkBefore:[],
+     aKalkAfter:[],
    }
  },
  watch: {
@@ -494,8 +499,6 @@ export default {
          })
 
 
-
-
          setTimeout(function(){
             eventBus.$emit('enable')
         },1000)
@@ -525,6 +528,35 @@ export default {
 
         },200)
       }
+
+      if (server.key == 668) {  //Aplikuj novy template
+        queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable)
+
+        .then(res=>{
+          queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable)
+          .then (res => {
+            self.aKalkBefore = queryKalk.getTemplatesUser(self.cTable)
+            f.Alert2("A:", JSON.stringify(self.aKalkBefore))
+          })
+          .then(res=>{
+            f.Alert2("B:", JSON.stringify(self.aKalkBefore))
+
+
+          })
+        })
+
+
+        //f.Alert2('Kalkulace 2 - viditelna, kalkulace 1 jen v db', server.Kalkulace2.length)
+        self.$store.dispatch('saveKalkCela', {data: server.Kalkulace2 })
+
+
+        //eventBus.$emit("NulujRadek")
+
+
+      }
+
+      //Ukladani - rozdelena = 668
+
 
       if (server.key == 555) {  //Guma sloupce 1
         self.zobrazit=false
