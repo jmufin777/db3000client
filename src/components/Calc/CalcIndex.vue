@@ -21,17 +21,9 @@
     <!-- {{aKalkulace}} -->
 
 <div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
-   <div  slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2">
-     <!--
-         <work-but  :ID="'A_'+1" style="position:relative;left:4px" ></work-but>
-        <hr>
-        <work-but  :ID="'B_'+2" style="position:relative;left:4px" ></work-but>
-        <hr>
-        <work-but  :ID="'C_'+3" style="position:relative;left:4px" ></work-but>
-        <hr>
-        //-->
-  </div>
-
+   <div  v-for="(aBefore,iBefore ) in aKalkBefore" :key="iBefore" slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2">
+         <work-but  :ID="'A_'+aBefore.poradi" style="position:relative;left:4px" ></work-but>
+   </div>
 
   <div v-for="idxK in 1" :key="idxK" slot="kalkulace"  >
 
@@ -73,10 +65,14 @@
                   </button>
               </work-col>
           </div>
+
         <div slot="mezera" class="red">&nbsp;</div>
 
       </work>
   </div>
+      <div  v-for="(aAfter,iAfter ) in aKalkAfter" :key="iAfter" slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2">
+         <work-but  :ID="'A_'+aAfter.poradi" style="position:relative;left:4px" ></work-but>
+   </div>
 
 
   <div style="z-indeX:999999;background:black">
@@ -531,27 +527,10 @@ export default {
       }
 
       if (server.key == 668) {  //Aplikuj novy template
-        queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable)
-
-        .then(res=>{
-          queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable)
-          .then (res => {
-            self.aKalkBefore = queryKalk.getTemplatesUser(self.cTable)
-            f.Alert2("A:", JSON.stringify(self.aKalkBefore))
-          })
-          .then(res=>{
-            f.Alert2("B:", JSON.stringify(self.aKalkBefore))
+          self.$store.dispatch('saveKalkCela', {data: server.Kalkulace2 })
+          self.RozdelKalkulaci(server)
 
 
-          })
-        })
-
-
-        //f.Alert2('Kalkulace 2 - viditelna, kalkulace 1 jen v db', server.Kalkulace2.length)
-        self.$store.dispatch('saveKalkCela', {data: server.Kalkulace2 })
-
-
-        //eventBus.$emit("NulujRadek")
 
 
       }
@@ -749,6 +728,46 @@ export default {
  //  this.$destroy()
  },
  methods: {
+   async RozdelKalkulaci(server){
+     const self = this
+      await queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable)
+      await queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable)
+      self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+
+      //f.Alert2(JSON.stringify(self.aKalkBefore))
+
+
+        // queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable)
+        // .then(res=>{
+        //  queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable)
+        // })
+        // .then(res => {
+        //   alert('zkusim')
+        //   f.Alert2(JSON.stringify(queryKalk.getTemplatesUser(self.cTable) ))
+        // })
+
+
+        //self.aKalkBefore = await ( queryKalk.getTemplatesUser(self.cTable) )
+        //f.Alert("A:", JSON.stringify(self.aKalkBefore))
+        // .then(res=>{
+        // //  queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable)
+        //   .then (res => {
+        //     queryKalk.getTemplatesUser(self.cTable)
+        //     f.Alert("A:", JSON.stringify(self.aKalkBefore), JSON.stringify(res))
+        //   })
+        //   .then(res=>{
+        //     f.Alert("B:", JSON.stringify(self.aKalkBefore), JSON.stringify(res))
+        //   })
+        // })
+
+
+        //f.Alert2('Kalkulace 2 - viditelna, kalkulace 1 jen v db', server.Kalkulace2.length)
+        //self.$store.dispatch('saveKalkCela', {data: server.Kalkulace2 })
+
+
+        //eventBus.$emit("NulujRadek")
+
+   },
    getVal(obj,klic) {
      var cRet =""
 

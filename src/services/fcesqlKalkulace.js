@@ -406,7 +406,7 @@ async getTemplates() {
   ///f.Alert(JSON.stringify(atmp))
 },
 async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
-
+  var defer = $.Deferred();
   var idefix=store.state.idefix
 
   var q= `select
@@ -424,10 +424,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
           a.poradi,
           b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix `;
 
-
   q= `${q} where true `
-
-
 
   if (poradiFrom > 0) {
     q= `${q} and poradi>= ${poradiFrom} `
@@ -439,18 +436,12 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
 
   //return;
   var atmp=[]
-  //f.Alert("BUS ",q)
-  try {
+
     atmp= (await Q.all(idefix,q)).data.data
-    f.Info('Get User',JSON.stringify(atmp))
-  return ;
-    //eventBus.$emit('DATATEMPLATES',{data: atmp})
-    return atmp
-    //
-  } catch (e) {
-    f.Alert('nevidim templats',e, q)
-    console.log("ERR pozadavek na templates", e)
-  }
+    f.Info('Get User 1',JSON.stringify(atmp))
+    defer.resolve(atmp)
+
+  return defer.promise()
   ///f.Alert(JSON.stringify(atmp))
 },
 
