@@ -283,13 +283,15 @@ async Vklad(data, kalkulace2 ){
 
 },
 
-async VkladUser(data, kalkulace2, cTable ){
+async VkladUser(data, kalkulace2, cTable, nazev="" ){
 
   var idefix=store.state.idefix
   var atmp=[]
   var nret = 0
   if (f.isEmpty(data.nazev)) {
     data.nazev=''
+    data.nazev=nazev
+
     data.kcks=0
     data.ks=0
     data.naklad=0
@@ -314,6 +316,9 @@ async VkladUser(data, kalkulace2, cTable ){
   await Q.post(0,q)
   .then ( res=>{
     //f.Alert('pokus')
+  })
+  .catch(e=>{
+    f.Alert2("Doslo k chyba pri vkladu do DB", e)
   })
   return;
   try {

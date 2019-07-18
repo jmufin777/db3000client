@@ -1,6 +1,6 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-<div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
+<div  style="max-height:80%; overflow:auto;font-size:100%;" class="white lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
     <table style="float:left;max-width:100%" >
       <tr style="height:28px" class="honza_color" >
       <td class="leva white pt-1 prava pr-1 honza_color" style="width:1em;;height:28px" >
@@ -147,7 +147,7 @@
            </button>
          </div>
          <div>
-           {{showTemplates }} /{{ID2}} / {{ f1.getBottom('seek'+ID2,0) }} :: {{ ZobrazMenu }}
+           {{showTemplates }} /{{ID2}} / {{ f1.getBottom('seek'+ID2,0) }} :: {{ ZobrazMenu }} : {{ dataDB}}
          </div>
       <div
         style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:100000000"
@@ -262,8 +262,9 @@ export default {
       required: false,
       default: 0
     },
-
-
+    dataDB: {
+        required: false,
+    }
 
   },
  data () {
@@ -352,6 +353,18 @@ export default {
  async mounted () {
    const self = this
    var cvar = 'seek'+self.ID2+''
+
+   if (!f.isEmpty(self.dataDB)) {
+      Object.entries(self.dataDB).forEach(([key, val]) => {
+        console.log(key); // the name of the current key.
+        console.log(val); // the value of the current key.
+        if (self.form.hasOwnProperty(key)) {
+          self.form[key]=val
+        }
+      });
+   }
+
+   //self.form.nazev= self.dataDB.nazev
 
 
    //f.Info(self.idefix)

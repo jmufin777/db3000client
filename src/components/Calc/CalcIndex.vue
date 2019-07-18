@@ -22,7 +22,7 @@
 
 <div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
    <div  v-for="(aBefore,iBefore ) in aKalkBefore" :key="iBefore" slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2">
-         <work-but  :ID="'A_'+aBefore.poradi" style="position:relative;left:4px" ></work-but>
+         <work-but  :ID="'A_'+aBefore.poradi" style="position:relative;left:4px"  :dataDB="aBefore"></work-but>
    </div>
 
   <div v-for="idxK in 1" :key="idxK" slot="kalkulace"  >
@@ -484,13 +484,21 @@ export default {
          self.KalkulaceThis = -1
          self.KalkulaceLast = -1
 
+
          //f.Alert2(self.idefix)
 
          Q.post(0,`drop table if exists ${self.cTable} ; create table ${self.cTable} without oids as select * from calc_templates limit 0
          ;alter table ${self.cTable} add poradi serial; alter table ${self.cTable} alter idefix  set default nextval('list2_seq')`)
          .then (res => {
            f.Alert2('Vytvorena nova databaze pro tvorbu VL', JSON.stringify(res))
+           .then(res=> {
+             self.aKalkBefore=[]
+             self.aKalkAfter=[]
+
+           })
+
          })
+
          .catch(e => {
            f.Alert2('Doslo k chybal pri komunikaci s databazi')
          })
@@ -730,8 +738,9 @@ export default {
  methods: {
    async RozdelKalkulaci(server){
      const self = this
-      await queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable)
-      await queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable)
+      await queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable, "")
+
+      await queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable,"Nová řádka")
       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
 
       //f.Alert2(JSON.stringify(self.aKalkBefore))

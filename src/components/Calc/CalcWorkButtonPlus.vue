@@ -40,11 +40,13 @@ export default {
     ID:0
 
 
+
   },
  data () {
    return {
      ID0: this.ID,
      ID2: 0,
+
      f: f,
      st: [],
 
