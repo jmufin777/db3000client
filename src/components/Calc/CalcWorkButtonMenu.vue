@@ -205,7 +205,11 @@ export default {
    }
  },
  created() {
+  //  eventBus.$on('MenuLeft', (server) => {
+  //     self.Left=server.key
+  //     //self.addCol(server.key)
 
+  //   })
   //  eventBus.$on('MenuLeft', (server) => {
   //     self.Left=server.key
   //     //self.addCol(server.key)

@@ -61,6 +61,9 @@ export default {
   datum3(value) {
     return moment(String(value)).format('DD.MM.YYYY')
   },
+  cas3(value) {
+    return value.substring(0,5)
+  },
   dnes () {
     var xd = new Date()
     //alert(xd)
@@ -953,7 +956,55 @@ sleep(ms) {
 },
 isEmpty(str) {
   return (!str || 0 === str.length);
-}
+},
+Jstr(str) {
+  return JSON.stringify(str)
+},
+Jparse(str) {
+  return JSON.parse(JSON.stringify(str))
+},
+ID2() {
+  return  Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983777458)) / Math.round(Math.random() * 198323458))
+},
+
+dataRadka(id2) {
+  //idefix
+ var  aKeys=[
+     'nazev'
+    ,'kcks'
+    ,'ks'
+    ,'naklad'
+    ,'marze'
+    ,'prodej'
+    ,'marze_pomer'
+    ,'expedice_datum'
+    ,'expedice_cas'
+    ,'user_update_idefix'
+    ,'nazevOrig'
+    ,'vlozit'
+    ,'idefixuser'
+   ]
+   let dRet={}
+
+   for (var x=0;x<aKeys.length;x++){
+     if (x==0) {
+       if (document.getElementById("seek"+id2)){
+         dRet['nazev']=document.getElementById("seek"+id2).value
+       } else
+       if (document.getElementById("expedice_cas"+id2)){
+        dRet['nazev']=document.getElementById("expedice_cas"+id2).value
+        f.Alert('CASCASCAS')
+      }
+     }  else
+       if (document.getElementById(aKeys[x]+id2) ) {
+           dRet[aKeys[x]]=document.getElementById(aKeys[x]+id2).value
+       }
+
+
+   }
+     return dRet
+ //f.Alert("VAL:",document.getElementById("seek"+id2).value)
+},
 
 
 }

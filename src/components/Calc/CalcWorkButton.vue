@@ -122,10 +122,13 @@
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:29em;height:28px" class="honza_color2" >
         <!-- <input type="text" v-model="form.expedice_cas" style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE" class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"> -->
       <select v-model="form.expedice_cas"
-      style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE" class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"
+      style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE"
+      class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"
+      :id="'expedice_cas'+ID2"
       >
         <option v-for="(tItem,i) in timelist"
         :key="i"
+
         :label="tItem"
         :value="tItem"
          >{{tItem}}</option>
@@ -147,7 +150,8 @@
            </button>
          </div>
          <div>
-           {{showTemplates }} /{{ID2}} / {{ f1.getBottom('seek'+ID2,0) }} :: {{ ZobrazMenu }} : {{ dataDB}}
+           neco
+           <!-- {{showTemplates }} /{{ID2}} / {{ f1.getBottom('seek'+ID2,0) }} :: {{ ZobrazMenu }} : {{ form }} isOpen:  {{ isOpen}} -->
          </div>
       <div
         style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:100000000"
@@ -252,10 +256,20 @@ export default {
  },
   props: {
     ID:0,
-    ZobrazMenu: {
+    ID2: {
+      type: Number,
+      default:0,
+      required: false
+    },
+    ZobrazMenu: {  // k dispozici jsou rozbalovaci nabidky
       type: Boolean,
       required: false,
       default: false
+    },
+    isOpen: { //Pokud je kalkulace rozbalena - (vuex)
+      type: Boolean,
+      default: false,
+      required: false
     },
     Poradi: {
       type: Number,
@@ -264,13 +278,14 @@ export default {
     },
     dataDB: {
         required: false,
-    }
+    },
+
 
   },
  data () {
    return {
      ID0: this.ID,
-     ID2: 0,
+
      f1: f,
      $: $,
      showTemplates: true,
@@ -322,12 +337,10 @@ export default {
         {
           Kalkulace: server.data[0].obsah,
           key: 667,
-
         })
-      //self.setTemplate(server.data)
-      //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
     })
-  self.ID2 = Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983458)) / Math.round(Math.random() * 1983458))
+
+  //self.ID2 = Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983458)) / Math.round(Math.random() * 1983458))
   setTimeout(function(){
     $('#seek'+self.ID2).on('focus', function(){
       try {
@@ -354,7 +367,21 @@ export default {
    const self = this
    var cvar = 'seek'+self.ID2+''
 
-   if (!f.isEmpty(self.dataDB)) {
+    //f.Alert('Created', self.isOpen)
+
+      eventBus.$off('DATARADKARECZADOST')  //Nacitani rolovaciho menu - seznam templatu
+      eventBus.$on('DATARADKARECZADOST',(server)=>{
+        if (self.isOpen){
+          f.Alert('Poslu')
+          eventBus.$emit('DATARADKASENDDATA',
+            {
+              data: self.form
+            })
+        }
+      })
+
+
+   if (!f.isEmpty(self.dataDB)) {  //form z db do pameti (self.form)
       Object.entries(self.dataDB).forEach(([key, val]) => {
         console.log(key); // the name of the current key.
         console.log(val); // the value of the current key.

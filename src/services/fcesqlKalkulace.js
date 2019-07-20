@@ -2,6 +2,7 @@ import moment from 'moment'
 //import Q from '../../services/query'
 import Q from './query'
 import f from './fce'
+import prepocty from './fceKalkulacePrepocty'
 import store from '@/store/store'
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
@@ -10,7 +11,6 @@ import { eventBus } from '@/main.js'
 
 const cols = `
   nazev,
-
   kcks,
   ks,
   naklad ,
@@ -288,9 +288,13 @@ async VkladUser(data, kalkulace2, cTable, nazev="" ){
   var idefix=store.state.idefix
   var atmp=[]
   var nret = 0
-  if (f.isEmpty(data.nazev)) {
-    data.nazev=''
+  var dataBck=f.Jparse(data)
+  var aCols = cols.split(",")
+
     data.nazev=nazev
+  //if (f.isEmpty(data.nazev)) {
+    //data.nazev=''
+
 
     data.kcks=0
     data.ks=0
@@ -301,11 +305,26 @@ async VkladUser(data, kalkulace2, cTable, nazev="" ){
     data.expedice_datum='2019-01-01'
     data.expedice_cas='12:00'
 
+    var neco=""
 
-    //f.Alert('Data nejsou ')
+    for (var x=0; x< aCols.length;x++){
+        neco = aCols[x].trim()
+      if (!f.isEmpty(dataBck[neco])){
+        data[neco]  = dataBck[neco]
+      }
+    }
+
+    //f.Alert("Data po ", f.Jstr(data), f.Jstr(dataBck))  ;
+
+    //f.Alert('Data X', cols.split(",").length)
     //return;
-  }
+  //}
+    if (data.ks>0) {
+      data.naklad = await(prepocty.getNaklad(f.Jparse(kalkulace2)))
+    }
     kalkulace2 = JSON.stringify(kalkulace2)
+
+    //Prepocet
   var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix)
   values (
     trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${data.expedice_datum}','${data.expedice_cas}','${idefix}','${idefix}'
@@ -313,6 +332,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="" ){
   ) `;
   //f.Info("Q", q)
   // return
+  //f.Alert("VKL", nazev, f.Jstr(data.nazev))
   await Q.post(0,q)
   .then ( res=>{
     //f.Alert('pokus')
@@ -321,21 +341,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="" ){
     f.Alert2("Doslo k chyba pri vkladu do DB", e)
   })
   return;
-  try {
-    atmp= (await Q.all(idefix,'select max(idefix) as idefix  from calc_templates')).data.data
-    if (atmp.length == 1 ){
-      nret = atmp[0].idefix
-      //f.Alert(nret)
-      store.dispatch('setKalkulaceIdefix',nret)
-    }
-    //f.Alert(atmp.length,' :: ',JSON.stringify(atmp))
-  } catch (e) {
-    f.Alert('ERR Vklad kalkulace ',e)
-    console.log("ERR Kalk1", e)
-  }
 
-
-  // f.Alert('Funkce vklad')
 
 },
 
@@ -437,13 +443,17 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
   if (poradiTo > 0) {
     q= `${q} and poradi<= ${poradiTo} `
   }
-  q= `${q} order by  case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev`
-
+  q= `${q} order by  poradi,case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev `
   //return;
   var atmp=[]
 
     atmp= (await Q.all(idefix,q)).data.data
-    f.Info('Get User 1',JSON.stringify(atmp))
+    await atmp.forEach(el=>{
+      el.expedice_datum= f.datum3(el.expedice_datum)
+      el.expedice_cas  = f.cas3(el.expedice_cas)
+      // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
+    })
+    //f.Info('Get User 1',JSON.stringify(atmp))
     defer.resolve(atmp)
 
   return defer.promise()

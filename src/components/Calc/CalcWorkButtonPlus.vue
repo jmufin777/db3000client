@@ -9,6 +9,7 @@
     <div class="kolecko" >
       <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
       </div>
+
   </button>
    </div>
   </td>
@@ -37,25 +38,39 @@ export default {
 
  },
   props: {
-    ID:0
-
+    ID:0,
+    ID2: {
+      type: Number,
+      default:0,
+      required: false
+    },
 
 
   },
  data () {
    return {
      ID0: this.ID,
-     ID2: 0,
+
 
      f: f,
      st: [],
+     form: {
+     }
 
    }
  },
  created() {
    const self=this
-   self.ID2 = Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983458)) / Math.round(Math.random() * 1983458))
+   // self.ID2 = Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983458)) / Math.round(Math.random() * 1983458))
    self.st = self.$store.state
+
+   eventBus.$off('DATARADKASENDDATA')
+   eventBus.$on('DATARADKASENDDATA',(server)=>{
+     self.form=server.data
+     f.Alert2(JSON.stringify(self.form))
+
+
+    })
    // f.Alert(self.st.KalkulaceThis)
 
   //  eventBus.$on('MenuLeft', (server) => {
@@ -79,6 +94,10 @@ export default {
       f.Alert2('Prvni kalkulace .. co s tim ?')
       return
     }
+      eventBus.$emit("DATARADKARECZADOST")
+
+
+
       //f.Alert2('Rozdeleni',self.ID,self.st.KalkulaceThis)
       var stBackup= stAll.filter((el,idx2) => {   //Zalozit do db
         return idx2 < self.ID

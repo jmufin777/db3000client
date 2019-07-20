@@ -21,19 +21,23 @@
     <!-- {{aKalkulace}} -->
 
 <div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
-   <div  v-for="(aBefore,iBefore ) in aKalkBefore" :key="iBefore" slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2">
-         <work-but  :ID="'A_'+aBefore.poradi" style="position:relative;left:4px"  :dataDB="aBefore"></work-but>
+
+   <div  v-for="(aBefore,iBefore ) in aKalkBefore" :key="iBefore" slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2b">
+
+          <work-but  :ID="'A_'+aBefore.poradi" style="position:relative;left:4px"  :dataDB="aBefore" :ID2="ID+iBefore" ></work-but>
+
+
    </div>
 
   <div v-for="idxK in 1" :key="idxK" slot="kalkulace"  >
 
         <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska">
           <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
-          <work-but  :ID="'AB_'+iK" :ZobrazMenu="true" ></work-but>
+          <work-but  :ID="'AB_'+iK" :ZobrazMenu="true" :isOpen="true" :ID2="ID+999666"></work-but>
 
           </span>
           <span v-else style="position:relative;left:30px" slot="tlacitka" >
-          <work-but-plus  :ID="iK"> </work-but-plus>
+          <work-but-plus  :ID="iK" :ID2="ID+999666"> </work-but-plus>
           </span>
           <span slot="leva" :key="'L'+ TestRend" style="position:relative;left:30px" >
           <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
@@ -71,7 +75,7 @@
       </work>
   </div>
       <div  v-for="(aAfter,iAfter ) in aKalkAfter" :key="iAfter" slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2">
-         <work-but  :ID="'A_'+aAfter.poradi" style="position:relative;left:4px" ></work-but>
+         <!-- <work-but  :ID="'A_'+aAfter.poradi" style="position:relative;left:4px" ></work-but> -->
    </div>
 
 
@@ -404,10 +408,12 @@ export default {
      showPrehled: 1,
      qtest: [],
      ID: 0,
+
      TestRend :0,
      timeoutDrag: null,
      $: $,
      f: f,
+     idTmp:0,
      drag: false,
      cTable :'',
      aKalkBefore:[],
@@ -486,9 +492,16 @@ export default {
 
 
          //f.Alert2(self.idefix)
+         var q = `
+         drop table if exists ${self.cTable} ;drop sequence if exists ${self.cTable}_seq
+         ;create sequence ${self.cTable}_seq
+         ;create table ${self.cTable} without oids as select * from calc_templates limit 0
+         ;alter table ${self.cTable} add poradi serial
+         ;alter table ${self.cTable} alter idefix  set default nextval('list2_seq')
+         ;alter table ${self.cTable} alter id set default nextval('${self.cTable}_seq')
+         `
 
-         Q.post(0,`drop table if exists ${self.cTable} ; create table ${self.cTable} without oids as select * from calc_templates limit 0
-         ;alter table ${self.cTable} add poradi serial; alter table ${self.cTable} alter idefix  set default nextval('list2_seq')`)
+         Q.post(0,q)
          .then (res => {
            f.Alert2('Vytvorena nova databaze pro tvorbu VL', JSON.stringify(res))
            .then(res=> {
@@ -500,7 +513,7 @@ export default {
          })
 
          .catch(e => {
-           f.Alert2('Doslo k chybal pri komunikaci s databazi')
+           f.Alert2('Doslo k chybal pri komunikaci s databazi', q, e )
          })
 
 
@@ -537,8 +550,6 @@ export default {
       if (server.key == 668) {  //Aplikuj novy template
           self.$store.dispatch('saveKalkCela', {data: server.Kalkulace2 })
           self.RozdelKalkulaci(server)
-
-
 
 
       }
@@ -620,12 +631,11 @@ export default {
       self.ColCount++
       //self.addCol(server.key)
 
-
     })
 
  },
  async mounted () {
-   f.Info(queryKalk)
+//   f.Info(queryKalk)
 
 /* Vzor query
     try {
@@ -642,7 +652,7 @@ export default {
 */
   const self=this
 
-   this.ID = Math.round(Math.random() * 198345813)
+   this.ID = Math.round(Math.random() * 19834581377)
    this.aKalkulace = this.$store.state.Kalkulace
 
    //$(document).on('click', function(e){
@@ -736,12 +746,42 @@ export default {
  //  this.$destroy()
  },
  methods: {
+
    async RozdelKalkulaci(server){
      const self = this
-      await queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable, "")
+     var dataRadka={}
+     //f.Alert('data1')
+     dataRadka=f.dataRadka(server.id2)
+     server.data["expedice_datum"] = dataRadka.expedice_datum
+     server.data["expedice_cas"]  =  dataRadka.expedice_cas
+     //f.Alert('data2', f.Jstr(dataRadka))
+      //f.Alert('Radka SEND: ', f.Jstr(dataRadka), 'CAS: ', f.Jstr(dataRadka.expedice_cas))
 
-      await queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable,"Nová řádka")
+      await queryKalk.VkladUser(dataRadka,server.Kalkulace1 ,self.cTable,dataRadka.nazev)
+      await queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable, "Nová řádka")
       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+
+
+      //f.Alert(server.id2, $("#seek"+server.id2).val())
+
+/*
+      idefix:0, // pri nacteni se aktualizuje na otevrenou kalkulaci
+       nazev: '',
+       kcks: null,
+       ks: null,
+       naklad:null ,
+       marze: null,
+       prodej:null,
+       marze_pomer: null,
+       expedice_datum: '01.01.2010',
+       expedice_cas: "08:00",
+       user_update_idefix: 0,
+       nazevOrig:'',
+       vlozit: 0,
+       idefixuser:0,
+       ID: 0,
+       */
+
 
       //f.Alert2(JSON.stringify(self.aKalkBefore))
 
@@ -1312,7 +1352,7 @@ button:focus {
   font-size:20px !important;
   height: 14px !important;
   */
-
+  font-size:100%;
 }
 .v-label .theme--light .v-input__slot .v-select__slot .v-label .theme--light .v-select__selections {
   font-size:22px !important;
