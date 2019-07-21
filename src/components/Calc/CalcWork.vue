@@ -4,6 +4,8 @@
  <slot name="sloupce" class="pl-0">
 
 <slot name="tlacitka" class="white"></slot>
+<slot name="tlacitka2" class="blue"></slot>
+<slot name="tlacitka3" class="green"></slot>
 
 
 <table width="120%" border="0px" >

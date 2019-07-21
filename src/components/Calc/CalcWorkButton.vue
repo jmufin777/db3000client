@@ -16,14 +16,14 @@
             </div>
         </button>
         </td><td  class="honza_color pa-0" style="text-align:left">
-        <button class="kolecko2"  @click="f1.Alert2('Smazani tohoto VL ')">
+        <button class="kolecko2"  @click="delVL()">
           <div class="kolecko" >
             <!-- <i class="el-icon-close" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
           <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:monospace">x</span>
             </div>
         </button>
         </td><td  class="honza_color pa-0" style="text-align:left">
-         <button class="kolecko2"  @click="f1.Alert2('Rozbaleni,zableneni ')" title="Ulozit">
+         <button class="kolecko2"  @click="setVL()" title="Ulozit">
            <div class="kolecko" >
            <i class="el-icon-arrow-right" style="color:#93908e;position:absolute;top:-0px;left:0px"
            ></i>
@@ -144,7 +144,12 @@
       </table>
          <div class="honza_color2" style="height:29px;padding-top:2px;text-align:left;padding-left:7px;width:100%;text-align:right;padding-right:15%" title="Odeslat do vyroby">
            <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
-           @click="f1.Alert2('Odeslani do vyroby','pripravuje se')"
+           @click="saveVL()"
+           >
+           <v-icon size="medium" class="honza_color2" style="cursor:pointer" >save</v-icon>
+           </button>
+           <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
+           @click="f1.Alert2('Odeslani do vyroby','pripravuje se', IDEFIX )"
            >
            <v-icon size="medium" class="honza_color2" style="cursor:pointer" >rotate_right</v-icon>
            </button>
@@ -154,12 +159,14 @@
            <!-- {{showTemplates }} /{{ID2}} / {{ f1.getBottom('seek'+ID2,0) }} :: {{ ZobrazMenu }} : {{ form }} isOpen:  {{ isOpen}} -->
          </div>
       <div
-        style="position:absolute;z-index:90010;overflow:scroll;max-height:14em;z-index:100000000"
+        style="position:absolute;overflow:scroll;max-height:14em;z-index:999999999"
         :style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'"
         :id="'seek'+ID2+'_list2'"
-        v-if="showTemplates && ZobrazMenu  " class="elevation-12 honza_color_seznam"
+        v-if=" showTemplates && ZobrazMenu  " class="elevation-12 honza_color_seznam"
+
+
       >
-            <!-- {{showTemplates}} {{dataTemplates.length}} -->
+             <!-- {{showTemplates}} {{dataTemplates.length}} -->
               <table  width="100%" v-if="showTemplates " class="pa-2 honza_color_seznam" border="0">
                   <tr v-for="(m1b, i1b) in
                   dataTemplates.filter(
@@ -261,6 +268,11 @@ export default {
       default:0,
       required: false
     },
+    IDEFIX: {
+      type: Number,
+      default:0,
+      required: false
+    },
     ZobrazMenu: {  // k dispozici jsou rozbalovaci nabidky
       type: Boolean,
       required: false,
@@ -322,13 +334,24 @@ export default {
 
   //   })
   const self = this
-    eventBus.$off('DATATEMPLATES')  //Nacitani rolovaciho menu - seznam templatu
+//    eventBus.$off('DATATEMPLATES')  //Nacitani rolovaciho menu - seznam templatu
     eventBus.$on('DATATEMPLATES',(server)=>{
-      self.dataTemplates=server.data
-      self.showTemplates = true
+
+          server.data.forEach(el=>{
+            self.dataTemplates.push(el)
+          })
+          self.dataTemplates=server.data
+          self.showTemplates = true
+          f.Info(f.Jstr(self.dataTemplates))
+
+        //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
+
+
+
+
       //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
     })
-    eventBus.$off('DATATEMPLATE')  //Nacitenijedne jedina kompletni kalkulace z databaze
+  //  eventBus.$off('DATATEMPLATE')  //Nacitenijedne jedina kompletni kalkulace z databaze
     eventBus.$on('DATATEMPLATE',(server)=>{
 
        self.form.obsah=server.data[0].obsah
@@ -368,7 +391,7 @@ export default {
    var cvar = 'seek'+self.ID2+''
 
     //f.Alert('Created', self.isOpen)
-
+/*
       eventBus.$off('DATARADKARECZADOST')  //Nacitani rolovaciho menu - seznam templatu
       eventBus.$on('DATARADKARECZADOST',(server)=>{
         if (self.isOpen){
@@ -379,17 +402,10 @@ export default {
             })
         }
       })
+*/
 
+    self.setDataDBtoForm()
 
-   if (!f.isEmpty(self.dataDB)) {  //form z db do pameti (self.form)
-      Object.entries(self.dataDB).forEach(([key, val]) => {
-        console.log(key); // the name of the current key.
-        console.log(val); // the value of the current key.
-        if (self.form.hasOwnProperty(key)) {
-          self.form[key]=val
-        }
-      });
-   }
 
    //self.form.nazev= self.dataDB.nazev
 
@@ -550,6 +566,19 @@ export default {
     //alert('aRend')
      eventBus.$emit("Rend")
   },
+
+  setDataDBtoForm(){
+    const self=this
+    if (!f.isEmpty(self.dataDB)) {  //form z db do pameti (self.form)
+      Object.entries(self.dataDB).forEach(([key, val]) => {
+        console.log(key); // the name of the current key.
+        console.log(val); // the value of the current key.
+        if (self.form.hasOwnProperty(key)) {
+          self.form[key]=val
+        }
+      });
+   }
+  },
   fokus(lastFocus=''){
     const self = this
     if (self.ZobrazMenu == false)  return
@@ -596,6 +625,32 @@ export default {
     }
 
 
+  },
+  async delVL(){
+    const self = this
+    if (f.Confirm('Vymazat tento VL?')){
+        eventBus.$emit('MenuHlavni', {key: 669, idefix: self.IDEFIX })
+    }
+
+  },
+  async saveVL(){ //Update
+    if (f.Confirm('Uozit VL - update?')){
+      const self = this
+    var def= $.Deferred()
+    var idefixuser=self.$store.state.idefix
+  //  alert(self.form.ID)
+    self.form.ID=self.ID2
+    await eventBus.$emit('MenuHlavni', {key: 670, idefix: self.IDEFIX, data: self.form  })
+
+    return def.promise()
+
+    }
+    //f1.Alert2('Ulozeni', IDEFIX );
+  },
+  async setVL(){
+    const self=this
+    await eventBus.$emit('MenuHlavni', {key: 671, idefix: self.IDEFIX })
+    //f.Alert('setVL- rozbleni zabaleni', self.IDEFIX)
   },
   async setTemplate(cItem){
     const self = this
@@ -888,7 +943,7 @@ async KalkulacePrepocetKusy(k, ks=1){
 
 
           setTimeout(function(){
-            self.showTemplates=false
+            self.showTemplates=false;
 
           },100)
 

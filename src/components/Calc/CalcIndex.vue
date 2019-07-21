@@ -21,21 +21,35 @@
     <!-- {{aKalkulace}} -->
 
 <div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
+   <div  v-for="(aBefore,iBefore ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix<IDEFIXACTIVE || IDEFIXACTIVE==0) })" :key="iBefore"
+     slot="kalkulace"
+     style="position:relative;width:100%;top:0em;overflow:scroll"
+     id="obalKalkulace2b"
+   >
+      <work-but  :ID="'A_'+aBefore.idefix" style="position:relative;left:4px"  :dataDB="aBefore" :ID2="ID+iBefore"
+      :IDEFIX="+aBefore.idefix"
+      :idR="idRend"
+       ></work-but>
 
-   <div  v-for="(aBefore,iBefore ) in aKalkBefore" :key="iBefore" slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2b">
-
-          <work-but  :ID="'A_'+aBefore.poradi" style="position:relative;left:4px"  :dataDB="aBefore" :ID2="ID+iBefore" ></work-but>
-
-
+        <!-- / {{aBefore.idefix }} -->
    </div>
 
   <div v-for="idxK in 1" :key="idxK" slot="kalkulace"  >
-
-        <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska">
+        <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska" >
           <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
-          <work-but  :ID="'AB_'+iK" :ZobrazMenu="true" :isOpen="true" :ID2="ID+999666"></work-but>
+          <work-but  v-if="aKalkBefore.length==0" :ID="'AB_'+iK" :ZobrazMenu="true" :isOpen="true" :ID2="ID+999666" :idR="idRend"></work-but>
 
+          <!-- && e.idefix==IDEFIXACTIVE -->
+          <work-but v-for="(aBefore1,iBefore1 ) in aKalkBefore.filter(e=>{return e.active==true  })" :key="iBefore1+900000"
+           :ID="'AC_'+aBefore1.idefix"
+           :IDEFIX="+aBefore1.idefix"
+           :dataDB="aBefore1" :ID2="ID+999666"
+           :ZobrazMenu="true" :isOpen="true"
+           :idR="idRend"
+            ></work-but>
+            NAD {{IDEFIXACTIVE}} {{ NAZEVACTIVE }}
           </span>
+
           <span v-else style="position:relative;left:30px" slot="tlacitka" >
           <work-but-plus  :ID="iK" :ID2="ID+999666"> </work-but-plus>
           </span>
@@ -72,11 +86,21 @@
 
         <div slot="mezera" class="red">&nbsp;</div>
 
+
       </work>
   </div>
-      <div  v-for="(aAfter,iAfter ) in aKalkAfter" :key="iAfter" slot="kalkulace" style="position:relative;width:100%;top:0em;overflow:scroll" id="obalKalkulace2">
-         <!-- <work-but  :ID="'A_'+aAfter.poradi" style="position:relative;left:4px" ></work-but> -->
+<div  v-for="(aBefore2,iBefore2 ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix>IDEFIXACTIVE && IDEFIXACTIVE>0 )})" :key="iBefore2+15000"
+     slot="kalkulace"
+     style="position:relative;width:100%;top:0em;overflow:scroll"
+     id="obalKalkulace3b"
+   >
+      <work-but  :ID="'A_'+aBefore2.idefix" style="position:relative;left:4px"  :dataDB="aBefore2" :ID2="ID+iBefore2"
+      :IDEFIX="+aBefore2.idefix"
+      :idR="idRend"
+       ></work-but>
+       POD {{IDEFIXACTIVE}} / {{aBefore2.idefix }}
    </div>
+
 
 
   <div style="z-indeX:999999;background:black">
@@ -410,6 +434,7 @@ export default {
      ID: 0,
 
      TestRend :0,
+     idRend: 0,
      timeoutDrag: null,
      $: $,
      f: f,
@@ -418,6 +443,8 @@ export default {
      cTable :'',
      aKalkBefore:[],
      aKalkAfter:[],
+     IDEFIXACTIVE:0,
+     NAZEVACTIVE:'',
    }
  },
  watch: {
@@ -489,6 +516,7 @@ export default {
          self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          self.KalkulaceThis = -1
          self.KalkulaceLast = -1
+         self.IDEFIXACTIVE=0
 
 
          //f.Alert2(self.idefix)
@@ -497,7 +525,10 @@ export default {
          ;create sequence ${self.cTable}_seq
          ;create table ${self.cTable} without oids as select * from calc_templates limit 0
          ;alter table ${self.cTable} add poradi serial
+         ;alter table ${self.cTable} add active bool default false
+         ;alter table ${self.cTable} add idefix_src bigint default 0
          ;alter table ${self.cTable} alter idefix  set default nextval('list2_seq')
+
          ;alter table ${self.cTable} alter id set default nextval('${self.cTable}_seq')
          `
 
@@ -553,23 +584,43 @@ export default {
 
 
       }
+      if (server.key == 669) {  //Aplikuj novy template
+            //f.Alert2("DELETE", server.idefix)
+            self.delVL(server.idefix)
+          //self.RozdelKalkulaci(server)
+
+
+      }
+      if (server.key == 670) {  //Aplikuj novy template
+            //f.Alert2("DELETE", server.idefix)
+            self.saveVL(server.idefix)
+          //self.RozdelKalkulaci(server)
+      }
+     if (server.key == 671) {  //Aplikuj novy template
+
+            //f.Alert2("DELETE", server.idefix)
+            try {
+              self.setVL(server.idefix)
+            } catch(e) {
+              f.Alert2("HAVARIE")
+            }
+
+          //self.RozdelKalkulaci(server)
+      }
 
       //Ukladani - rozdelena = 668
-
 
       if (server.key == 555) {  //Guma sloupce 1
         self.zobrazit=false
         self.TestRend++
 
-      self.$store.dispatch('removeCol',{
-          kalkulaceid: server.kalkulaceid,
-          idxCol: server.idxCol,
+        self.$store.dispatch('removeCol',{
+            kalkulaceid: server.kalkulaceid,
+            idxCol: server.idxCol,
         })
 
         self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
-
-
-        setTimeout(function(){
+        setTimeout(function() {
         self.zobrazit=true
              eventBus.$emit('enable')
          },100)
@@ -618,12 +669,8 @@ export default {
             eventBus.$emit('enable')
         },1000)
 
-
-        //addNew(11)
-        //self.aKalkulace.push({kalkulaceid: self.aKalkulace.length+1})
       }
 
-      //alert(self.Hlavni)
     })
 
      eventBus.$on('MenuLeft', (server) => {
@@ -635,22 +682,14 @@ export default {
 
  },
  async mounted () {
+
 //   f.Info(queryKalk)
 
-/* Vzor query
-    try {
-    this.qtest = (await query.all(this.user,'select * from   list_dodavatel limit 100')).data
-    } catch (e) {
-      console.log(JSON.stringify(e.response.data.error))
-    }
-    if (this.qtest) {
-        qtest.data - obsahuje data
-        qtest.fields - obsahuje seznam fields
-
-
-    }
-*/
   const self=this
+  self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+  await self.setIdefixActive()
+
+
 
    this.ID = Math.round(Math.random() * 19834581377)
    this.aKalkulace = this.$store.state.Kalkulace
@@ -746,6 +785,27 @@ export default {
  //  this.$destroy()
  },
  methods: {
+   async setIdefixActive() {
+     const self=this
+     self.aKalkBefore.forEach(el=>{
+      if (el.active==true){
+        self.IDEFIXACTIVE =el.idefix
+        self.NAZEVACTIVE=el.nazev
+        return
+      }
+    })
+   },
+   async setIdefixDeActive() {
+     const self=this
+     self.aKalkBefore.forEach(el=>{
+      if (el.active==true){
+        self.IDEFIXACTIVE =0
+        self.NAZEVACTIVE=''
+        el.active=false
+        return
+      }
+    })
+   },
 
    async RozdelKalkulaci(server){
      const self = this
@@ -754,68 +814,99 @@ export default {
      dataRadka=f.dataRadka(server.id2)
      server.data["expedice_datum"] = dataRadka.expedice_datum
      server.data["expedice_cas"]  =  dataRadka.expedice_cas
-     //f.Alert('data2', f.Jstr(dataRadka))
+     f.Alert('data2', self.IDEFIXACTIVE)
       //f.Alert('Radka SEND: ', f.Jstr(dataRadka), 'CAS: ', f.Jstr(dataRadka.expedice_cas))
 
-      await queryKalk.VkladUser(dataRadka,server.Kalkulace1 ,self.cTable,dataRadka.nazev)
-      await queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable, "Nová řádka")
+      await queryKalk.VkladUser(dataRadka,server.Kalkulace1 ,self.cTable,dataRadka.nazev , false , self.IDEFIXACTIVE)
+      await queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable, "Nová řádka", true,0)
+
+
+      self.aKalkBefore=[]
       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+      self.setIdefixActive()
+      setTimeout(function(){
+        self.idRend++
+      },500)
+      //f.Alert2("BEF", f.Jstr(self.aKalkBefore))
 
-
+      // setTimeout(function(){
+      //   self.idRend++
+      // },500)
       //f.Alert(server.id2, $("#seek"+server.id2).val())
+   },
+    async delVL(idefix){
+     const self = this
+      await queryKalk.delete(idefix ,self.cTable )
+      //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+      self.aKalkBefore=[]
+      self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+      self.setIdefixActive()
+      setTimeout(function(){
+        self.idRend++
+      },500)
 
-/*
-      idefix:0, // pri nacteni se aktualizuje na otevrenou kalkulaci
-       nazev: '',
-       kcks: null,
-       ks: null,
-       naklad:null ,
-       marze: null,
-       prodej:null,
-       marze_pomer: null,
-       expedice_datum: '01.01.2010',
-       expedice_cas: "08:00",
-       user_update_idefix: 0,
-       nazevOrig:'',
-       vlozit: 0,
-       idefixuser:0,
-       ID: 0,
-       */
+   },
 
-
-      //f.Alert2(JSON.stringify(self.aKalkBefore))
-
-
-        // queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable)
-        // .then(res=>{
-        //  queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable)
-        // })
-        // .then(res => {
-        //   alert('zkusim')
-        //   f.Alert2(JSON.stringify(queryKalk.getTemplatesUser(self.cTable) ))
-        // })
+   async setVL(idefix) {
+     const self = this
+     if (idefix == self.IDEFIXACTIVE) {
+       self.aKalkulace =[]
+       self.$store.dispatch('cleanKalk')
+       await queryKalk.setActive(0,self.cTable,0)
+       self.setIdefixDeActive()
+       //self.IDEFIXACTIVE =0
+       //f.Alert("R")
+       return
+     }
+     //f.Alert('Rozbal INDEX setVL ', idefix)
 
 
-        //self.aKalkBefore = await ( queryKalk.getTemplatesUser(self.cTable) )
-        //f.Alert("A:", JSON.stringify(self.aKalkBefore))
-        // .then(res=>{
-        // //  queryKalk.VkladUser(server.data,server.Kalkulace1 ,self.cTable)
-        //   .then (res => {
-        //     queryKalk.getTemplatesUser(self.cTable)
-        //     f.Alert("A:", JSON.stringify(self.aKalkBefore), JSON.stringify(res))
-        //   })
-        //   .then(res=>{
-        //     f.Alert("B:", JSON.stringify(self.aKalkBefore), JSON.stringify(res))
-        //   })
-        // })
+
+     queryKalk.setActive(idefix,self.cTable)
+     // return
+     self.IDEFIXACTIVE=idefix
+     //self.IDEFIXACTIVE =  (await queryKalk.getActive(self.cTable))
+     // f.Alert2("RETAC", self.IDEFIXACTIVE)
+
+        var nK= await(queryKalk.getTemplateUser(idefix,self.cTable))
+
+         self.aKalkBefore=[]
+         self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
 
 
-        //f.Alert2('Kalkulace 2 - viditelna, kalkulace 1 jen v db', server.Kalkulace2.length)
-        //self.$store.dispatch('saveKalkCela', {data: server.Kalkulace2 })
+         //self.aKalkulace=[]
+         self.aKalkulace =  f.Jparse(nK[0].obsah)
+         //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+         await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
+         self.setIdefixActive()
+
+         // self.KalkulaceThis = -1
+         // self.KalkulaceLast = -1
+         return
+
+      setTimeout(function(){
+
+        self.idRend++
+      },500)
 
 
-        //eventBus.$emit("NulujRadek")
 
+
+     //f.Alert('Rozbal INDEX setVL ', f.Jstr(nK[0].obsah))
+       //,
+       //await (f.Alert2('Ahoj //',JSON.stringify(nK[0].obsah.length) ," // ") )
+       //alert('tEd ')
+      //var obsah = await(self.KalkulacePrepocetKusy(nK[0].obsah,neco))
+     // self.form.naklad = await(prepocty.getNaklad(obsah))
+
+
+     //self.$store.dispatch('saveKalkCela', {data: server.Kalkulace })
+     //var nK= await(queryKalk.getTemplate(self.form.idefix))
+   },
+   async saveVL(idefix) {
+     const self = this
+     f.Alert('Uloz - update saveVL ', idefix)
+     //var nK= await(queryKalk.getTemplate(self.form.idefix))
    },
    getVal(obj,klic) {
      var cRet =""

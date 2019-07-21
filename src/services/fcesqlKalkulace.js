@@ -283,7 +283,7 @@ async Vklad(data, kalkulace2 ){
 
 },
 
-async VkladUser(data, kalkulace2, cTable, nazev="" ){
+async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=0){
 
   var idefix=store.state.idefix
   var atmp=[]
@@ -323,13 +323,42 @@ async VkladUser(data, kalkulace2, cTable, nazev="" ){
       data.naklad = await(prepocty.getNaklad(f.Jparse(kalkulace2)))
     }
     kalkulace2 = JSON.stringify(kalkulace2)
-
+    await Q.post(0,`update ${cTable} set active=false where active`)
     //Prepocet
-  var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix)
+  if (active==true || idefixactive==0)  {
+  var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix, active)
   values (
-    trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${data.expedice_datum}','${data.expedice_cas}','${idefix}','${idefix}'
+    trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${data.expedice_datum}','${data.expedice_cas}'
+    ,'${idefix}','${idefix}','${active}'
 
-  ) `;
+  ) `
+  f.Alert("Isert " , idefixactive , active)
+  } else {
+
+    var q = `update ${cTable} set
+  nazev          = trim('${data.nazev}'),
+  kcks           = '${data.kcks}',
+  ks             = '${data.ks}',
+  naklad         = '${data.naklad}',
+  marze          = '${data.marze}',
+  prodej         = '${data.prodej}',
+  marze_pomer    = '${data.marze_pomer}',
+  obsah          = '${kalkulace2}',
+  expedice_datum = '${data.expedice_datum}',
+  expedice_cas   = '${data.expedice_cas}',
+  user_update_idefix='${idefix}',
+  time_update = now()
+   where idefix = ${idefixactive}
+
+  `
+  f.Alert("IPDATE")
+  }
+  //obsah='${kalkulace}',
+   //  f.Alert('Update ' ,q)
+     console.log('Update ' ,q)
+
+//    await Q.post(0,q)
+
   //f.Info("Q", q)
   // return
   //f.Alert("VKL", nazev, f.Jstr(data.nazev))
@@ -341,8 +370,34 @@ async VkladUser(data, kalkulace2, cTable, nazev="" ){
     f.Alert2("Doslo k chyba pri vkladu do DB", e)
   })
   return;
+},
+async setActive(idefix=0,cTable, Aktivuj=1){
+  await Q.post(0,`update ${cTable} set active=false where active`)
+  if (Aktivuj>0) {
+    await Q.post(0,`update ${cTable} set active=true where idefix=${idefix}`)
+  }
 
+},
+async getActive(cTable){
+    var defer = $.Deferred();
+    try {
+      var atmp= (await Q.all(0,`select idefix from  ${cTable} where  active=true `))
+    if (atmp.length>0){
+        f.Alert2("ACTIVE",1, f.Jstr(atmp),`select idefix from  ${cTable} where  active=true`)
+        //defer.resolve(atmp[0].idefix)
+    } else {
+       f.Alert2("ACTIVE",0, f.Jstr(atmp),`select idefix from  ${cTable} where  active=true`)
+        defer.resolve(0)
+    }
 
+    }catch(e) {
+      f.Alert('pojeblo')
+  }
+
+  return defer.promise()
+},
+async delete(idefix=0,cTable){
+  await Q.post(0,`delete from  ${cTable}  where idefix=${idefix}`)
 },
 
 async Zmena(data,kalkulace2,_idefix){
@@ -433,6 +488,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
           a.expedice_cas,
           a.user_update_idefix,
           a.poradi,
+          a.active,
           b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix `;
 
   q= `${q} where true `
@@ -443,27 +499,55 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
   if (poradiTo > 0) {
     q= `${q} and poradi<= ${poradiTo} `
   }
-  q= `${q} order by  poradi,case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev `
+  q= `${q} order by  idefix,case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev `
   //return;
   var atmp=[]
+    try {
+      atmp= (await Q.all(idefix,q)).data.data
+      await atmp.forEach(el=>{
+        el.expedice_datum= f.datum3(el.expedice_datum)
+        el.expedice_cas  = f.cas3(el.expedice_cas)
+        defer.resolve(atmp)
+        // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
+      })
+    }  catch(e) {
+      defer.resolve(atmp)
+      f.Alert2('Chyba  getTemplatesUser')
+    }
 
-    atmp= (await Q.all(idefix,q)).data.data
-    await atmp.forEach(el=>{
-      el.expedice_datum= f.datum3(el.expedice_datum)
-      el.expedice_cas  = f.cas3(el.expedice_cas)
-      // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
-    })
     //f.Info('Get User 1',JSON.stringify(atmp))
-    defer.resolve(atmp)
+
 
   return defer.promise()
   ///f.Alert(JSON.stringify(atmp))
 },
 
-async getTemplate(_idefix=0) {
+async getTemplate(_idefix=0, cTable="") {
   var defer = $.Deferred();
   var idefix=store.state.idefix
   var q= 'select a.*,b.login  from calc_templates a join list_users b on a.user_update_idefix = b.idefix ';
+  q= `${q} where a.idefix= ${_idefix} `
+  var atmp=[]
+  //f.Alert("BUS ",Vue2)
+  try {
+    atmp= (await Q.all(idefix,q)).data.data
+    defer.resolve(atmp);
+  //  eventBus.$emit('DATATEMPLATE',{data: atmp})
+    //return atmp
+    //
+  } catch (e) {
+    f.Alert('nevidim templats',e, q)
+    console.log("ERR pozadavek na templates", e)
+    defer.resolve(false);
+  }
+  return defer.promise();
+  ///f.Alert(JSON.stringify(atmp))
+},
+
+async getTemplateUser(_idefix=0, cTable="") {
+  var defer = $.Deferred();
+  var idefix=store.state.idefix
+  var q= `select a.*,b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix `;
   q= `${q} where a.idefix= ${_idefix} `
   var atmp=[]
   //f.Alert("BUS ",Vue2)

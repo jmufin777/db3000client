@@ -44,6 +44,11 @@ export default {
       default:0,
       required: false
     },
+    IDEFIX: {
+      type: Number,
+      default:0,
+      required: false
+    },
 
 
   },
