@@ -255,6 +255,8 @@ if (_idefix > 0 && data.nazev==data.nazevOrig) {
  self.Zmena(data,kalkulace2,_idefix)
 }
 },
+
+
 async Vklad(data, kalkulace2 ){
   var idefix=store.state.idefix
   var atmp=[]
@@ -282,16 +284,44 @@ async Vklad(data, kalkulace2 ){
   // f.Alert('Funkce vklad')
 
 },
+async CopyUser(idefixactive=0,cTable="") {
 
-async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=0){
+  var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix, active)
+  select ${cols},user_insert_idefix,user_update_idefix, true from ${cTable} where idefix=${idefixactive}
+  `
+  await Q.post(0,`update ${cTable} set active=false where active`)
+  .then ( res=>{
+    //f.Alert('pokus')
+  })
+  .catch(e=>{
+    f.Alert2("Doslo k chyba pri oznaceni ACTIVE ", e)
+  })
+  await Q.post(0,q)
+  .then ( res=>{
+    //f.Alert('pokuscopy', q)
+  })
+  .catch(e=>{
+    f.Alert2("Doslo k chyba pri vkladu kopie kalkulace", e)
+  })
+  await Q.post(0,`update ${cTable} set nazev = nazev|| ' 2' where idefix = (select max(idefix) from ${cTable})`)
+  .then ( res=>{
+    //f.Alert('pokus')
+  })
+  .catch(e=>{
+    f.Alert2("Doslo k chyba pri oznaceni ACTIVE ", e)
+  })
+
+},
+async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=0, SaveKalkulkace=true){
 
   var idefix=store.state.idefix
   var atmp=[]
   var nret = 0
   var dataBck=f.Jparse(data)
   var aCols = cols.split(",")
-
+  if (nazev >''){
     data.nazev=nazev
+  }
   //if (f.isEmpty(data.nazev)) {
     //data.nazev=''
 
@@ -332,26 +362,42 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
     ,'${idefix}','${idefix}','${active}'
 
   ) `
-  f.Alert("Isert " , idefixactive , active)
+  //f.Alert("Isert " , idefixactive , active)
   } else {
-
+    if (SaveKalkulkace==true) {
+        var q = `update ${cTable} set
+      nazev              = trim('${data.nazev}'),
+      kcks               = '${data.kcks}',
+      ks                 = '${data.ks}',
+      naklad             = '${data.naklad}',
+      marze              = '${data.marze}',
+      prodej             = '${data.prodej}',
+      marze_pomer        = '${data.marze_pomer}',
+      obsah              = '${kalkulace2}',
+      expedice_datum     = '${data.expedice_datum}',
+      expedice_cas       = '${data.expedice_cas}',
+      user_update_idefix = '${idefix}',
+      time_update = now()
+      where idefix = ${idefixactive}
+      `
+  } else
+  if (SaveKalkulkace==false) {  //Zabalena radka, kalkulaci neprepisuji
     var q = `update ${cTable} set
-  nazev          = trim('${data.nazev}'),
-  kcks           = '${data.kcks}',
-  ks             = '${data.ks}',
-  naklad         = '${data.naklad}',
-  marze          = '${data.marze}',
-  prodej         = '${data.prodej}',
-  marze_pomer    = '${data.marze_pomer}',
-  obsah          = '${kalkulace2}',
-  expedice_datum = '${data.expedice_datum}',
-  expedice_cas   = '${data.expedice_cas}',
-  user_update_idefix='${idefix}',
-  time_update = now()
-   where idefix = ${idefixactive}
-
-  `
-  f.Alert("IPDATE")
+    nazev              = trim('${data.nazev}'),
+    kcks               = '${data.kcks}',
+    ks                 = '${data.ks}',
+    naklad             = '${data.naklad}',
+    marze              = '${data.marze}',
+    prodej             = '${data.prodej}',
+    marze_pomer        = '${data.marze_pomer}',
+    expedice_datum     = '${data.expedice_datum}',
+    expedice_cas       = '${data.expedice_cas}',
+    user_update_idefix = '${idefix}',
+    time_update = now()
+    where idefix = ${idefixactive}
+    `
+  }
+  //f.Alert("IPDATE")
   }
   //obsah='${kalkulace}',
    //  f.Alert('Update ' ,q)

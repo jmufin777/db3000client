@@ -9,7 +9,7 @@
       <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:8.5em;height:28px" class="honza_color" >
        <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:17.2em;width:100%" >
        <table  class="honza_color" border="0"><tr><td  class="honza_color pa-0" style="text-align:left">
-        <button class="kolecko2" @click="f1.Alert2('Kopie radky')">
+        <button class="kolecko2" @click="copyVL()">
           <div class="kolecko" >
             <!-- <i class="el-icon-plus" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
             <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
@@ -47,7 +47,7 @@
       </td>
       <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em;height:28px" class="honza_color" >
         <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%" >
-         <button class="kolecko2" @click="send()" title="Ulozit">
+         <button class="kolecko2" @click="send()" title="Ulozit" :id="'send_'+ID2">
            <div class="kolecko" >
            <i class="el-icon-upload" style="color:#93908e;position:absolute;top:-0px;left:0px"
            ></i>
@@ -481,26 +481,17 @@ export default {
             });
 
             event.preventDefault();
-            /*
-            var ctest = $("#seek"+self.ID2).val()
-            if (f.isEmpty( ctest ) ) {
-             f.Alert2('Nazev je treba vyplnit' ).then(function (){
-                setTimeout(function(){
-                  $("#seek"+self.ID2).focus()
-                },1000)
 
-              })
-              return
-            }
-            */
+           $('#send_'+self.ID2).trigger('click')
+           /*
+           if (self.IDEFIX==0){
             self.send().then(
-
               setTimeout(function(){
-
                 $("#seek"+self.ID2).focus()
               },3000)
-
             )
+            }
+            */
 
             //alert('ctrl-s');
             break;
@@ -633,6 +624,7 @@ export default {
     }
 
   },
+
   async saveVL(){ //Update
     if (f.Confirm('Uozit VL - update?')){
       const self = this
@@ -647,11 +639,25 @@ export default {
     }
     //f1.Alert2('Ulozeni', IDEFIX );
   },
+
   async setVL(){
     const self=this
+    if (self.IDEFIX==0){
+      f.Alert('Nelze rozbalit - neni v databazi')
+      return
+    }
     await eventBus.$emit('MenuHlavni', {key: 671, idefix: self.IDEFIX })
     //f.Alert('setVL- rozbleni zabaleni', self.IDEFIX)
   },
+
+  async copyVL(){
+    const self=this
+
+    await eventBus.$emit('MenuHlavni', {key: 672, idefix: self.IDEFIX })
+    //f.Alert('setVL- rozbleni zabaleni', self.IDEFIX)
+  },
+
+
   async setTemplate(cItem){
     const self = this
       var neco
@@ -807,53 +813,19 @@ async KalkulacePrepocetKusy(k, ks=1){
     const self = this
     var def= $.Deferred()
     var idefixuser=self.$store.state.idefix
-  //  alert(self.form.ID)
     self.form.ID=self.ID2
+    if (self.IDEFIX > 0 ){
+  //    f.Alert('A' + self.IDEFIX )
+       //await eventBus.$emit("SAVEZAZNAM",{data: self.form, idefix: self.IDEFIX })
+       def.resolve( eventBus.$emit("SAVEZAZNAM",{data: self.form, idefix: self.IDEFIX }))
+       return def.promise()
+    }  else {
+    //  f.Alert('B')
+       //await eventBus.$emit("SAVETEMPLATE",{data: self.form })
+       def.resolve( eventBus.$emit("SAVETEMPLATE",{data: self.form }) )
+       return def.promise()
+    }
 
-    await eventBus.$emit("SAVETEMPLATE",{data: self.form })
-    def.resolve( eventBus.$emit("SAVETEMPLATE",{data: self.form }) )
-    return def.promise()
-
-
-
-
-
-    //$("#box"+self.ID ).innerHTML ='AAA<b>BBB'
-    $("#box"+self.ID ).dialog({
-      modal: false,
-      buttons: {
-        Vlozit: function() {
-          self.form.Vlozit=1
-          eventBus.$emit("SAVETEMPLATE",{data: self.form })
-          $( this ).dialog( "close" );
-        },
-        Prepsat: function() {
-          self.form.Vlozit=2
-          eventBus.$emit("SAVETEMPLATE",{data: self.form })
-          $( this ).dialog( "close" );
-        },
-
-
-      },
-       title: "Success" + self.idefix+ ' '+self.form.idefix + ' /' + self.form.nazev + '/ ' + self.form.nazevOrig + self.form.user_update_idefix + ' '+ idefixuser,
-      show: {
-        effect: "fade",
-        duration: 500
-      },
-      hide: {
-        effect: "fade",
-        duration: 500
-      }
-
-    });
-
-    //$("#box"+self.ID).css('visibility','visible')
-
-
-    //$("#box"+self.ID).dialog()
-
-    //eventBus.$emit("SAVETEMPLATE",{data: self.form })
-    //queryKalk.setKalk(server.data,self.aKalkulace)
   },
   async dlg(){
     $("#box"+self.ID ).dialog({

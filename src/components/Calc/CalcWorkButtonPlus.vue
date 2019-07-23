@@ -95,11 +95,12 @@ export default {
 
     var stAll = JSON.parse(JSON.stringify(self.st.Kalkulace))
     var idxCut=-1
+
     if (self.ID<1){
       f.Alert2('Prvni kalkulace .. co s tim ?')
       return
     }
-      eventBus.$emit("DATARADKARECZADOST")
+      //eventBus.$emit("DATARADKARECZADOST")
 
 
 

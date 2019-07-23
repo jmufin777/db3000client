@@ -28,26 +28,28 @@
    >
       <work-but  :ID="'A_'+aBefore.idefix" style="position:relative;left:4px"  :dataDB="aBefore" :ID2="ID+iBefore"
       :IDEFIX="+aBefore.idefix"
-      :idR="idRend"
+      :key="'AWB_'+iBefore+''+idRend"
        ></work-but>
 
         <!-- / {{aBefore.idefix }} -->
    </div>
 
-  <div v-for="idxK in 1" :key="idxK" slot="kalkulace"  >
+  <div v-for="idxK in 1" :key="'x'+idxK" slot="kalkulace"  >
+
         <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska" >
           <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
-          <work-but  v-if="aKalkBefore.length==0" :ID="'AB_'+iK" :ZobrazMenu="true" :isOpen="true" :ID2="ID+999666" :idR="idRend"></work-but>
+          <work-but  v-if="aKalkBefore.length==0" :ID="'AB_'+iK" :ZobrazMenu="true" :isOpen="true" :ID2="ID+999666" :key="'AWC_'+iK+''+idRend"></work-but>
 
           <!-- && e.idefix==IDEFIXACTIVE -->
-          <work-but v-for="(aBefore1,iBefore1 ) in aKalkBefore.filter(e=>{return e.active==true  })" :key="iBefore1+900000"
+          <work-but v-for="(aBefore1,iBefore1 ) in aKalkBefore.filter(e=>{return e.active==true  })"
+           :key="'AWD_'+iBefore1+''+idRend+''+900000"
            :ID="'AC_'+aBefore1.idefix"
            :IDEFIX="+aBefore1.idefix"
            :dataDB="aBefore1" :ID2="ID+999666"
            :ZobrazMenu="true" :isOpen="true"
-           :idR="idRend"
+
             ></work-but>
-            NAD {{IDEFIXACTIVE}} {{ NAZEVACTIVE }}
+            <!-- NAD {{IDEFIXACTIVE}} {{ NAZEVACTIVE }} -->
           </span>
 
           <span v-else style="position:relative;left:30px" slot="tlacitka" >
@@ -96,9 +98,9 @@
    >
       <work-but  :ID="'A_'+aBefore2.idefix" style="position:relative;left:4px"  :dataDB="aBefore2" :ID2="ID+iBefore2"
       :IDEFIX="+aBefore2.idefix"
-      :idR="idRend"
+      :key="'AWE_'+iBefore2+''+idRend"
        ></work-but>
-       POD {{IDEFIXACTIVE}} / {{aBefore2.idefix }}
+       <!-- POD {{IDEFIXACTIVE}} / {{aBefore2.idefix }} -->
    </div>
 
 
@@ -466,6 +468,7 @@ export default {
      eventBus.$off('MenuHlavni')
      eventBus.$off('MenuLeft')
      eventBus.$off('SAVETEMPLATE')
+     eventBus.$off('SAVEZAZNAM')
      eventBus.$off('DELETETEMPLATE')
      eventBus.$on('kalkulaceDelete',(serverDel) => {
      eventBus.$off('MatCol')
@@ -489,10 +492,43 @@ export default {
       //self.addColMat(server)
     })
      await eventBus.$on('SAVETEMPLATE', (server) => {
+
        if (server.data.nazev=='') {
-            f.Alert2('Nazev je nutne vyplnit',self.user)
+          f.Alert2('Nazev je nutne vyplnit',self.user)
        } else {
+          //f.Alert2('Co tu delas ?', "TEMPLATE!!!" )
           queryKalk.setKalk(server.data,self.aKalkulace)
+       }
+       //f.Alert(JSON.stringify(server))
+     }),
+     await eventBus.$on('SAVEZAZNAM', (server) => {
+       //f.Alert2('Co tu delas ?', "DATABAZE!! " )
+       if (server.data.nazev=='') {
+          f.Alert2('Nazev je nutne vyplnit',self.user)
+       } else {
+           //f.Alert2('Delka kalkulace', self.aKalkulace.length)
+
+          //queryKalk.setVkladUser(server.data,self.aKalkulace,server.idefix, self.cTable)
+          var SaveKalkulkace=true
+          if (self.aKalkulace.length<1) {
+            SaveKalkulkace=false
+
+          }
+
+          if (server.idefix != self.IDEFIXACTIVE){
+            f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace ne"  )
+            SaveKalkulkace = false
+            queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
+
+          } else
+          if (server.idefix == self.IDEFIXACTIVE && server.idefix > 0 ) {
+            f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace Ano"  )
+            SaveKalkulkace = true
+            queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
+
+          }
+
+
        }
        //f.Alert(JSON.stringify(server))
      }),
@@ -607,6 +643,23 @@ export default {
 
           //self.RozdelKalkulaci(server)
       }
+      if (server.key == 672) {  //Aplikuj novy template
+
+            //f.Alert2("DELETE", server.idefix)
+
+
+            try {
+              self.copyVL(server.idefix)
+            } catch(e) {
+              f.Alert2("HAVARIE")
+            }
+
+          //self.RozdelKalkulaci(server)
+      }
+
+
+
+
 
       //Ukladani - rozdelena = 668
 
@@ -686,13 +739,17 @@ export default {
 //   f.Info(queryKalk)
 
   const self=this
+   this.ID = Math.round(Math.random() * 19834581377)
+  this.aKalkulace = this.$store.state.Kalkulace
+
   self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
   await self.setIdefixActive()
 
 
 
-   this.ID = Math.round(Math.random() * 19834581377)
-   this.aKalkulace = this.$store.state.Kalkulace
+
+
+
 
    //$(document).on('click', function(e){
      $(document).ready(function(){
@@ -814,14 +871,14 @@ export default {
      dataRadka=f.dataRadka(server.id2)
      server.data["expedice_datum"] = dataRadka.expedice_datum
      server.data["expedice_cas"]  =  dataRadka.expedice_cas
-     f.Alert('data2', self.IDEFIXACTIVE)
+     //f.Alert('data2', self.IDEFIXACTIVE)
       //f.Alert('Radka SEND: ', f.Jstr(dataRadka), 'CAS: ', f.Jstr(dataRadka.expedice_cas))
 
       await queryKalk.VkladUser(dataRadka,server.Kalkulace1 ,self.cTable,dataRadka.nazev , false , self.IDEFIXACTIVE)
       await queryKalk.VkladUser(server.data,server.Kalkulace2 ,self.cTable, "Nová řádka", true,0)
 
 
-      self.aKalkBefore=[]
+      //self.aKalkBefore=[]
       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
       self.setIdefixActive()
       setTimeout(function(){
@@ -837,12 +894,39 @@ export default {
     async delVL(idefix){
      const self = this
       await queryKalk.delete(idefix ,self.cTable )
+      if (idefix == self.IDEFIXACTIVE) {
+       self.aKalkulace =[]
+       self.$store.dispatch('cleanKalk')
+      }
       //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
-      self.aKalkBefore=[]
+      //self.aKalkBefore=[]
       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
       self.setIdefixActive()
       setTimeout(function(){
         self.idRend++
+      },500)
+
+   },
+
+    async copyVL(idefix){
+     const self = this
+
+      await queryKalk.CopyUser(idefix ,self.cTable )
+      self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+      //self.aKalkBefore=[]
+      //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+      //f.Alert(self.IDEFIXACTIVE, " P{RED")
+      await self.setIdefixActive()
+      //f.Alert(self.IDEFIXACTIVE, " P O")
+      var tmp = self.IDEFIXACTIVE
+      self.IDEFIXACTIVE = 0
+      //f.Alert(self.IDEFIXACTIVE)
+      await self.setVL(tmp)
+      return
+
+      setTimeout(function(){
+        self.idRend++
+        self.TestRend++
       },500)
 
    },
@@ -854,12 +938,11 @@ export default {
        self.$store.dispatch('cleanKalk')
        await queryKalk.setActive(0,self.cTable,0)
        self.setIdefixDeActive()
+
        //self.IDEFIXACTIVE =0
        //f.Alert("R")
        return
      }
-     //f.Alert('Rozbal INDEX setVL ', idefix)
-
 
 
      queryKalk.setActive(idefix,self.cTable)
@@ -870,7 +953,7 @@ export default {
 
         var nK= await(queryKalk.getTemplateUser(idefix,self.cTable))
 
-         self.aKalkBefore=[]
+         //self.aKalkBefore=[]
          self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
 
 
@@ -879,6 +962,10 @@ export default {
          //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
          self.setIdefixActive()
+         setTimeout(function(){
+            self.idRend++
+            self.TestRend++
+         },500)
 
          // self.KalkulaceThis = -1
          // self.KalkulaceLast = -1
