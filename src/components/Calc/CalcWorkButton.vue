@@ -47,7 +47,7 @@
       </td>
       <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em;height:28px" class="honza_color" >
         <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%" >
-         <button class="kolecko2" @click="send()" title="Ulozit" :id="'send_'+ID2">
+         <button class="kolecko2" @click="send('template')" title="Ulozit" :id="'send_'+ID2">
            <div class="kolecko" >
            <i class="el-icon-upload" style="color:#93908e;position:absolute;top:-0px;left:0px"
            ></i>
@@ -625,20 +625,7 @@ export default {
 
   },
 
-  async saveVL(){ //Update
-    if (f.Confirm('Uozit VL - update?')){
-      const self = this
-    var def= $.Deferred()
-    var idefixuser=self.$store.state.idefix
-  //  alert(self.form.ID)
-    self.form.ID=self.ID2
-    await eventBus.$emit('MenuHlavni', {key: 670, idefix: self.IDEFIX, data: self.form  })
 
-    return def.promise()
-
-    }
-    //f1.Alert2('Ulozeni', IDEFIX );
-  },
 
   async setVL(){
     const self=this
@@ -809,23 +796,48 @@ async KalkulacePrepocetKusy(k, ks=1){
 
     return
   },
-  async send(){
+  async send(co='template'){
     const self = this
     var def= $.Deferred()
     var idefixuser=self.$store.state.idefix
     self.form.ID=self.ID2
-    if (self.IDEFIX > 0 ){
-  //    f.Alert('A' + self.IDEFIX )
+    if (co == 'zaznam'){  //self.IDEFIX > 0 ||
+      //f.Alert('Zaznam ' + self.IDEFIX )
        //await eventBus.$emit("SAVEZAZNAM",{data: self.form, idefix: self.IDEFIX })
+
        def.resolve( eventBus.$emit("SAVEZAZNAM",{data: self.form, idefix: self.IDEFIX }))
        return def.promise()
-    }  else {
+    }  else
+    if ( co=='template') //self.IDEFIX == 0 ||
+     {
+
     //  f.Alert('B')
        //await eventBus.$emit("SAVETEMPLATE",{data: self.form })
        def.resolve( eventBus.$emit("SAVETEMPLATE",{data: self.form }) )
        return def.promise()
     }
 
+  },
+  async jarda () {
+    f.Alert('jarda')
+  },
+  async saveVL() { //Update
+     const self = this
+    if (f.Confirm('Uozit VL - update?')){
+      await self.send('zaznam')
+      //await self.jarda('zaznam')
+      return
+
+    var def= $.Deferred()
+    var idefixuser=self.$store.state.idefix
+  //  alert(self.form.ID)
+    self.form.ID=self.ID2
+    await eventBus.$emit('MenuHlavni', {key: 670, idefix: self.IDEFIX, data: self.form  })
+
+    return def.promise()
+
+    }
+    //f1.Alert2('Ulozeni', IDEFIX );
   },
   async dlg(){
     $("#box"+self.ID ).dialog({

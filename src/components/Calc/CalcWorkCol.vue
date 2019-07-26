@@ -256,8 +256,8 @@
             <textarea-autosize type="text"
                 v-model="form.txtStroj"
                 size="mini"
-                style="width:100%; height:16px;max-height:60px;border:none;font-size:12px"
-                class="nb elevation-0 pb-0 pt-0"
+                style="width:100%; height:16px;max-height:60px;border:none;font-size:110%;padding-left:5px;"
+                class="nb elevation-0 pb-0 pt-0 p-1"
                 :placeholder="'Hledani Stroj '+ getType()+ ' '+ID"
                 rows="1"
 
@@ -275,7 +275,8 @@
               <textarea-autosize type="text"
               v-model="form.txt"
               size="mini"
-              style="width:100%; height:16px;max-height:60px;border:none;font-size:12px"
+              style="width:100%; height:16px;max-height:60px;border:none;font-size:110%;"
+              class="pl-1"
               rows="1"
               :placeholder="'Hledani Mat'+ getType()+ ' '+ID"
               @focus.native="fokus('mat');form.showtxt=true"
@@ -290,7 +291,7 @@
          <v-card style="width:100%;float:none" class="pa-0 elevation-0"  v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Rez/)  && !getType().match(/Baleni/)" >
           <v-card-text style="width:80%; text-align: left" class="pa-0 pl-1" >
           <select v-if="getType()!=='Mat1'" v-model="form.tisk"  @change="saveVuexData(); classJarda('sel1_'+ID)" :id="'sel1_'+ID"       @keydown="classJarda('sel1opt_'+ID+'_'+form.tisk)"
-            style="color:black;font-color:black;border: 1px solid white !important" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
+            style="color:black;font-color:black;border: 1px solid white !important;font-size:110%" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
           >
             <option v-for="(a,b ) in Tisk"
                 :key="a.val"
@@ -312,8 +313,8 @@
             <textarea-autosize type="text"
                 v-model="form.txtPrace"
                 size="mini"
-                style="width:100%; height:16px;max-height:60px;border:none;font-size:12px"
-                class="nb elevation-0 pb-0"
+                style="width:100%; height:16px;max-height:60px;border:none;font-size:110%;"
+                class="nb elevation-0 pb-0 pl-1"
                 :placeholder="'Hledani Prace '+ getType()+ ' '+ID"
                 rows="1"
 
@@ -330,8 +331,8 @@
             <textarea-autosize type="text"
                 v-model="form.txtDod"
                 size="mini"
-                style="width:100%; height:16px;max-height:60px;border:none;font-size:12px"
-                class="nb elevation-0 pb-0"
+                style="width:100%; height:16px;max-height:60px;border:none;font-size:110%;"
+                class="nb elevation-0 pb-0 pl-1"
                 :placeholder="'Hledani Dod '+ getType()+ ' '+ID"
                 rows="1"
 
@@ -349,14 +350,14 @@
                     Naklad/ks
                   </td>
                   <td style="width:30%" class="prava">
-                    <input type="number" v-model="form.ext_naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right;border-bottom: dotted 1px black" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
+                    <input type="number" v-model="form.ext_naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right;border-bottom: dotted 1px black;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
                     @change="form.ext_celkem=form.ext_naklad_ks*form.ext_pocet_ks ;saveVuexData()">
                   </td>
                   <td class="pl-1" style="width:20%">
                     Pocet
                   </td>
                   <td class="prava" style="width:30%">
-                    <input type="number" v-model="form.ext_pocet_ks" size="mini"  style="width:90%; height:15px; text-align:right;" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
+                    <input type="number" v-model="form.ext_pocet_ks" size="mini"  style="width:90%; height:15px; text-align:right;;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
                     @change="form.ext_celkem=form.ext_naklad_ks*form.ext_pocet_ks;saveVuexData()">
                   </td>
                 </tr>
@@ -365,14 +366,14 @@
                     Celkem
                   </td>
                   <td class="prava" style="width:30%">
-                    <input type="number" v-model="form.ext_celkem" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
+                    <input type="number" v-model="form.ext_celkem" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
                   </td>
                   <td class="pl-1" style="width:20%">
                     <!-- <td class="nic bila prava pr-2 blue--text " style="width:20%"> -->
                     Prodej
                   </td>
                   <td class="prava" style="width:30%">
-                    <input type="number" v-model="form.ext_prodej" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
+                    <input type="number" v-model="form.ext_prodej" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
                   </td>
                 </tr>
               </table>
@@ -389,7 +390,7 @@
                 <td style="width:60%">Prodejni cena</td>
                 <td style="width:40%">
                   <input type="hidden" v-model="formx" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1"  >
-                  <input type="number" v-model="form.prodejDTP" size="mini"  placeholder="Prodej DTP" style="width:100%; height:15px; text-align:right" class="tdl tdn elevation-0 pl-1 "
+                  <input type="number" v-model="form.prodejDTP" size="mini"  placeholder="Prodej DTP" style="width:100%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pl-1 "
                   @change="formx=formx+1"
                    >
                 </td>
@@ -407,7 +408,7 @@
               <td style="width:70%" class="pl-3">
                 <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"
                   @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)"
-                  style="width:100%;color:black;font-color:black;border: 1px solid white !important;" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
+                  style="width:100%;color:black;font-color:black;border: 1px solid white !important;font-size:110%" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
                 >
                   <option v-for="(c,d ) in Baleni"
                       :key="c.val"
@@ -423,31 +424,31 @@
             <tr v-if="form.baleni==0">
               <td  class="leva pl-1">Cena</td>
               <td  class="prava">
-                <input type="number" v-model="form.naklad_mody" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+                <input type="number" v-model="form.naklad_mody" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
             </tr>
             <tr v-if="form.baleni==1">
               <td  class="leva pl-1">Po</td>
               <td  class="prava">
-                <input type="number" v-model="form.naklad_po" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+                <input type="number" v-model="form.naklad_po" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
             </tr>
             <tr v-if="form.baleni==2">
               <td  class="leva pl-1">Pocet</td>
               <td  class="prava">
-                <input type="number" v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+                <input type="number" v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
             </tr>
             <tr v-if="form.baleni==3">
               <td  class="leva pl-1">Pocet</td>
               <td  class="prava">
-                <input type="number" v-model="form.naklad_cena" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+                <input type="number" v-model="form.naklad_cena" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
             </tr>
             <tr >
               <td  class="leva pl-1">Naklad ks</td>
               <td  class="prava">
-                <input type="number" v-model="form.naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
+                <input type="number" v-model="form.naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
               </td>
             </tr>
           </table>
@@ -464,7 +465,7 @@
           <v-card-text style="text-align:left" class="pa-0">
             <textarea
               type="textarea" v-model="form.poznamka"
-              style="width:100%; min-height:5em;max-height:160px;border:none;font-size:12px"
+              style="width:100%; min-height:4em;max-height:160px;border:none;font-size:14px"
 
               class="nb elevation-0 pb-0 grey lighten-3"
               placeholder="poznamka"
@@ -477,15 +478,15 @@
         <v-card style="width:100%;float:none;position:absolute;bottom:0px;height:2em;vertical-align: text-bottom;" class="white" v-if="!getType().match(/Balenixx/)">
           <v-card-text style="text-align:left;width:100%;vertical-align: text-bottom;" class="pa-0">
             <table><tr><td style="width:20%">
-            Naklad&nbsp;&nbsp;
+            &nbsp;Naklad&nbsp;&nbsp;
             </td><td  style="width:30%">
-            <input type="number" v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1" readonly @change="saveVuexData()">
+            <input type="number" v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" readonly @change="saveVuexData()">
             </td><td  style="width:20%">
             <span v-if="level==3" >Korekce&nbsp;&nbsp;</span>
             <span v-else>&nbsp;</span>
             </td><td  style="width:30%">
 
-            <input v-if="level==3" type="number" v-model="form.nakladkorekce" size="mini"  style="width:90%; height:15px; text-align:right" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+            <input v-if="level==3" type="number" v-model="form.nakladkorekce" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
             <span v-else>&nbsp;</span>
             </td></tr></table>
           </v-card-text>

@@ -312,7 +312,7 @@ async CopyUser(idefixactive=0,cTable="") {
   })
 
 },
-async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=0, SaveKalkulkace=true){
+async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=0, SaveKalkulkace=true, SaveData=true){
 
   var idefix=store.state.idefix
   var atmp=[]
@@ -364,7 +364,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
   ) `
   //f.Alert("Isert " , idefixactive , active)
   } else {
-    if (SaveKalkulkace==true) {
+    if (SaveKalkulkace==true && SaveData==true) {
         var q = `update ${cTable} set
       nazev              = trim('${data.nazev}'),
       kcks               = '${data.kcks}',
@@ -381,6 +381,16 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
       where idefix = ${idefixactive}
       `
   } else
+  if (SaveKalkulkace==true && SaveData==false) {
+
+    var q = `update ${cTable} set
+        obsah              = '${kalkulace2}',
+        user_update_idefix = '${idefix}',
+        time_update = now()
+        where idefix = ${idefixactive}
+  `
+//  f.Alert('Ulozeni bez data ', q )
+} else
   if (SaveKalkulkace==false) {  //Zabalena radka, kalkulaci neprepisuji
     var q = `update ${cTable} set
     nazev              = trim('${data.nazev}'),

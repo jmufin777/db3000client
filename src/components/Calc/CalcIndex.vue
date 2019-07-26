@@ -21,6 +21,8 @@
     <!-- {{aKalkulace}} -->
 
 <div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
+  <input type="text" id="Zmenad" value="0" class="black white--text" style="width:100px">
+  JARDA : {{IDEFIXACTIVE}}
    <div  v-for="(aBefore,iBefore ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix<IDEFIXACTIVE || IDEFIXACTIVE==0) })" :key="iBefore"
      slot="kalkulace"
      style="position:relative;width:100%;top:0em;overflow:scroll"
@@ -38,7 +40,8 @@
 
         <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska" >
           <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
-          <work-but  v-if="aKalkBefore.length==0" :ID="'AB_'+iK" :ZobrazMenu="true" :isOpen="true" :ID2="ID+999666" :key="'AWC_'+iK+''+idRend"></work-but>
+            <!-- ||  IDEFIXACTIVE==0 -->
+          <work-but  v-if="aKalkBefore.length==0 " :ID="'AB_'+iK" :ZobrazMenu="true" :isOpen="true" :ID2="ID+999666" :key="'AWC_'+iK+''+idRend"></work-but>
 
           <!-- && e.idefix==IDEFIXACTIVE -->
           <work-but v-for="(aBefore1,iBefore1 ) in aKalkBefore.filter(e=>{return e.active==true  })"
@@ -446,6 +449,7 @@ export default {
      aKalkBefore:[],
      aKalkAfter:[],
      IDEFIXACTIVE:0,
+     IDEFIXACTIVELAST:0,
      NAZEVACTIVE:'',
    }
  },
@@ -512,20 +516,25 @@ export default {
           var SaveKalkulkace=true
           if (self.aKalkulace.length<1) {
             SaveKalkulkace=false
-
           }
-
           if (server.idefix != self.IDEFIXACTIVE){
-            f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace ne"  )
+    //        f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace ne"  )
             SaveKalkulkace = false
-            queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
+            self.saveZaznam(server,1)   // prepis radky
+            //queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
 
           } else
           if (server.idefix == self.IDEFIXACTIVE && server.idefix > 0 ) {
-            f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace Ano"  )
+  //          f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace Ano"  )
+            self.saveZaznam(server,2)   //prepis radky a kalkulace
             SaveKalkulkace = true
-            queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
-
+            //queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
+          } else
+          if (server.idefix == 0 && self.IDEFIXACTIVE==0 ) {
+//            f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace Ano , VKLAD ANO"  )
+            self.saveZaznam(server,3) //vklad radky i kalkulace
+            SaveKalkulkace = true
+            //queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", true, server.idefix, SaveKalkulkace )
           }
 
 
@@ -624,8 +633,6 @@ export default {
             //f.Alert2("DELETE", server.idefix)
             self.delVL(server.idefix)
           //self.RozdelKalkulaci(server)
-
-
       }
       if (server.key == 670) {  //Aplikuj novy template
             //f.Alert2("DELETE", server.idefix)
@@ -745,6 +752,9 @@ export default {
   self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
   await self.setIdefixActive()
 
+  setInterval(function(){
+    self.IsZmena()
+  },1000)
 
 
 
@@ -768,6 +778,8 @@ export default {
             hide: "explode",
         });
       */
+
+
         $(".myska").bind("mouseenter", function () {
           return
 
@@ -819,7 +831,11 @@ export default {
 
     });
 
+
+
      })
+
+
 
     //$("#plovoucimapa").css('top', e.pageY);
     //$("#plovoucimapa").css('left', e.pageX);
@@ -862,6 +878,22 @@ export default {
         return
       }
     })
+   },
+   IsZmena() {
+     $("input[type=text]").change( function(){
+        $("#Zmenad").get(0).value++
+
+      })
+      $("input[type=number]").change( function(){
+        $("#Zmenad").get(0).value++
+
+      })
+      $("textarea").change( function(){
+        $("#Zmenad").get(0).value++
+      })
+      $("select").change( function(){
+        $("#Zmenad").get(0).value++
+      })
    },
 
    async RozdelKalkulaci(server){
@@ -930,22 +962,104 @@ export default {
       },500)
 
    },
+  async saveZaznam(server,kod){
+      const self = this
+      var SaveKalkulkace = false
+      if (kod == 1 ){
+        SaveKalkulkace = false  //Ulozeni radky zavrene kalkulace
 
+        f.Alert('kod 1 - prepis ')
+        //saveZaznam(server,SaveKalkulace,1)
+        await queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
+
+        //f.Alert(kod," : ", self.IDEFIXACTIVE)
+
+      }
+      if (kod == 2 ){
+        SaveKalkulkace = true  //Ulozeni otevrene kalkulace
+        f.Alert('kod 2 - prepis - otevrena kalkulace')
+        //saveZaznam(server,SaveKalkulace,1)
+        await queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
+        //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+        //await self.setIdefixActive()
+        //f.Alert(kod," : ", self.IDEFIXACTIVE)
+      }
+      if (kod == 3){
+        //saveZaznam(server,SaveKalkulace,3)
+        f.Alert('kod 3 - Vklad - otevrenakalkulace')
+        SaveKalkulkace = true
+        await queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", true, server.idefix, SaveKalkulkace )
+        //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+        //await self.setIdefixActive()
+        //f.Alert(kod," : ", self.IDEFIXACTIVE)
+      }
+      if (kod == 4){
+        f.Alert('kod 4 - prepis - en kalkulace ne datova radka')
+        //Pri prepnuti ulozit kalkulaci a data v radce ponechat
+        SaveKalkulkace = true
+        await queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace, false )
+        //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+        //await self.setIdefixActive()
+        //f.Alert(kod," : ", self.IDEFIXACTIVE)
+      }
+      $("#Zmenad").get(0).value=0
+           //var nK=            await(queryKalk.getTemplateUser(idefix,self.cTable))
+
+           self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+           await self.setIdefixActive()
+           alert(self.IDEFIXACTIVE)
+
+
+           //self.aKalkulace=[]
+         //self.aKalkulace =  f.Jparse(nK[0].obsah)
+         //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+         //await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
+
+
+         self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
+         setTimeout(function(){
+            self.idRend++
+            self.TestRend++
+         },500)
+
+  },
    async setVL(idefix) {
      const self = this
+
+     var neco=$("#Zmenad").get(0).value
+       if  (neco*1 > 0) {
+        if (confirm('Stranka obsahuje neulozena data, pokracovat v zabaleni ?')) {
+          $("#Zmenad").get(0).value=0
+        } else {
+           return
+        }
+        }
      if (idefix == self.IDEFIXACTIVE) {
        self.aKalkulace =[]
        self.$store.dispatch('cleanKalk')
        await queryKalk.setActive(0,self.cTable,0)
        self.setIdefixDeActive()
-
-       //self.IDEFIXACTIVE =0
-       //f.Alert("R")
        return
      }
 
+     //&&  self.IDEFIXACTIVELAST>0
+      if (self.IDEFIXACTIVE != idefix && self.IDEFIXACTIVE > 0 && idefix > 0){
 
-     queryKalk.setActive(idefix,self.cTable)
+        //f.Alert('Stara 1;',self.IDEFIXACTIVE, ' Stara 2 ', self.IDEFIXACTIVELAST, ' Chci ',idefix )
+        if (neco > 0){
+
+          await self.saveZaznam({idefix: self.IDEFIXACTIVE, data: {}   },4)
+        }
+
+
+
+        //await self.
+
+      }
+
+
+
+     await queryKalk.setActive(idefix,self.cTable)
      // return
      self.IDEFIXACTIVE=idefix
      //self.IDEFIXACTIVE =  (await queryKalk.getActive(self.cTable))
@@ -962,6 +1076,8 @@ export default {
          //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
          self.setIdefixActive()
+
+         self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
          setTimeout(function(){
             self.idRend++
             self.TestRend++
@@ -990,6 +1106,7 @@ export default {
      //self.$store.dispatch('saveKalkCela', {data: server.Kalkulace })
      //var nK= await(queryKalk.getTemplate(self.form.idefix))
    },
+
    async saveVL(idefix) {
      const self = this
      f.Alert('Uloz - update saveVL ', idefix)
