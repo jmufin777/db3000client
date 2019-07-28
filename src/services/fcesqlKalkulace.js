@@ -568,7 +568,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
       })
     }  catch(e) {
       defer.resolve(atmp)
-      f.Alert2('Chyba  getTemplatesUser')
+      f.Alert2('Chyba  getTemplatesUser', e )
     }
 
     //f.Info('Get User 1',JSON.stringify(atmp))

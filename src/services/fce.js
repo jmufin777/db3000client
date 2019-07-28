@@ -744,8 +744,8 @@ entrcount(neco) {
 Alert(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
   var defer = $.Deferred();
   setTimeout(function(){
-
-    alert(ctxt1+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6)
+//     alert(ctxt1+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6);
+     defer.resolve(alert(ctxt1+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6));
   },500)
   return defer.promise()
 },

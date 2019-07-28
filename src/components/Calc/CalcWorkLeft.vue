@@ -797,21 +797,15 @@ async MenuStroj() {
       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatValue' , value: a })
       if (self.form.sirka >0 && self.form.vyska > 0 ){
         //alert('aaaaa')
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska' , value: self.form.vyska })
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatTisk' , value: self.form.tisk })
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatPanelovat' , value: self.form.panelovat })
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirkaPanel' , value: self.form.sirkaPanel })
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
-      self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) ) })
-
-
-      //self.Kalk.data.txtFormat =
-      //self.$store.dispatch('replaceKalk',self.Kalk)
-      //alert(self.Kalk.data.txtFormat)
-
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska' , value: self.form.vyska })
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatTisk' , value: self.form.tisk })
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatPanelovat' , value: self.form.panelovat })
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirkaPanel' , value: self.form.sirkaPanel })
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) )*self.form.nakladks })
 
       }
 
@@ -1082,7 +1076,7 @@ getFormatName() {
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirkaPanel' , value: self.form.sirkaPanel })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatNakladKs' , value: self.form.nakladks })
        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
-       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) ) })
+       self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) )*self.form.nakladks })
        //self.Kalk.data.txtFormat = self.form.Format
        //self.$store.dispatch('setKalk',self.Kalk)
        //self.$store.dispatch('setKalk',idK)
@@ -1117,7 +1111,7 @@ getFormatName() {
       if (self.form.showtxtStroj )  self.form.showtxtStroj  = false
       if (self.form.showtxtStroj1 ) self.form.showtxtStroj1 = false
     } else {
-      console.log("drzim ", self.ID)
+      // console.log("drzim ", self.ID)
     }
 
   },

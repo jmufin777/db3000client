@@ -1,57 +1,52 @@
 <template>
-<div style="position:relative;top:0px;background:#fdf0f7;text-align:left;font-size:14px;">
-      <div style="position:relative;top:0px;background:#fdf0f7;text-align:left">
-        <button v-for="(item,i) in aMain" :key="i" class="px-4 tlacitkoMenu elevation-2"
+<div style="position:relative;top:0px;background:#e4eff8;text-align:left;font-size:14px;">
+      <div style="position:relative;top:0px;background:#e4eff8;text-align:left">
+        <button v-for="(item,i) in aMain" :key="i" class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="setMenu(item.id)"
           :class="{'tlacitkoMenuActive':setmenu==item.id}"
+
           >
          {{item.txt}}
         </button>
+        <span class="tlacitkoMenu elevation-0 ml-4 pr-2 pb-1 pt-1" style="border-radius:0px 0px 0px 0px;background:#e4eff8">
+           <input type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;widht:30em;border: solid 1px black">
+           <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+           <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
+           </span>
+        </span>
+        {{ LastMain }}
       </div>
 
-      <div v-if="setmenu==''" style="position:relative;top:0px;background:#fdf0f7;text-align:left;height:5em;font-size:12px;">
+      <div v-if="setmenu==''" style="position:relative;top:0px;background:#e4eff8;text-align:left;height:3em;font-size:12px;">
           Nic neni vybrano
       </div>
-      <div v-if="setmenu=='kalkulace'" style="position:relative;top:0px;background:#fdf0f7;text-align:left;height:5.2em;font-size:14px;">
+      <div v-if="setmenu=='kalkulace'" style="position:relative;top:0px;background:#e4eff8;text-align:left;height:3.2em;font-size:14px;">
         <table><tr>
-          <td v-for="(item2,i2) in aSubKalkulace" :key="i2"   style="max-width: 6em;background:#fdf0f7;font-size:14px;">
+          <td v-for="(item2,i2) in aSubKalkulace" :key="i2"   style="max-width: 8em;background:#e4eff8;font-size:14px;">
           <button
-          class="px-2 elevation-0 pt-2"
+          class="px-1  pt-2 hoVer"
           @click="send(item2.id)"
           :class="{'blue--text':item2.set==1}"
+
          >
-         <div>
-          <i class="el-icon-circle-plus-outline" style="font-weight:bold;height:15px"></i>
-         </div>
-         <div class="pa-0">
-            <b >{{item2.txt}}</b>
-        </div>
+         <table style="background:#e4eff8"><tr><td style="background:#e4eff8;width:20px;
+         ">
+          <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:120%;"></i>
+         </td><td style="background:#e4eff8;"
+                :class="{'blue--text': item2.id==LastMain}"
+         >
+            <b class="hoVer"
+            >{{item2.txt}}</b>
+        </td></tr></table>
        </button>
           </td>
-          <td style="max-width: 5em;background:#fdf0f7">
-         <div class="pt-2 pl-2">
-          <i class="el-icon-search" style="font-weight:bold;height:15px"></i>
-         </div>
-         <div style="font-weight:bold;height:15px">
-           <b >Hledat</b>
-         </div>
 
-          </td>
-          <td style="max-width: 25em;background:#fdf0f7">
-
-
-         <div class="pt-3 pl-0">
-           <input type="text" class="white px-2"  style="border-radius:15px 15px 15px 15px;height:15px;font-size:12px;background:white !important;widht:30em">
-         </div>
-
-
-          </td>
         </tr></table>
         <!-- {{ aSubKalkulace}} -->
 
       </div>
-      <div v-else style="position:relative;top:0px;background:#fdf0f7;text-align:left;height:5.2em;font-size:11px;" >
-          Zatim nejsem naprogramovane menu pro tento vyber
+      <div v-else style="position:relative;top:0px;background:#e4eff8;text-align:left;height:4.05em;font-size:11px;" >
+          Aktualne v procesu
     </div>
 
       <div style="position:relative;top:0px;background:#ffffff;text-align:left;border-top: solid 1px #cacade;height:10em;font-size:12px;">
@@ -185,7 +180,7 @@ export default {
      setmenu:"kalkulace",
      setsub:0,
 
-     lastSend:0,
+     LastMain: 0,
      aMain : [
         {id: "zakazky",  txt: "Zakázky"},
         {id: "kalkulace",txt: "Kalkulace"},
@@ -195,13 +190,15 @@ export default {
         {id: "xxx", txt:  "???"},
        ],
        aSubKalkulace:[
-        {id:1, txt: "Nová Velkoplošná",set: 0},
-        {id:2, txt: "Nová Archová" ,set: 0},
-        {id:3, txt: "Nová Jiná",set: 0},
-        {id:4, txt: "Nová Externí",set: 0},
+        {id:9, txt: "Nová sada",set: 0},
+        {id:1, txt: "Velkoplošná",set: 0},
+        {id:2, txt: "Archová" ,set: 0},
+        {id:3, txt: "Jiná",set: 0},
+        {id:4, txt: "Externí",set: 0},
         {id:777, txt: "Ulozit",set: 0},
         {id:666, txt: "Vycistit",set: 0},
-       ]
+       ],
+
    }
  },
  created() {
@@ -243,12 +240,12 @@ export default {
 
 
      if (key > 0  ) {
-       self.lastSend = key
+       self.LastMain = key
        // console.log('tag', '')
        eventBus.$emit('MenuHlavni', {key: key })
      }
      if ( key == 11) {
-       self.lastSend = 0
+       self.LastMain = 0
      }
    }
 
@@ -362,6 +359,22 @@ table tr td  {
 ::-ms-input-placeholder { /* Microsoft Edge */
   color: #ffffff;
 }
+.hoVer:hover {
+      text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 1px 0 #bbb,
+               0 1px 0 #b9b9b9,
+               0 1px 0 #aaa,
+               0 1px 1px rgba(0,0,0,.1),
+               0 0 1px rgba(0,0,0,.1),
+               0 1px 1px rgba(0,0,0,.3),
+               0 1px 1px rgba(0,0,0,.2),
+               0 1px 1px rgba(0,0,0,.25),
+               0 1px 1px rgba(0,0,0,.2),
+               0 1px 1px rgba(0,0,0,.15);
+
+}
+
 </style>
 
 

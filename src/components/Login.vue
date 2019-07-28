@@ -61,12 +61,12 @@ export default {
     self.ID = Math.round(Math.random() * 1983458)
 
     if (!this.$store.state.isUserLoggedIn) {
-      this.$message({
-                 message: 'Neprihlaseno, prihlaste se prosim',
-                 type: 'error',
-                 center: true,
-                 duration: 3000
-              })
+      // this.$message({
+      //            message: 'Neprihlaseno, prihlaste se prosim',
+      //            type: 'error',
+      //            center: true,
+      //            duration: 3000
+      //         })
       setTimeout(function(){
 
           self.setFocus("Login_"+self.ID)
@@ -77,40 +77,56 @@ export default {
 
     if (this.$store.state.isUserLoggedIn) {
 
-      this.$message({
-                dangerouslyUseHTMLString: true,
-                message: 'Prihlaseno, Overuji pristupove urovne',
-                type: 'error',
-                center: true,
-                duration: 500
-              })
+      // this.$message({
+      //           dangerouslyUseHTMLString: true,
+      //           message: 'Prihlaseno, Overuji pristupove urovne',
+      //           type: 'error',
+      //           center: true,
+      //           duration: 500
+      //         })
       this.loginUpdate()
-      .then(res => {
-           this.$message({
-                dangerouslyUseHTMLString: true,
-                message: 'Uroven overena, cekame, na polozky menu',
-                type: 'success',
-                center: true,
-                duration: 1000
-              });
+      .then(res=>{
+        console.log('Spusteno')
+        this.menuUpate()
 
+        // .then(res=>{
+        //   this.$message({
+        //         dangerouslyUseHTMLString: true,
+        //         message: 'Spusteno',
+        //         type: 'success',
+        //         center: true,
+        //         duration: 15000
+        //       });
+        // })
       })
 
+      // this.loginUpdate()
+      // .then(res => {
+      //      this.$message({
+      //           dangerouslyUseHTMLString: true,
+      //           message: 'Uroven overena, cekame, na polozky menu',
+      //           type: 'success',
+      //           center: true,
+      //           duration: 1000
+      //         });
+
+      // })
 
 
 
-      this.menuUpate()
-      .then( res => {
 
-           this.$message({
-                dangerouslyUseHTMLString: true,
-                message: 'Spusteno',
-                type: 'success',
-                center: true,
-                duration: 1500
-              });
+      // this.menuUpate()
+      // .then( res => {
 
-      })
+      //      this.$message({
+      //           dangerouslyUseHTMLString: true,
+      //           message: 'Spusteno',
+      //           type: 'success',
+      //           center: true,
+      //           duration: 1500
+      //         });
+
+      // })
       this.$router.push({
         name: 'desktop'
       })
@@ -163,19 +179,21 @@ export default {
     },
     async login0 () {
       const self = this
+/*
             this.$message({
                 dangerouslyUseHTMLString: true,
                 message: 'Prihlasuji - autorizuji v databazi',
                 type: 'error',
-
                 center: true,
                 duration: 1000
               });
+              */
       try {
         const response = await AuthService.login({
           login: this.login,
           password: this.password
         })
+        /*
         this.$message({
                 dangerouslyUseHTMLString: true,
                 message: 'Nacitam menu',
@@ -184,19 +202,21 @@ export default {
                 center: true,
                 duration: 2000
               })
+        */
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
         this.$store.dispatch('setLevel', response.data.level)
         this.$store.dispatch('setIdefix', response.data.idefix)
         this.menuUpate()
         .then(res => {
-           this.$message({
-            dangerouslyUseHTMLString: true,
-            message: 'Spoustim aplikaci',
-            type: 'info',
-            center: true,
-            duration: 2000
-           })
+
+          //  this.$message({
+          //   dangerouslyUseHTMLString: true,
+          //   message: 'Spoustim aplikaci',
+          //   type: 'info',
+          //   center: true,
+          //   duration: 2000
+          //  })
           this.$router.push({
           name: 'desktop'
         })
@@ -204,6 +224,7 @@ export default {
         })
 
       } catch (error) {
+
         this.$message({
                 dangerouslyUseHTMLString: true,
                 message: `Doslo k chybe ${this.error}`,

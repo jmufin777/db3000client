@@ -82,7 +82,8 @@ export default {
       vse: [],
       who: [],
       insterval1:'',
-      tStart: 0
+      tStart: 0,
+      CounterJarda:0,
     }
   },
   mounted () {
@@ -90,12 +91,12 @@ export default {
 
       try{
         console.log('Status nacten')
-        this.$message({
-                message: 'Status nacten',
-                type: 'success',
-                center: true,
-                duration: 2000
-             })
+        // this.$message({
+        //         message: 'Status nacten',
+        //         type: 'success',
+        //         center: true,
+        //         duration: 2000
+        //      })
       } catch (e){
         //
          console.log('Error moutn dbstatus')
@@ -108,7 +109,11 @@ export default {
   async testNotify()   {
     // return
     const self =this
-    console.log(this.user,'bb')
+    self.CounterJarda++
+    if (self.CounterJarda == 1 || self.CounterJarda % 50 ==0  ){
+      console.log(this.user,'CounterJarda ',self.CounterJarda)
+    }
+
 
     var neco3  = (await ListFirma.one(this.user,0, 1011,''))
 
@@ -155,7 +160,8 @@ export default {
   },
   async db_who()  {
      const self = this
-      console.log(this.user)
+
+     // console.log(this.user)
      await  DbStatusService.who({idefix: this.$store.state.idefix})
      .then(res => {
        this.who = res.data.data

@@ -99,6 +99,7 @@
             :id="'marze_pomer'+ID2"
             readonly
           >
+
           </td>
           <td style="width:20%" class="honza_color">
             <span style="font-size:20px">%</span><span></span>
@@ -342,7 +343,7 @@ export default {
           })
           self.dataTemplates=server.data
           self.showTemplates = true
-          f.Info(f.Jstr(self.dataTemplates))
+          //f.Info(f.Jstr(self.dataTemplates))
 
         //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
 

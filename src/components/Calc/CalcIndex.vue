@@ -1,5 +1,5 @@
 <template>
-  <div style="height:400px" class="obal">
+  <div style="height:400px" class="obal" >
     <!-- Link:
   <router-link :to="{name: 'col', params: {ktery: 1 }}">Moduly</router-link> -->
     <my-layout>
@@ -20,19 +20,22 @@
     </div>
     <!-- {{aKalkulace}} -->
 
-<div  slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
+<div   slot="kalkulace" style="position:fixed;width:100%;top:20em;overflow:scroll;height:70%" id="obalKalkulace">
   <input type="text" id="Zmenad" value="0" class="black white--text" style="width:100px">
-  JARDA : {{IDEFIXACTIVE}}
+  JARDA : {{IDEFIXACTIVE}} / Delka kalkulace {{aKalkulace.length}}
    <div  v-for="(aBefore,iBefore ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix<IDEFIXACTIVE || IDEFIXACTIVE==0) })" :key="iBefore"
      slot="kalkulace"
      style="position:relative;width:100%;top:0em;overflow:scroll"
      id="obalKalkulace2b"
    >
-      <work-but  :ID="'A_'+aBefore.idefix" style="position:relative;left:4px"  :dataDB="aBefore" :ID2="ID+iBefore"
+      <work-but
+      :ID="'A_'+aBefore.idefix"
+      :dataDB="aBefore"
+      :ID2="ID+iBefore"
       :IDEFIX="+aBefore.idefix"
       :key="'AWB_'+iBefore+''+idRend"
+      style="position:relative;left:4px"
        ></work-but>
-
         <!-- / {{aBefore.idefix }} -->
    </div>
 
@@ -41,22 +44,37 @@
         <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska" >
           <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
             <!-- ||  IDEFIXACTIVE==0 -->
-          <work-but  v-if="aKalkBefore.length==0 " :ID="'AB_'+iK" :ZobrazMenu="true" :isOpen="true" :ID2="ID+999666" :key="'AWC_'+iK+''+idRend"></work-but>
+          <work-but  v-if="aKalkBefore.length==0 || (IDEFIXACTIVE == 0 && aKalkulace.length >0 ) "
+            :ID="'AB_'+iK"
+            :ID2="ID+999666"
+            :ZobrazMenu="true" :isOpen="true"
+            :key="'AWC_'+iK+''+idRend">
+          </work-but>
 
           <!-- && e.idefix==IDEFIXACTIVE -->
           <work-but v-for="(aBefore1,iBefore1 ) in aKalkBefore.filter(e=>{return e.active==true  })"
-           :key="'AWD_'+iBefore1+''+idRend+''+900000"
            :ID="'AC_'+aBefore1.idefix"
+           :ID2="ID+999666"
            :IDEFIX="+aBefore1.idefix"
-           :dataDB="aBefore1" :ID2="ID+999666"
-           :ZobrazMenu="true" :isOpen="true"
-
-            ></work-but>
+           :dataDB="aBefore1"
+           :ZobrazMenu="true"
+           :isOpen="true"
+           :key="'AWD_'+iBefore1+''+idRend+''+900000"
+           ></work-but>
             <!-- NAD {{IDEFIXACTIVE}} {{ NAZEVACTIVE }} -->
+
           </span>
 
           <span v-else style="position:relative;left:30px" slot="tlacitka" >
-          <work-but-plus  :ID="iK" :ID2="ID+999666"> </work-but-plus>
+          <!-- <work-but-plus  :ID="iK" :ID2="ID+999666"></work-but-plus> -->
+          <work-but-plus
+            :ID="iK"
+            :ID2="ID+999666"
+            :IDEFIX="IDEFIXACTIVE"
+
+
+            >
+          </work-but-plus>
           </span>
           <span slot="leva" :key="'L'+ TestRend" style="position:relative;left:30px" >
           <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
@@ -430,7 +448,7 @@ export default {
      Left: 0,
      aKalkulace: [],
      lastIdK: -1,
-     KalkulaceThis: -1,
+     //KalkulaceThis: -1,
      KalkulaceLast: -1,
      CalcCount: 0,
      ColCount: 0,
@@ -557,11 +575,18 @@ export default {
      eventBus.$on('MenuHlavni', (server) => {
       self.Hlavni=server.key
       if (server.key == 666) {  //Guma
+         $("#Zmenad").get(0).value=0
          self.$store.dispatch('cleanKalk')
-         self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
-         self.KalkulaceThis = -1
+         self.aKalkulace=[]
+
+         //self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+
+         this.$store.dispatch('setKalk',-1)
+         //alert(self.KalkulaceThis)
+         //self.KalkulaceThis = -1
          self.KalkulaceLast = -1
          self.IDEFIXACTIVE=0
+
 
 
          //f.Alert2(self.idefix)
@@ -579,15 +604,16 @@ export default {
 
          Q.post(0,q)
          .then (res => {
-           f.Alert2('Vytvorena nova databaze pro tvorbu VL', JSON.stringify(res))
+           // f.Alert2('Vytvorena nova databaze pro tvorbu VL', JSON.stringify(res))
+           f.sleep(20)  //vetez kdyby nahodou neco bylo potreba sem prdnout jeste
+           //f.Alert('OK 2')
+           //f.Alert2('aaa')
            .then(res=> {
              self.aKalkBefore=[]
              self.aKalkAfter=[]
-
+             f.Alert2('Hotovo')
            })
-
          })
-
          .catch(e => {
            f.Alert2('Doslo k chybal pri komunikaci s databazi', q, e )
          })
@@ -601,8 +627,11 @@ export default {
          self.$store.dispatch('cleanKalk')
          self.$store.dispatch('saveKalkCela', {data: server.Kalkulace })
          self.aKalkulace = server.Kalkulace
-         self.KalkulaceThis = -1
+         // self.KalkulaceThis = -1
+         this.$store.dispatch('setKalk',-1)
+
          self.KalkulaceLast = -1
+
          setTimeout(function(){
             self.TestRend=self.TestRend+1
             eventBus.$emit('enable')
@@ -699,7 +728,14 @@ export default {
 
       if (server.key < 11) {
         var beforeK = self.KalkulaceLast
-        self.addKalk(server.key)
+        if (server.key == 9) {
+          self.novaSada()
+          //Zabalit
+
+        } else {
+          self.addKalk(server.key)
+        }
+
         if (server.key == 3) {
           setTimeout(function(){
            self.addKalkCol("DTP")
@@ -880,17 +916,21 @@ export default {
     })
    },
    IsZmena() {
+     $("input[type=text]").off('change');
      $("input[type=text]").change( function(){
         $("#Zmenad").get(0).value++
 
       })
+      $("input[type=number]").off('change');
       $("input[type=number]").change( function(){
         $("#Zmenad").get(0).value++
 
       })
+      $("textarea").off('change')
       $("textarea").change( function(){
         $("#Zmenad").get(0).value++
       })
+      $("select").off('change')
       $("select").change( function(){
         $("#Zmenad").get(0).value++
       })
@@ -899,7 +939,7 @@ export default {
    async RozdelKalkulaci(server){
      const self = this
      var dataRadka={}
-     //f.Alert('data1')
+     // f.Alert(server.id2)
      dataRadka=f.dataRadka(server.id2)
      server.data["expedice_datum"] = dataRadka.expedice_datum
      server.data["expedice_cas"]  =  dataRadka.expedice_cas
@@ -939,7 +979,13 @@ export default {
       },500)
 
    },
-
+   async novaSada() {
+     const self = this
+     if (self.IDEFIXACTIVE > 0) {
+            await self.setVL(self.IDEFIXACTIVE)
+     }
+     self.addKalk(1)
+   },
     async copyVL(idefix){
      const self = this
 
@@ -1028,7 +1074,7 @@ export default {
 
      var neco=$("#Zmenad").get(0).value
        if  (neco*1 > 0) {
-        if (confirm('Stranka obsahuje neulozena data, pokracovat v zabaleni ?')) {
+        if (confirm('Stranka obsahuje neulozena data, pokracovat v zabaleni ?  ' +  self.IDEFIXACTIVE +' , ' + idefix )) {
           $("#Zmenad").get(0).value=0
         } else {
            return
@@ -1357,7 +1403,8 @@ export default {
         setTimeout(function(){
           if (self.KalkulaceLast != KalkulaceLast) {
             eventBus.$emit('enable')
-            self.KalkulaceThis = self.KalkulaceLast
+            self.$store.dispatch('setKalk',self.KalkulaceLast)
+            //self.KalkulaceThis = self.KalkulaceLast
             // self.defaultStyle(self.KalkulaceThis)
             self.setKalk(self.KalkulaceThis)
             var neco = 'ref_'+self.KalkulaceThis + self.ID

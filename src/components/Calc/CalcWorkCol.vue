@@ -404,8 +404,10 @@
         <v-card style="width:100%;" class="pa-0 elevation-0"  v-if="getType().match(/Baleni/)" >
           <table style="width:100%" class="elevation-0">
             <tr>
-              <td class="leva pl-1">Zpusob</td>
-              <td style="width:70%" class="pl-3">
+              <!-- <td class="leva pl-1">Zpusob</td> -->
+              <td style="width:50%" colspan="1" class="pl-2">
+                <table>
+                  <tr><td>
                 <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"
                   @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)"
                   style="width:100%;color:black;font-color:black;border: 1px solid white !important;font-size:110%" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
@@ -419,38 +421,36 @@
                     {{ c.txt }}
                   </option>
                 </select>
-              </td>
-            </tr>
-            <tr v-if="form.baleni==0">
-              <td  class="leva pl-1">Cena</td>
-              <td  class="prava">
+               </td>
+               <td>
+                 {{(form.baleni)=='0'?'Cena':(form.baleni=='1')?'Po'+form.baleni:(form.baleni==2)?'Pocet':(form.baleni==3)?'Pocet':'Nevim'}}
+                 <input type="hidden" v-model="form.naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
+               </td>
+
+              <td   v-if="form.baleni==0" class="prava">
                 <input type="number" v-model="form.naklad_mody" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
-            </tr>
-            <tr v-if="form.baleni==1">
-              <td  class="leva pl-1">Po</td>
-              <td  class="prava">
+
+              <td   v-if="form.baleni==1" class="prava">
                 <input type="number" v-model="form.naklad_po" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
-            </tr>
-            <tr v-if="form.baleni==2">
-              <td  class="leva pl-1">Pocet</td>
-              <td  class="prava">
+
+              <td   v-if="form.baleni==2" class="prava">
                 <input type="number" v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
-            </tr>
-            <tr v-if="form.baleni==3">
-              <td  class="leva pl-1">Pocet</td>
-              <td  class="prava">
+
+              <td   v-if="form.baleni==3" class="prava">
                 <input type="number" v-model="form.naklad_cena" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
-            </tr>
-            <tr >
+
+            <!-- <tr >
               <td  class="leva pl-1">Naklad ks</td>
               <td  class="prava">
                 <input type="number" v-model="form.naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
               </td>
-            </tr>
+            </tr> -->
+               </tr></table>
+            </td></tr>
           </table>
 
 
@@ -467,7 +467,7 @@
               type="textarea" v-model="form.poznamka"
               style="width:100%; min-height:4em;max-height:160px;border:none;font-size:14px"
 
-              class="nb elevation-0 pb-0 grey lighten-3"
+              class="nb elevation-0 pb-0 grey lighten-3 pl-2"
               placeholder="poznamka"
               @change="saveVuexData()">
             </textarea>
@@ -590,7 +590,7 @@ export default {
        {val:0,txt:'Mody'},
        {val:1,txt:'Balit Po'},
        {val:2,txt:'Pocet Baliku'},
-       {val:3,txt:'Je mi to jedno'},
+       {val:3,txt:'Je to jedno'},
 
      ],
 
@@ -974,7 +974,6 @@ async   zmenaType(cSloup=""){
      })
 
      self.Cols=self.Kalk.sloupecid // Sloupce do samostany promenny abych se neposral z tech tecek
-
      self.Col=self.Cols[self.getIndex()] ;
 
      //self.Col.push( self.Cols);
@@ -994,13 +993,14 @@ async   zmenaType(cSloup=""){
                self.filtrDat=[]
                self.filtrDo=[]
                self.filtrPrac=[]
-
              },100)
      },100)
    },
    deleteCol(){
       const self = this
-      if (confirm("Odtsranit " + self.getType() +" ?")){
+      var xData=self.form.txt+self.form.txtStroj1+self.form.txtStroj+self.form.txtPrace+self.form.txtDod
+
+      if (xData=='' || confirm("Odtsranit " + self.getType() +" ?")){
         self.isDeleted=true
         setTimeout(function(){
           eventBus.$emit('MenuHlavni',
@@ -1011,13 +1011,6 @@ async   zmenaType(cSloup=""){
         }
         )
         },500)
-
-        //self.isDeleted=true
-        // self.$store.dispatch('removeCol',{
-        //   kalkulaceid: self.k_id(),
-        //   idxCol: self.getIndex(),
-        // })
-
       }
 
    },
@@ -1562,6 +1555,7 @@ async   zmenaType(cSloup=""){
      }
      var neco = self.$store.state.Kalkulace[self.k_id()].sloupecid[self.getIndex()]
 
+
        try {
           self.form.itemSelectedStroj  = neco.data.stroj
           self.form.itemSelectedStroj1 = neco.data.stroj1
@@ -1596,8 +1590,14 @@ async   zmenaType(cSloup=""){
           }
 
      if (self.getType() == "Baleni"){
+       if (f.isEmpty(self.form.baleni)){
+         self.form.baleni=0
+       }
+
+
        //f.Alert(self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs)
        self.form.naklad_ks = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
+       //f.Alert(form.baleni)
        //self.form.naklad_ks = 50000
      }
 

@@ -1,7 +1,9 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
  <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
-
+ <div>
+        I:{{IDEFIX}} {{ ID }} {{ ID2 }}
+      </div>
 <table style="float:left" ><tr>
   <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:5.5em;text-align:center">
    <div class="honza_color" style="height:26px;padding-top:2px;text-align:center;width:5.2em;width:100%" >
@@ -10,6 +12,7 @@
       <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
       </div>
 
+
   </button>
    </div>
   </td>
@@ -17,6 +20,7 @@
   </tr></table>
      <div class="white " style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:100%" >
        &nbsp;
+
      </div>
   </div>
  <!-- </div> -->
@@ -40,13 +44,11 @@ export default {
   props: {
     ID:0,
     ID2: {
-      type: Number,
-      default:0,
+      default:"0",
       required: false
     },
     IDEFIX: {
-      type: Number,
-      default:0,
+      default:"0",
       required: false
     },
 

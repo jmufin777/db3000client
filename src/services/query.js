@@ -10,7 +10,7 @@ export default {
       //return Api().get('query',{ params: {  user: user,query: `select '${neco}' as nazev, 2 as nazev_txt,3 as idefix,4 as idefix_stroj,5 as idefix_mat`   }})
     //}
     if (neco=='undefined') {
-      console.log('GET Vracim nahradu jedou credentials: ',user, query, neco, `select '${neco}' as nazev, 2 as nazev_txt,3 as idefix,4 as idefix_stroj,5 as idefix_mat` )
+      console.log('GET Vracim nahradu dotaz je undefined : ',user, query, neco, `select '${neco}' as nazev, 2 as nazev_txt,3 as idefix,4 as idefix_stroj,5 as idefix_mat` )
       return Api().get('query',{ params: {  user: user,query: `select '${neco}' as nazev, 2 as nazev_txt,3 as idefix,4 as idefix_stroj,5 as idefix_mat limit 0`   }})
     }
 
@@ -20,7 +20,7 @@ export default {
   },
 
   post (user, query ) {
-    console.log('jedou credentials POST: ',user)
+    console.log('POST: query ',user)
     return Api().post('query', { params: {  user: user,query: query}} )
   }
 
