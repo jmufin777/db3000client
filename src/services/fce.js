@@ -1005,7 +1005,7 @@ dataRadka(id2) {
     ,'vlozit'
     ,'idefixuser'
    ]
-   let dRet={}
+   var dRet={}
 
    for (var x=0;x<aKeys.length;x++){
      if (x==0) {
@@ -1023,8 +1023,9 @@ dataRadka(id2) {
 
 
    }
+     this.Alert("VAL: ", "seek"+id2, document.getElementById("seek"+id2))
      return dRet
- //f.Alert("VAL:",document.getElementById("seek"+id2).value)
+
 },
 
 

@@ -327,6 +327,15 @@ export default {
      timelist: ['00:00','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00' ],
    }
  },
+ beforeDestroy: function () {
+    //this.choicesSelect.destroy()
+    //f.Alert('Nazdar bazer')
+},
+deactivated: function () {
+     //f.Alert('Nazdar bazer 2')
+      eventBus.$off('AskID2')
+  // remove any data you do not want to keep alive
+},
  async created() {
 
   //  eventBus.$on('MenuLeft', (server) => {
@@ -352,6 +361,15 @@ export default {
 
       //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
     })
+    //f.Alert('Tvorim')
+    //eventBus.$off('AskID2')
+    eventBus.$on('AskID2',(server)=>{
+      if (server.idefix == self.IDEFIX) {
+        eventBus.$emit('AnswerID2',{id2:self.ID2})
+         //f.Alert('ASK ', server.idefix,'Answer ', self.ID2, self.IDEFIX)
+      }
+
+    }),
   //  eventBus.$off('DATATEMPLATE')  //Nacitenijedne jedina kompletni kalkulace z databaze
     eventBus.$on('DATATEMPLATE',(server)=>{
 
@@ -631,7 +649,8 @@ export default {
   async setVL(){
     const self=this
     if (self.IDEFIX==0){
-      f.Alert('Nelze rozbalit - neni v databazi')
+      //f.Alert('Nelze rozbalit - neni v databazi')
+      await eventBus.$emit('MenuHlavni', {key: 671, idefix: self.IDEFIX,akce:'vlozit' })
       return
     }
     await eventBus.$emit('MenuHlavni', {key: 671, idefix: self.IDEFIX })
@@ -673,12 +692,16 @@ export default {
        self.form.user_update_idefix = cItem.user_update_idefix
        self.form.nazevOrig=cItem.nazev
        self.form.ID = self.ID2
+        try {
+
 
        var nK= await(queryKalk.getTemplate(self.form.idefix))
        //,
        //await (f.Alert2('Ahoj //',JSON.stringify(nK[0].obsah.length) ," // ") )
        //alert('tEd ')
+
        var obsah = await(self.KalkulacePrepocetKusy(nK[0].obsah,neco))
+
        self.form.naklad = await(prepocty.getNaklad(obsah))
 
        if (!f.isEmpty(self.form.expedice_cas)   ){
@@ -701,6 +724,10 @@ export default {
           id2: self.ID2
 
         })
+        } catch(e) {
+          console.log('chyba prepoctu', e )
+          //alert('chyba prepoctu' )
+        }
 
   },
 async KalkulacePrepocetKusy(k, ks=1){

@@ -559,7 +559,9 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
   //return;
   var atmp=[]
     try {
+      // f.Alert('kve 1')
       atmp= (await Q.all(idefix,q)).data.data
+      // f.Alert('kve 2')
       await atmp.forEach(el=>{
         el.expedice_datum= f.datum3(el.expedice_datum)
         el.expedice_cas  = f.cas3(el.expedice_cas)
