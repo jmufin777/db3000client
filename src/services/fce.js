@@ -988,7 +988,7 @@ ID2() {
   return  Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983777458)) / Math.round(Math.random() * 198323458))
 },
 
-dataRadka(id2) {
+dataRadkaOld(id2) {
   //idefix
  var  aKeys=[
      'nazev'
@@ -1024,6 +1024,63 @@ dataRadka(id2) {
 
    }
      this.Alert("VAL: ", "seek"+id2, document.getElementById("seek"+id2))
+     return dRet
+
+},
+
+getElByIdefix(nazev='',id2=0){
+  var neco=''
+  neco='[idefix='
+  neco+='"'
+  neco+=nazev+''+id2
+  neco+='"]'
+
+  var aprd=document.querySelector(neco)
+  if (aprd) {
+   // this.Alert(aprd.value)
+  } else {
+    //this.Alert('prdlacky', nazev,' ',id2 )
+  }
+  return aprd
+
+},
+
+dataRadka(id2) {
+  //idefix
+ var  aKeys=[
+     'nazev'
+    ,'kcks'
+    ,'ks'
+    ,'naklad'
+    ,'marze'
+    ,'prodej'
+    ,'marze_pomer'
+    ,'expedice_datum'
+    ,'expedice_cas'
+    ,'user_update_idefix'
+    ,'nazevOrig'
+    ,'vlozit'
+    ,'idefixuser'
+   ]
+   var dRet={}
+   var obj
+
+   for (var x=0;x<aKeys.length;x++){
+     if (x==0) {
+
+       if (obj=this.getElByIdefix("seek",id2)){
+         dRet['nazev']=obj.value
+       } else
+       if (obj=this.getElByIdefix("expedice_cas"+id2)){
+        dRet['nazev']=obj.value
+        //this.Alert('CASCASCAS')
+      }
+     }  else
+       if (obj=this.getElByIdefix(aKeys[x],id2) ) {
+           dRet[aKeys[x]]=obj.value
+       }
+   }
+     //this.Alert("VAL: ", "seek"+id2, document.getElementById("seek"+id2))
      return dRet
 
 },

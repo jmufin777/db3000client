@@ -1,6 +1,8 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-<div  style="max-height:80%; overflow:auto;font-size:100%;" class="white lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
+<div  style="max-height:80%; overflow:auto;font-size:100%;" class="white lighten-5 pa-0 pt-0 pb-0 " id="test_1"  @scroll="TestRend"
+      :class="'buttons'+ID2"
+>
     <table style="float:left;max-width:100%" >
       <tr style="height:28px" class="honza_color" >
       <td class="leva white pt-1 prava pr-1 honza_color" style="width:1em;;height:28px" >
@@ -24,7 +26,11 @@
         </button>
         </td><td  class="honza_color pa-0" style="text-align:left">
          <button class="kolecko2"  @click="setVL()" title="Ulozit">
-           <div class="kolecko" >
+           <div class="kolecko" v-if="IDEFIX==IDEFIXACTIVE">
+           <i class="el-icon-arrow-down" style="color:#93908e;position:absolute;top:-0px;left:0px"
+           ></i>
+           </div>
+           <div v-else class="kolecko" >
            <i class="el-icon-arrow-right" style="color:#93908e;position:absolute;top:-0px;left:0px"
            ></i>
            </div>
@@ -38,6 +44,7 @@
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 0px white;width:40em;height:28px" class="honza_color" >
           <input type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '+ ID2" class="honza_text"
         :id="'seek'+ID2"
+        :IDEFIX="'seek'+IDEFIX"
         @focus="fokus('seek'+ID2);showTemplates=true"
         @blur="Opust('seek')"
         @click="showTemplates=ZobrazMenu"
@@ -47,7 +54,10 @@
       </td>
       <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em;height:28px" class="honza_color" >
         <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%" >
-         <button class="kolecko2" @click="send('template')" title="Ulozit" :id="'send_'+ID2">
+         <button class="kolecko2" @click="send('template')" title="Ulozit" :id="'send_'+ID2"
+         :IDEFIX="'send'+IDEFIX"
+
+         >
            <div class="kolecko" >
            <i class="el-icon-upload" style="color:#93908e;position:absolute;top:-0px;left:0px"
            ></i>
@@ -59,6 +69,7 @@
         <table><tr><td style="width:75%" class="honza_color">
         <input type="number" v-model="form.kcks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="Kc/ks" class="honza_text honza_color pr-1 " title="Kc/ks"
         :id="'kcks'+ID2"
+        :IDEFIX="'kcks'+IDEFIX"
         >
         </td><td style="width:25%;" class="honza_color pt-1">
         <span style="font-size:14px">Kč/ks</span>
@@ -68,6 +79,7 @@
         <table><tr><td style="width:80%" class="honza_color">
         <input type="number" v-model="form.ks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1" title="Pocet kusu"
         :id="'ks'+ID2"
+        :IDEFIX="'ks'+IDEFIX"
         >
         </td><td style="width:20%;" class="honza_color pt-1">
         <span style="font-size:14px">ks</span>
@@ -81,25 +93,25 @@
                    :placeholder="'NAKLADY CELKEM' "
                    class="honza_text honza_color pr-1" title="Naklady celkem"
                    :id="'naklad'+ID2"
+                   :IDEFIX="'naklad'+IDEFIX"
             >
         </td></tr></table>
-
         <!-- <input type="text" :value="f1.getCislo(form.naklad)" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" class="honza_text honza_color pr-1"> -->
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em;height:28px" class="honza_color" >
         <input type="number" v-model="form.marze" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE" class="honza_text honza_color pr-1" title="Marze"
         :id="'marze'+ID2"
+        :IDEFIX="'marze'+IDEFIX"
         >
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:8em;height:28px;visibility:wisible" class="honza_color"  >
           <table border="0"><tr>
-
           <td style="width:80%" class="honza_color">
           <input type="text" v-model="form.marze_pomer" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="" class="honza_text honza_color pr-1" title="Marze Pomer"
             :id="'marze_pomer'+ID2"
+            :IDEFIX="'marze_pomer'+IDEFIX"
             readonly
           >
-
           </td>
           <td style="width:20%" class="honza_color">
             <span style="font-size:20px">%</span><span></span>
@@ -112,12 +124,14 @@
             </td><td stylee="width:80%"  class="honza_color">
          <input type="number" v-model="form.prodej" style="width:100%;text-align:right;height:26px;border:none;color:#ffffff !important" placeholder="PRODEJ CELKEM" class="honza_text honza_color pr-1 " title="Prodej"
              :id="'prodej'+ID2"
+             :IDEFIX="'prodej'+IDEFIX"
          >
         </td></tr></table>
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:29em;height:28px" class="honza_color2" >
          <input type="text" v-model="form.expedice_datum"
-        :id="'expedice_datum'+ID2"
+            :id="'expedice_datum'+ID2"
+        :IDEFIX="'expedice_datum'+IDEFIX"
         style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="DATUM" class="datum_expedice honza_text2 honza_color2 pr-1 " title="DATUM EXPEDICE">
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:29em;height:28px" class="honza_color2" >
@@ -126,6 +140,7 @@
       style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE"
       class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"
       :id="'expedice_cas'+ID2"
+      :IDEFIX="'expedice_cas'+IDEFIX"
       >
         <option v-for="(tItem,i) in timelist"
         :key="i"
@@ -229,8 +244,7 @@
               </table>
   </div>
 
-
-  <div :id="'box'+ID2"  style="display:none">
+  <div :id="'box'+ID2"  style="display:none" :IDEFIX="'box'+IDEFIX">
     Ulozeni kalkulace
   </div>
 
@@ -270,6 +284,11 @@ export default {
       required: false
     },
     IDEFIX: {
+      type: Number,
+      default:0,
+      required: false
+    },
+    IDEFIXACTIVE: {
       type: Number,
       default:0,
       required: false
@@ -363,13 +382,13 @@ deactivated: function () {
     })
     //f.Alert('Tvorim')
     //eventBus.$off('AskID2')
-    eventBus.$on('AskID2',(server)=>{
-      if (server.idefix == self.IDEFIX) {
-        eventBus.$emit('AnswerID2',{id2:self.ID2})
-         //f.Alert('ASK ', server.idefix,'Answer ', self.ID2, self.IDEFIX)
-      }
+    // eventBus.$on('AskID2',(server)=>{
+    //   if (server.idefix == self.IDEFIX) {
+    //     eventBus.$emit('AnswerID2',{id2:self.ID2})
+    //      //f.Alert('ASK ', server.idefix,'Answer ', self.ID2, self.IDEFIX)
+    //   }
 
-    }),
+    // }),
   //  eventBus.$off('DATATEMPLATE')  //Nacitenijedne jedina kompletni kalkulace z databaze
     eventBus.$on('DATATEMPLATE',(server)=>{
 
@@ -387,7 +406,7 @@ deactivated: function () {
     $('#seek'+self.ID2).on('focus', function(){
       try {
         queryKalk.getTemplates()
-        //f.Alert('a')
+        //f.Alert('a', this.id)
       } catch(e) {
         f.Alert('Chyba data templajtes')
       }
@@ -395,10 +414,12 @@ deactivated: function () {
    },100)
   $(document).ready(function(){
     $("*").click(function(){
-      //f.Alert(this)
+      //f.Alert(self.lastFocus)
       //$(this).toggle(2000)
       self.lastFocus=this.id
     })
+
+
     // $( function() {
     //   $( document ).tooltip();
     // });
