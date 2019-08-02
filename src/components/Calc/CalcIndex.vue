@@ -473,7 +473,8 @@ export default {
      cTable :'',
      aKalkBefore:[],
      aKalkAfter:[],
-
+     Pocet:0,
+     Znovu: 0,
      IDEFIXACTIVE: "0",
      IDEFIXACTIVELAST:0,
      NAZEVACTIVE:'',
@@ -954,8 +955,17 @@ deactivated: function () {
      $("input[type=text]").off('change');
       $("input[type=text]").change( function(){
         $("#Zmenad").get(0).value++
-
       })
+
+     $("input[type=checkbox]").off('change');
+      $("input[type=checkbox]").change( function(){
+        $("#Zmenad").get(0).value++
+      })
+      $("input[type=radio]").off('change');
+      $("input[type=radio]").change( function(){
+        $("#Zmenad").get(0).value++
+      })
+
       $("input[type=number]").off('change');
       $("input[type=number]").change( function(){
         $("#Zmenad").get(0).value++
@@ -975,7 +985,7 @@ deactivated: function () {
      const self = this
      var dataRadka={}
      // f.Alert(server.id2)
-     dataRadka=f.dataRadka(server.id2)
+     dataRadka=f.dataRadkaID(server.id2)
      server.data["expedice_datum"] = dataRadka.expedice_datum
      server.data["expedice_cas"]  =  dataRadka.expedice_cas
      //f.Alert('data2', self.IDEFIXACTIVE)
@@ -998,6 +1008,22 @@ deactivated: function () {
       // },500)
       //f.Alert(server.id2, $("#seek"+server.id2).val())
    },
+   async setRender() {
+     const self = this
+     self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+      //f.Alert('Vymazano 1', self.aKalkulace.length, f.Jstr(self.aKalkBefore))
+      //return
+      try {
+        await self.setIdefixActive()
+      } catch (e) {
+         f.Alert('Chyba ACTIVE')
+         console.log('Chyba ACTIVE')
+      }
+      setTimeout(function(){
+        self.idRend++
+        // f.Alert('Preklresleno 2', self.aKalkulace.length)
+      },500)
+   },
     async delVL(idefix){
      const self = this
      try {
@@ -1014,35 +1040,17 @@ deactivated: function () {
         }
 
       }
+      await self.setRender()
+      return
 
-      self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
-      //f.Alert('Vymazano 1', self.aKalkulace.length, f.Jstr(self.aKalkBefore))
-      //return
-      try {
-        await self.setIdefixActive()
-      } catch (e) {
-         f.Alert('Chyba ACTIVE')
-         console.log('Chyba ACTIVE')
-      }
-
-      setTimeout(function(){
-        self.idRend++
-        //f.Alert('Vymazano 2', self.aKalkulace.length)
-      },500)
       }
       catch (e) {
-        f.Alert('Deller')
+        f.Alert('Dell Er')
         return
       }
 
    },
-   async novaSada() {
-     const self = this
-     if (self.IDEFIXACTIVE > 0) {
-          await self.setVL(self.IDEFIXACTIVE)
-     }
-     self.addKalk(1)
-   },
+
     async copyVL(idefix){
      const self = this
 
@@ -1163,44 +1171,115 @@ alert(' addVL() 10')
 //dataRadka=f.dataRadka(server.id2)
     // f.Alert('jsem add')
   },
+  async novaSada() {
+     const self = this
+     var idefixActive = self.IDEFIXACTIVE
+     if (idefixActive>0){
+        await  self.setRozbalit(idefixActive)
+        await  self.setZabalit()
+        await  self.addKalk(1)
+        await  self.setRender()
+
+        return
+      }
+
+      if (idefixActive==0 && self.aKalkulace.length > 0 ) {
+        f.Alert('Nova sada = kdyz uz je jedna otevrena')
+        var neco11=new Promise((resolve,reject) =>{
+          var dataRadka=f.dataRadka(0)
+          resolve(dataRadka)
+        })
+        neco11
+        .then((resolve)=>{
+            //f.Alert('Otevrena nova kalkulace - vlozim', f.Jstr(resolve))
+            if (f.isEmpty(resolve.nazev)){
+              f.Alert('Nazev neni vyplnen, oznacuji ')
+              var objFiluta=f.getElByIdefix('seek',0)
+              objFiluta.focus()
+              return
+            } else {
+              self.saveZaznam({idefix: 0, data: resolve   },3)
+              .then(()=>{
+                self.setRender()
+                .then(()=>{
+                  self.setZabalit()
+                })
+                 .then(()=>{
+                  self.addKalk(1)
+                 })
+              })
+            }
+        })
+          // self.addVL()
+      //  return
+      }
+      if (idefixActive==0 && self.aKalkulace.length == 0 ) {
+        self.addKalk(1)
+      }
+
+   },
   async SaveAll(idefix=0) {
     const self = this
     var dataRadka={}
-    var defer = $.Deferred();
+
     var idefixActive=self.IDEFIXACTIVE
     var neco=$("#Zmenad").get(0).value
+    //$('div').css({opacity:'0.8'})
 
       if (neco < 0 ) {  //neuklada
         return
       }
-    await self.aKalkBefore.forEach(el=>{
-      if (el.idefix > 0 ) {
+    self.Pocet=0
+
+//self.Znovu=2
+//while(self.Z)
+await f.asyncForEach(self.aKalkBefore,async (el)=> {
+if (el.idefix > 0 ) {
         dataRadka= f.dataRadka(el.idefix)
-        // alert(f.Jstr(dataRadka))
-        if (f.isEmpty(dataRadka)) {
-          f.Alert('blby')
+
+        if (f.isEmpty(dataRadka.nazev)){
+          dataRadka.nazev+=" ERROR (1) "
+          alert('Error' + dataRadka.nazev )
+
         }
+        else
 
         if (self.aKalkulace.length>0 && self.IDEFIXACTIVE == el.idefix ) {
-            self.saveZaznam({idefix: el.idefix, data: dataRadka   },2)
+
+            await self.saveZaznam({idefix: el.idefix, data: dataRadka   },2)
+            .then(res=>{
+              self.Pocet++
+            })
         } else {
-            self.saveZaznam({idefix: el.idefix, data: dataRadka   },1)
+
+            await self.saveZaznam({idefix: el.idefix, data: dataRadka   },1)
+            .then(res=>{
+
+              self.Pocet++
+
+            })
         }
         //f.Alert(f.Jstr(dataRadka))
       }
-    })
+
+})
      if (idefixActive==0 && self.aKalkulace.length>0 && f.getElByIdefix('seek','0')){
-       alert('1 Vklad by idefix - zabalit Active 0' )
+       //alert('1 Vklad by idefix - zabalit Active 0' )
        dataRadka=  f.dataRadka(idefix)
       try {
         await  self.saveZaznam({idefix: idefixActive, data: dataRadka   },3)
+        await  self.setRender()
+        await  self.setZabalit()
+        self.Pocet++
       } catch (e) {
        f.Alert('Vklad selhal')
       }
      }
      $("#Zmenad").get(0).value=0
-     defer.resolve('ok')
-    return defer.promise()
+     //alert('Pocet ' + self.Pocet)
+      return
+
+
      //$("*").prop("disabled", false);
      //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
 
@@ -1220,24 +1299,36 @@ alert(' addVL() 10')
          self.setIdefixActive()
 
          self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
-                  setTimeout(function(){
+           setTimeout(function(){
             self.idRend++
             self.TestRend++
-         },500)
+         },100)
   },
   async setZabalit() {
     const self=this
        self.aKalkulace =[]
        self.$store.dispatch('cleanKalk')
        await queryKalk.setActive(0,self.cTable,0)  //tj.vypne vse, nezalezina idefixu
-       self.setIdefixDeActive()
+       await self.setIdefixDeActive()
   },
   async setVL(idefix) {
      const self = this
       var idefixActive=self.IDEFIXACTIVE
       var neco=$("#Zmenad").get(0).value
-
-
+      if (idefixActive==0 && self.aKalkulace.length>0 && idefix>0) {
+            //alert('Je  treba ulozit neulozenou')
+          var dataRadka=  f.dataRadka(0)
+          try {
+            await  self.saveZaznam({idefix: 0, data: dataRadka   },3)
+            await  self.setRender()
+            await  self.setZabalit()
+            self.Pocet++
+          } catch (e) {
+          f.Alert('Vklad selhal')
+          }
+//        alert('Bylo  treba ulozit neulozenou')
+  //      return
+      }
 
         await self.SaveAll(idefix)
 
@@ -1245,12 +1336,12 @@ alert(' addVL() 10')
       if (idefixActive==0  && idefix>0){
     //      alert(idefixActive +" " + idefix +' Rozbalit ')
          await self.setRozbalit(idefix)
-
       }
 //      f.Alert(idefixActive, " / ", idefix)
       if (idefixActive>0  && idefix == idefixActive ){
     //      alert(idefixActive +" " + idefix +' Rozbalit ')
             // alert('Zabaliti')
+          await self.setRozbalit(idefix)
           await self.setZabalit(idefix)
           //await self.setRozbalit(idefix)
       }

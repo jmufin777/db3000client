@@ -102,6 +102,7 @@ export default {
       f.Alert2('Prvni kalkulace .. co s tim ?')
       return
     }
+    $("#Zmenad").get(0).value++
       //eventBus.$emit("DATARADKARECZADOST")
 
 

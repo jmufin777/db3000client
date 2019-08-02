@@ -42,7 +42,7 @@
       </td>
       <!-- ;seznamPoz('seek'+ID2) //-->
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 0px white;width:40em;height:28px" class="honza_color" >
-          <input type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '+ ID2" class="honza_text"
+          <input type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '" class="honza_text"
         :id="'seek'+ID2"
         :IDEFIX="'seek'+IDEFIX"
         @focus="fokus('seek'+ID2);showTemplates=true"
@@ -289,7 +289,7 @@ export default {
       required: false
     },
     IDEFIXACTIVE: {
-      type: String,
+      // type: String,
       default:"0",
       required: false
     },

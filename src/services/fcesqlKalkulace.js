@@ -414,7 +414,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
   }
   //obsah='${kalkulace}',
    //  f.Alert('Update ' ,q)
-     console.log('Update ' ,q)
+     // console.log('Update ' ,q)
 
 //    await Q.post(0,q)
 

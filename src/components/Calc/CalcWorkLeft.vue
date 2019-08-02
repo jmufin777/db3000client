@@ -806,6 +806,7 @@ async MenuStroj() {
         self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'idefixVidet' , value: self.idefixVidet })
         self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat' , value: self.form.Format })
         self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) )*self.form.nakladks })
+        $("#Zmenad").get(0).value++
 
       }
 

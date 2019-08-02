@@ -988,7 +988,7 @@ ID2() {
   return  Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983777458)) / Math.round(Math.random() * 198323458))
 },
 
-dataRadkaOld(id2) {
+dataRadkaID(id2) {
   //idefix
  var  aKeys=[
      'nazev'
@@ -1023,7 +1023,7 @@ dataRadkaOld(id2) {
 
 
    }
-     this.Alert("VAL: ", "seek"+id2, document.getElementById("seek"+id2))
+     //this.Alert("VAL: ", "seek"+id2, document.getElementById("seek"+id2))
      return dRet
 
 },
@@ -1083,6 +1083,11 @@ dataRadka(id2) {
      //this.Alert("VAL: ", "seek"+id2, document.getElementById("seek"+id2))
      return dRet
 
+},
+async asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
 },
 
 
