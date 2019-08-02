@@ -289,8 +289,8 @@ export default {
       required: false
     },
     IDEFIXACTIVE: {
-      type: Number,
-      default:0,
+      type: String,
+      default:"0",
       required: false
     },
     ZobrazMenu: {  // k dispozici jsou rozbalovaci nabidky

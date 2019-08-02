@@ -474,7 +474,7 @@ export default {
      aKalkBefore:[],
      aKalkAfter:[],
 
-     IDEFIXACTIVE:0,
+     IDEFIXACTIVE: "0",
      IDEFIXACTIVELAST:0,
      NAZEVACTIVE:'',
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
@@ -1047,16 +1047,20 @@ deactivated: function () {
      const self = this
 
       await queryKalk.CopyUser(idefix ,self.cTable )
+
+
       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+      await self.setZabalit()
+
       //self.aKalkBefore=[]
       //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
       //f.Alert(self.IDEFIXACTIVE, " P{RED")
-      await self.setIdefixActive()
+      //await self.setIdefixActive()
       //f.Alert(self.IDEFIXACTIVE, " P O")
-      var tmp = self.IDEFIXACTIVE
-      self.IDEFIXACTIVE = 0
+      //var tmp = self.IDEFIXACTIVE
+      //self.IDEFIXACTIVE = 0
       //f.Alert(self.IDEFIXACTIVE)
-      await self.setVL(tmp)
+      //await self.setVL(tmp)
       return
 
       setTimeout(function(){
@@ -1141,7 +1145,7 @@ deactivated: function () {
   async addVL(){
     const self=this
     //await eventBus.$emit('AskID2',{idefix:0})
-alert('10')
+alert(' addVL() 10')
 
     setTimeout(function(){
       //var dataRadka=f.dataRadka(self.ID2ASK)
@@ -1162,11 +1166,21 @@ alert('10')
   async SaveAll(idefix=0) {
     const self = this
     var dataRadka={}
-    // alert('1')
+    var defer = $.Deferred();
     var idefixActive=self.IDEFIXACTIVE
+    var neco=$("#Zmenad").get(0).value
+
+      if (neco < 0 ) {  //neuklada
+        return
+      }
     await self.aKalkBefore.forEach(el=>{
       if (el.idefix > 0 ) {
         dataRadka= f.dataRadka(el.idefix)
+        // alert(f.Jstr(dataRadka))
+        if (f.isEmpty(dataRadka)) {
+          f.Alert('blby')
+        }
+
         if (self.aKalkulace.length>0 && self.IDEFIXACTIVE == el.idefix ) {
             self.saveZaznam({idefix: el.idefix, data: dataRadka   },2)
         } else {
@@ -1176,42 +1190,107 @@ alert('10')
       }
     })
      if (idefixActive==0 && self.aKalkulace.length>0 && f.getElByIdefix('seek','0')){
-       alert('1 by idefix' )
+       alert('1 Vklad by idefix - zabalit Active 0' )
        dataRadka=  f.dataRadka(idefix)
       try {
-        await  self.saveZaznam({idefix: self.IDEFIXACTIVE, data: dataRadka   },3)
+        await  self.saveZaznam({idefix: idefixActive, data: dataRadka   },3)
       } catch (e) {
-        f.Alert('Vklad selhal')
+       f.Alert('Vklad selhal')
       }
      }
-     self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+     $("#Zmenad").get(0).value=0
+     defer.resolve('ok')
+    return defer.promise()
+     //$("*").prop("disabled", false);
+     //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+
 //Aktualizece
 
+  },
+  async setRozbalit(idefix) {
+     const self = this
+       await queryKalk.setActive(idefix,self.cTable)
+        self.IDEFIXACTIVE=idefix
+        var nK= await(queryKalk.getTemplateUser(idefix,self.cTable))   //Aktualni kalulkulace
+        //f.Alert2(f.Jstr(nK))
+        self.aKalkulace =  f.Jparse(nK[0].obsah)
+        self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))   //Vsechny kalkulace - seznam
+         //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+         await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
+         self.setIdefixActive()
 
+         self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
+                  setTimeout(function(){
+            self.idRend++
+            self.TestRend++
+         },500)
+  },
+  async setZabalit() {
+    const self=this
+       self.aKalkulace =[]
+       self.$store.dispatch('cleanKalk')
+       await queryKalk.setActive(0,self.cTable,0)  //tj.vypne vse, nezalezina idefixu
+       self.setIdefixDeActive()
+  },
+  async setVL(idefix) {
+     const self = this
+      var idefixActive=self.IDEFIXACTIVE
+      var neco=$("#Zmenad").get(0).value
+
+
+
+        await self.SaveAll(idefix)
+
+
+      if (idefixActive==0  && idefix>0){
+    //      alert(idefixActive +" " + idefix +' Rozbalit ')
+         await self.setRozbalit(idefix)
+
+      }
+//      f.Alert(idefixActive, " / ", idefix)
+      if (idefixActive>0  && idefix == idefixActive ){
+    //      alert(idefixActive +" " + idefix +' Rozbalit ')
+            // alert('Zabaliti')
+          await self.setZabalit(idefix)
+          //await self.setRozbalit(idefix)
+      }
+      if (idefixActive>0  && idefix != idefixActive && idefix > 0 ){
+          await self.setZabalit()
+          await self.setRozbalit(idefix)
+
+      }
+
+
+      return
+
+       self.aKalkulace =[]
+       self.$store.dispatch('cleanKalk')
+       await queryKalk.setActive(0,self.cTable,0)  //tj.vypne vse, nezalezina idefixu
+       self.setIdefixDeActive()
 
   },
 
-   async setVL(idefix) {
+   async setVLOld(idefix) {
      const self = this
       var idefixActive=self.IDEFIXACTIVE
 
        await self.SaveAll(idefix)
-       return
+     //  return
 
 
 //       eventBus.$emit('AskID2',{idefix:idefix})
 
        //return
-     alert('setVL '+ idefix)
+     // alert('setVL '+ idefix)
 
      var neco=$("#Zmenad").get(0).value
      if (idefixActive==0 && self.aKalkulace.length>0){
-       await self.addVL()
-       // f.Alert('Pridat novou kalkulaci!!!')
+       // await self.addVL()
+        f.Alert('Pridat novou kalkulaci!!!')
        return
      }
 
-
+      return
 
        if  (neco*1 >= 0) {
 
@@ -1267,7 +1346,6 @@ alert('10')
      self.IDEFIXACTIVE=idefix
      //self.IDEFIXACTIVE =  (await queryKalk.getActive(self.cTable))
      // f.Alert2("RETAC", self.IDEFIXACTIVE)
-
         var nK= await(queryKalk.getTemplateUser(idefix,self.cTable))   //Aktualni kalulkulace
 
          //self.aKalkBefore=[]

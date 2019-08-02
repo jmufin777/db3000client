@@ -322,6 +322,9 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
   if (nazev >''){
     data.nazev=nazev
   }
+  if (nazev=="undefined"){
+    alert('sakra')
+  }
   //if (f.isEmpty(data.nazev)) {
     //data.nazev=''
 
