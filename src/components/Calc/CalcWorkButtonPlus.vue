@@ -1,9 +1,9 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
  <div  style="max-height:80%; overflow:auto;font-size:100%;" class="green lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
- <div>
+ <div v-if="false">
         I:{{IDEFIX}} {{ ID }} {{ ID2 }}
-      </div>
+ </div>
 <table style="float:left" ><tr>
   <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:5.5em;text-align:center">
    <div class="honza_color" style="height:26px;padding-top:2px;text-align:center;width:5.2em;width:100%" >

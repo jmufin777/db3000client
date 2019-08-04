@@ -40,7 +40,9 @@ async getNaklad(data) {
     }
     nsum = nsum + ntmp // potom co se sjedou vsechny sloupce, pripocitam vysledek
 
+
   });
+
   defer.resolve(nsum)
   return defer.promise()
 },

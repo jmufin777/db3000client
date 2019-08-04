@@ -78,7 +78,8 @@
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;height:28px;width:15em" class="honza_color" >
         <table><tr><td style="width:80%" class="honza_color">
-        <input type="number" v-model="form.ks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1" title="Pocet kusu"
+        <input type="number" v-model="form.ks"
+        style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1 zmeny" title="Pocet kusu"
         :id="'ks'+ID2"
         :IDEFIX="'ks'+IDEFIX"
 
@@ -164,6 +165,12 @@
          <div class="honza_color2" style="height:29px;padding-top:2px;text-align:left;padding-left:7px;width:100%;text-align:right;padding-right:15%" >
 
            <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
+           @click="prettyVL()"
+           title="Nahled - detail podkladu pro propocet  "
+           >
+           <v-icon size="medium" class="honza_color2" style="cursor:pointer" >view_list</v-icon>
+           </button>
+           <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
            @click="prepocetVL()"
            title="Prepocet radky"
            >
@@ -192,8 +199,6 @@
         :style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'"
         :id="'seek'+ID2+'_list2'"
         v-if=" showTemplates && ZobrazMenu  " class="elevation-12 honza_color_seznam"
-
-
       >
              <!-- {{showTemplates}} {{dataTemplates.length}} -->
               <table  width="100%" v-if="showTemplates " class="pa-2 honza_color_seznam" border="0">
@@ -258,7 +263,7 @@
   </div>
 
   <div :id="'box'+ID2"  style="display:none" :IDEFIX="'box'+IDEFIX">
-    Ulozeni kalkulace
+    Ulozeni  template
   </div>
 
 <!--nabidka templates !-->
@@ -271,10 +276,11 @@
 <script>
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
-import { setTimeout, clearInterval } from 'timers'
+import { setTimeout, clearInterval, setInterval } from 'timers'
 import f from '@/services/fce'
 import WorkLeft from './CalcWorkLeft.vue'       // Pracovni cast nahore
 import WorkCol from './CalcWorkCol.vue' // Prehledova dole
+import Q from '@/services/query'
 import queryKalk from '../../services/fcesqlKalkulace'
 import prepocty from '../../services/fceKalkulacePrepocty'
 
@@ -337,6 +343,7 @@ export default {
      timeout: 0 , //tOpusteni:0,
      lastFocus:'',
      dataTemplates: [],
+     ksLast: -100,
 
 
      form: {
@@ -458,6 +465,17 @@ deactivated: function () {
 */
 
     self.setDataDBtoForm()
+     setInterval(function(){
+       if (self.ksLast == self.form.ks) return;
+
+       if (self.form.naklad !=0 && self.form.ks >0){
+         //self.form.ks=Math.round(self.form.ks)
+         self.form.ks=parseInt(self.form.ks)
+         self.form.kcks = (self.form.naklad / self.form.ks).toFixed(2)
+         self.ksLast = self.form.ks
+         self.saveVL(0)
+       }
+     },200)
 
 
    //self.form.nazev= self.dataDB.nazev
@@ -468,11 +486,32 @@ deactivated: function () {
    //var atmp= (await Q.all(self.idefix,'select * from calc_templates')).data.data
 
    //f.Info(JSON.stringify(atmp))
+
    $("#seek"+self.ID2).on('keypress', function(e){
              if (e.keyCode==9) {
                $('#kcks'+self.ID2).focus()
              }
         })
+//  $("button,input").tooltip({
+    /*
+    show: {
+        effect: "slideDown",
+        delay: 250
+      },
+    hide: {
+        effect: "explode",
+        delay: 250
+      }
+    */
+  // })
+  $("input").change(function(){
+
+    if (self.form.naklad !=0 && self.form.ks >0){
+        self.form.kcks = self.form.naklad / self.form.ks
+      }
+
+  })
+
   $('input,button').on('focus',function(){
       if (this.id>'') {
         self.lastFocus = this.id
@@ -603,7 +642,10 @@ deactivated: function () {
 
 
     ]),
+
+
   },
+
 
  methods: {
    TestRend() {
@@ -615,6 +657,20 @@ deactivated: function () {
        self.cTable = 'calc_my_' + self.idefix
        var nK= await(queryKalk.getTemplateUser(self.IDEFIX,self.cTable))   //Aktualni kalulkulace
        self.form.naklad = await(prepocty.getNaklad(nK[0].obsah))
+ },
+ async prettyVL() {
+       const self=this
+       self.cTable = 'calc_my_' + self.idefix
+       var q = `select json_pretty(obsah) as vypis from ${self.cTable} where idefix= ${self.IDEFIX}`
+       var atmp= (await Q.all(self.idefix,q)).data.data
+       if (atmp.length>0) {
+         //var vypis =
+         f.Alert3("Detail",atmp[0].vypis)
+       } else {
+         alert('Vypis neni k dispozici')
+       }
+
+
  },
   setDataDBtoForm(){
     const self=this
@@ -892,9 +948,13 @@ async KalkulacePrepocetKusy(k, ks=1){
   async jarda () {
     f.Alert('jarda')
   },
-  async saveVL() { //Update
+  async saveVL(question=1) { //Update
      const self = this
-    if (f.Confirm('Uozit VL - update?')){
+   if (question==0)   {
+      //   await self.send('zaznam')
+      return
+   }
+    if (question == 1 && f.Confirm('Uozit VL - update?')){
       await self.send('zaznam')
       //await self.jarda('zaznam')
       return

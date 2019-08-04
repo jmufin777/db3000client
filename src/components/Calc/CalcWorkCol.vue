@@ -690,7 +690,7 @@ export default {
  created () {
    const self=this
    var ie=0
-   for(ie=0 ;ie<17 ;ie++) {
+   for(ie=0 ;ie<0 ;ie++) {
     self.form.externi.push( {Popis: '', Cena: 0 })
    }
    eventBus.$on('Rend', (server) => {

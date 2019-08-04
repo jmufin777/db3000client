@@ -841,6 +841,41 @@ Alert2(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
 
 },
 
+Alert3(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
+  var obj=document.createElement("DIV")
+  obj.id="myAlert3"
+  var defer = $.Deferred();
+  document.body.appendChild(obj)
+  var $dlg=$('#myAlert3').dialog({
+    modal: false,
+    title: ctxt1,
+    text: 'aaaa',
+    width:'800',
+      buttons: {
+        OK: function() {
+          defer.resolve("AHOOJ");
+          $( this ).dialog( "close" );
+          },
+      },
+      dialogClass: "my-dialog-1",
+      show: {
+        effect: "fade",
+        duration: 500
+      },
+      hide: {
+        effect: "fade",
+        duration: 500
+      },
+      });
+      //$dlg.html("<pre>"+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6+"</pre>");
+      $dlg.html("<textarea cols='80' rows='50' style='width:900px'>"+"\n"+ctxt2+"\n"+ctxt3+"\n"+ctxt4+"\n"+ctxt5+"\n"+ctxt6+"</textarea>");
+      setTimeout(function(){
+        $('.ui-dialog :button').focus();
+      },1000)
+      return defer.promise();
+
+},
+
 setCislo(ctxt1="",cval="0") {
   var defer = $.Deferred();
 

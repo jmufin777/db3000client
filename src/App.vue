@@ -416,6 +416,10 @@ button:focus {
  .my-dialog-1 .ui-widget-header {
     background:#c1ddf8;
 }
+.my-dialog-2 .ui-widget-header {
+    background:#c1ddf8;
+    width: 80em;
+}
 
  /* , ui-widget:focus, ui-corner-all:  */
 .no-title .ui-dialog-titlebar {
@@ -459,8 +463,37 @@ button:focus {
                0 20px 20px rgba(0,0,0,.15);
 
 }
+.tlacitkoMenu {
+  background:#dfdede;
+  border: solid 0px green;
+  border-radius: 0px 0px 8px 8px !important;
+  font-family: Helvetica,'Times New Roman', Times, serif;
 
+}
 
+.tlacitkoMenuActive {
+  background:#2489cc;
+  border: solid 1px #ffffff;
+  border-radius: 0px 0px 8px 8px !important;
+  color: #ffffff;
+  font-family: Helvetica,'Times New Roman', Times, serif;
+}
+
+.hoVer:hover {
+      text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 1px 0 #bbb,
+               0 1px 0 #b9b9b9,
+               0 1px 0 #aaa,
+               0 1px 1px rgba(0,0,0,.1),
+               0 0 1px rgba(0,0,0,.1),
+               0 1px 1px rgba(0,0,0,.3),
+               0 1px 1px rgba(0,0,0,.2),
+               0 1px 1px rgba(0,0,0,.25),
+               0 1px 1px rgba(0,0,0,.2),
+               0 1px 1px rgba(0,0,0,.15);
+
+}
 
 
 

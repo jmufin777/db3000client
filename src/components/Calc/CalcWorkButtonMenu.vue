@@ -20,7 +20,7 @@
       <div v-if="setmenu==''" style="position:relative;top:0px;background:#e4eff8;text-align:left;height:3em;font-size:12px;">
           Nic neni vybrano
       </div>
-      <div v-if="setmenu=='kalkulace'" style="position:relative;top:0px;background:#e4eff8;text-align:left;height:3.2em;font-size:14px;">
+      <div v-if="setmenu=='kalkulace' || setmenu=='zakazky'" style="position:relative;top:0px;background:#e4eff8;text-align:left;height:3.2em;font-size:14px;">
         <table><tr>
           <td v-for="(item2,i2) in aSubKalkulace" :key="i2"   style="max-width: 8em;background:#e4eff8;font-size:14px;">
           <button
@@ -66,7 +66,7 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava">Datum expedice:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="date" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
             </tr>
           </table>
 
@@ -89,7 +89,7 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Datum zadani:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="date" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
             </tr>
           </table>
 
@@ -132,7 +132,7 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">???:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="date" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
             </tr>
           </table>
         </div>
@@ -140,6 +140,7 @@
 
     </div>
     <hr style="color:#cacade">
+
 
 
 
@@ -158,6 +159,7 @@
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
+import f from '@/services/fce'
 
 
 
@@ -177,13 +179,14 @@ export default {
  data () {
    return {
      ID0: this.ID,
-     setmenu:"kalkulace",
+     setmenu:"zakazky",
      setsub:0,
 
      LastMain: 0,
      aMain : [
+        {id: "kalkulace",txt: "Nabídky"},
         {id: "zakazky",  txt: "Zakázky"},
-        {id: "kalkulace",txt: "Kalkulace"},
+
         {id: "vyroba",  txt:  "Výroba"},
         {id: "studio",  txt:  "Studio"},
         {id: "doprava", txt:  "Dopravy"},
@@ -214,6 +217,23 @@ export default {
   //   })
 
  },
+ mounted() {
+    const self = this
+
+
+//       return
+    setTimeout(function() {
+      eventBus.$emit('MenuHlavni',{key:1999, item: self.setmenu})
+     },100)
+         this.$nextTick(function () {
+    // Code that will run only after the entire view has been rendered
+      //$('input').hide(2000).show(2000);
+      //$('input').dialog();
+
+      $( ".datum" ).datepicker();
+  })
+
+  },
  methods: {
    TestRend() {
     //alert('aRend')
@@ -221,9 +241,11 @@ export default {
   },
   setMenu(cVal='') {
       //aler('aa')
+      const self = this
       this.setmenu = cVal;
+      eventBus.$emit('MenuHlavni',{key:1999, item: self.setmenu})
   },
-  send(key) {
+  async  send(key) {
      const self = this
       self.disabled = true
       self.setsub=key
@@ -318,21 +340,7 @@ textarea:focus, input:focus{
   position:relative;
 }
 
-.tlacitkoMenu {
-  background:#dfdede;
-  border: solid 0px green;
-  border-radius: 0px 0px 8px 8px !important;
-  font-family: Helvetica,'Times New Roman', Times, serif;
 
-}
-
-.tlacitkoMenuActive {
-  background:#2489cc;
-  border: solid 1px #ffffff;
-  border-radius: 0px 0px 8px 8px !important;
-  color: #ffffff;
-  font-family: Helvetica,'Times New Roman', Times, serif;
-}
 
 
 table tr td  {
@@ -359,21 +367,7 @@ table tr td  {
 ::-ms-input-placeholder { /* Microsoft Edge */
   color: #ffffff;
 }
-.hoVer:hover {
-      text-shadow: 0 1px 0 #ccc,
-               0 2px 0 #c9c9c9,
-               0 1px 0 #bbb,
-               0 1px 0 #b9b9b9,
-               0 1px 0 #aaa,
-               0 1px 1px rgba(0,0,0,.1),
-               0 0 1px rgba(0,0,0,.1),
-               0 1px 1px rgba(0,0,0,.3),
-               0 1px 1px rgba(0,0,0,.2),
-               0 1px 1px rgba(0,0,0,.25),
-               0 1px 1px rgba(0,0,0,.2),
-               0 1px 1px rgba(0,0,0,.15);
 
-}
 
 </style>
 

@@ -19,10 +19,44 @@
 
     </div>
     <!-- {{aKalkulace}} -->
+<div   slot="kalkulace" style="position:fixed;width:100%;top:20em;overflow:scroll;height:70%;text-align:left;left:40px" id="obalKalkulaceButtons">
 
-<div   slot="kalkulace" style="position:fixed;width:100%;top:20em;overflow:scroll;height:70%" id="obalKalkulace">
-  <input type="text" id="Zmenad" value="0" class="black white--text" style="width:100px">
-  JARDA : {{IDEFIXACTIVE}} / Delka kalkulace {{aKalkulace.length}}
+<button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+      slot="kalkulace"
+      @click="Nova()"
+   >
+   Nova
+   </button>
+
+  <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+      slot="kalkulace"
+      @click="Ulozit()"
+   >
+   Ulozit
+   </button>
+   <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+      slot="kalkulace"
+   >
+   Zmenit
+   </button>
+   <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+      slot="kalkulace"
+   >
+   Smazat
+   </button>
+   <button  v-if="MAINMENULAST=='kalkulace'" class="px-4 tlacitkoMenu elevation-2 hoVer"
+      slot="kalkulace"
+   >
+   Ulozit jako zakazku
+   </button>
+   JARDA : {{IDEFIXACTIVE}} / Delka kalkulace {{aKalkulace.length}}
+</div>
+<div   slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
+  <input type="hidden" id="Zmenad" value="0" class="black white--text" style="width:100px">
+
+
+
+
    <div  v-for="(aBefore,iBefore ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix<IDEFIXACTIVE || IDEFIXACTIVE==0) })" :key="iBefore"
      slot="kalkulace"
      style="position:relative;width:100%;top:0em;overflow:scroll"
@@ -479,6 +513,7 @@ export default {
      IDEFIXACTIVELAST:0,
      NAZEVACTIVE:'',
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
+     MAINMENULAST:'',
    }
  },
  watch: {
@@ -598,6 +633,21 @@ deactivated: function () {
      }),
      eventBus.$on('MenuHlavni', (server) => {
       self.Hlavni=server.key
+       if (server.key == 1999) {  //Polozky hlavniho menu
+        if (self.MAINMENULAST==server.item) {
+          f.Alert('Porad jsem ', server.item)
+        } else {
+          f.Alert('hlavni - zmena ', server.item)
+          self.MAINMENULAST=server.item
+          $("#Zmenad").get(0).value=0
+         self.$store.dispatch('cleanKalk')
+         self.aKalkulace=[]
+
+
+
+        }
+       return
+       }
       if (server.key == 666) {  //Guma
          $("#Zmenad").get(0).value=0
          self.$store.dispatch('cleanKalk')
@@ -763,7 +813,7 @@ deactivated: function () {
         var beforeK = self.KalkulaceLast
         if (server.key == 9) {
           if (f.isZmena()){
-            alert("Ulozte neulozena data")
+            alert("Ulozte neulozena data - zabaleni,rozbaleni")
             return
           }
           self.novaSada()
@@ -931,6 +981,12 @@ deactivated: function () {
  //  this.$destroy()
  },
  methods: {
+   async Ulozit(){
+     const self = this
+     await self.setVL(self.IDEFIXACTIVE,1)
+
+     f.Alert('Ulozim ', self.MAINMENULAST )
+   },
    async setIdefixActive() {
      const self=this
      self.aKalkBefore.forEach(el=>{
@@ -957,6 +1013,9 @@ deactivated: function () {
       $("input[type=text]").change( function(){
         //$(this).css("{background:white}")
          //this.style.color="yellow"
+         // this.className="d3"
+         //this.style.
+         this.style.fontSize = "120%";
 
         //$(this).hide(1000)
         $("#Zmenad").get(0).value++
@@ -1346,7 +1405,7 @@ if (self.Pocet == - 1) {
        await queryKalk.setActive(0,self.cTable,0)  //tj.vypne vse, nezalezina idefixu
        await self.setIdefixDeActive()
   },
-  async setVL(idefix) {
+  async setVL(idefix, jenUloz=0) {
      const self = this
       var idefixActive=self.IDEFIXACTIVE
       var neco=$("#Zmenad").get(0).value
@@ -1367,6 +1426,11 @@ if (self.Pocet == - 1) {
       }
         var necoSave=0
             necoSave = await self.SaveAll(idefix)
+            if (jenUloz==1) {
+              await  self.setZabalit()
+              alert('Jen jsem to ulozil')
+              return
+            }
        //alert("Save Result " + necoSave)
        if (necoSave < 0 ) {
          return
