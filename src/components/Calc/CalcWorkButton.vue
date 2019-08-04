@@ -70,6 +70,7 @@
         <input type="number" v-model="form.kcks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="Kc/ks" class="honza_text honza_color pr-1 " title="Kc/ks"
         :id="'kcks'+ID2"
         :IDEFIX="'kcks'+IDEFIX"
+        readonly
         >
         </td><td style="width:25%;" class="honza_color pt-1">
         <span style="font-size:14px">Kč/ks</span>
@@ -80,6 +81,7 @@
         <input type="number" v-model="form.ks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1" title="Pocet kusu"
         :id="'ks'+ID2"
         :IDEFIX="'ks'+IDEFIX"
+
         >
         </td><td style="width:20%;" class="honza_color pt-1">
         <span style="font-size:14px">ks</span>
@@ -94,6 +96,7 @@
                    class="honza_text honza_color pr-1" title="Naklady celkem"
                    :id="'naklad'+ID2"
                    :IDEFIX="'naklad'+IDEFIX"
+                   readonly
             >
         </td></tr></table>
         <!-- <input type="text" :value="f1.getCislo(form.naklad)" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" class="honza_text honza_color pr-1"> -->
@@ -158,14 +161,24 @@
       </td>
       </tr>
       </table>
-         <div class="honza_color2" style="height:29px;padding-top:2px;text-align:left;padding-left:7px;width:100%;text-align:right;padding-right:15%" title="Odeslat do vyroby">
+         <div class="honza_color2" style="height:29px;padding-top:2px;text-align:left;padding-left:7px;width:100%;text-align:right;padding-right:15%" >
+
+           <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
+           @click="prepocetVL()"
+           title="Prepocet radky"
+           >
+           <v-icon size="medium" class="honza_color2" style="cursor:pointer" >filter_9_plus</v-icon>
+           </button>
            <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
            @click="saveVL()"
+           title="Ulozit"
            >
            <v-icon size="medium" class="honza_color2" style="cursor:pointer" >save</v-icon>
            </button>
+
            <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
            @click="f1.Alert2('Odeslani do vyroby','pripravuje se', IDEFIX )"
+           title="Odeslat do vyroby"
            >
            <v-icon size="medium" class="honza_color2" style="cursor:pointer" >rotate_right</v-icon>
            </button>
@@ -597,7 +610,12 @@ deactivated: function () {
     //alert('aRend')
      eventBus.$emit("Rend")
   },
-
+ async prepocetVL(){
+       const self=this
+       self.cTable = 'calc_my_' + self.idefix
+       var nK= await(queryKalk.getTemplateUser(self.IDEFIX,self.cTable))   //Aktualni kalulkulace
+       self.form.naklad = await(prepocty.getNaklad(nK[0].obsah))
+ },
   setDataDBtoForm(){
     const self=this
     if (!f.isEmpty(self.dataDB)) {  //form z db do pameti (self.form)
@@ -680,6 +698,10 @@ deactivated: function () {
 
   async copyVL(){
     const self=this
+    if (self.IDEFIX==0)  {
+      f.Alert2('Kalkulaci nelze zkopirovat, dokud neni ulozena')
+      return
+    }
 
     await eventBus.$emit('MenuHlavni', {key: 672, idefix: self.IDEFIX })
     //f.Alert('setVL- rozbleni zabaleni', self.IDEFIX)

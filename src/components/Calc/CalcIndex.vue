@@ -730,9 +730,6 @@ deactivated: function () {
       }
 
 
-
-
-
       //Ukladani - rozdelena = 668
 
       if (server.key == 555) {  //Guma sloupce 1
@@ -765,6 +762,10 @@ deactivated: function () {
       if (server.key < 11) {
         var beforeK = self.KalkulaceLast
         if (server.key == 9) {
+          if (f.isZmena()){
+            alert("Ulozte neulozena data")
+            return
+          }
           self.novaSada()
           //Zabalit
 
@@ -823,7 +824,7 @@ deactivated: function () {
 
   self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
   await self.setIdefixActive()
-
+  $("*").removeAttr('autocomplete');
   setInterval(function(){
     self.IsZmena()
   },1000)
@@ -954,29 +955,38 @@ deactivated: function () {
    IsZmena() {
      $("input[type=text]").off('change');
       $("input[type=text]").change( function(){
+        //$(this).css("{background:white}")
+         //this.style.color="yellow"
+
+        //$(this).hide(1000)
         $("#Zmenad").get(0).value++
       })
 
      $("input[type=checkbox]").off('change');
       $("input[type=checkbox]").change( function(){
+        //this.style.color="yellow"
         $("#Zmenad").get(0).value++
       })
       $("input[type=radio]").off('change');
       $("input[type=radio]").change( function(){
+        //this.style.color="yellow"
         $("#Zmenad").get(0).value++
       })
 
       $("input[type=number]").off('change');
       $("input[type=number]").change( function(){
+        //this.style.color="yellow"
         $("#Zmenad").get(0).value++
 
       })
       $("textarea").off('change')
       $("textarea").change( function(){
+        //this.style.color="yellow"
         $("#Zmenad").get(0).value++
       })
       $("select").off('change')
       $("select").change( function(){
+        //this.style.color="yellow"
         $("#Zmenad").get(0).value++
       })
    },
@@ -1010,25 +1020,26 @@ deactivated: function () {
    },
    async setRender() {
      const self = this
+
      self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
-      //f.Alert('Vymazano 1', self.aKalkulace.length, f.Jstr(self.aKalkBefore))
-      //return
+
       try {
         await self.setIdefixActive()
       } catch (e) {
          f.Alert('Chyba ACTIVE')
          console.log('Chyba ACTIVE')
       }
-      setTimeout(function(){
-        self.idRend++
-        // f.Alert('Preklresleno 2', self.aKalkulace.length)
-      },500)
+      await f.sleep(500)
+      //setTimeout(function(){
+      self.idRend++
+      return  self.aKalkBefore.length
    },
     async delVL(idefix){
      const self = this
      try {
       if (idefix>0) {
         await queryKalk.delete(idefix ,self.cTable )
+    //    alert('Vymazano 1')
       }
 
       if (idefix == self.IDEFIXACTIVE) {
@@ -1036,11 +1047,12 @@ deactivated: function () {
           self.aKalkulace =[]
           self.$store.dispatch('cleanKalk')
         } catch(e) {
-          //f.Alert('err 33')
+          f.Alert('err 33')
         }
-
       }
+//      alert('Vymazano 2')
       await self.setRender()
+  //    alert('Vyazano')
       return
 
       }
@@ -1171,20 +1183,29 @@ alert(' addVL() 10')
 //dataRadka=f.dataRadka(server.id2)
     // f.Alert('jsem add')
   },
-  async novaSada() {
+
+    async novaSada() {
      const self = this
      var idefixActive = self.IDEFIXACTIVE
+     var objFiluta
+
      if (idefixActive>0){
         await  self.setRozbalit(idefixActive)
         await  self.setZabalit()
         await  self.addKalk(1)
         await  self.setRender()
+        await     f.sleep(500)
+        objFiluta=f.getElByIdefix('seek',0)
+        if (objFiluta){
+          objFiluta.focus()
+        }
+
 
         return
       }
 
       if (idefixActive==0 && self.aKalkulace.length > 0 ) {
-        f.Alert('Nova sada = kdyz uz je jedna otevrena')
+        // f.Alert('Nova sada = kdyz uz je jedna otevrena')
         var neco11=new Promise((resolve,reject) =>{
           var dataRadka=f.dataRadka(0)
           resolve(dataRadka)
@@ -1192,9 +1213,10 @@ alert(' addVL() 10')
         neco11
         .then((resolve)=>{
             //f.Alert('Otevrena nova kalkulace - vlozim', f.Jstr(resolve))
+            //f.sleep(1000)
             if (f.isEmpty(resolve.nazev)){
               f.Alert('Nazev neni vyplnen, oznacuji ')
-              var objFiluta=f.getElByIdefix('seek',0)
+              objFiluta=f.getElByIdefix('seek',0)
               objFiluta.focus()
               return
             } else {
@@ -1214,11 +1236,17 @@ alert(' addVL() 10')
       //  return
       }
       if (idefixActive==0 && self.aKalkulace.length == 0 ) {
-        self.addKalk(1)
+          await self.addKalk(1)
+          await    f.sleep(500)
+          //alert('mam')
+          objFiluta=f.getElByIdefix('seek',0)
+        if (objFiluta){
+          objFiluta.focus()
+        }
       }
 
    },
-  async SaveAll(idefix=0) {
+  async SaveAll(idefix=0, PreskocChybu=0) {
     const self = this
     var dataRadka={}
 
@@ -1240,10 +1268,15 @@ if (el.idefix > 0 ) {
         if (f.isEmpty(dataRadka.nazev)){
           dataRadka.nazev+=" ERROR (1) "
           alert('Error' + dataRadka.nazev )
+          var objFiluta=f.getElByIdefix('seek',el.idefix)
+              objFiluta.focus()
+              self.Pocet=-1
+              if (PreskocChybu==0){
+                 return
+              }
 
         }
         else
-
         if (self.aKalkulace.length>0 && self.IDEFIXACTIVE == el.idefix ) {
 
             await self.saveZaznam({idefix: el.idefix, data: dataRadka   },2)
@@ -1251,18 +1284,19 @@ if (el.idefix > 0 ) {
               self.Pocet++
             })
         } else {
-
             await self.saveZaznam({idefix: el.idefix, data: dataRadka   },1)
             .then(res=>{
-
               self.Pocet++
-
             })
         }
         //f.Alert(f.Jstr(dataRadka))
       }
 
 })
+if (self.Pocet == - 1) {
+  f.Alert('Pochybeni')
+  return -1
+}
      if (idefixActive==0 && self.aKalkulace.length>0 && f.getElByIdefix('seek','0')){
        //alert('1 Vklad by idefix - zabalit Active 0' )
        dataRadka=  f.dataRadka(idefix)
@@ -1270,6 +1304,7 @@ if (el.idefix > 0 ) {
         await  self.saveZaznam({idefix: idefixActive, data: dataRadka   },3)
         await  self.setRender()
         await  self.setZabalit()
+        // f.Alert('Vkladam prvni')
         self.Pocet++
       } catch (e) {
        f.Alert('Vklad selhal')
@@ -1277,7 +1312,7 @@ if (el.idefix > 0 ) {
      }
      $("#Zmenad").get(0).value=0
      //alert('Pocet ' + self.Pocet)
-      return
+      return 0
 
 
      //$("*").prop("disabled", false);
@@ -1322,6 +1357,7 @@ if (el.idefix > 0 ) {
             await  self.saveZaznam({idefix: 0, data: dataRadka   },3)
             await  self.setRender()
             await  self.setZabalit()
+
             self.Pocet++
           } catch (e) {
           f.Alert('Vklad selhal')
@@ -1329,8 +1365,12 @@ if (el.idefix > 0 ) {
 //        alert('Bylo  treba ulozit neulozenou')
   //      return
       }
-
-        await self.SaveAll(idefix)
+        var necoSave=0
+            necoSave = await self.SaveAll(idefix)
+       //alert("Save Result " + necoSave)
+       if (necoSave < 0 ) {
+         return
+       }
 
 
       if (idefixActive==0  && idefix>0){

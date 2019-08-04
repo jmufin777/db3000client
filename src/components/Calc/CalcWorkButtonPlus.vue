@@ -95,8 +95,10 @@ export default {
   Rozdel(){
     const self=this
 
+
     var stAll = JSON.parse(JSON.stringify(self.st.Kalkulace))
     var idxCut=-1
+
 
     if (self.ID<1){
       f.Alert2('Prvni kalkulace .. co s tim ?')

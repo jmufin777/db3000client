@@ -352,9 +352,21 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
     //f.Alert('Data X', cols.split(",").length)
     //return;
   //}
-    if (data.ks>0) {
-      data.naklad = await(prepocty.getNaklad(f.Jparse(kalkulace2)))
-    }
+   // if (data.ks>0) {
+      //alert("A " + data.naklad)
+      if (SaveKalkulkace) {
+        //alert("C " + data.naklad)
+        data.naklad = await(prepocty.getNaklad(f.Jparse(kalkulace2)))
+      }
+      if (data.naklad >0 && data.ks>0){
+        data.kcks= data.naklad / data.ks
+      } else {
+        data.kcks = 0
+      }
+
+
+      // alert("B" + data.naklad)
+    //}
     kalkulace2 = JSON.stringify(kalkulace2)
     await Q.post(0,`update ${cTable} set active=false where active`)
     //Prepocet
@@ -564,13 +576,17 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
     try {
       // f.Alert('kve 1')
       atmp= (await Q.all(idefix,q)).data.data
-      // f.Alert('kve 2')
+
+      if (atmp.length==0) {
+        defer.resolve(atmp)
+      } else  {
       await atmp.forEach(el=>{
         el.expedice_datum= f.datum3(el.expedice_datum)
         el.expedice_cas  = f.cas3(el.expedice_cas)
         defer.resolve(atmp)
         // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
       })
+      }
     }  catch(e) {
       defer.resolve(atmp)
       f.Alert2('Chyba  getTemplatesUser', e )

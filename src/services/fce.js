@@ -1090,6 +1090,12 @@ async asyncForEach(array, callback) {
   }
 },
 
+isZmena(){
+  var neco=$("#Zmenad").get(0).value
+    neco = neco *1
+    return neco > 0
+},
+
 
 }
 
