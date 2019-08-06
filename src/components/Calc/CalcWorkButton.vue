@@ -138,7 +138,7 @@
         :IDEFIX="'expedice_datum'+IDEFIX"
         style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="DATUM" class="datum_expedice honza_text2 honza_color2 pr-1 " title="DATUM EXPEDICE">
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:29em;height:28px" class="honza_color2" >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:15em;height:28px" class="honza_color2" >
         <!-- <input type="text" v-model="form.expedice_cas" style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE" class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"> -->
       <select v-model="form.expedice_cas"
       style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE"
@@ -160,30 +160,31 @@
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;height:26px;height:28px" class="honza_color2" >
         VL seznam:
       </td>
+
       </tr>
       </table>
-         <div class="honza_color2" style="height:29px;padding-top:2px;text-align:left;padding-left:7px;width:100%;text-align:right;padding-right:15%" >
+         <div class="honza_color2" style="height:29px;padding-top:2px;text-align:left;padding-left:7px;width:100%;text-align:right;padding-right:2%" >
 
-           <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
+           <button style="background:#c3c3bf;border-right: solid 1px white;border-left: solid 1px white;height:90%;width:28px" class="px-1"
            @click="prettyVL()"
            title="Nahled - detail podkladu pro propocet  "
            >
-           <v-icon size="medium" class="honza_color2" style="cursor:pointer" >view_list</v-icon>
+           <v-icon size="small" class="honza_color2" style="cursor:pointer;font-size:15px" >view_list</v-icon>
            </button>
-           <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
+           <button style="background:#c3c3bf;border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1"
            @click="prepocetVL()"
            title="Prepocet radky"
            >
            <v-icon size="medium" class="honza_color2" style="cursor:pointer" >filter_9_plus</v-icon>
            </button>
-           <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
+           <button style="background:#c3c3bf;border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1"
            @click="saveVL()"
            title="Ulozit"
            >
            <v-icon size="medium" class="honza_color2" style="cursor:pointer" >save</v-icon>
            </button>
 
-           <button style="background:#c3c3bf;border-right: solid 2px white;border-left: solid 2px white;height:100%" class="px-2"
+           <button style="background:#c3c3bf;border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1"
            @click="f1.Alert2('Odeslani do vyroby','pripravuje se', IDEFIX )"
            title="Odeslat do vyroby"
            >
