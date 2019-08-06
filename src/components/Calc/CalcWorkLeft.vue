@@ -104,8 +104,15 @@
          <!-- <v-card-text> -->
          <v-card-text  class="pa-0 pt-0  " style="height:100%">
          <table style="width:100%;font-size:12px"><tr>
-           <td style="width:15%">Panelovat</td>
-           <td style="width:10%"><input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)" style="text-align:right;width:100%" class="tdl tdn elevation-0 pr-0" @change="getFormatName()"></td>
+           <!-- <td style="width:15%">Panelovat</td>
+           <td style="width:10%"><input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)" style="text-align:right;width:100%" class="tdl tdn elevation-0 pr-0" @change="getFormatName()"></td> -->
+
+           <td style="width:25%">
+           <label :for="'panelovat'+ID" style="cursor:pointer"><span></span>Panelovat&nbsp;</label>
+           <input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)" s
+           :id="'panelovat'+ID"
+           class="tdl tdn elevation-0 pr-0" @change="getFormatName()">
+           </td>
            <td style="width:10%">Po</td>
            <td style="width:25%">
              <input type="number"   v-model="form.sirkaPanel" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-0 pr-1"  @focus="$event.target.select()" @change="getFormatName();sirkaP()">
@@ -204,7 +211,7 @@
 
 <div
 style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
-:style="'top:'+ f1.getBottom('seek'+ID,40)+'px;width:'+f1.getWidth('seek'+ID,40)+'px;left:'+f1.getLeft('seek'+ID, 100)+'px'"
+:style="'top:'+ f1.getBottom('seek'+ID,40)+'px;width:'+f1.getWidth('seek'+ID,80)+'px;left:'+f1.getLeft('seek'+ID, 88)+'px'"
    v-if="MenuFormatShow" class="elevation-2 blue lighten-4 pl-0 pr-0"
 
        >
@@ -594,10 +601,19 @@ self.$store.dispatch('setFormat')
     self.clickX = 0
     self.clickY = 0
 
+    $('#seek'+self.ID).trigger('blur')
+    f.sleep(100)
+    $('#seek'+self.ID).trigger('focus')
+
+
+
      if (yesno== 0) {
        this.MenuFormatShow = true
 
-         self.MenuShow = false;
+       //f.Alert2("200")
+
+
+      self.MenuShow = false;
 
         setTimeout(function() {
 
@@ -612,6 +628,8 @@ self.$store.dispatch('setFormat')
      }
      if (yesno==1) {
        this.MenuFormatShow = false
+
+       //alert("300")
      }
 
      try {
@@ -1369,6 +1387,10 @@ textarea:focus, input:focus {
     outline: 1px dashed;
 
 }
+input:focus, input:focus {
+    zoom: 105%;
+}
+
 
 td th {
   font-size: 12px;

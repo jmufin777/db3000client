@@ -1313,6 +1313,7 @@ table tr td  {
   border-collapse: collapse;
   vertical-align: top;
 }
+
 .sloupec {
   vertical-align: top;
 

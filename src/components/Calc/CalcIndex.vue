@@ -642,6 +642,7 @@ deactivated: function () {
           $("#Zmenad").get(0).value=0
          self.$store.dispatch('cleanKalk')
          self.aKalkulace=[]
+         self.setZabalit()
 
 
 
