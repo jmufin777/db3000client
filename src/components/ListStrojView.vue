@@ -386,7 +386,7 @@ export default {
        isIndeterminate: true,
       //CheckBox
       //SubMenu
-      showSubMenu: true,
+      showSubMenu: false,
       SubMemuItems: [
         { title:'Oznacit jako tiskove' ,akce: 'T1'},
         { title:'Zrusit jako tiskove' ,akce: 'T2'},

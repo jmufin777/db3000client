@@ -389,7 +389,7 @@ export default {
        isIndeterminate: true,
       //CheckBox
       //SubMenu
-      showSubMenu: true,
+      showSubMenu: false,
       SubMemuItems: [
         { title:'Vymazat oznacene' ,akce: 'del'},
         { title:'Neco jeste nevim' ,akce: 'nevim'},

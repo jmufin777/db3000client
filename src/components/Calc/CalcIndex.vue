@@ -57,7 +57,7 @@
 
 
 
-   <div  v-for="(aBefore,iBefore ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix<IDEFIXACTIVE || IDEFIXACTIVE==0) })" :key="iBefore"
+   <div v-cloak v-for="(aBefore,iBefore ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix<IDEFIXACTIVE || IDEFIXACTIVE==0) })" :key="iBefore"
      slot="kalkulace"
      style="position:relative;width:100%;top:0em;overflow:scroll"
      id="obalKalkulace2b"
@@ -73,12 +73,12 @@
         <!-- / {{aBefore.idefix }} -->
    </div>
 
-  <div v-for="idxK in 1" :key="'x'+idxK" slot="kalkulace"  >
+  <div v-cloak v-for="idxK in 1" :key="'x'+idxK" slot="kalkulace"  >
 
-        <work slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska" >
+        <work v-cloak slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska" >
           <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
             <!-- ||  IDEFIXACTIVE==0 -->
-          <work-but  v-if="aKalkBefore.length==0 || (IDEFIXACTIVE == 0 && aKalkulace.length >0 ) "
+          <work-but  v-cloak v-if="aKalkBefore.length==0 || (IDEFIXACTIVE == 0 && aKalkulace.length >0 ) "
             :ID="'AB_'+iK"
             :ID2="ID+999666"
             :ZobrazMenu="true" :isOpen="true"
@@ -88,7 +88,7 @@
           </work-but>
 
           <!-- && e.idefix==IDEFIXACTIVE -->
-          <work-but v-for="(aBefore1,iBefore1 ) in aKalkBefore.filter(e=>{return e.active==true  })"
+          <work-but v-cloak v-for="(aBefore1,iBefore1 ) in aKalkBefore.filter(e=>{return e.active==true  })"
            :ID="'AC_'+aBefore1.idefix"
            :ID2="ID+999666"
            :IDEFIX="+aBefore1.idefix"
@@ -105,6 +105,7 @@
           <span v-else style="position:relative;left:30px" slot="tlacitka" >
           <!-- <work-but-plus  :ID="iK" :ID2="ID+999666"></work-but-plus> -->
           <work-but-plus
+          v-cloak
             :ID="iK"
             :ID2="ID+999666"
             :IDEFIX="IDEFIXACTIVE"
@@ -137,10 +138,10 @@
           </work-left>
           </span>
 
-          <div  v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block;position:relative;left:30px'"  >
+          <div  v-cloak v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block;position:relative;left:30px'"  >
               <!-- {{iKalk.sloupecid}} -->
-              <work-col :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend" style="z-index:889977">
-                  <button slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i>
+              <work-col v-cloak :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend" style="z-index:889977">
+                  <button v-cloak slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i>
                   </button>
               </work-col>
           </div>
@@ -530,23 +531,32 @@ export default {
 
 beforeDestroy: function () {
     //this.choicesSelect.destroy()
-    //f.Alert('Nazdar bazer')
+    //f.Alert('Nazdar bazer dest')
 },
 deactivated: function () {
-    //f.Alert('Nazdar bazer 2 INDEX')
-     eventBus.$off('MenuHlavni')
-     eventBus.$off('MenuLeft')
-     eventBus.$off('SAVETEMPLATE')
-     eventBus.$off('SAVEZAZNAM')
-     eventBus.$off('DELETETEMPLATE')
-     eventBus.$off('AnswerID2')
+     //f.Alert('Nazdar bazer 2 INDEX')
+     // eventBus.$off('MenuHlavni')
+     // eventBus.$off('MenuLeft')
+     // eventBus.$off('SAVETEMPLATE')
+     // eventBus.$off('SAVEZAZNAM')
+     // eventBus.$off('DELETETEMPLATE')
+     // eventBus.$off('AnswerID2')
+     //this.$destroy();
+      // remove the element from the DOM
+     //this.$el.parentNode.removeChild(this.$el);
   // remove any data you do not want to keep alive
 },
 
  async created () {
       const self = this
      self.cTable = 'calc_my_' + self.idefix
-//      alert('Tvorim')
+      eventBus.$off('MenuHlavni')
+      eventBus.$off('MenuLeft')
+      eventBus.$off('SAVETEMPLATE')
+      eventBus.$off('SAVEZAZNAM')
+      eventBus.$off('DELETETEMPLATE')
+      eventBus.$off('AnswerID2')
+      //alert('Tvorim')
      eventBus.$on('kalkulaceDelete',(serverDel) => {
      eventBus.$off('MatCol')
      eventBus.$off('Rend')
@@ -650,6 +660,7 @@ deactivated: function () {
        return
        }
       if (server.key == 666) {  //Guma
+         alert(server.key)
          $("#Zmenad").get(0).value=0
          self.$store.dispatch('cleanKalk')
          self.aKalkulace=[]
@@ -866,7 +877,7 @@ deactivated: function () {
 
  },
  async mounted () {
-
+ // alert('Tvorim 22')
 //   f.Info(queryKalk)
 
   const self=this

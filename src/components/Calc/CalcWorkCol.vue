@@ -7,6 +7,7 @@
      @scroll="TestRend=TestRend+1"
      v-if="isDeleted==false"
      :key="TestRend"
+     v-cloak
      >
    <div style="position:absolute;width:100%;top:10px;height:90%;background:white" class="white"></div>
     <span v-if="true && kalkulaceid==KalkulaceThis">
@@ -36,7 +37,7 @@
             && (filtrData().length>1 || (filtrData().length==1 && filtrData()[0].nazev!=form.txt) )
         " class="elevation-12 yellow"
         :style="'top:'+ getBottom('seek1_'+ID)+'px;width:'+getWidth('seek1_'+ID,8)+'px;left:'+getLeft('seek1_'+ID,1)+'px'" > -->
-        <div style="max-height:10em;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxt && (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' || getType()=='Jine'  )
+        <div v-cloak style="max-height:10em;overflow-y:scroll;position:absolute;z-index:1000"  v-if="form.showtxt && (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir' || getType()=='Jine'  )
             && (filtrDat.length>1 || (filtrDat.length==1 && filtrDat[0].nazev!=form.txt) )
         " class="elevation-12 yellow"
         :style="'top:'+ getBottom('seek1_'+ID)+'px;width:'+getWidth('seek1_'+ID,8)+'px;left:'+getLeft('seek1_'+ID,1)+'px'" >
@@ -2278,6 +2279,7 @@ select option div {
 .jarda {
     /* background: greenyellow !important; */
 }
+
 
 </style>
 

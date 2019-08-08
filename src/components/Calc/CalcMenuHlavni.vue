@@ -34,7 +34,7 @@
            @click="send(item.key)"
            v-bind:class="{'elevation-5': item.key !== lastSend }"
            >
-             {{ item.value }}
+            {{ item.value }}
              </v-btn>
             </td>
             <td style="width:15%;border:none;text-align:right">

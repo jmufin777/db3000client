@@ -495,6 +495,10 @@ button:focus {
 
 }
 
+[v-cloak] {
+  display: none;
+}
+
 
 
 
