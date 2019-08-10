@@ -1,6 +1,6 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
-<div  style="max-height:80%; overflow:auto;font-size:100%;" class="white lighten-5 pa-0 pt-0 pb-0 " id="test_1"  @scroll="TestRend"
+<div  style="max-height:80%; overflow:auto;font-size:100%;" class="white lighten-5 pa-0 pt-0 pb-0 " id="test_2"  @scroll="TestRend"
       :class="'buttons'+ID2"
 >
     <table style="float:left;max-width:100%" >
@@ -264,7 +264,7 @@
   </div>
 
   <div :id="'box'+ID2"  style="display:none" :IDEFIX="'box'+IDEFIX">
-    Ulozeni  template
+    Ulozeni template
   </div>
 
 <!--nabidka templates !-->
@@ -303,6 +303,7 @@ export default {
       default:0,
       required: false
     },
+
     IDEFIX: {
       type: Number,
       default:0,
@@ -337,6 +338,7 @@ export default {
  data () {
    return {
      ID0: this.ID,
+     IDEFIXTEMPLATE :0 ,
 
      f1: f,
      $: $,
@@ -777,7 +779,9 @@ deactivated: function () {
        //f.Info('seek'+self.ID2)
 
        //return
+       self.IDEFIXTEMPLATE = cItem.idefix
        self.form.idefix=cItem.idefix
+
        self.form.nazev=cItem.nazev
        self.form.kcks = cItem.kcks
        self.form.ks = neco
@@ -792,6 +796,7 @@ deactivated: function () {
        self.form.user_update_idefix = cItem.user_update_idefix
        self.form.nazevOrig=cItem.nazev
        self.form.ID = self.ID2
+
         try {
 
 
@@ -939,9 +944,13 @@ async KalkulacePrepocetKusy(k, ks=1){
     if ( co=='template') //self.IDEFIX == 0 ||
      {
 
-    //  f.Alert('B')
+       //f.Alert('B', self.IDEFIXTEMPLATE, ':: ', self.IDEFIXACTIVE )
        //await eventBus.$emit("SAVETEMPLATE",{data: self.form })
-       def.resolve( eventBus.$emit("SAVETEMPLATE",{data: self.form }) )
+       self.form['idefixtemplate']= self.IDEFIXTEMPLATE
+       var tmpform=f.Jparse(self.form)
+       tmpform.idefix= self.IDEFIXTEMPLATE
+        def.resolve( eventBus.$emit("SAVETEMPLATE",{data: tmpform }) )
+       //def.resolve( eventBus.$emit("SAVETEMPLATE",{data: self.form }) )
        return def.promise()
     }
 
@@ -1203,9 +1212,6 @@ async KalkulacePrepocetKusy(k, ks=1){
             break;
      }
      }
-
-//el.selectionEnd = el.selectionStart
-
 
    },
 

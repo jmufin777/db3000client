@@ -51,10 +51,12 @@ async setKalk(data,kalkulace,_idefix=0) {
 
   var atmp=[]
 
+  // f.Alert('1')
   //   title: "Success" + data.idefix+ ' '+ data.nazev + '/ ' + data.nazevOrig + data.user_update_idefix + ' '+ idefix,
 //  f.Alert2(data.user_update_idefix,data.nazev, idefix)
 
   if (data.user_update_idefix*1 > 0 && idefix*1 !== data.user_update_idefix*1){
+    // f.Alert('2')
   //  f.Alert('Cizi vynalez -VLOZIT',idefix , data.user_update_idefix)
     $("#box"+data.ID ).dialog({
       modal: false,
@@ -94,10 +96,13 @@ async setKalk(data,kalkulace,_idefix=0) {
   }
 
 
-
+//  f.Alert('2.5', ' ', data.user_update_idefix,' : ',idefix )
 
   var idefixOver=0
-  if (data.user_update_idefix ==0) {
+  if (data.user_update_idefix ==0
+       || data.user_update_idefix == idefix  //Pridano pri ukladni z kalkulace jako template
+    ) {
+//    f.Alert('3')
     qover=`select * from calc_templates where nazev = trim('${data.nazev}') and user_update_idefix = ${idefix} `
     // f.Alert(qover)
     try {
@@ -110,7 +115,6 @@ async setKalk(data,kalkulace,_idefix=0) {
         $("#box"+data.ID ).dialog({
           modal: false,
           buttons: {
-
             Vlozit: function() {
               data.Vlozit=1
               self.Vklad(data, kalkulace2)
@@ -139,7 +143,9 @@ async setKalk(data,kalkulace,_idefix=0) {
       console.log("ERR Kalk1", e)
     }
   }
+  f.Alert('3.5', data.nazev , ' : ', idefixOver )
  if (idefixOver > 0 ) {
+  f.Alert('4')
   $("#box"+data.ID ).dialog({
     modal: false,
     buttons: {
@@ -173,6 +179,7 @@ async setKalk(data,kalkulace,_idefix=0) {
 
   });
 } else
+// && !f.isEmpty(data.idefixtemplate)
 
 if (data.idefix > 0) {
 
@@ -195,7 +202,7 @@ if (data.idefix > 0) {
             $( this ).dialog( "close" );
           },
         },
-        title: "Zmena nazvu",
+        title: "Zmena nazvu " + data.idefix + ' '+data.idefixtemplate ,
         dialogClass: "my-dialog-1",
         show: {
           effect: "fade",
@@ -475,8 +482,9 @@ async Zmena(data,kalkulace2,_idefix){
   var idefix=store.state.idefix
   var atmp=[]
   var nret = 0
+  var tempTable ="calc_templates"
 
-  var q = `update calc_templates set
+  var q = `update ${tempTable} set
   nazev          = trim('${data.nazev}'),
   kcks           = '${data.kcks}',
   ks             = '${data.ks}',
@@ -492,7 +500,7 @@ async Zmena(data,kalkulace2,_idefix){
    where idefix = ${_idefix}
   `
   //obsah='${kalkulace}',
-   //  f.Alert('Update ' ,q)
+     f.Alert('Update idfix' ,_idefix )
      console.log('Update ' ,q)
 
     await Q.post(0,q)

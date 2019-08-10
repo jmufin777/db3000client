@@ -6,7 +6,7 @@
       <div slot="hlavninew" style="position:fixed;top:4.8em;left:10px;background:#fdf0f7;text-align:left;width:100%" id="hlavninabidka" class="HlavniNabidka">
     <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
      <div >
-      <work-but-menu></work-but-menu>
+      <work-but-menu :ID="ID"></work-but-menu>
      </div>
 
     <span v-if="false">
@@ -48,6 +48,11 @@
       slot="kalkulace"
    >
    Ulozit jako zakazku
+   </button>
+   <button  v-if="MAINMENULAST=='zakazky'" class="px-4 tlacitkoMenu elevation-2 hoVer"
+      slot="kalkulace"
+   >
+   Ulozit jako nabidku
    </button>
    JARDA : {{IDEFIXACTIVE}} / Delka kalkulace {{aKalkulace.length}}
 </div>
@@ -439,7 +444,7 @@ import {mutations} from 'vuex'
 import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import MyLayout from './CalcMyLayout.vue'
-import MenuHlavni from './CalcMenuHlavni.vue'
+//import MenuHlavni from './CalcMenuHlavni.vue'
 import MenuLeft from './CalcMenuLeft.vue'
 
 import Work from './CalcWork.vue'       // Pracovni cast nahore, obshahuje levou cast a sloupce
@@ -475,7 +480,7 @@ export default {
     'work-but': WorkBut,
     'work-but-plus': WorkButPlus,
     'work-but-menu': WorkButMenu,
-    'menu-hlavni': MenuHlavni,
+    // 'menu-hlavni': MenuHlavni,
 
  },
  data () {
@@ -586,7 +591,7 @@ deactivated: function () {
        if (server.data.nazev=='') {
           f.Alert2('Nazev je nutne vyplnit',self.user)
        } else {
-          //f.Alert2('Co tu delas ?', "TEMPLATE!!!" )
+          //f.Alert2('Co tu delas ?', "TEMPLATE!!!" ,server.data.idefix)
           queryKalk.setKalk(server.data,self.aKalkulace)
        }
        //f.Alert(JSON.stringify(server))
@@ -645,9 +650,9 @@ deactivated: function () {
       self.Hlavni=server.key
        if (server.key == 1999) {  //Polozky hlavniho menu
         if (self.MAINMENULAST==server.item) {
-          f.Alert('Porad jsem ', server.item)
+          // f.Alert('Porad jsem ', server.item)
         } else {
-          f.Alert('hlavni - zmena ', server.item)
+          // f.Alert('hlavni - zmena ', server.item)
           self.MAINMENULAST=server.item
           $("#Zmenad").get(0).value=0
          self.$store.dispatch('cleanKalk')
@@ -660,7 +665,7 @@ deactivated: function () {
        return
        }
       if (server.key == 666) {  //Guma
-         alert(server.key)
+         // alert(server.key)
          $("#Zmenad").get(0).value=0
          self.$store.dispatch('cleanKalk')
          self.aKalkulace=[]
@@ -684,7 +689,6 @@ deactivated: function () {
          ;alter table ${self.cTable} add active bool default false
          ;alter table ${self.cTable} add idefix_src bigint default 0
          ;alter table ${self.cTable} alter idefix  set default nextval('list2_seq')
-
          ;alter table ${self.cTable} alter id set default nextval('${self.cTable}_seq')
          `
 
@@ -996,7 +1000,6 @@ deactivated: function () {
    async Ulozit(){
      const self = this
      await self.setVL(self.IDEFIXACTIVE,1)
-
      f.Alert('Ulozim ', self.MAINMENULAST )
    },
    async setIdefixActive() {

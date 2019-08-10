@@ -1,4 +1,7 @@
 import moment from 'moment'
+import Q from './query'
+import f from './fce'
+import store from '@/store/store'
 
 export default {
 
@@ -184,6 +187,62 @@ export default {
   order by b.nazev`;
   return q;
 }
+
+,async getFirma(idefix_firma=0){
+  var idefix=store.state.idefix
+  var defer = $.Deferred();
+  var q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix) from list_dodavatel a order by nazev`;
+  var atmp=[]
+  try {
+    // f.Alert('kve 1')
+    atmp= (await Q.all(idefix,q)).data.data
+    // f.Info('Get Firma 1', "DATA: ",JSON.stringify(atmp))
+    defer.resolve(atmp)
+
+
+
+  }  catch(e) {
+    defer.resolve(atmp)
+    f.Alert2('Chyba  Dotaz Firma', e )
+  }
+
+
+
+
+  return defer.promise();
+}
+
+,async getFirmaOsoba(idefix_firma=0){
+  var idefix=store.state.idefix
+
+  var q=`select idefix, idefix_firma, osoba(idefix ) as osoba, aktivni from list_firmaosoba where idefix_firma = ${idefix_firma} order by jmeno`
+  var defer = $.Deferred();
+  var atmp=[]
+  try {
+    // f.Alert('kve 1')
+    atmp= (await Q.all(idefix,q)).data.data
+
+    if (atmp.length==0) {
+      defer.resolve(atmp)
+    } else  {
+    await atmp.forEach(el=>{
+
+      defer.resolve(atmp)
+      // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
+    })
+    }
+  }  catch(e) {
+    defer.resolve(atmp)
+    f.Alert2('Chyba  getFirmaOsoba', e )
+  }
+
+
+
+
+
+  return defer.promise();
+}
+
 
 
 }

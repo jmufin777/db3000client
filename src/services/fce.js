@@ -969,9 +969,13 @@ getLeft(id,addPoz=10,idVztah="obal1_kalkulace") {
   if (oNeco = document.getElementById(id)) {
     neco = oNeco.offsetParent.offsetLeft+addPoz
 
-    var r2 = oNeco.closest("#test_1");
-    neco = neco - r2.scrollLeft
-    console.log(neco," LEFT ", obal.scrollLeft, " Left Neco " , oNeco.scrollLeft, oNeco.parentElement.scrollLeft , " R2 ", r2.id , "scr ", r2.scrollLeft , " r ", r2.scrollWidth )
+    var r2
+    if (r2= oNeco.closest("#test_1")) {
+      neco = neco - r2.scrollLeft
+    }
+    //alert(r2)
+
+    // console.log(neco," LEFT ", obal.scrollLeft, " Left Neco " , oNeco.scrollLeft, oNeco.parentElement.scrollLeft , " R2 ", r2.id , "scr ", r2.scrollLeft , " r ", r2.scrollWidth )
 
 
 

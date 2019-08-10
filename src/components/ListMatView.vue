@@ -405,9 +405,9 @@ export default {
     self.handleResize()
 //    return
     if (this.isUserLoggedIn) {
-      this.IsWaiting = true
-        this.getWhere()
-        this.getEnums()
+        this.IsWaiting = true
+        await this.getWhere()
+        await this.getEnums()
 
       //this.list = (await ListMat.all(this.user,`${self.where}`)).data
         this.IsWaiting = false

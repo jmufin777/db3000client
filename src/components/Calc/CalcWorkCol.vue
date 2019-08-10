@@ -703,7 +703,7 @@ export default {
        self.timeout=setTimeout(function() {
 
          self.TestRend++;
-         console.log("Render col ", self.TestRend )
+         //console.log("Render col ", self.TestRend )
 
      }, 500)
     }
