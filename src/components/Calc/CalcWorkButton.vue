@@ -525,37 +525,10 @@ deactivated: function () {
       }
     });
     this.$nextTick(function () {
-    // Code that will run only after the entire view has been rendered
-      //$('input').hide(2000).show(2000);
-      //$('input').dialog();
-
       $( ".datum_expedice" ).datepicker();
   })
-   //$( function() {
 
-     //$( ".datum_expedice" ).datepicker( "option", "dateFormat", "dd.mm.yy");
 
-//
-
-     $.datepicker.regional['cs'] = {
-      closeText: 'Zavrit', // set a close button text
-      currentText: 'Dnes', // set today text
-      monthNames: ['Leden','Unor','Brezen','Duben','Kveten','Cerven',   'Cervenc','Srpen','Zari','Rijen','Listopad','Prsinec'], // set month names
-      monthNamesShort: ['Led','Un','Bre','Dub','Kve','Cer','Crc','Srp','Zar','Rij','Lis','Pro'], // set short month names
-      dayNames: ['Ne','Po','Ut','St','Ct','Pá','So'], // set  days names
-      dayNamesShort: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
-      dayNamesMin: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
-      weekNames: ['Tyden'],
-      dateFormat: 'dd.mm.yy', // set format date
-      showWeek: true,
-      firstDay: 1,
-      showButtonPanel: true,
-      showOtherMonths: true,
-      changeYear: true,
-      changeMonth: true,
-    };
-
-      $.datepicker.setDefaults($.datepicker.regional['cs']);
 
 
       $( "#expedice_datum"+self.ID2 ).on('change', function(){
@@ -695,6 +668,7 @@ deactivated: function () {
      $(oSeznam).css("z-index",99999999999)
 
       $(oSeznam).show(1000)
+      // $(oSeznam).hide(1000)
       if (self.ZobrazMenu) {
         console.log(self.ZobrazMenu)
       }
@@ -1205,6 +1179,7 @@ async KalkulacePrepocetKusy(k, ks=1){
         case 13:
             //f.stopka(e)
             e.target.click
+            // $("#"+e.target.id).hide(1000)
             setTimeout(function(){
               document.getElementById(PrvekTxt).focus()
             },50)

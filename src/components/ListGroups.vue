@@ -131,6 +131,7 @@
   size="mini"
   :close-on-press-escape="true"
   :close-on-click-modal="false"
+  :modal="false"
   center>
 
     <span slot="title" size="mini" class="blue">

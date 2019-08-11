@@ -1,5 +1,5 @@
 <template>
-<div style="position:relative;top:0px;background:#e4eff8;text-align:left;font-size:14px;">
+<div style="position:relative;top:0px;background:#e4eff8;text-align:left;font-size:14px;" >
       <div style="position:relative;top:0px;background:#e4eff8;text-align:left">
         <button v-for="(item,i) in aMain" :key="i" class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="setMenu(item.id)"
@@ -59,27 +59,34 @@
               ></td>
             </tr>
            <tr>
-              <td style="position:relative;top:0px;color:#258bce;width:30%;" class="prava">Název firmy:</td>
+              <td style="position:relative;top:0px;color:#258bce;width:30%;" class="prava"><a @click="editF(form.idefix_firma)" ><b >Název firmy:</b></a></td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
               <input
               type="text"
-              :id="'nazevfirmy_'+ID"
+              :id="fields['firma']['nazev']"
               size="mini"
               style="width:90%"
               class="tdl tdn"
-              @focus="fokus('nazevfirmy_'+ID);showTemplates=true"
-              @blur="Opust('nazevfirmy_'+ID)"
-              @click="showTemplates=ZobrazMenu"
-              @keydown="showTemplates=ZobrazMenu;ZobrazMenu ? seznam('nazevfirmy_'+ID+'_list_'+0,1,$event) : false"
+              @focus="fokus('firma');fields['firma'].ZobrazMenu=true"
+              @blur="Opust('firma');"
+              @click="fields['firma'].ZobrazMenu=true"
+              @keydown="fields['firma'].ZobrazMenu ? seznam(fields['firma']['nazev']+'_list_'+0,1,$event) : false"
+              v-model="form.nazevfirmy"
               ></td>
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava">Název zakázky:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input
+              v-model="form.nazev"
+              :id="'nazev'+ID"
+              type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava">Datum expedice:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input
+              v-model="form.datumexpedice"
+              :id="'datumexpedice'+ID"
+              type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
             </tr>
           </table>
 
@@ -93,8 +100,24 @@
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
            <tr>
-              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Kontaktni osoba:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">
+                <a @click="editK(form.idefix_firma)" >
+                Kontaktni osoba:
+                </a>
+                </td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input
+              type="text" size="mini"  style="width:90%"
+              class="tdl tdn"
+              @focus="fokus('osoba');fields['osoba'].ZobrazMenu=true"
+              @blur="Opust('osoba');"
+              @click="fields['osoba'].ZobrazMenu=true"
+              @keydown="fields['osoba'].ZobrazMenu ? seznam(fields['osoba']['nazev']+'_list_'+0,1,$event) : false"
+              :id="fields['osoba']['nazev']"
+
+
+              v-model="form.osoba"
+
+              ></td>
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Doprava:</td>
@@ -140,12 +163,12 @@
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn "></td>
             </tr>
             <tr>
-              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">???:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Text na fakturu:</td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input v-model="form.vyrobapopis_print" type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
             <tr>
-              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">???:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
+              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Vyroba popis:</td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input v-model="form.vyrobapopis_print" type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
             </tr>
           </table>
         </div>
@@ -153,31 +176,45 @@
 
     </div>
     <hr style="color:#cacade">
-
-       <div style="min-height:5px;max-height:10em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px"
-        v-if="showFirma && aFirma.length > 0" class="elevation-12 teal"
-          :style="'top:'+ f.getBottom('nazevfirmy_'+ID,80)+'px;width:'+f.getWidth('nazevfirmy_'+ID,8)+'px;left:'+f.getLeft('nazevfirmy_'+ID,0)+'px'">
+       <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none"
+          v-if="aFirma.length > 0 "
+          class="elevation-12 teal"
+          :id="fields['firma'].nazev+'_list'"
+          :style="fields['firma'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:none'"
+          >
         <span style="display:none">FF {{ aFirma.length}}</span>
-        <span style="display:none">
-         {{ aFirma}}
-         <!-- {{ getBottom('seek5_'+ID) }} {{ Col.dataStroj}} -->
-        </span>
-          <table  width="100%" v-if="true " >
-             <tr class="mt-0 pa-0 grey lighten-4" v-for="(item1, i1) in aFirma" :key="i1"  >
-              <td class="pa-0 ma-0 pl-1 grey lighten-4">
 
-              <a :href="'#'" :id="'nazevfirmy_'+ID+'_list_'+i1"  @keydown="seznam('nazevfirmy_'+ID+'_list_'+i1,1,$event)" @click="form.txtDod= item1['firma']; form.showtxtDod=false; setColDod(item1)" @focus="lastFocus='seek5_'+ID">
+          <table  width="100%" v-if="true " >
+            <tr v-if="false"><td>{{ fields['firma'].ZobrazMenu }}</td></trv->
+             <tr class="mt-0 pa-0 grey lighten-4"
+             v-for="(item1, i1) in
+             aFirma.filter(
+                    el =>
+                    (
+                      ( (el.nazev+el.ico).toUpperCase().match((form.nazevfirmy+'').toUpperCase()) && form.nazevfirmy+'' > '' && form.nazevfirmy !== el.nazev )
+                      || (form.nazevfirmy+'').trim() == ''
+                    ) && (form.nazevfirmy+'').trim() != (el.nazev+'').trim()
+                    ).slice(0,50)" :key="i1"
+              >
+              <td class="pa-0 ma-0 pl-1 grey lighten-4">
+              <a :href="'#'" :id="fields['firma'].nazev+'_list_'+i1"
+              @keydown="
+                seznam(fields['firma'].nazev +'_list_'+i1,1,$event)"
+                @click="setF(item1)"
+                @focus="lastFocus=fields['firma'].nazev"
+              >
               <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
                 <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
-                <v-card-text style="font-size:90%;text-align:left;width:100%" @click="form.txtDod= item1['firma']; form.showtxtDod=false; setColDod(item1)"
-                :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
-                class="ma-0 pa-0 pl-1"
+                <v-card-text style="font-size:90%;text-align:left;width:100%"
+                 @click="form['nazevfirmy']= item1['nazev'];setF(item1['idefix_firma'])
+                 fields['firma'].ZobrazMenu=false;
+                 form['idefix_firma']=item1['idefix_firma']"
+                 :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
+                 class="ma-0 pa-0 pl-1"
                 >
-
-                  {{ item1['nazev'] }}
+                  <table width="100%" cols="100"><tr><td style="width:80%">{{ item1['nazev'] }}</td><td style="width:20%">{{item1.ico}}</td></tr></table>
                  </v-card-text>
                  </td></tr></table>
-
               </v-card>
             </a>
               </td>
@@ -185,9 +222,59 @@
           </table>
         </div>
 
+       <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none"
+          v-if="aOsoba.length > 0 "
+          class="elevation-12 teal"
+          :id="fields['osoba'].nazev+'_list'"
+          :style="fields['osoba'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:none'"
+          >
+        <span style="display:none">FF {{ aOsoba.length}}</span>
 
+          <table  width="100%" v-if="true " >
+            <tr v-if="false"><td>{{ fields['osoba'].ZobrazMenu }}</td></trv->
+             <tr class="mt-0 pa-0 grey lighten-4"
+             v-for="(item1, i1) in
+             aOsoba.filter(
+                    el =>
+                    (
+                      ( (el.nazev).toUpperCase().match((form.osoba+'').toUpperCase()) && form.osoba+'' > '' && form.osoba !== el.nazev )
+                      || (form.osoba+'').trim() == ''
+                    ) && (form.osoba+'').trim() != (el.nazev+'').trim()
+                    )" :key="i1"
+              >
+              <td class="pa-0 ma-0 pl-1 grey lighten-4">
+              <a :href="'#'" :id="fields['osoba'].nazev+'_list_'+i1"
+              @keydown="
+                seznam(fields['osoba'].nazev +'_list_'+i1,1,$event)"
+                @click="setOsoba(item1)"
+                @focus="lastFocus=fields['osoba'].nazev"
+              >
+              <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
+                <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
+                <v-card-text style="font-size:90%;text-align:left;width:100%"
+                 @click="form['osoba']= item1['nazev'];setOsoba(item1['idefix'])
+                 fields['osoba'].ZobrazMenu=false;
+                 form['idefix_osoba']=item1['idefix']"
+                 :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
+                 class="ma-0 pa-0 pl-1"
+                >
+                  <table width="100%" cols="100"><tr><td style="width:40%">{{ item1['nazev'] }}</td>
+                  <td style="width:20%">{{item1.aktivni?'A':'N'}}&nbsp;</td>
+                  <td style="width:20%">{{item1.tel}}&nbsp;</td>
+                  <td v-if="false" style="width:20%">{{item1.mail}}&nbsp;</td>
+                  </tr></table>
+                 </v-card-text>
+                 </td></tr></table>
+              </v-card>
+            </a>
+              </td>
+            </tr>
+          </table>
+        </div>
 
-
+      <div id="jqwin"  style="display:none" >
+        Ulozeni template
+      </div>
 
 </div>
 
@@ -202,7 +289,7 @@
 <script>
 import {mapState} from 'vuex'
 import { eventBus } from '@/main.js'
-import { setTimeout, clearInterval } from 'timers'
+import { setTimeout, clearInterval, setInterval } from 'timers'
 import f from '@/services/fce'
 import SQL from '../../services/fcesql'
 
@@ -285,18 +372,60 @@ export default {
          objednavka0       : '',
          pdf0              : '',
          informace         : '',
+         nazevfirmy        : '',  //pridaner texty co nejsou ve strkture
+         osoba             : '',  //osoba
+         obchodnik         : '',  //obchodnik - text
+         produkce          : '',  //produkce - text
        },
        aFirma: [],
        aOsoba: [],
        aUser: [],
        aProdukce: [],
 
+      fields: {
+        'firma': {
+          ZobrazMenu: false,
+          nazev: ''
+        },
+        'osoba': {
+          ZobrazMenu: false,
+          nazev: ''
+        },
+        'obchodnik': {
+          ZobrazMenu: false,
+          nazev: ''
+        },
+        'produkce': {
+          ZobrazMenu: false,
+          nazev: ''
+        }
+      },
+
    }
  },
+  beforeDestroy: function () {
+    //this.choicesSelect.destroy()
+    const self=this
+   // f.Alert('dea')
+     for(let key in self.fields) {
+       if (document.getElementById(self.fields[key].nazev+'_list')) {
+         //f.Alert('Nazdar bazer 2', key, self.fields[key].nazev)
+         $("#"+self.fields[key].nazev+'_list').remove()
+       }
+     }
+},
+deactivated: function () {
+//     const self=this
+    return
+
+
+  // remove any data you do not want to keep alive
+},
  async created() {
      const self=this
      //alert(11111)
      self.aFirma =  await SQL.getFirma(0)
+
 
      //f.Alert("afirma", f.Jstr(self.aFirma))
   //  eventBus.$on('MenuLeft', (server) => {
@@ -313,6 +442,15 @@ export default {
  },
  async mounted() {
     const self = this
+    self.fields.firma.show=false
+    self.fields.firma.nazev='nazevfirmy_'+self.ID
+    self.fields.osoba.show=false
+    self.fields.osoba.nazev='osoba_'+self.ID
+    self.fields.obchodnik.show=false
+    self.fields.obchodnik.nazev='obcodnik_'+self.ID
+    self.fields.produkce.show=false
+    self.fields.produkce.nazev='produkce_'+self.ID
+
 
    // alert('nazevfirmy_'+self.ID)
   //setTimeout(function(){
@@ -320,9 +458,42 @@ export default {
   //},2000)
   //
 //       return
+    setInterval(function(){
+       for(let key in self.fields) {
+           try {
+            if  ($(':focus')[0].id){
+              if ($(':focus')[0].id.split("_")[0] == self.fields[key].nazev.split("_")[0]) {
+              } else {
+                self.fields[key].ZobrazMenu =false
+              }
+            }
+           } catch(e) {
+
+           }
+        }
+    },500)
     setTimeout(function() {
       eventBus.$emit('MenuHlavni',{key:1999, item: self.setmenu})
      },100)
+      $.datepicker.regional['cs'] = {
+        closeText: 'Zavrit', // set a close button text
+        currentText: 'Dnes', // set today text
+        monthNames: ['Leden','Unor','Brezen','Duben','Kveten','Cerven',   'Cervenc','Srpen','Zari','Rijen','Listopad','Prsinec'], // set month names
+        monthNamesShort: ['Led','Un','Bre','Dub','Kve','Cer','Crc','Srp','Zar','Rij','Lis','Pro'], // set short month names
+        dayNames: ['Ne','Po','Ut','St','Ct','Pá','So'], // set  days names
+        dayNamesShort: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
+        dayNamesMin: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
+        weekNames: ['Tyden'],
+        dateFormat: 'dd.mm.yy', // set format date
+        showWeek: true,
+        firstDay: 1,
+        showButtonPanel: true,
+        showOtherMonths: true,
+        changeYear: true,
+        changeMonth: true,
+    };
+
+      $.datepicker.setDefaults($.datepicker.regional['cs']);
          this.$nextTick(function () {
     // Code that will run only after the entire view has been rendered
       //$('input').hide(2000).show(2000);
@@ -336,6 +507,172 @@ export default {
    TestRend() {
     //alert('aRend')
      eventBus.$emit("Rend")
+  },
+
+ FilterFirma() {
+   const self=this
+                return this.aFirma.filter(
+                    el =>
+                      (
+                        (
+                        (
+                          el.nazev+el.ico).toUpperCase().match((self.form.nazevfirmy+'').toUpperCase()) && self.form.nazevfirmy+'' > '' && self.form.nazevfirmy !== el.nazev )
+                      || (self.form.nazevfirmy+'').trim() == ''
+                      )
+                      && self.form.nazevfirmy != el.nazev
+                ).length >0
+ },
+
+ async setF(itemCela){
+      const self = this
+      var isZmena = false ;
+
+      //f.Alert(f.Jstr(itemCela))
+      //return
+      if (f.isEmpty(itemCela)) {
+        //f.Alert('Empty')
+        return
+      }
+      if (!itemCela.hasOwnProperty('nazev')) {
+        f.Alert('prdka')
+        return
+      }
+      if (self.form.idefix_firma==0 && itemCela['idefix'] > 0  ) {
+        isZmena = true;
+
+      }
+      if (self.form.idefix_firma>0 && self.form.idefix_firma != itemCela['idefix']) {
+        self.form.osoba=''
+        self.form.idefix_osoba=0
+        isZmena = true;
+      }
+      self.form.nazevfirmy= itemCela['nazev'];
+      self.form.idefix_firma= itemCela['idefix'];
+      self.fields['firma'].ZobrazMenu=false;
+
+ //     f.Alert('#'+self.fields['firma'].nazev+'_list')
+      $('#'+self.fields['firma'].nazev+'_list').css('display','none')
+      if (self.form.idefix_firma > 0 ) {
+         //f.Alert(document.getElementById(self.fields['osoba']['nazev']),self.fields['osoba']['nazev'])
+
+         self.aOsoba=   await SQL.getFirmaOsoba(self.form.idefix_firma)
+      //   f.Alert('Stouram kontaky', self.fields['osoba']['nazev'], f.Jstr(self.aOsoba))
+
+         if (isZmena && self.aOsoba.length>0) {
+             if (self.aOsoba.length==1) {
+              self.form.idefix_osoba = self.aOsoba[0].idefix
+              self.form.osoba = self.aOsoba[0].nazev
+             }
+
+            setTimeout(function(){
+               $('#'+self.fields['osoba']['nazev']).focus()
+            },1000)
+         }
+
+      }
+
+
+      // f.Alert("IC ", f.Jstr(itemCela))
+
+
+
+ },
+
+ async setOsoba(itemCela){
+      const self = this
+
+      //f.Alert(f.Jstr(itemCela))
+      //return
+      if (f.isEmpty(itemCela)) {
+        //f.Alert('Empty')
+        return
+      }
+      if (!itemCela.hasOwnProperty('nazev')) {
+        f.Alert('prdka')
+        return
+      }
+      self.form.osoba= itemCela['nazev'];
+      self.form.idefix_osoba= itemCela['idefix'];
+      self.fields['firma'].ZobrazMenu=false;
+
+ //     f.Alert('#'+self.fields['firma'].nazev+'_list')
+      $('#'+self.fields['firma'].nazev+'_list').css('display','none')
+      if (self.form.idefix_firma > 0 ) {
+         f.Alert(document.getElementById(self.fields['osoba']['nazev']),self.fields['osoba']['nazev'])
+
+         self.aOsoba=   await SQL.getFirmaOsoba(self.form.idefix_firma)
+         // f.Alert('Stouram kontaky', self.fields['osoba']['nazev'], f.Jstr(self.aOsoba))
+         $('#'+self.fields['osoba']['nazev']).focus()
+
+      }
+
+
+      // f.Alert("IC ", f.Jstr(itemCela))
+
+
+
+ },
+  editF(_idefix=0){
+      const self = this
+     let route = this.$router.resolve({ name: 'firma',  params: { id: _idefix } })
+     // var x=parseInt(screen.width*0.9)
+     // var y=parseInt(screen.height*0.9)
+     var y  = parseInt(window.innerHeight *0.95)
+     var x  = parseInt(window.innerWidth *0.95)
+      //f.Alert(x , y ,_idefix, 'f',self.form.idefix_firma )
+     //alert(screen.height)
+
+     //var ow=window.open(route.href, 'Firma',  `width=${x},height=${y}`)
+
+     //ow.location.reload()
+      $("#jqwin").css("height",y+"px")
+      var d = $('#jqwin').html("<iframe id='ifrm' style='width:100%;height:100%' " + "></iframe>");
+      d.dialog({
+        width:`${x}`,
+        height:`${y}`,
+
+      });
+      $("#jqwin>#ifrm").attr("src", route.href);
+
+
+
+    //this.$router.push( { name: 'firma',  params: { id: '14125' } })
+
+    return
+
+
+
+  },
+  editK(_idefix=0){
+      const self = this
+     let route = this.$router.resolve({ name: 'firma',  params: { id: _idefix*-1 ,step: 3} })
+     // var x=parseInt(screen.width*0.9)
+     // var y=parseInt(screen.height*0.9)
+     var y  = parseInt(window.innerHeight *0.95)
+     var x  = parseInt(window.innerWidth *0.95)
+     // f.Alert(x , y ,_idefix, 'f',self.form.idefix_firma )
+     //alert(screen.height)
+
+     //var ow=window.open(route.href, 'Firma',  `width=${x},height=${y}`)
+
+     //ow.location.reload()
+      $("#jqwin").css("height",y+"px")
+      var d = $('#jqwin').html("<iframe id='ifrm' style='width:100%;height:100%' " + "></iframe>");
+      d.dialog({
+        width:`${x}`,
+        height:`${y}`,
+
+      });
+      $("#jqwin>#ifrm").attr("src", route.href);
+
+
+
+    //this.$router.push( { name: 'firma',  params: { id: '14125' } })
+
+    return
+
+
+
   },
   setMenu(cVal='') {
       //aler('aa')
@@ -567,10 +904,14 @@ export default {
 
         case 13:
             //f.stopka(e)
+
+            //$("#"+e.target.id).hide(1000)
             e.target.click
             setTimeout(function(){
+              //alert('13 : '+e.target.id)
+              //e.target.click
               document.getElementById(PrvekTxt).focus()
-            },50)
+            },250)
 
             break;
      }
@@ -602,19 +943,63 @@ export default {
        self.LastMain = 0
      }
    },
-     fokus(lastFocus=''){
+  async fokus(lastFocusx=''){  //parametr - Zmena !!! = typ polozky
     const self = this
+    var lastFocus = self.fields[lastFocusx]['nazev']
+
+    //f.Alert(self.fields[lastFocusx]['nazev'])
+    //f.Alert(document.getElementById(self.fields[lastFocusx]['nazev']))
+    //return ;
+
     if (self.ZobrazMenu == false)  return
     this.lastFocus=lastFocus
-    var oSeznam="#"+lastFocus+"_list2"
-     $(oSeznam).css("z-index",99999999999)
+    // self.fields[lastFocusx].ZobrazMenu = false
+    var Prvek='#'+lastFocus
 
-      $(oSeznam).show(1000)
-      if (self.ZobrazMenu) {
-        console.log(self.ZobrazMenu)
+  //  await f.sleep(2000)
+
+
+
+    var oSeznam="#"+lastFocus+"_list"
+    var oSeznamId=lastFocus+"_list"
+
+     // f.Alert2(oSeznamId ,oSeznamId,document.getElementById(oSeznamId), ' fields', f.Jstr(self.fields))
+    try {
+      if (f.isEmpty(document.getElementById(oSeznamId).offsetParent) &&  !document.getElementById(oSeznamId).offsetParent ) {
+        document.getElementById(oSeznamId).cloneNode=false
+        document.getElementById("app").appendChild(document.getElementById(oSeznamId) )
       }
-      //f.Info(self.ZobrazMenu)
-      //f.Info(oSeznam, self.ZobrazMenu)
+    } catch(e) {
+        //f.Alert2('Firma nema kontakty dispozici')
+    }
+
+
+
+
+     //:style="'top:'+ f.getBottomApp('nazevfirmy_'+ID,80)+'px;width:'+f.getWidth('nazevfirmy_'+ID,8)+'px;left:'+f.getLeftApp('nazevfirmy_'+ID,0)+'px'"
+
+    var H= parseInt($(Prvek).outerHeight())
+    var top =parseInt($(Prvek).offset().top)+H
+
+
+    var _css3={
+    "top":   top+'px',
+    "width":f.getWidth(lastFocus,8)+'px',
+    "left":  f.getLeftApp(lastFocus,0)+'px',
+    "display": "block"
+    }
+    //var x = $('child-div').offset().top - $('parent-div').offset().top;
+
+    var x = $(Prvek).offset().top ;
+  //  f.Alert2( f.Jstr(_css3), x, lastFocus, " H ", H)
+     $(oSeznam).css("z-index",99999999999)
+     $(oSeznam).css(_css3)
+
+      //$(oSeznam).show(1000)
+    //  $(oSeznam).hide(1000).show(1000)
+
+      console.log('Jsem zpet ??' , self.lastFocus )
+
 
     return
 
@@ -627,7 +1012,7 @@ export default {
     this.lastFocus=lastFocus
   },
   seznamPoz(lastFocus=''){
-    var oSeznam="#"+lastFocus+"_list2"
+    var oSeznam="#"+lastFocus+"_list"
     try {
       var x=$("#"+lastFocus).offset().top
       var pozTop = Math.ceil($("#"+lastFocus).offset().top - $(document).scrollTop())
@@ -645,16 +1030,22 @@ export default {
   Opust(cid='') {
 
     const self = this
+
   //  var x = document.activeElement.tagName
     //f.Alert(self.lastFocus)
+  //  f.Alert(self.fields[cid]['nazev'].split("_")[0], self.lastFocus )
 
+    var cfield =self.fields[cid]['nazev'].split("_")[0]
     //console.log(x)
     setTimeout(function(){
+      var aktualni=self.lastFocus.split("_")[0]
     //f.Alert(self.lastFocus)
-    if (self.lastFocus.substr(0,4)=='seek'){
-       self.showTemplates=true
+    if (aktualni == cfield){
+    //if (self.lastFocus.substr(0,4)=='naze'){
+       self.fields[cid].ZobrazMenu=true
      } else {
-        self.showTemplates=false
+        self.fields[cid].ZobrazMenu=false
+
     }
 
   },200)
@@ -669,6 +1060,12 @@ export default {
 <style scoped>
 textarea:focus, input:focus{
     outline: 0px dashed;
+}
+a:focus {
+  color:black;
+  zoom:105%;
+  font-weight:900;
+
 }
 .honza_text{
   background: #93908e;

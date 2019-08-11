@@ -191,7 +191,7 @@ export default {
 ,async getFirma(idefix_firma=0){
   var idefix=store.state.idefix
   var defer = $.Deferred();
-  var q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix) from list_dodavatel a order by nazev`;
+  var q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix) from list_dodavatel a order by nazev `;
   var atmp=[]
   try {
     // f.Alert('kve 1')
@@ -215,7 +215,7 @@ export default {
 ,async getFirmaOsoba(idefix_firma=0){
   var idefix=store.state.idefix
 
-  var q=`select idefix, idefix_firma, osoba(idefix ) as osoba, aktivni from list_firmaosoba where idefix_firma = ${idefix_firma} order by jmeno`
+  var q=`select idefix, idefix_firma, osoba(idefix ) as nazev, aktivni,mail,tel from list_firmaosoba where idefix_firma = ${idefix_firma} order by jmeno`
   var defer = $.Deferred();
   var atmp=[]
   try {
@@ -235,6 +235,8 @@ export default {
     defer.resolve(atmp)
     f.Alert2('Chyba  getFirmaOsoba', e )
   }
+
+
 
 
 

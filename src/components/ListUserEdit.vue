@@ -7,6 +7,7 @@
   :close-on-click-modal="false"
   :close="endDlg"
   id="dialog004"
+  :modal="false"
 
   >
 <!-- <el-row> <el-col :span="24"> -->

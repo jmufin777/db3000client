@@ -13,7 +13,7 @@
 <div style="height:100%;overflow:scroll;text-align:left;width:100%" class="mt-0 px-2 white" :id="'t' + objId1" ref="sirka">
 
   <el-col :span="12" style="text-align:left;top:-30px" class="mx-1 mt-0 ">
-
+     <!-- //AAAAAAAA {{ $route.params }} -->
  <!-- <el-col :span="12" :offset="0" style="margin-top:5px;padding-left:10px" > -->
 
  <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -277,7 +277,7 @@
 
 
 
-<list-firma-edit  v-if="IsDialog"></list-firma-edit>
+<list-firma-edit  v-if="IsDialog "></list-firma-edit>
 
   </div>
   </div>
@@ -334,7 +334,12 @@ import { stringify } from 'querystring';
 
 
 export default {
-  props: ['visible'],
+  // props: ['visible'],
+  IDEFIX: {
+      type: Number,
+      default:0,
+      required: false
+    },
   components: {
     'list-firma-edit': ListFirmaEdit
   },
@@ -434,12 +439,18 @@ export default {
     self.objId2+=''+self.ID
     self.objSearchBar+=''+self.ID
     self.getStrana()
+
+
+    //alert('zdar')
+
+
     var interv =setInterval(function() {
        self.sirka("sirka")
        // self.TestovaciCislo++
 //       alert(self.Sirka)
     },500)
     self.handleResize()
+
 /*
     setTimeout(function(){
       self.editLineToForm(0)
@@ -453,12 +464,13 @@ export default {
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
         this.getWhere()
-         this.getEnums()
+        this.getEnums()
 
 
         this.IsWaiting = false
         return
     }
+    // await self.ZobrazJednu()
 
   },
 
@@ -469,7 +481,6 @@ export default {
         //self.getData()
        self.getWhere()
        self.getEnums()
-
       })
     window.addEventListener('resize', self.handleResize)
 
@@ -783,7 +794,12 @@ setTimeout( function(){
         `
        self.allTrue =true
   }
+      if (!f.isEmpty(self.$route.params.id) && self.$route.params.id != 0 )   {
 
+          var npar= Math.abs(self.$route.params.id)
+          self.where= `(true ) and a.idefix = ${npar} `
+      }
+      //alert(self.where)
       this.IsWaiting = true
 
         this.list = (await ListFirma.all(this.user,self.where )).data
@@ -793,7 +809,28 @@ setTimeout( function(){
           this.$store.dispatch('seekFirma', search)
         }
         this.IsWaiting = false
-       // alert('jsem zde' + JSON.stringify(this.list) )
+
+        if (!f.isEmpty(self.$route.params.id) && self.$route.params.id != 0)   {
+        //  self.editLine(0)
+          if (self.$route.params.id < 0) {
+             self.editLineToForm(0,2)
+          } else {
+            self.editLineToForm(0,0)
+          }
+
+  //            alert('jsem zde' + JSON.stringify(this.list) )
+      //        self.timeout = setTimeout(function() {
+      //        eventBus.$emit('dlg8310', {
+      //          'IsDialog': self.IsDialog,
+      //          'Akce' : 'edit' ,
+      //          'Idefix' :  self.list[0]["idefix"],
+      //          'typ_kalkulace' :  self.list[0]["typ_kalkulace"],
+      //      })
+      //    },1000)
+        }
+
+
+
 
 
  },
@@ -855,7 +892,7 @@ copyLineToForm(nRow) {
      //alert(nRow+ self.list[nRow]["id"] + " Copy")
      //self.newLine(nRow)
    },
-editLineToForm(nRow) {
+editLineToForm(nRow,step=0) {
      const self = this
      self.IsDialog = true
      self.Info = nRow
@@ -865,7 +902,7 @@ editLineToForm(nRow) {
      //alert(self.IsDialog)
      //self.SendName="AAAX "+Math.random()
      //alert(self.list[nRow])
-     // alert('aaaa')
+
      if (self.timeout) {
       clearTimeout(self.timeout)
       self.timeout =false
@@ -875,19 +912,28 @@ editLineToForm(nRow) {
     }
      self.timeout = setTimeout(function() {
 
-
      eventBus.$emit('dlg8310', {
            'IsDialog': self.IsDialog,
            'Akce' : 'edit' ,
            'Idefix' :  self.list[nRow]["idefix"],
            'typ_kalkulace' :  self.list[nRow]["typ_kalkulace"],
+           'step': step
 
       })
-
      },100)
-
      //alert(nRow+ self.list[nRow]["id"] + " Copy")
      //self.newLine(nRow)
+   },
+   async ZobrazJednu(){
+    if (self.$route.params.id > 0) {
+      setTimeout(function(){
+        eventBus.$emit('dlg8310', {
+           'IsDialog': false,
+           'Akce' : 'edit' ,
+           'Idefix' :  self.$route.params.id,
+      })
+      },2000)
+    }
    },
 
    async saveLines(id){
@@ -923,12 +969,6 @@ editLineToForm(nRow) {
          ,obec: obec
          ,ico: ico
          ,dic: dic
-
-
-
-
-
-
         })
         Posli.push(aTmp)
        }
@@ -940,7 +980,6 @@ editLineToForm(nRow) {
      })
      .catch((e) =>{
        alert('Doslo k chybe pri kontrole databaze'+ e)
-
      })
      //return
       var neco = []

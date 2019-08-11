@@ -1321,6 +1321,8 @@ export default {
        // self.TestovaciCislo++
 //       alert(self.Sirka)
     },500)
+    self.step=4
+
     //self.handleResize()
 
 
@@ -1337,7 +1339,7 @@ export default {
       eventBus.$on('dlg8310', ( dlgPar ) => {
         // alert('EVENT' + JSON.stringify(dlgPar ))
             self.rec = dlgPar
-             // alert(JSON.stringify(dlgPar))
+               //alert(JSON.stringify(dlgPar))
              try {
              // self.xMyska = event.screenX - 200
              } catch(e) {
@@ -1417,15 +1419,22 @@ export default {
        // alert('Zmena firmy' + JSON.stringify(self.firmaosoba))
               }
               self.getData(dlgPar)
-
             }
-
-          //}
 
         }
         //alert(JSON.stringify(dlgPar))
         //self.getData()
                 //self.getWhere()
+        if (!f.isEmpty(dlgPar['step'])) {
+          self.step = dlgPar['step']
+          //self.step = 0
+
+          //f.Alert('Dorazil', self.step, 'B', dlgPar['step'] )
+        } else {
+          //f.Alert('nedorazil')
+          self.step = 0
+        }
+
 
       })
 

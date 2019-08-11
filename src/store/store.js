@@ -112,9 +112,19 @@ export default new Vuex.Store({
       state.WinDows.forEach((el, ind) => {
         if (ind === nasel) {
           state.zMax = state.zMax + 1
-          state.WinDows[ind].z1 = state.zMax
+//          state.WinDows[ind].z1 = state.zMax
+            state.WinDows[ind]["z1"]= state.zMax
         } else {
-          state.WinDows[ind].z1 = 999
+  //        state.WinDows[ind].z1 = 999
+
+            if (state.WinDows[ind]) {
+              state.WinDows[ind]["z1"] = 999
+              ///console.log("HUHUHU WIN ",ind , "   " , state.WinDows[ind])
+            } else {
+              //console.log("HOHOHOHOOOO WIN ",ind , "   " , state.WinDows[ind])
+
+            }
+
         }
       })
     },
