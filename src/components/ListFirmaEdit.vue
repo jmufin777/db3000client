@@ -921,6 +921,47 @@
      <v-window-item :value="5">
         <v-card v-show="step2=='5'">
           <v-card-text>
+                        <v-spacer></v-spacer>
+            <!-- <el-row class="ma-2 mt-4 pt-4">
+             <el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%;color:yellow" class="info elevation-5">Prace</el-button>
+             </el-row> -->
+            <el-row class="ma-2">
+              <el-col :span="24">
+                <el-row class="ma-2 mt-4">
+                  <el-col :span="20">
+                 <div v-if="step2==5" style="width:100%;max-width:2000px;position:relative;" :id="'t' + objId1" ref="sirka">
+                  <ta-ble3  :h="'430px;'+pof(Sirka,99)+';top:30px'"  :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'" :TopA="'top:28px'" :TopB="'height:28px'">
+
+                     <table slot="head"  :style="pof(Sirka*SirkaStred,98)">
+                        <thead class="c-1  tdline">
+
+                         <th class="tdline stred" :style="pof(Sirka*SirkaStred,50)" >Jmeno</th>
+                         <th class="tdline stred" :style="pof(Sirka*SirkaStred, 50)" >Skupiny
+                         </th>
+
+                           <button  type="button" style="width:22px;height:22px; font-color:black" class="pl-0 info elevation-3"  @click="kontaktEditInsert=!kontaktEditInsert ; kontaktEdit=(kontaktEditInsert)?false:(kontaktEdit );focus()" ><i class="el-icon-plus" size="mini"></i></button>
+                       </thead>
+                     </table>
+
+                    <table slot="body"  :style="pof(Sirka*SirkaStred,98)">
+
+                       <tbody class="nb tdlr">
+                         <tr v-for="(itemU, iU) in aUser" :key="iU">
+                           <td :style="pof(Sirka*SirkaStred,50)">{{itemU.fullname}}</td>
+                           <td :style="pof(Sirka*SirkaStred,50)">{{itemU.skupiny}}</td>
+                         </tr>
+                       </tbody>
+                    </table>
+                  </ta-ble3>
+                 </div>
+
+
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+
+
             {{ stepInfo}}
           </v-card-text>
         </v-card>
@@ -973,6 +1014,8 @@ import Ico from '@/services/IcoService'
 import List2bEdit from  './List2bEdit.vue'
 
 import f from '@/services/fce'
+
+import SQL from '@/services/fcesql'
 import moment from 'moment'
 
 
@@ -1236,6 +1279,8 @@ export default {
       },
       lastTime: 0, //posledni cas prichozi udalosti v int
       IsIco: 0,
+      aUser: [],
+
 
       //Vzor
 
@@ -1329,6 +1374,8 @@ export default {
   },
   async created () {
     var self=this
+     self.aUser  =  await SQL.getOsoba(0,'obchod')
+     //f.Alert("aOsoba - pro firmu", f.Jstr(self.aUser))
 
     eventBus.$on('edit_stroj', ( dlgPar ) => {
       self.citac++

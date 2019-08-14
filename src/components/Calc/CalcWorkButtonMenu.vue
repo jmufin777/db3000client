@@ -425,9 +425,11 @@ deactivated: function () {
      const self=this
      //alert(11111)
      self.aFirma =  await SQL.getFirma(0)
+     self.aUser  =  await SQL.getOsoba(0,'obchod')
 
 
-     //f.Alert("afirma", f.Jstr(self.aFirma))
+
+     //f.Alert("aOsoba", f.Jstr(self.aUser))
   //  eventBus.$on('MenuLeft', (server) => {
   //     self.Left=server.key
   //     //self.addCol(server.key)

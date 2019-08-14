@@ -45,7 +45,7 @@
         <el-tooltip  placement="top" effect="light">
           <div slot="content">Popis: </div>
       <el-badge :value="groupCount(element.idefix)"  class="blue item my-0" style="background-color:white;width:95%;height:100%;border-radius:0px">
-
+         <!-- AAAAA {{ element.idefix }} {{ tableGroups }} -->
         <!-- <div style="border:solid 1px;height:100%" class="white"> -->
         <div class=" ma-0 "
         v-bind:class="{blue: element.level !=3 && element.level>0, green: element.level == 3 }"
@@ -291,7 +291,7 @@ export default {
 
       try {
         console.log('data Jsou 1')
-
+          this.tableGroups=[]
          await ListUsersService.all(this.user, id) // id je prikaz nebo idefix
          .then( res => {
 
@@ -304,20 +304,39 @@ export default {
           this.tableData.forEach(element => {
               element.Menus1  =  ""
               element.Groups1 = []
-              console.log(element)
+
                 this.tableGroups[element.idefix] =[]
                 this.tableMenus[element.idefix] =''
-          });
+
+            });
               res.data.dataMenu.forEach((el) =>{
                 this.tableMenus[el.idefix_user] = el.idefix_menu*1
               })
+
+
+              //this.tableGroups=[]
               res.data.dataGroups.forEach((el) =>{
-                this.tableGroups[el.idefix_user].push(el.idefix_group)
+
+                try {
+                 if (this.tableGroups.hasOwnProperty(el.idefix_user) ){
+                  //console.log("Ma " , element.idefix)
+                  if (el.idefix_group > 0) {
+                    this.tableGroups[el.idefix_user].push(el.idefix_group)
+                  }
+
+                }
+                } catch(e2) {
+                    console.log('GR2 T Zruseny uzivatel ' ,  el.idefix_user )
+                }
               })
+
+                    // console.log('GR2 TGruops  ' ,  this.tableGroups  )
+
             }
          })
       } catch (e) {
         this.error = e
+        console.log("GR Error ", e) ;
 
       }
       this.IsWaiting=false

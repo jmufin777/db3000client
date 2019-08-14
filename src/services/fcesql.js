@@ -237,9 +237,46 @@ export default {
   }
 
 
+  return defer.promise();
+}
 
 
+,async getOsoba(idefix_osoba=0, skupina=''){
+  var idefix=store.state.idefix
+  var q=`select idefix,login,email,telefon, plati, zobraz ,level,idefix2fullname(idefix) as fullname, coalesce(b.skupiny,'N') as skupiny from list_users u
+  left join (
+  select a.idefix_user,array_to_string(array_agg(b.nazev order by nazev ),',') as skupiny  from list_groups_users a join list_groups b on a.idefix_group = b.idefix group by idefix_user
+  ) b on u.idefix = b.idefix_user
+  where u.plati= 1
+  `
+  q= `select * from (${q}) a where
 
+  ( ${idefix_osoba} = 0 or idefix = ${idefix_osoba}   )
+  and
+  ( '${skupina}' = '' or  skupiny ilike '%${skupina}%'   )
+
+  order by fullname
+  `
+
+  var defer = $.Deferred();
+  var atmp=[]
+  try {
+    // f.Alert('kve 1')
+    atmp= (await Q.all(idefix,q)).data.data
+
+    if (atmp.length==0) {
+      defer.resolve(atmp)
+    } else  {
+    await atmp.forEach(el=>{
+
+      defer.resolve(atmp)
+      // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
+    })
+    }
+  }  catch(e) {
+    defer.resolve(atmp)
+    f.Alert2('Chyba  getFirmaOsoba', e , q )
+  }
 
 
   return defer.promise();
