@@ -70,7 +70,7 @@
               @focus="fokus('firma');fields['firma'].ZobrazMenu=true"
               @blur="Opust('firma');"
               @click="fields['firma'].ZobrazMenu=true"
-              @keydown="fields['firma'].ZobrazMenu ? seznam(fields['firma']['nazev']+'_list_'+0,1,$event) : false"
+              @keydown="aktFirma();fields['firma'].ZobrazMenu ? seznam(fields['firma']['nazev']+'_list_'+0,1,$event) : false"
               v-model="form.nazevfirmy"
               ></td>
             </tr>
@@ -83,10 +83,13 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava">Datum expedice:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input
-              v-model="form.datumexpedice"
-              :id="'datumexpedice'+ID"
-              type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
+                <input
+                  v-model="form.datumexpedice"
+                  :id="'datumexpedice'+ID"
+                  type="text" size="mini"  style="width:90%" class="tdl tdn datum"
+                >
+              </td>
             </tr>
           </table>
 
@@ -114,7 +117,6 @@
               @keydown="fields['osoba'].ZobrazMenu ? seznam(fields['osoba']['nazev']+'_list_'+0,1,$event) : false"
               :id="fields['osoba']['nazev']"
 
-
               v-model="form.osoba"
 
               ></td>
@@ -125,7 +127,10 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Datum zadani:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum"
+              :id="'datumzadani_'+ID"
+              v-model="form.datumzadani"
+              ></td>
             </tr>
           </table>
 
@@ -143,11 +148,29 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Account:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
+                <input type="text" size="mini"  style="width:90%" class="tdl tdn"
+
+                @focus="fokus('obchodnik');fields['obchodnik'].ZobrazMenu=true"
+                @blur="Opust('obchodnik');"
+                @click="fields['obchodnik'].ZobrazMenu=true"
+                @keydown="fields['obchodnik'].ZobrazMenu ? seznam(fields['obchodnik']['nazev']+'_list_'+0,1,$event) : false"
+                :id="fields['obchodnik']['nazev']"
+                v-model="form.obchodnik"
+
+                ></td>
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Produkce:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input  size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input  size="mini"  style="width:90%" class="tdl tdn"
+                @focus="fokus('produkce');fields['produkce'].ZobrazMenu=true"
+                @blur="Opust('produkce');"
+                @click="fields['produkce'].ZobrazMenu=true"
+                @keydown="fields['produkce'].ZobrazMenu ? seznam(fields['produkce']['nazev']+'_list_'+0,1,$event) : false"
+                :id="fields['produkce']['nazev']"
+                v-model="form.produkce"
+
+              ></td>
             </tr>
           </table>
         </div>
@@ -182,6 +205,7 @@
           :id="fields['firma'].nazev+'_list'"
           :style="fields['firma'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:none'"
           >
+
         <span style="display:none">FF {{ aFirma.length}}</span>
 
           <table  width="100%" v-if="true " >
@@ -190,10 +214,11 @@
              v-for="(item1, i1) in
              aFirma.filter(
                     el =>
-                    (
+                    ( true ||
                       ( (el.nazev+el.ico).toUpperCase().match((form.nazevfirmy+'').toUpperCase()) && form.nazevfirmy+'' > '' && form.nazevfirmy !== el.nazev )
                       || (form.nazevfirmy+'').trim() == ''
                     ) && (form.nazevfirmy+'').trim() != (el.nazev+'').trim()
+
                     ).slice(0,50)" :key="i1"
               >
               <td class="pa-0 ma-0 pl-1 grey lighten-4">
@@ -206,7 +231,7 @@
               <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
                 <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
                 <v-card-text style="font-size:90%;text-align:left;width:100%"
-                 @click="form['nazevfirmy']= item1['nazev'];setF(item1['idefix_firma'])
+                 @click="form['nazevfirmy']= item1['nazev'];setF(item1);
                  fields['firma'].ZobrazMenu=false;
                  form['idefix_firma']=item1['idefix_firma']"
                  :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
@@ -271,6 +296,110 @@
             </tr>
           </table>
         </div>
+
+         <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none"
+          v-if="aObchodnik.length > 0 "
+          class="elevation-12 teal"
+          :id="fields['obchodnik'].nazev+'_list'"
+          :style="fields['obchodnik'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:block'"
+          >
+        <span style="display:none">FF {{ aObchodnik.length}}</span>
+
+          <table  width="100%" v-if="true " >
+            <tr v-if="false"><td>{{ fields['obchodnik'].ZobrazMenu }}</td></trv->
+             <tr class="mt-0 pa-0 grey lighten-4"
+             v-for="(item1, i1) in
+             aObchodnik.filter(
+                    el =>
+                    (
+                      ( (el.fullname).toUpperCase().match((form.obchodnik+'').toUpperCase()) && form.obchodnik+'' > '' && form.obchodnik !== el.fullname )
+                      || (form.obchodnik+'').trim() == ''
+                    ) && (form.obchodnik+'').trim() != (el.fullnamee+'').trim()
+                    )" :key="i1"
+              >
+              <td class="pa-0 ma-0 pl-1 grey lighten-4">
+              <a :href="'#'" :id="fields['obchodnik'].nazev+'_list_'+i1"
+              @keydown="
+                seznam(fields['obchodnik'].nazev +'_list_'+i1,1,$event)"
+                @click="setObchodnik(item1)"
+                @focus="lastFocus=fields['obchodnik'].nazev"
+              >
+              <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
+                <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
+                <v-card-text style="font-size:90%;text-align:left;width:100%"
+                 @click="form['obchodnik']= item1['nazev'];setObchodnik(item1)
+                 fields['obchodnik'].ZobrazMenu=false;
+                 form['idefix_obchodnik']=item1['idefix']"
+                 :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
+                 class="ma-0 pa-0 pl-1"
+                >
+                  <table width="100%" cols="100"><tr><td style="width:40%">{{ item1['fullname'] }}</td>
+                  <td style="width:20%">{{item1.plati?'A':'N'}}&nbsp;</td>
+                  <td v-if="false" style="width:20%">{{item1.telefon}}&nbsp;</td>
+                  <td v-if="false" style="width:20%">{{item1.email}}&nbsp;</td>
+                  </tr></table>
+                 </v-card-text>
+                 </td></tr></table>
+              </v-card>
+            </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none"
+          v-if="aProdukce.length > 0 "
+          class="elevation-12 teal"
+          :id="fields['produkce'].nazev+'_list'"
+          :style="fields['produkce'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:block'"
+          >
+        <span style="display:none">FF {{ aProdukce.length}}</span>
+
+          <table  width="100%" v-if="true " >
+            <tr v-if="false"><td>{{ fields['produkce'].ZobrazMenu }}</td></trv->
+             <tr class="mt-0 pa-0 grey lighten-4"
+             v-for="(item1, i1) in
+             aProdukce.filter(
+                    el =>
+                    (
+                      ( (el.fullname).toUpperCase().match((form.produkce+'').toUpperCase()) && form.produkce+'' > '' && form.produkce !== el.fullname )
+                      || (form.produkce+'').trim() == ''
+                    ) && (form.produkce+'').trim() != (el.fullnamee+'').trim()
+                    )" :key="i1"
+              >
+              <td class="pa-0 ma-0 pl-1 grey lighten-4">
+              <a :href="'#'" :id="fields['produkce'].nazev+'_list_'+i1"
+              @keydown="
+                seznam(fields['produkce'].nazev +'_list_'+i1,1,$event)"
+                @click="setProdukce(item1)"
+                @focus="lastFocus=fields['produkce'].nazev"
+              >
+              <v-card class="grey lighten-4 pa-0 ma-0" style="width:99%;" >
+                <table style="width:100%" class="pa-0 ma-0"><tr><td style="width:100%" class="pa-0 ma-0 grey lighten-4">
+                <v-card-text style="font-size:90%;text-align:left;width:100%"
+                 @click="form['produkce']= item1['nazev'];setProdukce(item1)
+                 fields['produkce'].ZobrazMenu=false;
+                 form['idefix_produkce']=item1['idefix']"
+                 :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
+                 class="ma-0 pa-0 pl-1"
+                >
+                  <table width="100%" cols="100"><tr><td style="width:40%">{{ item1['fullname'] }}</td>
+                  <td style="width:20%">{{item1.plati?'A':'N'}}&nbsp;</td>
+                  <td v-if="false" style="width:20%">{{item1.telefon}}&nbsp;</td>
+                  <td v-if="false" style="width:20%">{{item1.email}}&nbsp;</td>
+                  </tr></table>
+                 </v-card-text>
+                 </td></tr></table>
+              </v-card>
+            </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+
+
+
 
       <div id="jqwin"  style="display:none" >
         Ulozeni template
@@ -379,7 +508,7 @@ export default {
        },
        aFirma: [],
        aOsoba: [],
-       aUser: [],
+       aObchodnik: [],
        aProdukce: [],
 
       fields: {
@@ -424,12 +553,17 @@ deactivated: function () {
  async created() {
      const self=this
      //alert(11111)
-     self.aFirma =  await SQL.getFirma(0)
-     self.aUser  =  await SQL.getOsoba(0,'obchod')
+     self.aFirma =  await SQL.getFirma(0,'',10)
+
+     self.aObchodnik  =  await SQL.getOsoba(0,'obchod')
+     self.aProdukce = self.aObchodnik
 
 
 
-     //f.Alert("aOsoba", f.Jstr(self.aUser))
+
+
+
+     //f.Alert("aOsoba", f.Jstr(self.aObchodnik))
   //  eventBus.$on('MenuLeft', (server) => {
   //     self.Left=server.key
   //     //self.addCol(server.key)
@@ -467,6 +601,9 @@ deactivated: function () {
               if ($(':focus')[0].id.split("_")[0] == self.fields[key].nazev.split("_")[0]) {
               } else {
                 self.fields[key].ZobrazMenu =false
+                //$("#"+self.fields[key].nazev).hide(1000).show(1000)
+                $("#"+self.fields[key].nazev+'_list').hide(500)
+
               }
             }
            } catch(e) {
@@ -477,32 +614,31 @@ deactivated: function () {
     setTimeout(function() {
       eventBus.$emit('MenuHlavni',{key:1999, item: self.setmenu})
      },100)
-      $.datepicker.regional['cs'] = {
-        closeText: 'Zavrit', // set a close button text
-        currentText: 'Dnes', // set today text
-        monthNames: ['Leden','Unor','Brezen','Duben','Kveten','Cerven',   'Cervenc','Srpen','Zari','Rijen','Listopad','Prsinec'], // set month names
-        monthNamesShort: ['Led','Un','Bre','Dub','Kve','Cer','Crc','Srp','Zar','Rij','Lis','Pro'], // set short month names
-        dayNames: ['Ne','Po','Ut','St','Ct','Pá','So'], // set  days names
-        dayNamesShort: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
-        dayNamesMin: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
-        weekNames: ['Tyden'],
-        dateFormat: 'dd.mm.yy', // set format date
-        showWeek: true,
-        firstDay: 1,
-        showButtonPanel: true,
-        showOtherMonths: true,
-        changeYear: true,
-        changeMonth: true,
-    };
-
-      $.datepicker.setDefaults($.datepicker.regional['cs']);
-         this.$nextTick(function () {
-    // Code that will run only after the entire view has been rendered
-      //$('input').hide(2000).show(2000);
-      //$('input').dialog();
-
+    //   $.datepicker.regional['cs'] = {
+    //     closeText: 'Zavrit', // set a close button text
+    //     currentText: 'Dnes', // set today text
+    //     monthNames: ['Leden','Unor','Brezen','Duben','Kveten','Cerven',   'Cervenc','Srpen','Zari','Rijen','Listopad','Prsinec'], // set month names
+    //     monthNamesShort: ['Led','Un','Bre','Dub','Kve','Cer','Crc','Srp','Zar','Rij','Lis','Pro'], // set short month names
+    //     dayNames: ['Ne','Po','Ut','St','Ct','Pá','So'], // set  days names
+    //     dayNamesShort: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
+    //     dayNamesMin: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
+    //     weekNames: ['Tyden'],
+    //     dateFormat: 'dd.mm.yy', // set format date
+    //     showWeek: true,
+    //     firstDay: 1,
+    //     showButtonPanel: true,
+    //     showOtherMonths: true,
+    //     changeYear: true,
+    //     changeMonth: true,
+    // };
+    // $.datepicker.setDefaults($.datepicker.regional['cs']);
+    // this.$nextTick(function () {
+    //  $( ".datum" ).datepicker();
+    // })
+    this.$nextTick(function () {
       $( ".datum" ).datepicker();
-  })
+
+    })
 
   },
  methods: {
@@ -510,6 +646,16 @@ deactivated: function () {
     //alert('aRend')
      eventBus.$emit("Rend")
   },
+
+
+  async   aktFirma(){
+     const self= this
+
+      self.aFirma =  await SQL.getFirma(0,self.form.nazevfirmy, 50)
+
+
+      // f.Info(f.Jstr(self.fields), f.Jstr(self.aFirma))
+     },
 
  FilterFirma() {
    const self=this
@@ -550,7 +696,15 @@ deactivated: function () {
       }
       self.form.nazevfirmy= itemCela['nazev'];
       self.form.idefix_firma= itemCela['idefix'];
+      //f.Info(f.Jstr(itemCela))
+      if (!f.isEmpty(itemCela['fullname'])) {
+        self.form.idefix_obchodnik = itemCela['idefix_user']
+        self.form.obchodnik = itemCela['fullname']
+        //f.Alert('Pridelim obcodnika')
+
+      }
       self.fields['firma'].ZobrazMenu=false;
+
 
  //     f.Alert('#'+self.fields['firma'].nazev+'_list')
       $('#'+self.fields['firma'].nazev+'_list').css('display','none')
@@ -601,19 +755,72 @@ deactivated: function () {
       $('#'+self.fields['firma'].nazev+'_list').css('display','none')
       if (self.form.idefix_firma > 0 ) {
          f.Alert(document.getElementById(self.fields['osoba']['nazev']),self.fields['osoba']['nazev'])
-
          self.aOsoba=   await SQL.getFirmaOsoba(self.form.idefix_firma)
          // f.Alert('Stouram kontaky', self.fields['osoba']['nazev'], f.Jstr(self.aOsoba))
          $('#'+self.fields['osoba']['nazev']).focus()
+      }
+
+ },
+ async setObchodnik(itemCela){
+      const self = this
+
+      //f.Alert(f.Jstr(itemCela))
+      //return
+      if (f.isEmpty(itemCela)) {
+        //f.Alert('Empty')
+        return
+      }
+      if (!itemCela.hasOwnProperty('fullname')) {
+        f.Alert('prdka')
+        return
+      }
+      self.form.obchodnik= itemCela['fullname'];
+      self.form.idefix_obchodnik= itemCela['idefix'];
+      self.fields['firma'].ZobrazMenu=false;
+
+ //     f.Alert('#'+self.fields['firma'].nazev+'_list')
+      $('#'+self.fields['firma'].nazev+'_list').css('display','none')
+      if (self.form.idefix_firma > 0 ) {
+         f.Alert(document.getElementById(self.fields['obchodnik']['nazev']),self.fields['obchodnik']['nazev'])
+
+         //self.aOsoba=   await SQL.getFirmaOsoba(self.form.idefix_firma)
+         // f.Alert('Stouram kontaky', self.fields['obchodnik']['nazev'], f.Jstr(self.aOsoba))
+         $('#'+self.fields['obchodnik']['nazev']).focus()
 
       }
 
+ },
 
-      // f.Alert("IC ", f.Jstr(itemCela))
+ async setProdukce(itemCela){
+      const self = this
 
+      //f.Alert(f.Jstr(itemCela))
+      //return
+      if (f.isEmpty(itemCela)) {
+        //f.Alert('Empty')
+        return
+      }
+      if (!itemCela.hasOwnProperty('fullname')) {
+        f.Alert('prdka')
+        return
+      }
+      self.form.produkce= itemCela['fullname'];
+      self.form.idefix_produkce= itemCela['idefix'];
+      self.fields['firma'].ZobrazMenu=false;
 
+ //     f.Alert('#'+self.fields['firma'].nazev+'_list')
+      $('#'+self.fields['firma'].nazev+'_list').css('display','none')
+      if (self.form.idefix_firma > 0 ) {
+         f.Alert(document.getElementById(self.fields['produkce']['nazev']),self.fields['produkce']['nazev'])
+
+         //self.aOsoba=   await SQL.getFirmaOsoba(self.form.idefix_firma)
+         // f.Alert('Stouram kontaky', self.fields['produkce']['nazev'], f.Jstr(self.aOsoba))
+         $('#'+self.fields['produkce']['nazev']).focus()
+
+      }
 
  },
+
   editF(_idefix=0){
       const self = this
      let route = this.$router.resolve({ name: 'firma',  params: { id: _idefix } })
@@ -964,15 +1171,16 @@ deactivated: function () {
 
     var oSeznam="#"+lastFocus+"_list"
     var oSeznamId=lastFocus+"_list"
+//    f.Alert2('Firma nema kontakty dispozici', document.getElementById(oSeznamId))
 
      // f.Alert2(oSeznamId ,oSeznamId,document.getElementById(oSeznamId), ' fields', f.Jstr(self.fields))
     try {
-      if (f.isEmpty(document.getElementById(oSeznamId).offsetParent) &&  !document.getElementById(oSeznamId).offsetParent ) {
+      if (!f.isEmpty(document.getElementById(oSeznamId)) && f.isEmpty(document.getElementById(oSeznamId).offsetParent) &&  !document.getElementById(oSeznamId).offsetParent ) {
         document.getElementById(oSeznamId).cloneNode=false
         document.getElementById("app").appendChild(document.getElementById(oSeznamId) )
       }
     } catch(e) {
-        //f.Alert2('Firma nema kontakty dispozici')
+          //f.Alert('Ztratil jsem objekt', document.getElementById(oSeznamId), oSeznamId)
     }
 
 

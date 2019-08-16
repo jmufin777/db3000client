@@ -8,7 +8,30 @@
 
 <script>
 export default {
- name: 'App'
+ name: 'App',
+ mounted() {
+         $.datepicker.regional['cs'] = {
+        closeText: 'Zavrit', // set a close button text
+        currentText: 'Dnes', // set today text
+        monthNames: ['Leden','Unor','Brezen','Duben','Kveten','Cerven',   'Cervenc','Srpen','Zari','Rijen','Listopad','Prsinec'], // set month names
+        monthNamesShort: ['Led','Un','Bre','Dub','Kve','Cer','Crc','Srp','Zar','Rij','Lis','Pro'], // set short month names
+        dayNames: ['Ne','Po','Ut','St','Ct','Pá','So'], // set  days names
+        dayNamesShort: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
+        dayNamesMin: ['Ne','Po','Ut','St','Ct','Pá','So'], // set more short days names
+        weekNames: ['Tyden'],
+        dateFormat: 'dd.mm.yy', // set format date
+        showWeek: true,
+        firstDay: 1,
+        showButtonPanel: true,
+        showOtherMonths: true,
+        changeYear: true,
+        changeMonth: true,
+    };
+    $.datepicker.setDefaults($.datepicker.regional['cs']);
+    this.$nextTick(function () {
+      $( ".datum" ).datepicker();
+    })
+ },
 }
 </script>
 

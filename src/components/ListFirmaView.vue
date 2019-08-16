@@ -451,6 +451,8 @@ export default {
     },500)
     self.handleResize()
 
+
+
 /*
     setTimeout(function(){
       self.editLineToForm(0)
@@ -459,12 +461,19 @@ export default {
 */
 
 
-
 //    return
     if (this.isUserLoggedIn) {
       this.IsWaiting = true
         this.getWhere()
         this.getEnums()
+        //self.editLineToForm(self.list[0]);
+   if (false) {
+     setTimeout(function(){
+      self.editLineToForm(0,5);
+    },1000)
+   }
+
+
 
 
         this.IsWaiting = false

@@ -77,13 +77,21 @@ export default {
   datum3(value) {
     return moment(String(value)).format('DD.MM.YYYY')
   },
+  datum4(value) {
+    return moment(String(value)).format('YYYYMMDD')
+  },
   cas3(value) {
     return value.substring(0,5)
   },
   dnes () {
     var xd = new Date()
-    //alert(xd)
-    return xd.getFullYear()+"."+xd.getMonth()+"."+("0"+""+xd.getDay()+"").slice(-2)
+    //var m =  ("0"+""+xd.getMonth()+"").slice(-2)
+    //var d =  ("0"+""+xd.getDay()+"").slice(-2)
+     var m  =  ("0"+""+(xd.getMonth()*1+1)+"").slice(-2)
+     var d =  ("0"+""+xd.getDate()+""  ).slice(-2)
+     //this.Alert2(xd.getFullYear()+"."+m +"."+ d, xd )
+
+    return xd.getFullYear()+"."+m +"."+ d
     // return this.datum(xd)
   },
  cp(obj) {
@@ -778,7 +786,7 @@ Info(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
     $("#"+ID).attr('id',ID)
     $("#"+ID).html(chtml);
     $("#"+ID).css("position","absolute")
-    $("#"+ID).css("top","10%")
+    $("#"+ID).css("bottom","10%")
     $("#"+ID).css("right","200px")
     $("#"+ID).css("background","#cccccc")
     $("#"+ID).css("z-index","100000000")

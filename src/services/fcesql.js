@@ -188,10 +188,25 @@ export default {
   return q;
 }
 
-,async getFirma(idefix_firma=0){
+,async getFirma(idefix_firma=0, firmanazev='', nlimit = 0){
   var idefix=store.state.idefix
   var defer = $.Deferred();
-  var q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix) from list_dodavatel a order by nazev `;
+  var q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
+  left join (select distinct on (idefix_firma) idefix_firma,idefix_user,idefix2fullname(idefix_user) as fullname from list_firmaaccount where _do is null or _do <= now()::date order by idefix_firma, _do desc) b
+      on a.idefix = b.idefix_firma
+  order by nazev `;
+  if (firmanazev>'') {
+      q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
+      left join (select distinct on (idefix_firma) idefix_firma,idefix_user,idefix2fullname(idefix_user) as fullname from list_firmaaccount where _do is null or _do <= now()::date order by idefix_firma, _do desc) b
+      on a.idefix = b.idefix_firma
+      where to_aascii(a.nazev || coalesce(a.ico,'')) ~* to_aascii('${firmanazev}') order by a.nazev `;
+      //f.Alert2(q)
+  }
+  if (nlimit>0 ) {
+     q= `${q} limit ${nlimit}`
+  }
+
+
   var atmp=[]
   try {
     // f.Alert('kve 1')

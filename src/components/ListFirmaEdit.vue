@@ -121,6 +121,7 @@
           >
         </el-date-picker>
 
+
         </td>
       <td  class="nb tdlr">
         <el-input type="textarea" v-model="firmanotice.txt" rows="1" autosize class="nb" placeholder="Zde vlozte poznamku">
@@ -196,7 +197,8 @@
           value-format="yyyy-MM-dd HH:mm"
           time-arrow-control
 
-         v-if="notice.pripominka" v-model="notice.kdy" size="mini"  type="datetime" align="right" style="width:100%"></el-date-picker>
+         v-if="notice.pripominka" v-model="notice.kdy" size="mini"  type="datetime" align="right" style="width:100%">
+         </el-date-picker>
          <el-date-picker
           format="dd.MM HH:mm"
           value-format="yyyy-MM-dd HH:mm"
@@ -921,7 +923,7 @@
      <v-window-item :value="5">
         <v-card v-show="step2=='5'">
           <v-card-text>
-                        <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
             <!-- <el-row class="ma-2 mt-4 pt-4">
              <el-button size ="mini" @click="edit_vlastnosti('list2-prace','Prace')" style="width:90%;color:yellow" class="info elevation-5">Prace</el-button>
              </el-row> -->
@@ -930,33 +932,90 @@
                 <el-row class="ma-2 mt-4">
                   <el-col :span="20">
                  <div v-if="step2==5" style="width:100%;max-width:2000px;position:relative;" :id="'t' + objId1" ref="sirka">
-                  <ta-ble3  :h="'430px;'+pof(Sirka,99)+';top:30px'"  :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'" :TopA="'top:28px'" :TopB="'height:28px'">
+                   <!-- {{firmaaccount}}{{ aUser }}  -->
+                    <!-- {{ aPridelenyUser }} -->
+                   <ta-ble3  :h="'430px;'+pof(Sirka,99)+';top:30px'"  :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'" :TopA="'top:28px'" :TopB="'height:28px'">
 
                      <table slot="head"  :style="pof(Sirka*SirkaStred,98)">
                         <thead class="c-1  tdline">
-
-                         <th class="tdline stred" :style="pof(Sirka*SirkaStred,50)" >Jmeno</th>
-                         <th class="tdline stred" :style="pof(Sirka*SirkaStred, 50)" >Skupiny
+                         <th class="tdline stred" :style="pof(Sirka*SirkaStred,40)" >Obchodnik</th>
+                         <th class="tdline stred" :style="pof(Sirka*SirkaStred, 25)" >Od
+                         </th>
+                         <th class="tdline stred" :style="pof(Sirka*SirkaStred, 25)" >Do
+                         </th>
+                         <th class="tdline stred" :style="pof(Sirka*SirkaStred, 10)" >
+                           <button  type="button" style="width:22px;height:22px; font-color:black" class="pl-0 info elevation-3"  @click="PridelenyInsert()" ><i class="el-icon-plus" size="mini"></i></button>
                          </th>
 
-                           <button  type="button" style="width:22px;height:22px; font-color:black" class="pl-0 info elevation-3"  @click="kontaktEditInsert=!kontaktEditInsert ; kontaktEdit=(kontaktEditInsert)?false:(kontaktEdit );focus()" ><i class="el-icon-plus" size="mini"></i></button>
                        </thead>
                      </table>
 
                     <table slot="body"  :style="pof(Sirka*SirkaStred,98)">
+                     <tbody class="nb tdlr">
+                         <tr >
+                           <td :style="pof(Sirka*SirkaStred,40)" class="stred" >
+                              <el-select v-model="firmaaccount.idefix_user"
+                                default-first-option
+                                size="mini"  class="pt-0 pl-1" style="width:100%">
+                              <el-option
+                                v-for="item9 in aUser"
+                                :key="item9.idefix"
+                                :label="item9.fullname"
+                                :value="item9.idefix*1"
+                              >
+                                {{item9.fullname}}
+                              </el-option>
+                            </el-select>
+                          </td>
+                          <td :style="pof(Sirka*SirkaStred,25)" class="stred">
+                           <el-date-picker v-model="firmaaccount._od" size="mini"  type="date" align="right" style="width:90%"
+                              format="dd.MM.yyyy"
+                              value-format="yyyyMMdd"
+                           ></el-date-picker>
+                         </td>
+                        </td>
+                       <td :style="pof(Sirka*SirkaStred,25)" class="stred">
 
-                       <tbody class="nb tdlr">
-                         <tr v-for="(itemU, iU) in aUser" :key="iU">
-                           <td :style="pof(Sirka*SirkaStred,50)">{{itemU.fullname}}</td>
-                           <td :style="pof(Sirka*SirkaStred,50)">{{itemU.skupiny}}</td>
+                         <el-date-picker v-model="firmaaccount._do" size="mini"  type="date" align="right" style="width:90%"
+                            format="dd.MM.yyyy"
+                            value-format="yyyyMMdd"
+                         >
+                         </el-date-picker>
+                         </td>
+                         <td :style="pof(Sirka*SirkaStred,10)" class="stred">
+                           &nbsp;
+                         </td>
+                         </tr>
+                         <tr v-for="(ap, ip) in aPridelenyUser" :key="ip">
+                           <td :style="pof(Sirka*SirkaStred,40)" class="pl-3">
+                                {{ap.fullname}}
+                          </td>
+                          <td :style="pof(Sirka*SirkaStred,25)" class="stred">
+                           <el-date-picker v-model="ap._od" size="mini"  type="date" align="right" style="width:90%"
+                              format="dd.MM.yyyy"
+                              value-format="yyyyMMdd"
+                              readonly
+                           ></el-date-picker>
+                         </td>
+                        </td>
+                       <td :style="pof(Sirka*SirkaStred,25)" class="stred">
+                         <!-- {{ap._do}} -->
+                         <el-date-picker v-model="ap._do" size="mini"  type="date" align="right" style="width:90%"
+                            format="dd.MM.yyyy"
+                            value-format="yyyyMMdd"
+                         >
+                         </el-date-picker>
+                         </td>
+                         <td :style="pof(Sirka*SirkaStred,10)" class="stred">
+                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="deletePrideleni(ap.idefix,ap._do,0)" title="Zrusit platnost ke dni DO"><i class="el-icon-close" size="mini"></i></button>
+                           <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="deletePrideleni(ap.idefix,ap._do,2)" title="Vymazat zaznam"><i class="el-icon-delete" size="mini"></i></button>
+                         </td>
                          </tr>
                        </tbody>
                     </table>
                   </ta-ble3>
                  </div>
-
-
-                  </el-col>
+                 </el-col>
                 </el-row>
               </el-col>
             </el-row>
@@ -1016,9 +1075,8 @@ import List2bEdit from  './List2bEdit.vue'
 import f from '@/services/fce'
 
 import SQL from '@/services/fcesql'
+import Q from '@/services/query'
 import moment from 'moment'
-
-
 
 //import List2StrojSubSkup from '@/services/List2StrojSubSkupService'
 // import List2StrojSkup from '@/services/List2StrojSkupService'
@@ -1056,6 +1114,7 @@ export default {
       checkedLeft: [],
       checkedRight: [],
       checkAll: '',
+      ID:0,
 
 
 
@@ -1268,10 +1327,15 @@ export default {
         pripominka: false
 
       },
+      firmaaccount: {
+        idefix :0 ,
+         idefix_firma:0,
+         idefix_user:0,
+         txt:'',
+         _od: f.dnes(),
+         _do: null,
 
-
-      //
-      //
+      },
 
       // links: [],
       form3: {
@@ -1280,6 +1344,7 @@ export default {
       lastTime: 0, //posledni cas prichozi udalosti v int
       IsIco: 0,
       aUser: [],
+      aPridelenyUser: [],
 
 
       //Vzor
@@ -1366,16 +1431,20 @@ export default {
        // self.TestovaciCislo++
 //       alert(self.Sirka)
     },500)
+
+   this.$nextTick(function () {
+    //$( "#_od" ).datepicker('show');
+    });
     self.step=4
-
     //self.handleResize()
-
 
   },
   async created () {
     var self=this
      self.aUser  =  await SQL.getOsoba(0,'obchod')
+
      //f.Alert("aOsoba - pro firmu", f.Jstr(self.aUser))
+
 
     eventBus.$on('edit_stroj', ( dlgPar ) => {
       self.citac++
@@ -1466,6 +1535,7 @@ export default {
        // alert('Zmena firmy' + JSON.stringify(self.firmaosoba))
               }
               self.getData(dlgPar)
+
             }
 
         }
@@ -1508,6 +1578,80 @@ export default {
   } ,
 
   methods: {
+async deletePrideleni(_idefix=0, _do , co=0) {
+  const self = this
+  var q=''
+  if (co>0 && f.Confirm('Uplne vymazat zaznam  ?')) {
+    q=`delete from list_firmaaccount   where idefix = ${_idefix}`
+      await Q.post(self.idefix,q)
+      await self.Prideleny()
+      return
+
+  }else
+  if (_idefix >0  && f.Confirm('Ukoncit ke dni ?')) {
+
+      if (_do > ''){
+        q = `update list_firmaaccount set _do = '${_do}',user_update_idefix = ${self.idefix}  where idefix = ${_idefix}`
+      } else {
+        q = `update list_firmaaccount set _do = now()::date,user_update_idefix = ${self.idefix}  where idefix = ${_idefix}`
+      }
+      await Q.post(self.idefix,q)
+      await self.Prideleny()
+
+  }
+} ,
+async Prideleny()  {
+  const self = this
+
+   var q = `select *,idefix2fullname(idefix_user) as fullname  from list_firmaaccount where idefix_firma = ${self.idefixThis} order by _od desc,idefix desc  `
+   self.aPridelenyUser = (await Q.all(self.idefix,q)).data.data
+   self.aPridelenyUser.forEach(el=>{
+     if (el._od >'') {
+       el._od= f.datum4(el._od)
+     }
+     if (el._do >'') {
+       el._do= f.datum4(el._do)
+     }
+   })
+   self.aUser  =  await SQL.getOsoba(0,'obchod')
+
+  //f.Alert2(q)
+  //aPriself.idefixThis
+
+      //atmp= (await Q.all(idefix,q)).data.data
+},
+async PridelenyInsert()  {
+  const self = this
+  if (self.firmaaccount.idefix_user > 0 && self.firmaaccount._od >'') {
+
+  var q = `select *,idefix2fullname(idefix_user) as fullname  from list_firmaaccount where idefix_firma = ${self.idefixThis}`
+  if (f.isEmpty(self.firmaaccount._do))  {
+    q= `insert into list_firmaaccount(idefix_firma,idefix_user, _od,user_insert_idefix,user_update_idefix ) values ( ${self.idefixThis},${self.firmaaccount.idefix_user}
+    , '${self.firmaaccount._od}',${self.idefix},${self.idefix})`
+  }
+  if (!f.isEmpty(self.firmaaccount._do))  {
+    q= `insert into list_firmaaccount(idefix_firma,idefix_user, _od,user_insert_idefix,user_update_idefix ) values ( ${self.idefixThis},${self.firmaaccount.idefix_user}
+    , '${self.firmaaccount._od}',${self.idefix},${self.idefix})`
+  }
+  if (!f.isEmpty(self.firmaaccount._do))  {
+    q= `insert into list_firmaaccount(idefix_firma,idefix_user, _od ,_do,user_insert_idefix,user_update_idefix) values ( ${self.idefixThis},${self.firmaaccount.idefix_user}
+    , '${self.firmaaccount._od}',${self.firmaaccount._do}',${self.idefix},${self.idefix})`
+  }
+//    f.Alert(q)
+    await Q.post(self.idefix,q)
+    await self.Prideleny()
+
+
+  //self.aPridelenyUser = (await Q.all(self.idefix,q)).data.data
+//  f.Alert2(q)
+  } else {
+    f.Alert2('Zaznam nelze vlozit', 'Musi byt vyplnena platnost a obchodnik')
+  }
+  //aPriself.idefixThis
+
+      //atmp= (await Q.all(idefix,q)).data.data
+},
+
 closeKontakt() {
       const self = this
       self.kontaktEditInsert = false
@@ -2377,6 +2521,7 @@ renderFunc(h, option) {
                 self.list.data.firmanotice.forEach(el => {
                   el.datum  = f.datum2(el.datum)
                 })
+                self.Prideleny()
 
 
               } catch (e) {
@@ -2384,6 +2529,7 @@ renderFunc(h, option) {
         //      alert( self.list.data.stroj[0].idefix )
                 self.idefixThis = self.list.data.firma[0].idefix
                 self.firmaNazev = self.list.data.firma[0].nazev
+
 
 
               }
