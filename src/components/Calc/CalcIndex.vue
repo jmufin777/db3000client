@@ -3,11 +3,49 @@
     <!-- Link:
   <router-link :to="{name: 'col', params: {ktery: 1 }}">Moduly</router-link> -->
     <my-layout>
-      <div slot="hlavninew" style="position:fixed;top:4.8em;left:10px;background:#fdf0f7;text-align:left;width:100%" id="hlavninabidka" class="HlavniNabidka">
+      <div slot="hlavninew" style="position:fixed;top:4.8em;left:10px;background:#ffffff;text-align:left;width:100%" id="hlavninabidka" class="HlavniNabidka">
     <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
      <div >
-      <work-but-menu :ID="ID"></work-but-menu>
+      <work-but-menu :ID="ID">
+        <span slot="tlacitkazakazky">
+          <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+          @click="Nova()"
+          >
+          Nova
+          </button>
+
+          <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+              @click="Ulozit()"
+          >
+          Ulozit
+          </button>
+          <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+          >
+          Zmenit
+          </button>
+          <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+          >
+          Smazat
+          </button>
+          <button  v-if="MAINMENULAST=='kalkulace'" class="px-4 tlacitkoMenu elevation-2 hoVer"
+          >
+          Ulozit jako zakazku
+          </button>
+          <button  v-if="MAINMENULAST=='zakazky'" class="px-4 tlacitkoMenu elevation-2 hoVer"
+          >
+          Ulozit jako nabidku
+          </button>
+        </span>
+
+      </work-but-menu>
+
+       <!-- JARDA : {{IDEFIXACTIVE}} / Delka kalkulace {{aKalkulace.length}} -->
+
+
+
+
      </div>
+
 
     <span v-if="false">
 
@@ -19,44 +57,9 @@
 
     </div>
     <!-- {{aKalkulace}} -->
-<div   slot="kalkulace" style="position:fixed;width:100%;top:20em;overflow:scroll;height:70%;text-align:left;left:40px" id="obalKalkulaceButtons">
-
-<button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-      slot="kalkulace"
-      @click="Nova()"
-   >
-   Nova
-   </button>
-
-  <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-      slot="kalkulace"
-      @click="Ulozit()"
-   >
-   Ulozit
-   </button>
-   <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-      slot="kalkulace"
-   >
-   Zmenit
-   </button>
-   <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-      slot="kalkulace"
-   >
-   Smazat
-   </button>
-   <button  v-if="MAINMENULAST=='kalkulace'" class="px-4 tlacitkoMenu elevation-2 hoVer"
-      slot="kalkulace"
-   >
-   Ulozit jako zakazku
-   </button>
-   <button  v-if="MAINMENULAST=='zakazky'" class="px-4 tlacitkoMenu elevation-2 hoVer"
-      slot="kalkulace"
-   >
-   Ulozit jako nabidku
-   </button>
-   JARDA : {{IDEFIXACTIVE}} / Delka kalkulace {{aKalkulace.length}}
-</div>
-<div   slot="kalkulace" style="position:fixed;width:100%;top:22em;overflow:scroll;height:70%" id="obalKalkulace">
+<!-- <div   slot="kalkulace" style="position:fixed;width:100%;top:40em;overflow:scroll;height:70%;text-align:left;left:40px" id="obalKalkulaceButtons">
+</div> -->
+<div  v-if="obrazovka==3" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace">
   <input type="hidden" id="Zmenad" value="0" class="black white--text" style="width:100px">
 
 
@@ -520,6 +523,7 @@ export default {
      NAZEVACTIVE:'',
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
      MAINMENULAST:'',
+     obrazovka:3,
    }
  },
  watch: {

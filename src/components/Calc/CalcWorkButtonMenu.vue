@@ -186,12 +186,12 @@
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn "></td>
             </tr>
             <tr>
-              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Text na fakturu:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input v-model="form.vyrobapopis_print" type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Cislo obj:</td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input v-model="form.cisloobjednavky" type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
             <tr>
-              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Vyroba popis:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input v-model="form.vyrobapopis_print" type="text" size="mini"  style="width:90%" class="tdl tdn datum"></td>
+              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">??:</td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input v-model="form.vyrobapopis_print" type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
           </table>
         </div>
@@ -199,6 +199,74 @@
 
     </div>
     <hr style="color:#cacade">
+    <hr>
+    <div style="position:relative;top:0px;color:#258bce;float:left;background:#ffffff;height:2.5em" class="leva pr-2">
+    <slot name="tlacitkazakazky">
+       <div >nic tu neni</div>
+    </slot>
+    </div>
+
+
+    <div style="position:relative;top:0px;color:#258bce;float:left;background:#ffffff;height:2.5em" class="leva pr-2">
+
+
+              <div style="position:relative;top:0px;color:#258bce;float:left;background:#ffffff;" class="leva pl-4 pr-4 pt-2">Text na fakturu:</div>
+              <div style="position:relative;top:0px;color:#000000;float:left;background:#ffffff;width:25em" class="prava pr-4">
+                <!-- <input v-model="form.vyrobapopis_print" type="text" size="mini"  style="width:25em" class="tdl tdn"> -->
+                <textarea-autosize type="text"
+                class="tdl tdn"
+                v-model="form.poznamky"
+                size="mini"
+                style="width:100%; height:3em;max-height:3em;border:bottom: solid 10px red;font-size:100%;padding-left:5px;">
+                </textarea-autosize>
+                </div>
+              <div style="position:relative;top:0px;color:#258bce;float:left;background:#ffffff;" class="leva pl-4 pr-4 pt-2">Vyroba popis:</div>
+              <div style="position:relative;top:0px;color:#000000;float:left;background:#ffffff;width:25em" class="prava pr-4">
+                <textarea-autosize type="text"
+                class="tdl tdn"
+                v-model="form.vyrobapopis_print"
+                size="mini"
+                style="width:100%; height:3em;max-height:3em;border:bottom: solid 10px red;font-size:100%;padding-left:5px;">
+                </textarea-autosize>
+              </div>
+
+
+
+              <div style="position:relative;top:0px;color:#000000;float:left;background:#ffffff;width:5em" class="leva pl-1">
+                <label :for="'pdf0'+ID" style="cursor:pointer"><span></span>PDF&nbsp;</label>
+                  <input type="file" value="0"
+                  :name="'dodak0'+ID"
+                  :id="'pdf0'  +ID"
+                  class="tdl tdn elevation-0 pr-0" @change="true"/>
+
+              </div>
+
+             <div style="position:relative;top:0px;color:#000000;float:left;background:#ffffff;width:5em" class="leva pl-1">
+                <label :for="'pdf0'+ID" style="cursor:pointer"><span></span>Dodak&nbsp;</label>
+                  <input type="file" value="0"
+                  :name="'pdf0'+ID"
+                  :id="'pdf0'  +ID"
+                  class="tdl tdn elevation-0 pr-0" @change="true"/>
+
+              </div>
+              <div style="position:relative;top:0px;color:#000000;float:left;background:#ffffff;width:5em" class="leva pl-1">
+                <label :for="'objednavka0'+ID" style="cursor:pointer"><span></span>Objednavka&nbsp;</label>
+                  <input type="file" value="0"
+                  :name="'pdf0'+ID"
+                  :id="'pdf0'  +ID"
+                  class="tdl tdn elevation-0 pr-0" @change="true"/>
+
+              </div>
+
+
+
+
+
+
+   </div>
+
+
+
        <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none"
           v-if="aFirma.length > 0 "
           class="elevation-12 teal"
@@ -301,7 +369,7 @@
           v-if="aObchodnik.length > 0 "
           class="elevation-12 teal"
           :id="fields['obchodnik'].nazev+'_list'"
-          :style="fields['obchodnik'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:block'"
+          :style="fields['obchodnik'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:none'"
           >
         <span style="display:none">FF {{ aObchodnik.length}}</span>
 
@@ -351,7 +419,7 @@
           v-if="aProdukce.length > 0 "
           class="elevation-12 teal"
           :id="fields['produkce'].nazev+'_list'"
-          :style="fields['produkce'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:block'"
+          :style="fields['produkce'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:none'"
           >
         <span style="display:none">FF {{ aProdukce.length}}</span>
 
@@ -396,9 +464,6 @@
             </tr>
           </table>
         </div>
-
-
-
 
 
       <div id="jqwin"  style="display:none" >
@@ -1268,6 +1333,9 @@ deactivated: function () {
 
 
 <style scoped>
+input[type="file"] {
+  display:none
+}
 textarea:focus, input:focus{
     outline: 0px dashed;
 }

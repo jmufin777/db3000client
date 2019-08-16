@@ -109,7 +109,7 @@
 
            <td style="width:25%">
            <label :for="'panelovat'+ID" style="cursor:pointer"><span></span>Panelovat&nbsp;</label>
-           <input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)" s
+           <input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)"
            :id="'panelovat'+ID"
            class="tdl tdn elevation-0 pr-0" @change="getFormatName()">
            </td>
@@ -162,9 +162,10 @@
              <tr>
 
               <td v-for="idx in 4" :key="idx" class="pb-1 pl-1 ">
-                <!-- <label class="custom-file-upload" style="height:25px;width:250px "> -->
-                <input type="file" />
-                <!-- </label> -->
+
+                <label :for="'file_' + idx" style="cursor:pointer"><span></span>P{{idx}}&nbsp;</label>
+                <input type="file" :id="'file_' + idx" />
+
               </td>
 
           </tr>
@@ -1402,7 +1403,7 @@ a:focus {
 }
 
 input[type="file"] {
-    display: block;
+    display: none;
 }
 .custom-file-upload {
     border: 1px solid #ccc;
