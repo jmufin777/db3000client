@@ -56,6 +56,7 @@
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava">Číslo zakázky:</td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4" ><input type="text" size="mini"  style="width:90%" class="tdl tdn"
               :id="'cislo' + ID "
+              v-model="form.cislo"
               ></td>
             </tr>
            <tr>
@@ -622,6 +623,18 @@ deactivated: function () {
 
      self.aObchodnik  =  await SQL.getOsoba(0,'obchod')
      self.aProdukce = self.aObchodnik
+     eventBus.$off('NovaZN')
+     eventBus.$on("NovaZN", (server)=>{
+        //f.Alert('zalozim', server.id)
+        self.form.cislo = server.cislo
+        self.form.datumexpedice = server.exp
+        self.form.produkce= server.prod_txt
+        self.form.idefix_produkce = server.prod
+        self.form.datumzadani = server.zadani
+        //f.Alert(f.Jstr(server))
+
+
+      })
 
 
 
@@ -705,12 +718,17 @@ deactivated: function () {
 
     })
 
+
   },
  methods: {
    TestRend() {
     //alert('aRend')
      eventBus.$emit("Rend")
   },
+  // retData(){
+  //   //alert('ja 1')
+  //   return this.form
+  // },
 
 
   async   aktFirma(){

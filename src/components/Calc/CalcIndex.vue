@@ -6,14 +6,13 @@
       <div slot="hlavninew" style="position:fixed;top:4.8em;left:10px;background:#ffffff;text-align:left;width:100%" id="hlavninabidka" class="HlavniNabidka">
     <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
      <div >
-      <work-but-menu :ID="ID">
+      <work-but-menu :ID="ID" ref="w1">
         <span slot="tlacitkazakazky">
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="Nova()"
           >
           Nova
           </button>
-
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
               @click="Ulozit()"
           >
@@ -36,13 +35,9 @@
           Ulozit jako nabidku
           </button>
         </span>
-
       </work-but-menu>
 
        <!-- JARDA : {{IDEFIXACTIVE}} / Delka kalkulace {{aKalkulace.length}} -->
-
-
-
 
      </div>
 
@@ -511,6 +506,7 @@ export default {
      timeoutDrag: null,
      $: $,
      f: f,
+     w1: WorkButMenu,
      idTmp:0,
      drag: false,
      cTable :'',
@@ -1004,7 +1000,42 @@ deactivated: function () {
    async Ulozit(){
      const self = this
      await self.setVL(self.IDEFIXACTIVE,1)
+     var  data2= self.$refs.w1.form
+     f.Alert(f.Jstr(data2))
+
      f.Alert('Ulozim ', self.MAINMENULAST )
+   },
+   async Nova(){
+     const self = this
+     var c= 0
+
+
+    if (self.MAINMENULAST=='zakazky')  {
+        var c = (await Q.all(self.idefix,`select newzak(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce`)).data.data[0]
+    }
+    if (self.MAINMENULAST=='kalkulace')  {
+        var c = (await Q.all(self.idefix,`select newnab(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce `)).data.data[0]
+    }
+    c.exp=f.datum3(c.exp)
+    c.zadani = f.datum20(c.zadani)
+
+    f.Alert(f.Jstr(c));
+
+       eventBus.$emit('NovaZN', {
+         id: self.MAINMENULAST,
+         cislo: c.cislo,
+         exp: c.exp,
+         prod: self.idefix,
+         prod_txt : c.produkce,
+         zadani:c.zadani
+
+     })
+
+
+     //await self.setVL(self.IDEFIXACTIVE,1)
+
+
+     f.Alert('Nova ', self.MAINMENULAST )
    },
    async setIdefixActive() {
      const self=this
