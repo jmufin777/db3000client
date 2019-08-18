@@ -109,7 +109,8 @@
                 Kontaktni osoba:
                 </a>
                 </td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
+              <input
               type="text" size="mini"  style="width:90%"
               class="tdl tdn"
               @focus="fokus('osoba');fields['osoba'].ZobrazMenu=true"
@@ -141,7 +142,9 @@
             <!-- <tr><td>a</td></tr> -->
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Faktury:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input
+              v-model="form.cislofaktury"
+              type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
            <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Platba:</td>
@@ -348,7 +351,7 @@
                 <v-card-text style="font-size:90%;text-align:left;width:100%"
                  @click="form['osoba']= item1['nazev'];setOsoba(item1['idefix'])
                  fields['osoba'].ZobrazMenu=false;
-                 form['idefix_osoba']=item1['idefix']"
+                 form['idefix_firmaosoba']=item1['idefix']"
                  :class="{'grey lighten-4':1==1, 'grey lighten-5':1>1}"
                  class="ma-0 pa-0 pl-1"
                 >
@@ -636,6 +639,26 @@ deactivated: function () {
 
       })
 
+     eventBus.$off('Focus')
+     eventBus.$on("Focus", (server)=>{
+       if (!f.isEmpty(self.fields[server.pole])){
+          if (document.getElementById(self.fields[server.pole]['nazev'])) {
+            document.getElementById(self.fields[server.pole]['nazev']).focus()
+          }
+          //f.Alert(f.Jstr(self.fields[server.pole]['nazev']) )
+       }
+
+       //self.fields[server.nazev]['nazev']
+
+
+       // f.Alert(pole)
+        //f.Alert('zalozim', server.id)
+
+        //f.Alert(f.Jstr(server))
+
+
+      })
+
 
 
 
@@ -774,7 +797,7 @@ deactivated: function () {
       }
       if (self.form.idefix_firma>0 && self.form.idefix_firma != itemCela['idefix']) {
         self.form.osoba=''
-        self.form.idefix_osoba=0
+        self.form.idefix_firmaosoba=0
         isZmena = true;
       }
       self.form.nazevfirmy= itemCela['nazev'];
@@ -799,7 +822,7 @@ deactivated: function () {
 
          if (isZmena && self.aOsoba.length>0) {
              if (self.aOsoba.length==1) {
-              self.form.idefix_osoba = self.aOsoba[0].idefix
+              self.form.idefix_firmaosoba = self.aOsoba[0].idefix
               self.form.osoba = self.aOsoba[0].nazev
              }
 
@@ -831,7 +854,7 @@ deactivated: function () {
         return
       }
       self.form.osoba= itemCela['nazev'];
-      self.form.idefix_osoba= itemCela['idefix'];
+      self.form.idefix_firmaosoba= itemCela['idefix'];
       self.fields['firma'].ZobrazMenu=false;
 
  //     f.Alert('#'+self.fields['firma'].nazev+'_list')

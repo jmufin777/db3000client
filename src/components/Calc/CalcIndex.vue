@@ -520,6 +520,7 @@ export default {
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
      MAINMENULAST:'',
      obrazovka:3,
+     status:0,
    }
  },
  watch: {
@@ -1001,25 +1002,137 @@ deactivated: function () {
      const self = this
      await self.setVL(self.IDEFIXACTIVE,1)
      var  data2= self.$refs.w1.form
-     f.Alert(f.Jstr(data2))
+     var q1=""
+     var _idefix = 0
 
-     f.Alert('Ulozim ', self.MAINMENULAST )
+     if (self.status==1){
+
+       if (self.MAINMENULAST=='kalkulace'){
+        // f.Alert('Vlozim novou', self.MAINMENULAST )
+         q1=`select * from nab_insert(newnab(${self.idefix}),${data2.idefix_firma}, '${data2.datumexpedice}')  `
+         //f.Alert2(q1)
+         //return
+        var c = (await Q.all(self.idefix,q1)).data.data[0]
+        f.Alert("NAB", f.Jstr(c));
+        var qset=(await self.UpdateSet(data2))
+        var q= `update nab_t_list ${qset} where idefix = ${c.idefix}`
+        var d = (await Q.post(self.idefix,q))
+
+
+        //Vlozit polozky z kalkulace
+
+
+
+       } else
+       if (self.MAINMENULAST=='zakazky'){
+        q1=`select * from zak_insert(newzak(${self.idefix}),${data2.idefix_firma}, '${data2.datumexpedice}')  `
+         //f.Alert2(q1)
+         //return
+         if (f.isEmpty(data2.nazevfirmy)) {
+           this.$notify( {
+            title: 'Upozorneni',
+            message: 'Firma je povinna ',
+            type: 'warning',
+            offset: 100,
+            duration: 5000
+          })
+           eventBus.$emit("Focus",{pole: 'firma'})
+
+
+
+           return
+         }
+        var c = (await Q.all(self.idefix,q1)).data.data[0]  //Pouziju polozky idefix, splatnost, zbytek by mel byt ve formulari spravne
+        var qset=(await self.UpdateSet(data2))
+        var q= `update zak_t_list ${qset} where idefix = ${c.idefix}`
+        var d = (await Q.post(self.idefix,q))
+        //Vlozit (zmenit ) polozky z kalkulace
+        f.Alert(self.cTable)
+        var qitems = `insert into zak_t_items ()`
+
+
+        //Zmena statusu
+
+        f.Alert2(d)
+
+
+        //f.Alert("ZAK", f.Jstr(c));
+
+       }
+
+       //f.Alert2(f.Jstr(data2))
+
+    //    var necox = {"cislo":"1900900016","vl_rozsah":"","idefix_firma":"13464","idefix_firmaosoba":0,
+    //    "nazev":"neco je to","cisloobjednavky":"petka","datumzadani":"18.08.2019 06:32:21",
+    //    "datumexpedice":"28.08.2019","datumsplatnosti":null,"vyrobapopis":"","naklad":0,
+    //    "poznamky":"rychle hlavne mez to uvidis to zaplat","zamknuto":null,"idefix_user_lock":0,
+    //    "odemknuto":null,"idefix_user_unlock":0,"zamek":false,"uct_rok":2019,"login":"",
+    //    "vyrobapopis_print":"uriznout tak aby ve skladu zbylo na dalsi","cislofaktury":"","idefix_obchodnik":0,
+    //    "idefix_produkce":"9","idefix_last":0,"idefix_nabidka":0,"dodak0":"","objednavka0":"",
+    //    "pdf0":"","informace":"",
+    //    "nazevfirmy":"AbbVie s.r.o.",
+    //    "osoba":"Belasová Iva","obchodnik":"","produkce":"mares mares "}
+      }
+
+
+
    },
+   async UpdateSet(data2 ) {
+           const self=this
+           var qset= `set `
+           if (self.MAINMENULAST=='zakazky') {
+//             qset+=`cislozakazky        =  ${data2.cislo},`
+           } else
+           if (self.MAINMENULAST=='kalkulace') {
+  //           qset+=`cislonabidky        =  ${data2.cislo},`
+           }
+
+            qset+=`vl_rozsah           =  '',`  // vymenit za funkci
+            qset+=`idefix_firma        =  ${data2.idefix_firma},`  // pujde ci nepujde menit ?
+            qset+=`idefix_firmaosoba   =  ${data2.idefix_firmaosoba},`  // pujde ci nepujde menit ?
+            qset+=`nazev               =  '${data2.nazev}',`  // pujde ci nepujde menit ?
+            qset+=`cisloobjednavky     =  '${data2.cisloobjednavky}',`  // pujde ci nepujde menit ?
+            qset+=`cislofaktury        =  '${data2.cislofaktury}',`  // pujde ci nepujde menit ?
+            //qset+=`datumzadani         =  '${data2.datumzadani}',`  // nebude - je jen proi vlozeni!!!!
+            qset+=`datumexpedice       =  '${data2.datumexpedice}',`  // pujde ci nepujde menit ?
+            //qset+=`datumsplatnosti     =  '${data2.datumsplatnosti}',`  // na starem datum studio, co to vlastneje
+            qset+=`vyrobapopis         =  '${data2.vyrobapopis}',`  // pujde ci nepujde menit ?
+            qset+=`odemknuto           =   null,`  // !!!!DULEZITE   - pri zmene zamku
+            qset+=`zamknuto            =   null,`  // !!!!DULEZITE   - pri zmene zamku
+            qset+=`idefix_user_unlock  =  '${data2.idefix_user_unlock}',`   // !!!!DULEZITE
+            qset+=`zamek               =  '${data2.zamek}',`  // pujde ci nepujde menit ?
+            qset+=`login               =   idefix2login(${self.idefix}),`  // pujde ci nepujde menit ?
+            qset+=`vyrobapopis_print   =  '${data2.vyrobapopis_print}',`  // pujde ci nepujde menit ?
+            qset+=`idefix_obchodnik    =  '${data2.idefix_obchodnik}',`   // !!!!DULEZITE
+            qset+=`idefix_produkce     =  '${data2.idefix_produkce}',`   // !!!!DULEZITE
+            qset+=`idefix_last         =  '${data2.idefix_last}',`   // !!!!DULEZITE  - nova uprvou - originalni zakazka
+            qset+=`idefix_nabidka      =  '${data2.idefix_nabidka}',`   // !!!!DULEZITE  - Vychozi nabidka (zakazka)
+            qset+=`dodak0              =  '${data2.dodak0}',`        // !!!!DULEZITE  PRILOHY
+            qset+=`objednavka0         =  '${data2.objednavka0}',`   // !!!!DULEZITE  PRILOHY
+            qset+=`pdf0                =  '${data2.pdf0}' `          // !!!!DULEZITE  PRILOHY
+            return qset
+
+   },
+
    async Nova(){
      const self = this
      var c= 0
+     self.status=1
 
 
     if (self.MAINMENULAST=='zakazky')  {
         var c = (await Q.all(self.idefix,`select newzak(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce`)).data.data[0]
+        // `select newzak(9) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(9) as produkce`
     }
     if (self.MAINMENULAST=='kalkulace')  {
         var c = (await Q.all(self.idefix,`select newnab(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce `)).data.data[0]
+        //select newnab(9) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(9) as produkce
     }
+    //f.Alert('A',f.Jstr(c));
     c.exp=f.datum3(c.exp)
     c.zadani = f.datum20(c.zadani)
 
-    f.Alert(f.Jstr(c));
+    //f.Alert('B',f.Jstr(c));
 
        eventBus.$emit('NovaZN', {
          id: self.MAINMENULAST,
@@ -1035,7 +1148,7 @@ deactivated: function () {
      //await self.setVL(self.IDEFIXACTIVE,1)
 
 
-     f.Alert('Nova ', self.MAINMENULAST )
+     //f.Alert('Nova ', self.MAINMENULAST )
    },
    async setIdefixActive() {
      const self=this
