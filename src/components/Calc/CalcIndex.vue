@@ -20,18 +20,21 @@
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           >
-          Zmenit
+          Nova upravou
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           >
           Smazat
           </button>
           <button  v-if="MAINMENULAST=='kalkulace'" class="px-4 tlacitkoMenu elevation-2 hoVer"
+            @click="Ulozit('z')"
           >
           Ulozit jako zakazku
           </button>
           <button  v-if="MAINMENULAST=='zakazky'" class="px-4 tlacitkoMenu elevation-2 hoVer"
+           @click="Ulozit('n')"
           >
+
           Ulozit jako nabidku
           </button>
         </span>
@@ -998,25 +1001,54 @@ deactivated: function () {
  //  this.$destroy()
  },
  methods: {
-   async Ulozit(){
+   async Ulozit(kod=''){
      const self = this
      await self.setVL(self.IDEFIXACTIVE,1)
      var  data2= self.$refs.w1.form
      var q1=""
      var _idefix = 0
+     if (kod=='n') {
+       self.MAINMENULAST='kalkulace'
+       eventBus.$emit('setmenu',{setmenu: 'kalkulace'})
+
+     } else
+     if (kod=='z') {
+       self.MAINMENULAST='zakazky'
+       eventBus.$emit('setmenu',{setmenu: 'zakazky'})
+
+     }
+
+     //alert(kod)
+     //return
+
 
      if (self.status==1){
 
        if (self.MAINMENULAST=='kalkulace'){
         // f.Alert('Vlozim novou', self.MAINMENULAST )
+
          q1=`select * from nab_insert(newnab(${self.idefix}),${data2.idefix_firma}, '${data2.datumexpedice}')  `
          //f.Alert2(q1)
          //return
         var c = (await Q.all(self.idefix,q1)).data.data[0]
-        f.Alert("NAB", f.Jstr(c));
+
+        self.$refs.w1.form.cislo = c.cislo
+        //self.$refs.w1.form.cislo
+        //f.Alert("NAB", f.Jstr(c));
         var qset=(await self.UpdateSet(data2))
         var q= `update nab_t_list ${qset} where idefix = ${c.idefix}`
         var d = (await Q.post(self.idefix,q))
+
+
+        var iset=(await self.InsertSet(c.idefix, 'idefix_nab'))
+
+        var del = (await Q.post(self.idefix,`delete from nab_t_items where obsah::text > '' and idefix_nab = ${c.idefix}`))
+        var qitems = `insert into nab_t_items
+          ${iset}
+          from ${self.cTable} where obsah::text >''
+        `
+        var e = (await Q.post(self.idefix,qitems))
+        this.$notify( { title: 'Informace',  message: 'Ulozeno ', type: 'success', offset: 100, duration: 3000 })
 
 
         //Vlozit polozky z kalkulace
@@ -1029,31 +1061,32 @@ deactivated: function () {
          //f.Alert2(q1)
          //return
          if (f.isEmpty(data2.nazevfirmy)) {
-           this.$notify( {
-            title: 'Upozorneni',
-            message: 'Firma je povinna ',
-            type: 'warning',
-            offset: 100,
-            duration: 5000
-          })
+           this.$notify( { title: 'Upozorneni',  message: 'Firma je povinna ', type: 'warning', offset: 100, duration: 5000 })
            eventBus.$emit("Focus",{pole: 'firma'})
-
-
 
            return
          }
         var c = (await Q.all(self.idefix,q1)).data.data[0]  //Pouziju polozky idefix, splatnost, zbytek by mel byt ve formulari spravne
+        self.$refs.w1.form.cislo = c.cislo
         var qset=(await self.UpdateSet(data2))
         var q= `update zak_t_list ${qset} where idefix = ${c.idefix}`
         var d = (await Q.post(self.idefix,q))
         //Vlozit (zmenit ) polozky z kalkulace
-        f.Alert(self.cTable)
-        var qitems = `insert into zak_t_items ()`
+        //f.Alert(self.cTable)
+        var iset=(await self.InsertSet(c.idefix))
+        var del = (await Q.post(self.idefix,`delete from zak_t_items where obsah::text > '' and idefix_zak = ${c.idefix}`))
+        var qitems = `insert into zak_t_items
+          ${iset}
+          from ${self.cTable} where obsah::text >''
+        `
+        var e = (await Q.post(self.idefix,qitems))
+        this.$notify( { title: self.MAINMENULAST,  message: 'Ulozeno ' , type: 'success', offset: 100, duration: 3000 })
+
 
 
         //Zmena statusu
 
-        f.Alert2(d)
+        //f.Alert2(d)
 
 
         //f.Alert("ZAK", f.Jstr(c));
@@ -1076,6 +1109,57 @@ deactivated: function () {
 
 
 
+   },
+   async InsertSet(idefix_zak, itemIdName='idefix_zak') {
+     const self= this
+
+     return `(
+            kod,
+            nazev,
+            obsah,
+            kcks,
+            ks,
+            naklad,
+            marze,
+            prodej,
+            marze_pomer,
+            expedice_datum,
+            expedice_cas,
+            datum,
+            poradi,
+
+            id_src,
+            active,
+            idefix_src,
+            ${itemIdName},
+            user_insert_idefix,
+            user_update_idefix
+
+        )
+
+            select
+            kod,
+            nazev,
+            obsah,
+            kcks,
+            ks,
+            naklad,
+            marze,
+            prodej,
+            marze_pomer,
+            expedice_datum,
+            expedice_cas,
+            datum,
+            poradi,
+
+
+            id,
+            active,
+            idefix,
+            ${idefix_zak},
+            ${self.idefix},
+            ${self.idefix}
+            `
    },
    async UpdateSet(data2 ) {
            const self=this
@@ -1591,7 +1675,7 @@ if (self.Pocet == - 1) {
             necoSave = await self.SaveAll(idefix)
             if (jenUloz==1) {
               await  self.setZabalit()
-              alert('Jen jsem to ulozil')
+              // alert('Jen jsem to ulozil')
               return
             }
        //alert("Save Result " + necoSave)

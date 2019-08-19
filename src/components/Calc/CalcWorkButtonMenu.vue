@@ -645,19 +645,12 @@ deactivated: function () {
           if (document.getElementById(self.fields[server.pole]['nazev'])) {
             document.getElementById(self.fields[server.pole]['nazev']).focus()
           }
-          //f.Alert(f.Jstr(self.fields[server.pole]['nazev']) )
        }
-
-       //self.fields[server.nazev]['nazev']
-
-
-       // f.Alert(pole)
-        //f.Alert('zalozim', server.id)
-
-        //f.Alert(f.Jstr(server))
-
-
       })
+     eventBus.$off('setmenu')
+     eventBus.$on("setmenu", (server)=>{
+          self.setmenu = server.setmenu
+     })
 
 
 
@@ -703,7 +696,7 @@ deactivated: function () {
               } else {
                 self.fields[key].ZobrazMenu =false
                 //$("#"+self.fields[key].nazev).hide(1000).show(1000)
-                $("#"+self.fields[key].nazev+'_list').hide(500)
+                $("#"+self.fields[key].nazev+'_list').hide(250)
 
               }
             }
@@ -711,7 +704,7 @@ deactivated: function () {
 
            }
         }
-    },500)
+    },350)
     setTimeout(function() {
       eventBus.$emit('MenuHlavni',{key:1999, item: self.setmenu})
      },100)
