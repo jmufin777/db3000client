@@ -40,30 +40,28 @@
           </button>
         </span>
       </work-but-menu>
-
        <!-- JARDA : {{IDEFIXACTIVE}} / Delka kalkulace {{aKalkulace.length}} -->
-
      </div>
-
-
     <span v-if="false">
-
       {{ KalkulaceThis}} /Last {{ KalkulaceLast }}
       {{ $store.state.KalkulaceThis }} {{ TestRend }}
     </span>
       <!-- <menu-left slot="menuleft"></menu-left>
          <menu-hlavni></menu-hlavni> -->
-
     </div>
     <!-- {{aKalkulace}} -->
-<!-- <div   slot="kalkulace" style="position:fixed;width:100%;top:40em;overflow:scroll;height:70%;text-align:left;left:40px" id="obalKalkulaceButtons">
-</div> -->
-<div  v-if="obrazovka==1 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
+    <!-- <div   slot="kalkulace" style="position:fixed;width:100%;top:40em;overflow:scroll;height:70%;text-align:left;left:40px" id="obalKalkulaceButtons">
+    </div> -->
+<div  v-if="obrazovka==1 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%;max-height:600px" id="obalKalkulace"  class="stred">
   Seznam Z {{MAINMENULAST}}
+  <div style="position:fixed; top:30em;right:30%;opacity:0.5">
+      <span style="color:red; font-size:10em">1Z</span>
+  </div>
+
   <table style="width:70%">
     <thead>
       <th>Ikony</th>
-      <th>Č. zakazky</th>
+      <th>Č.zakazky</th>
       <th>Klient</th>
       <th>Název</th>
       <th>Vytvoření</th>
@@ -72,9 +70,8 @@
       <th>Prodej</th>
       <th>Zisk</th>
     </thead>
-
     <tbody>
-      <tr v-for="(polozka,idx) in seznam_zak" :key="idx">
+      <tr v-for="(polozka,idx) in seznam_zak" :key="idx"  @click="to2Z(polozka)" style="cursor:pointer">
         <td>Ikona</td>
         <td>{{polozka.cislozakazky}}</td>
         <td class="leva pl-2" >{{polozka.firma}}</td>
@@ -84,18 +81,51 @@
         <td class="prava pr-4" >{{polozka.nakladsum}}</td>
         <td class="prava pr-4" >{{polozka.prodejsum}}</td>
         <td class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
-
       </tr>
     </tbody>
 
   </table>
 </div>
+
+<div  v-if="obrazovka==2 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
+<!-- {{polozky_zak}} -->
+<button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+          @click="obrazovka=1"
+          >
+          Kniha
+          </button>
+  <table style="width:70%">
+    <thead>
+      <th>Ikony</th>
+      <th>Práce</th>
+      <th>Dodavatel</th>
+      <th>Kč/ks</th>
+      <th>ks</th>
+      <th>Naklady celkem</th>
+      <th>Marze</th>
+      <th>Text na faktuře</th>
+
+    </thead>
+    <tbody>
+      <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"  @click="to3Z(polozka2)" style="cursor:pointer">
+      <td>Ikony</td>
+      <td>Práce</td>
+      <td>Dodavatel</td>
+      <td>{{polozka2.kcks}}</td>
+      <td>{{polozka2.ks}}</td>
+      <td>{{polozka2.naklad}}</td>
+      <td>{{polozka2.marze}}</td>
+      <td>{{polozka2.nazev}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
 <div  v-if="obrazovka==1 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace">
   Seznam N {{MAINMENULAST}}
 </div>
-<div  v-if="obrazovka==2" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace">
-  Rozpis {{MAINMENULAST}}
-</div>
+
 <div  v-if="obrazovka==3 || true" slot="kalkulace" style="position:fixed;width:100%;top:45em;overflow:scroll;height:70%" id="obalKalkulace">
 
 
@@ -567,6 +597,8 @@ export default {
 
      seznam_zak: [],
      seznam_nab:[],
+     polozky_zak:[],
+     polozky_nab:[],
 
    }
  },
@@ -1057,6 +1089,47 @@ deactivated: function () {
  //  this.$destroy()
  },
  methods: {
+   async to2Z(polozka) {
+     const self = this
+
+     if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
+
+       self.obrazovka=2
+
+       self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix}`)).data.data
+       //f.Alert(polozka.idefix, f.Jstr(self.polozky_zak))
+
+
+     } else {
+       this.$notify( { title: self.MAINMENULAST,  message: `Chyba pri nacteni polozek` , type: 'error', offset: 100, duration: 3000 })
+
+     }
+
+
+
+   },
+   async to3Z(polozka) {
+      const self= this
+       self.obrazovka=3
+       //eventBus.$emit(666)
+       //var a = (await Q.post(self.idefix,`drop table if exists ${self.cTable}`))
+       // var b = (await Q.post(self.idefix,`create table ${self.cTable} without oids  asselect * from zak_t_items where idefix_zak = ${polozka.idefix_zak}`))
+
+
+       //await  self.setZabalit()
+
+
+
+
+      f.Alert('3Z?')
+   },
+   async to2N(polozka) {
+     const self = this
+     self.obrazovka=2
+
+
+     f.Alert(polozka.idefix)
+   },
    async Ulozit(kod=''){
      const self = this
      await self.setVL(self.IDEFIXACTIVE,1)
