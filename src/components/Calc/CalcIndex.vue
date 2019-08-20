@@ -6,6 +6,7 @@
       <div slot="hlavninew" style="position:fixed;top:4.8em;left:10px;background:#ffffff;text-align:left;width:100%" id="hlavninabidka" class="HlavniNabidka">
     <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
      <div >
+      <input type="hidden" id="Zmenad" value="0" class="black white--text" style="width:100px">
       <work-but-menu :ID="ID" ref="w1">
         <span slot="tlacitkazakazky">
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
@@ -57,8 +58,46 @@
     <!-- {{aKalkulace}} -->
 <!-- <div   slot="kalkulace" style="position:fixed;width:100%;top:40em;overflow:scroll;height:70%;text-align:left;left:40px" id="obalKalkulaceButtons">
 </div> -->
-<div  v-if="obrazovka==3" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace">
-  <input type="hidden" id="Zmenad" value="0" class="black white--text" style="width:100px">
+<div  v-if="obrazovka==1 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
+  Seznam Z {{MAINMENULAST}}
+  <table style="width:70%">
+    <thead>
+      <th>Ikony</th>
+      <th>Č. zakazky</th>
+      <th>Klient</th>
+      <th>Název</th>
+      <th>Vytvoření</th>
+      <th>Změna</th>
+      <th>Nákladová cena</th>
+      <th>Prodej</th>
+      <th>Zisk</th>
+    </thead>
+
+    <tbody>
+      <tr v-for="(polozka,idx) in seznam_zak" :key="idx">
+        <td>Ikona</td>
+        <td>{{polozka.cislozakazky}}</td>
+        <td class="leva pl-2" >{{polozka.firma}}</td>
+        <td class="leva pl-2" >{{polozka.nazev}}</td>
+        <td class="stred pl-2" >{{f.datum3(polozka.datumzadani)}}</td>
+        <td class="leva pl-2" >{{f.datum3(polozka.time_update)}}</td>
+        <td class="prava pr-4" >{{polozka.nakladsum}}</td>
+        <td class="prava pr-4" >{{polozka.prodejsum}}</td>
+        <td class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
+
+      </tr>
+    </tbody>
+
+  </table>
+</div>
+<div  v-if="obrazovka==1 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace">
+  Seznam N {{MAINMENULAST}}
+</div>
+<div  v-if="obrazovka==2" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace">
+  Rozpis {{MAINMENULAST}}
+</div>
+<div  v-if="obrazovka==3 || true" slot="kalkulace" style="position:fixed;width:100%;top:45em;overflow:scroll;height:70%" id="obalKalkulace">
+
 
 
 
@@ -522,8 +561,13 @@ export default {
      NAZEVACTIVE:'',
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
      MAINMENULAST:'',
-     obrazovka:3,
-     status:0,
+     obrazovka:1,
+     status:0,  //status pro ulozeni 1 = nova
+
+
+     seznam_zak: [],
+     seznam_nab:[],
+
    }
  },
  watch: {
@@ -658,6 +702,14 @@ deactivated: function () {
         } else {
           // f.Alert('hlavni - zmena ', server.item)
           self.MAINMENULAST=server.item
+          if (self.MAINMENULAST== 'kalkulace'){
+            self.Seznam('nab')
+          } else
+          if (self.MAINMENULAST== 'zakazky'){
+            self.Seznam('zak')
+          }
+
+
           $("#Zmenad").get(0).value=0
          self.$store.dispatch('cleanKalk')
          self.aKalkulace=[]
@@ -899,6 +951,10 @@ deactivated: function () {
     self.IsZmena()
   },1000)
 
+  //Po startu se nacte seznam zakazek
+        await self.Seznam('zak')
+
+
 
 
 
@@ -1009,23 +1065,66 @@ deactivated: function () {
      var _idefix = 0
      if (kod=='n') {
        self.MAINMENULAST='kalkulace'
+       self.status=1; // Save AS nb - zakazku - zmena statusu na vklad
        eventBus.$emit('setmenu',{setmenu: 'kalkulace'})
 
      } else
      if (kod=='z') {
        self.MAINMENULAST='zakazky'
+       self.status=1; // Save AS nb - zakazku - zmena statusu na vklad
        eventBus.$emit('setmenu',{setmenu: 'zakazky'})
 
      }
 
-     //alert(kod)
+     f.Alert(kod, ' ',self.status )
+
      //return
 
+     if (self.status==2){
 
+       if (self.MAINMENULAST=='kalkulace'){  //Tohle domyslet co vlastne vidim
+           //self.$refs.w1.form.cislo
+           var c = (await Q.all(self.idefix,`select * from nab_t_list where cislonabidky= ${self.$refs.w1.form.cislo}`)).data.data[0]
+
+           var qset=(await self.UpdateSet(data2))
+           var q= `update nab_t_list ${qset} where idefix = ${c.idefix}`
+           var d = (await Q.post(self.idefix,q))
+
+           var iset=(await self.InsertSet(c.idefix))
+           var del = (await Q.post(self.idefix,`delete from nab_t_items where obsah::text > '' and idefix_nab = ${c.idefix}`))
+           var qitems = `insert into nab_t_items
+             ${iset}
+             from ${self.cTable} where obsah::text >''
+           `
+           var e = (await Q.post(self.idefix,qitems))
+           this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislonabidky}` , type: 'success', offset: 100, duration: 3000 })
+           self.status=2;
+       }
+       if (self.MAINMENULAST=='zakazky'){
+          //self.$refs.w1.form.cislo = c.cislo
+          var c = (await Q.all(self.idefix,`select * from zak_t_list where cislozakazky= ${self.$refs.w1.form.cislo}`)).data.data[0]
+
+          var qset=(await self.UpdateSet(data2))
+          var q= `update zak_t_list ${qset} where idefix = ${c.idefix}`
+          var d = (await Q.post(self.idefix,q))
+          //Vlozit (zmenit ) polozky z kalkulace
+          //f.Alert(self.cTable)
+          var iset=(await self.InsertSet(c.idefix))
+          var del = (await Q.post(self.idefix,`delete from zak_t_items where obsah::text > '' and idefix_zak = ${c.idefix}`))
+          var qitems = `insert into zak_t_items
+            ${iset}
+            from ${self.cTable} where obsah::text >''
+          `
+          var e = (await Q.post(self.idefix,qitems))
+          this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislozakazky}` , type: 'success', offset: 100, duration: 3000 })
+          self.status=2;
+
+       }
+     }
      if (self.status==1){
 
        if (self.MAINMENULAST=='kalkulace'){
-        // f.Alert('Vlozim novou', self.MAINMENULAST )
+         //f.Alert('Vlozim novou', self.MAINMENULAST )
 
          q1=`select * from nab_insert(newnab(${self.idefix}),${data2.idefix_firma}, '${data2.datumexpedice}')  `
          //f.Alert2(q1)
@@ -1048,7 +1147,8 @@ deactivated: function () {
           from ${self.cTable} where obsah::text >''
         `
         var e = (await Q.post(self.idefix,qitems))
-        this.$notify( { title: 'Informace',  message: 'Ulozeno ', type: 'success', offset: 100, duration: 3000 })
+        this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno ${ c.cislo}`, type: 'success', offset: 100, duration: 3000 })
+        self.status=2;
 
 
         //Vlozit polozky z kalkulace
@@ -1061,7 +1161,7 @@ deactivated: function () {
          //f.Alert2(q1)
          //return
          if (f.isEmpty(data2.nazevfirmy)) {
-           this.$notify( { title: 'Upozorneni',  message: 'Firma je povinna ', type: 'warning', offset: 100, duration: 5000 })
+           this.$notify( { title: 'Upozorneni',  message: `Firma je povinna`, type: 'warning', offset: 100, duration: 5000 })
            eventBus.$emit("Focus",{pole: 'firma'})
 
            return
@@ -1080,7 +1180,8 @@ deactivated: function () {
           from ${self.cTable} where obsah::text >''
         `
         var e = (await Q.post(self.idefix,qitems))
-        this.$notify( { title: self.MAINMENULAST,  message: 'Ulozeno ' , type: 'success', offset: 100, duration: 3000 })
+        this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno  ${ c.cislo}` , type: 'success', offset: 100, duration: 3000 })
+        self.status=2;
 
 
 
@@ -1195,6 +1296,23 @@ deactivated: function () {
             qset+=`objednavka0         =  '${data2.objednavka0}',`   // !!!!DULEZITE  PRILOHY
             qset+=`pdf0                =  '${data2.pdf0}' `          // !!!!DULEZITE  PRILOHY
             return qset
+
+   },
+async Seznam(ceho = 'zak', where =''){
+    const self=this
+     var q=`select a.*,b.nazev as firma,c.*  from ${ceho}_t_list a join list_dodavatel b on a.idefix_firma= b.idefix
+          join (
+      	  select idefix_${ceho}, sum(naklad) as nakladsum, sum(prodej) as prodejsum from ${ceho}_t_items  group by idefix_${ceho}
+      ) c on a.idefix = c.idefix_${ceho}
+        order by a.idefix desc limit 100 `
+        if (ceho == 'zak'){
+          self.seznam_zak = (await Q.all(self.idefix,q)).data.data
+        }
+       if (ceho == 'nab'){
+          self.seznam_nab = (await Q.all(self.idefix,q)).data.data
+        }
+
+
 
    },
 
