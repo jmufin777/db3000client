@@ -35,7 +35,6 @@
           <button  v-if="MAINMENULAST=='zakazky'" class="px-4 tlacitkoMenu elevation-2 hoVer"
            @click="Ulozit('n')"
           >
-
           Ulozit jako nabidku
           </button>
         </span>
@@ -52,13 +51,13 @@
     <!-- {{aKalkulace}} -->
     <!-- <div   slot="kalkulace" style="position:fixed;width:100%;top:40em;overflow:scroll;height:70%;text-align:left;left:40px" id="obalKalkulaceButtons">
     </div> -->
-<div  v-if="obrazovka==1 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%;max-height:600px" id="obalKalkulace"  class="stred">
+<div  v-if="obrazovka_zak==1 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%;max-height:600px" id="obalKalkulace"  class="stred">
   Seznam Z {{MAINMENULAST}}
   <div style="position:fixed; top:30em;right:30%;opacity:0.5">
       <span style="color:red; font-size:10em">1Z</span>
   </div>
 
-  <table style="width:70%">
+  <table style="width:70%" :id="'tab_'+ID">
     <thead>
       <th>Ikony</th>
       <th>Č.zakazky</th>
@@ -71,8 +70,11 @@
       <th>Zisk</th>
     </thead>
     <tbody>
-      <tr v-for="(polozka,idx) in seznam_zak" :key="idx"  @click="to2Z(polozka)" style="cursor:pointer">
-        <td>Ikona</td>
+      <tr v-for="(polozka,idx) in seznam_zak" :key="idx"  @dblclick="to2Z(polozka);"  @click="FillFormWait(polozka)" style="cursor:pointer"
+        :id="'tr_'+polozka.idefix"
+        class="hoVer"
+      >
+        <td><button class="num green">Ikona</button></td>
         <td>{{polozka.cislozakazky}}</td>
         <td class="leva pl-2" >{{polozka.firma}}</td>
         <td class="leva pl-2" >{{polozka.nazev}}</td>
@@ -87,10 +89,13 @@
   </table>
 </div>
 
-<div  v-if="obrazovka==2 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
+<div  v-if="obrazovka_zak==2 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
 <!-- {{polozky_zak}} -->
+<div style="position:fixed; top:30em;right:30%;opacity:0.5">
+      <span style="color:red; font-size:10em">2Z</span>
+  </div>
 <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-          @click="obrazovka=1"
+          @click="obrazovka_zak=1"
           >
           Kniha
           </button>
@@ -122,13 +127,96 @@
 
 </div>
 
-<div  v-if="obrazovka==1 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace">
+<div  v-if="obrazovka_nab==1 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace">
   Seznam N {{MAINMENULAST}}
+  Seznam Z {{MAINMENULAST}}
+  <div style="position:fixed; top:30em;right:30%;opacity:0.5">
+      <span style="color:red; font-size:10em">1N</span>
+  </div>
+
+  <table style="width:70%" :id="'tab_'+ID">
+    <thead>
+      <th>Ikony</th>
+      <th>Č.zakazky</th>
+      <th>Klient</th>
+      <th>Název</th>
+      <th>Vytvoření</th>
+      <th>Změna</th>
+      <th>Nákladová cena</th>
+      <th>Prodej</th>
+      <th>Zisk</th>
+    </thead>
+    <tbody>
+      <tr v-for="(polozka,idx) in seznam_nab" :key="idx"  @dblclick="to2N(polozka);"  @mousedown="FillFormWait(polozka)" style="cursor:pointer"
+        :id="'tr_'+polozka.idefix"
+        class="hoVer"
+      >
+        <td><button class="num green">Ikona</button></td>
+        <td>{{polozka.cislonabidky}}</td>
+        <td class="leva pl-2" >{{polozka.firma}}</td>
+        <td class="leva pl-2" >{{polozka.nazev}}</td>
+        <td class="stred pl-2" >{{f.datum3(polozka.datumzadani)}}</td>
+        <td class="leva pl-2" >{{f.datum3(polozka.time_update)}}</td>
+        <td class="prava pr-4" >{{polozka.nakladsum}}</td>
+        <td class="prava pr-4" >{{polozka.prodejsum}}</td>
+        <td class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
+      </tr>
+    </tbody>
+
+  </table>
+</div>
+<div  v-if="obrazovka_nab==2 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
+<!-- {{polozky_zak}} -->
+<div style="position:fixed; top:30em;right:30%;opacity:0.3">
+      <span style="color:red; font-size:10em">2N</span>
+  </div>
+<button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+          @click="obrazovka_nab=1"
+          >
+          Kniha
+          </button>
+  <table style="width:70%">
+    <thead>
+      <th>Ikony</th>
+      <th>Práce</th>
+      <th>Dodavatel</th>
+      <th>Kč/ks</th>
+      <th>ks</th>
+      <th>Naklady celkem</th>
+      <th>Marze</th>
+      <th>Text na faktuře</th>
+
+    </thead>
+    <tbody>
+      <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"  @click="to3N(polozka2)" style="cursor:pointer">
+      <td>Ikony</td>
+      <td>Práce</td>
+      <td>Dodavatel</td>
+      <td>{{polozka2.kcks}}</td>
+      <td>{{polozka2.ks}}</td>
+      <td>{{polozka2.naklad}}</td>
+      <td>{{polozka2.marze}}</td>
+      <td>{{polozka2.nazev}}</td>
+      </tr>
+    </tbody>
+  </table>
+
 </div>
 
-<div  v-if="obrazovka==3 || true" slot="kalkulace" style="position:fixed;width:100%;top:45em;overflow:scroll;height:70%" id="obalKalkulace">
+<div  v-if="(obrazovka_nab==3 && MAINMENULAST=='kalkulace')  || (obrazovka_zak==3 && MAINMENULAST=='zakazky')" slot="kalkulace" style="position:fixed;width:100%;top:25em;overflow:scroll;height:70%" id="obalKalkulace">
+  <button v-if="MAINMENULAST=='kalkulace'" class="px-4 tlacitkoMenu elevation-2 hoVer"
+      @click="obrazovka_nab=2" >
+      Rozpis nabidky
+  </button>
+  <button v-if="MAINMENULAST=='zakazky'" class="px-4 tlacitkoMenu elevation-2 hoVer"
+      @click="obrazovka_zak=2" >
+      Rozpis zakazky
+  </button>
 
-
+<div style="position:fixed; top:30em;right:30%;opacity:0.5">
+      <span v-if="MAINMENULAST=='zakazky'   && obrazovka_zak == 3" style="color:red; font-size:10em">3Z</span>
+      <span v-if="MAINMENULAST=='kalkulace' && obrazovka_nab == 3" style="color:red; font-size:10em">3N</span>
+  </div>
 
 
 
@@ -529,6 +617,7 @@ import f from '@/services/fce'
 // import query from '../../services/query'
 import Q from '../../services/query'
 import queryKalk from '../../services/fcesqlKalkulace'
+import SQL from '../../services/fcesql'
 
 //10411
 
@@ -591,14 +680,25 @@ export default {
      NAZEVACTIVE:'',
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
      MAINMENULAST:'',
-     obrazovka:1,
+     obrazovka_nab:1,
+     obrazovka_zak:1,
      status:0,  //status pro ulozeni 1 = nova
+     status_zak:0,  //status pro ulozeni 1 = nova
+     status_nab:0,  //status pro ulozeni 1 = nova
 
 
      seznam_zak: [],
      seznam_nab:[],
      polozky_zak:[],
      polozky_nab:[],
+
+     aktivni_zak:0,
+     aktivni_nab:0,
+
+     polozka_zak:[],
+     polozka_nab:[],
+
+     timeout: false,
 
    }
  },
@@ -647,6 +747,7 @@ deactivated: function () {
      eventBus.$off('Rend')
      console.log(serverDel)
      })
+
 
      //eventBus.$off()
     eventBus.$on('AnswerID2',(server)=>{
@@ -734,11 +835,15 @@ deactivated: function () {
         } else {
           // f.Alert('hlavni - zmena ', server.item)
           self.MAINMENULAST=server.item
+
           if (self.MAINMENULAST== 'kalkulace'){
             self.Seznam('nab')
+            self.FillFormWait(self.polozka_nab)
+
           } else
           if (self.MAINMENULAST== 'zakazky'){
             self.Seznam('zak')
+            self.FillFormWait(self.polozka_zak)
           }
 
 
@@ -982,6 +1087,13 @@ deactivated: function () {
   setInterval(function(){
     self.IsZmena()
   },1000)
+/* funguje je potreba domlyslet
+   $(document).on('keydown',`#tab_${self.ID} > tbody tr .num`,function (e) {
+    if (e.which === 40) {
+      $(this).parents("tr").next("tr").find('.num').focus();
+    }
+     });
+*/
 
   //Po startu se nacte seznam zakazek
         await self.Seznam('zak')
@@ -1089,15 +1201,70 @@ deactivated: function () {
  //  this.$destroy()
  },
  methods: {
+   async FillFormWait(polozka) {
+      const self = this
+      self.FillForm(polozka);
+
+      if (self.timeout){
+       clearTimeout(self.timeout)
+       self.timeout=false
+       return
+     }
+       self.timeout=setTimeout(function() {
+          self.FillForm(polozka);
+         //console.log("Render col ", self.TestRend )
+
+     }, 500)
+
+
+   },
+   async FillForm(polozka) {
+       const self = this
+
+       self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
+       if (self.MAINMENULAST=="zakazky") {
+         self.$refs.w1.form.cislo                = polozka.cislozakazky
+         self.polozka_zak=polozka
+         self.status=2
+       } else
+       if (self.MAINMENULAST=="kalkulace") {
+         self.$refs.w1.form.cislo                = polozka.cislonabidky
+         self.polozka_nab=polozka
+         self.status_nab=2
+       }
+
+
+
+       self.$refs.w1.form.nazev                = polozka.nazev
+       self.$refs.w1.form.idefix_firma         = polozka.idefix_firma
+       self.$refs.w1.form.idefix_osoba         = polozka.idefix_firma
+       self.$refs.w1.form.nazevfirmy           = polozka.firma
+       self.$refs.w1.form.idefix_obchodnik     = polozka.idefix_obchodnik
+       self.$refs.w1.form.idefix_produkce      = polozka.idefix_produkce
+       self.$refs.w1.form.obchodnik            = polozka.obchodnik
+       self.$refs.w1.form.produkce             = polozka.produkce
+       self.$refs.w1.form.osoba                = polozka.osoba
+
+       self.$refs.w1.form.datumzadani               = f.datum20(polozka.datumzadani)
+       self.$refs.w1.form.datumexpedice             = f.datum3(polozka.datumexpedice)
+
+       self.$refs.w1.form.vyrobapopis_print         = polozka.vyrobapopis_print
+       self.$refs.w1.form.poznamky                 = polozka.poznamky
+
+
+   },
    async to2Z(polozka) {
      const self = this
+      self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
 
      if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
-
-       self.obrazovka=2
+       self.status_zak=2
+       self.obrazovka_zak=2
 
        self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix}`)).data.data
-       //f.Alert(polozka.idefix, f.Jstr(self.polozky_zak))
+       await self.FillForm(polozka);
+       //self.$refs.w1.form.osoba   = polozka.idefix_firma
+       //f.Alert(polozka.idefix, f.Jstr(polozka))
 
 
      } else {
@@ -1110,11 +1277,10 @@ deactivated: function () {
    },
    async to3Z(polozka) {
       const self= this
-       self.obrazovka=3
+       self.obrazovka_zak=3
        //eventBus.$emit(666)
        //var a = (await Q.post(self.idefix,`drop table if exists ${self.cTable}`))
        // var b = (await Q.post(self.idefix,`create table ${self.cTable} without oids  asselect * from zak_t_items where idefix_zak = ${polozka.idefix_zak}`))
-
 
        //await  self.setZabalit()
 
@@ -1123,28 +1289,59 @@ deactivated: function () {
 
       f.Alert('3Z?')
    },
-   async to2N(polozka) {
-     const self = this
-     self.obrazovka=2
+   async to3N(polozka) {
+      const self= this
+       self.obrazovka_nab=3
+       //eventBus.$emit(666)
+       //var a = (await Q.post(self.idefix,`drop table if exists ${self.cTable}`))
+       // var b = (await Q.post(self.idefix,`create table ${self.cTable} without oids  asselect * from zak_t_items where idefix_zak = ${polozka.idefix_zak}`))
+
+       //await  self.setZabalit()
 
 
-     f.Alert(polozka.idefix)
+
+
+      f.Alert('3N?')
+   },
+  async to2N(polozka) {
+  const self = this
+      self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
+
+     if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
+       self.status_nab=2
+       self.obrazovka_nab=2
+
+       self.polozky_nab=  (await Q.all(self.idefix,`select * from nab_t_items where idefix_nab= ${polozka.idefix}`)).data.data
+       await self.FillForm(polozka);
+       //self.$refs.w1.form.osoba   = polozka.idefix_firma
+       //f.Alert(polozka.idefix, f.Jstr(polozka))
+
+
+     } else {
+       this.$notify( { title: self.MAINMENULAST,  message: `Chyba pri nacteni polozek` , type: 'error', offset: 100, duration: 3000 })
+
+     }
+
    },
    async Ulozit(kod=''){
      const self = this
-     await self.setVL(self.IDEFIXACTIVE,1)
+     //f.Alert(self.IDEFIXACTIVE, self.aKalkulace.length)
+    if (self.obrazovka_nab==3 || self.obrazovka_zak==3){
+      await self.setVL(self.IDEFIXACTIVE,1)
+    }
+
      var  data2= self.$refs.w1.form
      var q1=""
      var _idefix = 0
      if (kod=='n') {
        self.MAINMENULAST='kalkulace'
-       self.status=1; // Save AS nb - zakazku - zmena statusu na vklad
+       self.status_nab=1; // Save AS nb - zakazku - zmena statusu na vklad
        eventBus.$emit('setmenu',{setmenu: 'kalkulace'})
 
      } else
      if (kod=='z') {
        self.MAINMENULAST='zakazky'
-       self.status=1; // Save AS nb - zakazku - zmena statusu na vklad
+       self.status_zak=1; // Save AS nb - zakazku - zmena statusu na vklad
        eventBus.$emit('setmenu',{setmenu: 'zakazky'})
 
      }
@@ -1152,28 +1349,43 @@ deactivated: function () {
      f.Alert(kod, ' ',self.status )
 
      //return
+     /*
+     insert into nab_t_items ( kod, nazev, obsah, kcks, ks, naklad, marze, prodej, marze_pomer, expedice_datum
+     , expedice_cas, datum, poradi, id_src, active, idefix_src, idefix_zak, user_insert_idefix, user_update_idefix )
+     select kod, nazev, obsah, kcks, ks, naklad, marze, prodej, marze_pomer, expedice_datum
+     , expedice_cas, datum, poradi, id, active, idefix, 64078, 9, 9 from calc_my_9 where obsah::text >''
+     */
 
-     if (self.status==2){
+     if (true ||  self.status_zak==2){
 
-       if (self.MAINMENULAST=='kalkulace'){  //Tohle domyslet co vlastne vidim
+       if (self.status_nab==2 && self.MAINMENULAST=='kalkulace'){  //Tohle domyslet co vlastne vidim
+
            //self.$refs.w1.form.cislo
+           f.Alert2(`select * from nab_t_list where cislonabidky= ${self.$refs.w1.form.cislo}`, ' :: ', self.status_zak, ' :: ',self.status_nab)
            var c = (await Q.all(self.idefix,`select * from nab_t_list where cislonabidky= ${self.$refs.w1.form.cislo}`)).data.data[0]
 
            var qset=(await self.UpdateSet(data2))
            var q= `update nab_t_list ${qset} where idefix = ${c.idefix}`
            var d = (await Q.post(self.idefix,q))
 
+
            var iset=(await self.InsertSet(c.idefix))
            var del = (await Q.post(self.idefix,`delete from nab_t_items where obsah::text > '' and idefix_nab = ${c.idefix}`))
+
            var qitems = `insert into nab_t_items
              ${iset}
              from ${self.cTable} where obsah::text >''
            `
+           qitems=qitems.replace("idefix_zak","idefix_nab")
+           //f.Alert2(qitems)
            var e = (await Q.post(self.idefix,qitems))
+
            this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislonabidky}` , type: 'success', offset: 100, duration: 3000 })
-           self.status=2;
+           self.Seznam('nab')
+
+           self.status_nab=2;
        }
-       if (self.MAINMENULAST=='zakazky'){
+       if (self.status_zak==2 && self.MAINMENULAST=='zakazky'){
           //self.$refs.w1.form.cislo = c.cislo
           var c = (await Q.all(self.idefix,`select * from zak_t_list where cislozakazky= ${self.$refs.w1.form.cislo}`)).data.data[0]
 
@@ -1190,13 +1402,14 @@ deactivated: function () {
           `
           var e = (await Q.post(self.idefix,qitems))
           this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislozakazky}` , type: 'success', offset: 100, duration: 3000 })
-          self.status=2;
+          self.Seznam('zak')
+          self.status_zak=2;
 
        }
      }
-     if (self.status==1){
+     if (true || self.status==1){
 
-       if (self.MAINMENULAST=='kalkulace'){
+       if (self.status_nab==1 &&  self.MAINMENULAST=='kalkulace'){
          //f.Alert('Vlozim novou', self.MAINMENULAST )
 
          q1=`select * from nab_insert(newnab(${self.idefix}),${data2.idefix_firma}, '${data2.datumexpedice}')  `
@@ -1221,7 +1434,8 @@ deactivated: function () {
         `
         var e = (await Q.post(self.idefix,qitems))
         this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno ${ c.cislo}`, type: 'success', offset: 100, duration: 3000 })
-        self.status=2;
+        self.status_nab=2;
+        self.Seznam('nab')
 
 
         //Vlozit polozky z kalkulace
@@ -1229,7 +1443,7 @@ deactivated: function () {
 
 
        } else
-       if (self.MAINMENULAST=='zakazky'){
+       if (self.status_zak==1 && self.MAINMENULAST=='zakazky'){
         q1=`select * from zak_insert(newzak(${self.idefix}),${data2.idefix_firma}, '${data2.datumexpedice}')  `
          //f.Alert2(q1)
          //return
@@ -1254,7 +1468,8 @@ deactivated: function () {
         `
         var e = (await Q.post(self.idefix,qitems))
         this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno  ${ c.cislo}` , type: 'success', offset: 100, duration: 3000 })
-        self.status=2;
+        self.status_zak=2;
+        self.Seznam('zak')
 
 
 
@@ -1361,6 +1576,7 @@ deactivated: function () {
             qset+=`zamek               =  '${data2.zamek}',`  // pujde ci nepujde menit ?
             qset+=`login               =   idefix2login(${self.idefix}),`  // pujde ci nepujde menit ?
             qset+=`vyrobapopis_print   =  '${data2.vyrobapopis_print}',`  // pujde ci nepujde menit ?
+            qset+=`poznamky            =  '${data2.poznamky}',`  // pujde ci nepujde menit ?
             qset+=`idefix_obchodnik    =  '${data2.idefix_obchodnik}',`   // !!!!DULEZITE
             qset+=`idefix_produkce     =  '${data2.idefix_produkce}',`   // !!!!DULEZITE
             qset+=`idefix_last         =  '${data2.idefix_last}',`   // !!!!DULEZITE  - nova uprvou - originalni zakazka
@@ -1373,11 +1589,19 @@ deactivated: function () {
    },
 async Seznam(ceho = 'zak', where =''){
     const self=this
-     var q=`select a.*,b.nazev as firma,c.*  from ${ceho}_t_list a join list_dodavatel b on a.idefix_firma= b.idefix
+     var q=`select a.*,b.nazev as firma,c.*, osoba(o.idefix) as osoba
+            , idefix2fullname(idefix_obchodnik) as obchodnik
+            , idefix2fullname(idefix_produkce)  as produkce
+          from ${ceho}_t_list a
+          join list_dodavatel b on a.idefix_firma= b.idefix
+          left join list_firmaosoba o on a.idefix_firmaosoba = o.idefix
+
           join (
       	  select idefix_${ceho}, sum(naklad) as nakladsum, sum(prodej) as prodejsum from ${ceho}_t_items  group by idefix_${ceho}
       ) c on a.idefix = c.idefix_${ceho}
         order by a.idefix desc limit 100 `
+
+        //f.Alert2(q)
         if (ceho == 'zak'){
           self.seznam_zak = (await Q.all(self.idefix,q)).data.data
         }
@@ -1392,14 +1616,16 @@ async Seznam(ceho = 'zak', where =''){
    async Nova(){
      const self = this
      var c= 0
-     self.status=1
+
 
 
     if (self.MAINMENULAST=='zakazky')  {
+      self.status_zak=1
         var c = (await Q.all(self.idefix,`select newzak(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce`)).data.data[0]
         // `select newzak(9) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(9) as produkce`
     }
     if (self.MAINMENULAST=='kalkulace')  {
+      self.status_nab=1
         var c = (await Q.all(self.idefix,`select newnab(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce `)).data.data[0]
         //select newnab(9) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(9) as produkce
     }
