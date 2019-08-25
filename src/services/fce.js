@@ -1206,6 +1206,43 @@ isZmena(){
     return neco > 0
 },
 
+pof(max, proc) {
+  var neco = Math.round(max* proc/100) +''
+  neco = `width:${neco}px`
+  return neco
+
+  //alert(neco)
+},
+
+sirka(id="",npar=0) {
+  const self= this
+  var nret = 0
+
+    if (document.getElementById(id)) {
+      nret=document.getElementById(id).clientWidth
+      return nret
+
+      }
+      else
+
+      if (nret==0) {
+        setTimeout(function(){
+          if (npar< 2){
+            self.sirka(id,++npar)
+            nret=document.getElementById(id).clientWidth
+            console.log("Neni ID POKUS ? ",document.getElementById(id) , "  ", id, " npar ", npar, "sirka ", nret )
+            return nret
+          } else {
+          nret= screen.width
+          console.log("Neni ID - screen ? ",document.getElementById(id) , "  ", id )
+          return nret
+
+          }
+        },100)
+      }
+
+      return nret
+},
 
 }
 

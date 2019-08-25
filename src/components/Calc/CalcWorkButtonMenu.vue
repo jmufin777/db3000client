@@ -323,7 +323,7 @@
           v-if="aOsoba.length > 0 "
           class="elevation-12 teal"
           :id="fields['osoba'].nazev+'_list'"
-          :style="fields['osoba'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:none'"
+          :style="fields['osoba'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:block'"
           >
         <span style="display:none">FF {{ aOsoba.length}}</span>
 
@@ -781,7 +781,7 @@ deactivated: function () {
         return
       }
       if (!itemCela.hasOwnProperty('nazev')) {
-        f.Alert('prdka')
+        f.Alert('CVhybi pole nazev - error v aplikace')
         return
       }
       if (self.form.idefix_firma==0 && itemCela['idefix'] > 0  ) {
@@ -853,7 +853,7 @@ deactivated: function () {
  //     f.Alert('#'+self.fields['firma'].nazev+'_list')
       $('#'+self.fields['firma'].nazev+'_list').css('display','none')
       if (self.form.idefix_firma > 0 ) {
-         f.Alert(document.getElementById(self.fields['osoba']['nazev']),self.fields['osoba']['nazev'])
+         //f.Alert(document.getElementById(self.fields['osoba']['nazev']),self.fields['osoba']['nazev'])
          self.aOsoba=   await SQL.getFirmaOsoba(self.form.idefix_firma)
          // f.Alert('Stouram kontaky', self.fields['osoba']['nazev'], f.Jstr(self.aOsoba))
          $('#'+self.fields['osoba']['nazev']).focus()
