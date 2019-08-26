@@ -62,14 +62,18 @@
            <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%;" class="prava"><a @click="editF(form.idefix_firma)" ><b >Název firmy:</b></a></td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
-              <!-- <el-select v-model="form.idefix_firma"
-              v-if="aFirma.length>0 ||  true"
+              <el-select v-model="form.idefix_firma"
+              v-if="false && (aFirma.length>0 ||  true)"
               filterable clearable
               no-match-text="Nenalezeno"
               no-data-text="Cekam na data"
               default-first-option
               size="mini"  class="pt-0 pl-1"
+              remote
+              :remote-method="remoteMethod"
+              :loading="loading"
               @change="getOsoba()"
+
 
                 >
                 <el-option
@@ -81,7 +85,7 @@
               >{{item9.nazev}}</el-option>
             </el-select>
             <input v-else
-              type="text" size="mini"  style="width:90%"
+              type="text" size="mini"  style="width:90%;display:none"
               class="tdl tdn"
               @focus="fokus('osoba');fields['osoba'].ZobrazMenu=true"
               @blur="Opust('osoba');"
@@ -90,9 +94,9 @@
               :id="fields['osoba']['nazev']"
               v-model="form.nazevfirmy"
               READONLY
-              > -->
+              >
 
-              <input
+              <input v-if="true"
               type="text"
               :id="fields['firma']['nazev']"
               size="mini"
@@ -133,7 +137,7 @@
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Vyrobni listy:</td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
-           <tr>
+           <tr style="height:2.5em">
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">
                 <a @click="editK(form.idefix_firma);getOsoba()" >
                 Kontaktni osoba:
@@ -141,23 +145,29 @@
                 </td>
               <!-- <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"> -->
                 <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4">
+
               <el-select v-model="form.idefix_firmaosoba"
               v-if="aOsoba.length>0 ||  true"
               filterable clearable
               no-match-text="Nenalezeno"
               no-data-text="Cekam na data"
               default-first-option
-              size="mini"  class="pt-0 pl-1"
+              size="mini"  class="pt-0 pl-0 pa-0 ma-0"
+              :style="'width:90%;border-bottom:dotted 1px'"
+              popper-class="silver lighten-5"
+              placeholder="Osoba"
 
-                >
+
+              >
                 <el-option
-
                 v-for="item8 in aOsoba"
                 :key="item8.idefix"
                 :label="item8.nazev"
                 :value="item8.idefix"
+                style="font-size:13px"
               >{{item8.nazev}}</el-option>
             </el-select>
+
             <input v-else
               type="text" size="mini"  style="width:90%"
               class="tdl tdn"
@@ -169,6 +179,7 @@
               v-model="form.osoba"
               READONLY
               >
+
 
              <!-- {{ aOsoba}} -->
               <!-- <input v-else
@@ -808,7 +819,11 @@ deactivated: function () {
   //   return this.form
   // },
 
+async remoteMethod(query) {
+  const self=this
+  self.aFirma =  await SQL.getFirma(0,query, 50)
 
+},
   async   aktFirma(){
      const self= this
 
@@ -1535,7 +1550,9 @@ table tr td  {
 ::-ms-input-placeholder { /* Microsoft Edge */
   color: #ffffff;
 }
-
+.el-input, .el-input--mini,.el-input--suffix, .is-focus {
+  display:none
+}
 
 </style>
 

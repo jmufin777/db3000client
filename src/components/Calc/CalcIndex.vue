@@ -1360,6 +1360,9 @@ deactivated: function () {
        const self = this
 
        self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
+       //self.$refs.w1.aFirma=   await SQL.getFirmaOsoba(polozka.idefix_firma)
+       self.$refs.w1.aFirma=   await SQL.getFirma(0,polozka.firma,100000)
+
        self.$refs.w1.form.osoba =""
        if (self.MAINMENULAST=="zakazky") {
          self.$refs.w1.form.cislo                = polozka.cislozakazky
@@ -1429,16 +1432,20 @@ deactivated: function () {
    async to3Z(polozka) {
       const self= this
        self.obrazovka_zak=3
-       //eventBus.$emit(666)
+
+
+
+       eventBus.$emit(666)
        //var a = (await Q.post(self.idefix,`drop table if exists ${self.cTable}`))
-       // var b = (await Q.post(self.idefix,`create table ${self.cTable} without oids  asselect * from zak_t_items where idefix_zak = ${polozka.idefix_zak}`))
+       var qb=`create table ${self.cTable} without oids  as select * from zak_t_items where idefix_zak = ${polozka.idefix_zak}`
+       //var b = (await Q.post(self.idefix,qb))
 
        //await  self.setZabalit()
 
 
 
 
-      f.Alert('3Z?')
+      f.Alert2('3Z?', qb)
    },
    async to3N(polozka) {
       const self= this
