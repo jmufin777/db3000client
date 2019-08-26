@@ -14,7 +14,7 @@
            <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
            </span>
         </span>
-        {{ LastMain }} / {{ID}}
+        <!-- {{ LastMain }} / {{ID}} -->
       </div>
 
       <div v-if="setmenu==''" style="position:relative;top:0px;background:#e4eff8;text-align:left;height:3em;font-size:12px;">
@@ -62,6 +62,36 @@
            <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%;" class="prava"><a @click="editF(form.idefix_firma)" ><b >Název firmy:</b></a></td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
+              <!-- <el-select v-model="form.idefix_firma"
+              v-if="aFirma.length>0 ||  true"
+              filterable clearable
+              no-match-text="Nenalezeno"
+              no-data-text="Cekam na data"
+              default-first-option
+              size="mini"  class="pt-0 pl-1"
+              @change="getOsoba()"
+
+                >
+                <el-option
+
+                v-for="item9 in aFirma"
+                :key="item9.idefix"
+                :label="item9.nazev"
+                :value="item9.idefix"
+              >{{item9.nazev}}</el-option>
+            </el-select>
+            <input v-else
+              type="text" size="mini"  style="width:90%"
+              class="tdl tdn"
+              @focus="fokus('osoba');fields['osoba'].ZobrazMenu=true"
+              @blur="Opust('osoba');"
+              @click="getOsoba()"
+
+              :id="fields['osoba']['nazev']"
+              v-model="form.nazevfirmy"
+              READONLY
+              > -->
+
               <input
               type="text"
               :id="fields['firma']['nazev']"
@@ -105,12 +135,43 @@
             </tr>
            <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">
-                <a @click="editK(form.idefix_firma)" >
+                <a @click="editK(form.idefix_firma);getOsoba()" >
                 Kontaktni osoba:
                 </a>
                 </td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
-              <input
+              <!-- <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"> -->
+                <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4">
+              <el-select v-model="form.idefix_firmaosoba"
+              v-if="aOsoba.length>0 ||  true"
+              filterable clearable
+              no-match-text="Nenalezeno"
+              no-data-text="Cekam na data"
+              default-first-option
+              size="mini"  class="pt-0 pl-1"
+
+                >
+                <el-option
+
+                v-for="item8 in aOsoba"
+                :key="item8.idefix"
+                :label="item8.nazev"
+                :value="item8.idefix"
+              >{{item8.nazev}}</el-option>
+            </el-select>
+            <input v-else
+              type="text" size="mini"  style="width:90%"
+              class="tdl tdn"
+              @focus="fokus('osoba');fields['osoba'].ZobrazMenu=true"
+              @blur="Opust('osoba');"
+              @click="getOsoba()"
+
+              :id="fields['osoba']['nazev']"
+              v-model="form.osoba"
+              READONLY
+              >
+
+             <!-- {{ aOsoba}} -->
+              <!-- <input v-else
               type="text" size="mini"  style="width:90%"
               class="tdl tdn"
               @focus="fokus('osoba');fields['osoba'].ZobrazMenu=true"
@@ -118,10 +179,10 @@
               @click="fields['osoba'].ZobrazMenu=true"
               @keydown="fields['osoba'].ZobrazMenu ? seznam(fields['osoba']['nazev']+'_list_'+0,1,$event) : false"
               :id="fields['osoba']['nazev']"
-
               v-model="form.osoba"
-
-              ></td>
+              disabled="true"
+              > -->
+              </td>
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Doprava:</td>
@@ -319,7 +380,8 @@
           </table>
         </div>
 
-       <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none"
+       <!-- <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none" -->
+       <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:block"
           v-if="aOsoba.length > 0 "
           class="elevation-12 teal"
           :id="fields['osoba'].nazev+'_list'"
@@ -832,7 +894,10 @@ deactivated: function () {
 
 
  },
-
+ async getOsoba()  {
+   const self=this
+   self.aOsoba=   await SQL.getFirmaOsoba(self.form.idefix_firma)
+ },
  async setOsoba(itemCela){
       const self = this
 
@@ -1063,6 +1128,10 @@ deactivated: function () {
           status= true;
           objSeznam= document.getElementById(id)
         //  self.info.push("OK")
+      } else {
+
+        this.$notify( { title: 'Hledani ',  message: 'Seznam '+id+ ' neni' , type: 'error', offset: 100, duration: 1000 })
+        return
       }
 
 
@@ -1352,6 +1421,7 @@ deactivated: function () {
     if (aktualni == cfield){
     //if (self.lastFocus.substr(0,4)=='naze'){
        self.fields[cid].ZobrazMenu=true
+       //self.fields[cid].ZobrazMenu=false
      } else {
         self.fields[cid].ZobrazMenu=false
 
@@ -1375,7 +1445,7 @@ textarea:focus, input:focus{
 }
 a:focus {
   color:black;
-  zoom:105%;
+  zoom:101%;
   font-weight:900;
 
 }

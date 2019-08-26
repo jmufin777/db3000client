@@ -51,12 +51,13 @@
     <!-- {{aKalkulace}} -->
     <!-- <div   slot="kalkulace" style="position:fixed;width:100%;top:40em;overflow:scroll;height:70%;text-align:left;left:40px" id="obalKalkulaceButtons">
     </div> -->
-<div  v-if="obrazovka_zak==1 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:23em;overflow:scroll;height:70%;max-height:600px" id="obalKalkulace"  class="stred">
+<div  v-if="obrazovka_zak==1 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%;max-height:600px" id="obalKalkulace"  class="stred">
 
   <div style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999">
       <span style="color:red; font-size:10em">1Z</span>
   </div>
-  <div class="leva" >
+  <div class="leva blue lighten-5" :style="f.pof( Sirka,98)" style="position:relative;" >
+
 
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
         @click="to2Z(polozka_zak)"
@@ -74,10 +75,20 @@
      >
         NICKA
     </button>
+    <span class="elevation-0 ml-4 pr-2 pb-0 pt-0" style="position:absolute;border-radius:0px 0px 0px 0px;background:#e4eff8;right:30%">
+           Rok:<input   v-model="search_zak_rok"   type="number" class="white px-0 "  style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black"  @keyup="Seznam('zak')">
+           Cislo:<input v-model="search_zak_cislo" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black" @keyup="Seznam('zak')">
+           Neco:<input  v-model="search_zak"       type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black" @keyup="Seznam('zak')" >
+
+           <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+           <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
+           </span>
+
+    </span>
 
 </div>
 
-  <ta-ble3  :h="'530px;'+f.pof( Sirka,99)+';top:0px'"  :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'" :TopA="'top:28px'" :TopB="'height:28px'" :id="'tab_'+ID">
+  <ta-ble3  :h="'530px;'+f.pof( Sirka,99)+';top:1px'"  :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'" :TopA="'top:28px'" :TopB="'height:28px'" :id="'tab_'+ID">
   <table slot="head"  :style="f.pof(Sirka,98)"  >
     <thead class="c-1 tdline">
 
@@ -116,7 +127,7 @@
   </ta-ble3>
 </div>
 
-<div  v-if="obrazovka_zak==2 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:23em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
+<div  v-if="obrazovka_zak==2 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
 <!-- {{polozky_zak}} -->
 <div style="position:fixed; top:30em;right:30%;opacity:0.5">
       <span style="color:red; font-size:10em">2Z</span>
@@ -141,11 +152,6 @@
 </div>
 
 
-<button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-          @click="obrazovka_zak=1"
-          >
-          Kniha
-          </button>
   <table style="width:70%">
     <thead>
       <th>Ikony</th>
@@ -174,13 +180,14 @@
 
 </div>
 
-<div  v-if="obrazovka_nab==1 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:23em;overflow:scroll;height:70%" id="obalKalkulace">
+<div  v-if="obrazovka_nab==1 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%" id="obalKalkulace">
   <!-- Seznam N {{MAINMENULAST}}
   Seznam Z {{MAINMENULAST}} -->
   <div style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999">
       <span style="color:red; font-size:10em;">1N</span>
   </div>
-  <div class="leva">
+
+   <div class="leva cyan lighten-5" :style="f.pof( Sirka,98)" style="position:relative;" >
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
         @click="to2N(polozka_nab)"
         v-if="!f.isEmpty(polozka_nab)"
@@ -197,6 +204,17 @@
      >
         NICKA
     </button>
+        <span class="elevation-0 ml-4 pr-2 pb-0 pt-0 " style="position:absolute;border-radius:0px 0px 0px 0px;background:#e4eff8;right:30%">
+           Rok:<input    v-model="search_nab_rok"   type="number" class="white px-0 "  style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black"  @keyup="Seznam('nab')">
+           Cislo:<input v-model="search_nab_cislo" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black" @keyup="Seznam('nab')">
+           Neco:<input  v-model="search_nab"       type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black" @keyup="Seznam('nab')" >
+
+
+           <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+           <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
+           </span>
+
+    </span>
 </div>
 
   <ta-ble3  :h="'530px;'+f.pof( Sirka,99)+';top:0px'"  :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'" :TopA="'top:28px'" :TopB="'height:28px'" :id="'tab_'+ID">
@@ -239,7 +257,7 @@
 
 
 </div>
-<div  v-if="obrazovka_nab==2 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:23em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
+<div  v-if="obrazovka_nab==2 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
 <!-- {{polozky_zak}} -->
 <div style="position:fixed; top:30em;right:30%;opacity:0.3">
       <span style="color:red; font-size:10em">2N</span>
@@ -288,7 +306,7 @@
   </table>
 </div>
 
-<div  v-if="(obrazovka_nab==3 && MAINMENULAST=='kalkulace')  || (obrazovka_zak==3 && MAINMENULAST=='zakazky')" slot="kalkulace" style="position:fixed;width:100%;top:23em;overflow:scroll;height:70%" id="obalKalkulace">
+<div  v-if="(obrazovka_nab==3 && MAINMENULAST=='kalkulace')  || (obrazovka_zak==3 && MAINMENULAST=='zakazky')" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%" id="obalKalkulace">
   <div class="leva pt-0 pb-2">
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer" v-if="MAINMENULAST=='kalkulace'"
         @click="obrazovka_nab=1"
@@ -806,6 +824,10 @@ export default {
 
      search_zak:"",
      search_nab:"",
+     search_zak_rok:"",
+     search_nab_rok:"",
+     search_zak_cislo:"",
+     search_nab_cislo:"",
      order_zak:"",
      order_nab:"",
      desc_zak:"",
@@ -1201,6 +1223,9 @@ deactivated: function () {
   setInterval(function(){
     self.IsZmena()
   },1000)
+  var xd = new Date()
+  self.search_nab_rok= xd.getFullYear()
+  self.search_zak_rok= xd.getFullYear()
 /* funguje je potreba domlyslet
    $(document).on('keydown',`#tab_${self.ID} > tbody tr .num`,function (e) {
     if (e.which === 40) {
@@ -1335,6 +1360,7 @@ deactivated: function () {
        const self = this
 
        self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
+       self.$refs.w1.form.osoba =""
        if (self.MAINMENULAST=="zakazky") {
          self.$refs.w1.form.cislo                = polozka.cislozakazky
          self.polozka_zak=polozka
@@ -1350,7 +1376,7 @@ deactivated: function () {
 
        self.$refs.w1.form.nazev                = polozka.nazev
        self.$refs.w1.form.idefix_firma         = polozka.idefix_firma
-       self.$refs.w1.form.idefix_osoba         = polozka.idefix_firma
+       self.$refs.w1.form.idefix_firmaosoba    = polozka.idefix_firmaosoba
        self.$refs.w1.form.nazevfirmy           = polozka.firma
        self.$refs.w1.form.idefix_obchodnik     = polozka.idefix_obchodnik
        self.$refs.w1.form.idefix_produkce      = polozka.idefix_produkce
@@ -1524,7 +1550,7 @@ deactivated: function () {
           var q= `update zak_t_list ${qset} where idefix = ${c.idefix}`
           var d = (await Q.post(self.idefix,q))
           //Vlozit (zmenit ) polozky z kalkulace
-          f.Alert(self.cTable)
+          // f.Alert(self.cTable)
           var iset=(await self.InsertSet(c.idefix))
           var del = (await Q.post(self.idefix,`delete from zak_t_items where obsah::text > '' and idefix_zak = ${c.idefix}`))
           var qitems = `insert into zak_t_items
@@ -1543,12 +1569,12 @@ deactivated: function () {
        if (self.status_nab==1 &&  self.MAINMENULAST=='kalkulace'){
          //f.Alert('Vlozim novou', self.MAINMENULAST )
 
-         q1=`select * from nab_insert(newnab(${self.idefix}),${data2.idefix_firma}, '${data2.datumexpedice}')  `
+         q1=`select * from nab_insert(${self.idefix},${data2.idefix_firma}, '${data2.datumexpedice}')  `
         if (!self.ZpravaValidace(data2)) {
           return
         }
-         f.Alert2(q1)
-         return
+        // f.Alert2(q1)
+        // return
         var c = (await Q.all(self.idefix,q1)).data.data[0]
 
         self.$refs.w1.form.cislo = c.cislo
@@ -1578,7 +1604,7 @@ deactivated: function () {
 
        } else
        if (self.status_zak==1 && self.MAINMENULAST=='zakazky'){
-        q1=`select * from zak_insert(newzak(${self.idefix}),${data2.idefix_firma}, '${data2.datumexpedice}')  `
+        q1=`select * from zak_insert(${self.idefix},${data2.idefix_firma}, '${data2.datumexpedice}')  `
          //f.Alert2(q1)
          //return
 
@@ -1762,6 +1788,11 @@ deactivated: function () {
 async Seznam(ceho = 'zak', where ='', orderby=''){
     const self=this
     var desc=""
+
+    var cWhereRow=""
+    var cWhereCislo=""
+    var cWhereRok=""
+    var cislo=""
      var q=`select a.*,b.nazev as firma,c.*, osoba( coalesce(o.idefix,0)) as osoba
             , idefix2fullname(idefix_obchodnik) as obchodnik
             , idefix2fullname(idefix_produkce)  as produkce
@@ -1773,9 +1804,29 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
           left join (
       	  select idefix_${ceho}, sum(naklad) as nakladsum, sum(prodej) as prodejsum from ${ceho}_t_items  group by idefix_${ceho}
       ) c on a.idefix = c.idefix_${ceho}`
+
         //order by a.idefix desc limit 100 `
         q= `select * from (${q}) a `
+
         if (ceho == 'zak') {
+
+
+          cislo=  "cislozakazky"
+          if (self.search_zak >'') {
+              cWhereRow= self.search_zak
+          }
+          if (self.search_zak_rok >'') {
+              cWhereRok= self.search_zak_rok
+          }
+          if (self.search_zak_cislo >'') {
+              cWhereCislo= self.search_zak_cislo
+          }
+          if(f.isEmpty(orderby) && self.order_zak>'' ){
+            //f.Alert2("TED",self.order_zak, ' b: ', orderby )
+            orderby = self.order_zak
+            desc    = self.desc_zak
+          }
+          else
           if (self.order_zak == orderby){
               if (self.desc_zak==''){
                 self.desc_zak='desc'
@@ -1787,9 +1838,27 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
             self.order_zak=orderby
             self.desc_zak=''
           }
+
           desc = self.desc_zak
         }
         if (ceho == 'nab') {
+          //where podmninka
+          cislo=  "cislonabidky"
+          if (self.search_nab >'') {
+              cWhereRow= self.search_nab
+          }
+          if (self.search_nab_rok >'') {
+              cWhereRok= self.search_nab_rok
+          }
+          if (self.search_nab_cislo >'') {
+              cWhereCislo= self.search_nab_cislo
+          }
+          if(f.isEmpty(orderby) && self.order_nab>'' ){
+            //f.Alert2("TED",self.order_zak, ' b: ', orderby )
+            orderby = self.order_nab
+            desc    = self.desc_nab
+          }
+          else
           if (self.order_nab == orderby){
 
               if (self.desc_nab==''){
@@ -1803,18 +1872,44 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
             self.order_nab=orderby
             self.desc_nab=''
           }
+
           desc = self.desc_nab
         }
 
+        //where to_aascii(row(a.*)::text)  ilike '%ruzi%'
+
+        // f.Alert2(orderby)
+
         if (orderby >'') {
-         q= `select * from (${q}) a order by ${orderby} ${desc}`
+          if (orderby=="cislozakazky" || orderby=="cislonabidky"){
+            q= `select * from (${q}) a order by right(${orderby},5) ${desc}`
+          } else {
+            q= `select * from (${q}) a order by ${orderby} ${desc}`
 
+          }
+        } else {
+          q= `select * from (${q}) a order by a.idefix desc`
+            //f.Alert2(q)
         }
+        if (cWhereRok>''){
+           /// cWhereRow= `where to_aascii(row(a.*)::text)  ilike '%ruzi%'`
+           q= `select * from (${q}) a  where left(${cislo},2) = right(${cWhereRok},2)`
+           //f.Alert2(q)
+        }
+        if (cWhereCislo>''){
+           /// cWhereRow= `where to_aascii(row(a.*)::text)  ilike '%ruzi%'`
+           q= `select * from (${q}) a  where right(${cislo},5)::bigint = right(${cWhereCislo},5)::bigint`
+           // f.Alert2(q)
+        }
+        if (cWhereRow>''){
+           /// cWhereRow= `where to_aascii(row(a.*)::text)  ilike '%ruzi%'`
+           q= `select * from (${q}) a  where to_aascii(row(a.*)::text)  ilike '%${cWhereRow}%'`
+           //f.Alert2(q)
+        }
+        q= `select * from (${q}) a limit 200 `
 
-        q= `select * from (${q}) a limit 10 `
 
-
-        // f.Alert2(q)
+         //f.Alert2(q)
         if (ceho == 'zak'){
           self.seznam_zak = (await Q.all(self.idefix,q)).data.data
         }
