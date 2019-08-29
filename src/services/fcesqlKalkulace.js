@@ -554,6 +554,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
   var defer = $.Deferred();
   var idefix=store.state.idefix
 
+
   var q= `select
           a.idefix,
           a.nazev,
@@ -597,7 +598,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
       }
     }  catch(e) {
       defer.resolve(atmp)
-      f.Alert2('Chyba  getTemplatesUser', e )
+      f.Alert2('Chyba  getTemplatesUser', e,q )
     }
 
     //f.Info('Get User 1',JSON.stringify(atmp))

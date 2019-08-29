@@ -68,10 +68,10 @@
         Polozky 2Z
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-        @click="to3Z(polozka_zak)"
+        @click="to3Z(polozka_zak,1)"
         v-if="!f.isEmpty(polozka_zak)"
         >
-        3Z
+        3Z A
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden"
      >
@@ -142,10 +142,10 @@
         Kniha 1Z
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-        @click="to3Z(polozka_zak)"
+        @click="to3Z(polozka_zak,1)"
         v-if="!f.isEmpty(polozka_zak)"
         >
-        3Z
+        3Z A
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden"
      >
@@ -167,7 +167,7 @@
 
     </thead>
     <tbody>
-      <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"  @click="to3Z(polozka2)" style="cursor:pointer">
+      <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"  @click="to3Z(polozka2,2)" style="cursor:pointer">
       <td>Ikony</td>
       <td>Práce</td>
       <td>Dodavatel</td>
@@ -197,10 +197,10 @@
         Polozky 2N
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-        @click="to3N(polozka_nab)"
+        @click="to3N(polozka_nab,1)"
         v-if="!f.isEmpty(polozka_nab)"
         >
-        3N
+        3N A
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden"
      >
@@ -271,10 +271,10 @@
         Kniha 1N
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-        @click="to3N(polozka_nab)"
+        @click="to3N(polozka_nab,1)"
         v-if="!f.isEmpty(polozka_nab)"
         >
-        3N
+        3N A
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden"
      >
@@ -294,7 +294,7 @@
       <th>Text na faktuře</th>
     </thead>
     <tbody>
-      <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"  @click="to3N(polozka2)" style="cursor:pointer">
+      <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"  @click="to3N(polozka2,2)" style="cursor:pointer">
       <td>Ikony</td>
       <td>Práce</td>
       <td>Dodavatel</td>
@@ -808,7 +808,7 @@ export default {
      IDEFIXACTIVELAST:0,
      NAZEVACTIVE:'',
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
-     MAINMENULAST:'',
+     MAINMENULAST:'zakazky',
      obrazovka_nab:1,
      obrazovka_zak:1,
      status:0,  //status pro ulozeni 1 = nova
@@ -1006,6 +1006,8 @@ deactivated: function () {
          $("#Zmenad").get(0).value=0
          self.$store.dispatch('cleanKalk')
          self.aKalkulace=[]
+
+
 
          //self.aKalkulace =  JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
 
@@ -1227,6 +1229,13 @@ deactivated: function () {
   this.aKalkulace = this.$store.state.Kalkulace
 
 
+if (self.MAINMENULAST== 'zakazky'){
+      self.cTable = 'calc_my_' + self.idefix+"_zak"
+  }
+  if (self.MAINMENULAST== 'kalkulace'){
+      self.cTable = 'calc_my_' + self.idefix+"_nab"
+  }
+//f.Alert('tab  ', self.cTable, self.MAINMENULAST)
 
   self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
   await self.setIdefixActive()
@@ -1247,12 +1256,6 @@ deactivated: function () {
 
   //Po startu se nacte seznam zakazek
   await self.Seznam('zak')
-  if (self.MAINMENULAST== 'zakazky'){
-      self.cTable = 'calc_my_' + self.idefix+"_zak"
-  }
-  if (self.MAINMENULAST== 'kalkulace'){
-      self.cTable = 'calc_my_' + self.idefix+"_nab"
-  }
 
   self.Sirka=  Math.ceil((window.innerWidth ) * 0.9)
   //f.Alert("1",  self.cTable)
@@ -1428,56 +1431,111 @@ deactivated: function () {
    async to2Z(polozka) {
      const self = this
       self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
-
      if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
        self.status_zak=2
        self.obrazovka_zak=2
-
        self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix}`)).data.data
        await self.FillForm(polozka);
        //self.$refs.w1.form.osoba   = polozka.idefix_firma
        //f.Alert(polozka.idefix, f.Jstr(polozka))
-
-
      } else {
        this.$notify( { title: self.MAINMENULAST,  message: `Chyba pri nacteni polozek` , type: 'error', offset: 100, duration: 3000 })
-
      }
-
-
-
    },
-   async to3Z(polozka) {
+
+   async to3N(polozka,odkud=1) {
       const self= this
-       self.obrazovka_zak=3
+      var idfx = 0
+      var idfxKalkulace=0
+      self.obrazovka_nab=3
 
+      if (odkud == 2) {
+   //     f.Alert('2 --  ',f.Jstr(polozka.idefix_nab))
+        idfxKalkulace = polozka.idefix
+        idfx=polozka.idefix_nab
+      } else
+      if (odkud == 1) {
+        idfx=polozka.idefix
+      }
+      //f.Alert('3 --  ', idfx)
+      await self.to3(polozka,'nab', idfx, idfxKalkulace)
+   },
 
+   async to3Z(polozka,odkud=1){
+      const self= this
+      var idfx = 0
+      var idfxKalkulace=0
+      self.obrazovka_zak=3
+
+      if (odkud == 2) { //Polozky
+        idfxKalkulace = polozka.idefix
+        idfx=polozka.idefix_zak
+
+      } else
+      if (odkud == 1) {
+
+        idfx=polozka.idefix
+      }
+      //  f.Alert('3 --  ', idfx)
+
+      // if (!f.isEmpty(polozka.idefix_zak)) {
+      //   idfx=polozka.idefix_zak
+      // } else {
+      //   idfx=polozka.idefix
+
+      // }
+
+      await self.to3(polozka,'zak', idfx,  idfxKalkulace )
+   },
+   async to3(polozka,typ='zak', idfx=0, idfxKalkulace) {
+      const self= this
+
+//      f.Alert('to3  ', idfx)
+
+       //eventBus.$emit('MenuHlavni', {key: 666 })
+       //if ()
+         self.$store.dispatch('cleanKalk')
+         self.aKalkulace=[]
+         self.aKalkBefore=[]
+         self.aKalkAfter=[]
+         this.$store.dispatch('setKalk',-1)
+         self.KalkulaceLast = -1
+         self.IDEFIXACTIVE=0
 
        //eventBus.$emit(666)
        //var a = (await Q.post(self.idefix,`drop table if exists ${self.cTable}`))
-       /*
-       drop table if exists ${self.cTable} ;drop sequence if exists ${self.cTable}_seq
+       //;create table ${self.cTable} without oids as select * from calc_templates limit 0
+       //  ;alter table ${self.cTable} add poradi serial
+       //  ;alter table ${self.cTable} add active bool default false
+       //  ;alter table ${self.cTable} add idefix_src bigint default 0
+       var qb=`drop table if exists ${self.cTable} ;drop sequence if exists ${self.cTable}_seq
          ;create sequence ${self.cTable}_seq
-         ;create table ${self.cTable} without oids as select * from calc_templates limit 0
-         ;alter table ${self.cTable} add poradi serial
-         ;alter table ${self.cTable} add active bool default false
-         ;alter table ${self.cTable} add idefix_src bigint default 0
+         ;create table ${self.cTable} without oids  as select * from ${typ}_t_items where idefix_${typ} = ${idfx}
+
          ;alter table ${self.cTable} alter idefix  set default nextval('list2_seq')
          ;alter table ${self.cTable} alter id set default nextval('${self.cTable}_seq')
-         */
+        `
        //f.Alert2(f.Jstr(polozka))
-       var qb=`create table ${self.cTable} without oids  as select * from zak_t_items where idefix_zak = ${polozka.idefix}`
-       f.Alert2(qb);
-       //var b = (await Q.post(self.idefix,qb))
+       //var qb=`create table ${self.cTable} without oids  as select * from zak_t_items where idefix_zak = ${polozka.idefix}`
 
-       //await  self.setZabalit()
+       var b = (await Q.post(self.idefix,qb))
+       //f.Alert2( qb);
+       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+       //f.Alert(f.Jstr(self.aKalkBefore))
+       await self.setZabalit()
+       if (idfxKalkulace>0) {
+         await  self.setRozbalit(idfxKalkulace)
+       }
+
+       $("#Zmenad").get(0).value=0
+
 
 
 
 
       // f.Alert2('3Z?', qb)
    },
-   async to3N(polozka) {
+   async to3Nxxx(polozka) {
       const self= this
        self.obrazovka_nab=3
        //eventBus.$emit(666)
@@ -1487,7 +1545,8 @@ deactivated: function () {
        //await  self.setZabalit()
        var qb=`create table ${self.cTable} without oids  as select * from nab_t_items where idefix_nab = ${polozka.idefix}`
        //f.Alert2(qb);
-       //var b = (await Q.post(self.idefix,qb))
+       var b = (await Q.post(self.idefix,qb))
+
 
 
       f.Alert2('3N?' , qb)
@@ -1515,9 +1574,13 @@ deactivated: function () {
    async Ulozit(kod=''){
      const self = this
      //f.Alert(self.IDEFIXACTIVE, self.aKalkulace.length)
-    if (self.obrazovka_nab==3 || self.obrazovka_zak==3){
+    if (self.obrazovka_nab==3  && self.MAINMENULAST=='kalkulace'){
       await self.setVL(self.IDEFIXACTIVE,1)
     }
+    if (self.obrazovka_zak==3  && self.MAINMENULAST=='zakazky'){
+      await self.setVL(self.IDEFIXACTIVE,1)
+    }
+
 
      var  data2= self.$refs.w1.form
      var q1=""
@@ -1558,6 +1621,10 @@ deactivated: function () {
            }
            var q= `update nab_t_list ${qset} where idefix = ${c.idefix}`
            var d = (await Q.post(self.idefix,q))
+           var dporadi=`update ${self.cTable} set poradi = id where poradi is null`
+          //f.Alert('ZakTus' ,dporadi)
+          var uporadi = (await Q.post(self.idefix,dporadi))
+
 
 
            var iset=(await self.InsertSet(c.idefix))
@@ -1577,7 +1644,7 @@ deactivated: function () {
            self.status_nab=2;
        }
        if (self.status_zak==2 && self.MAINMENULAST=='zakazky'){
-         //f.Alert('ZakTus')
+
           //self.$refs.w1.form.cislo = c.cislo
 
           var c = (await Q.all(self.idefix,`select * from zak_t_list where cislozakazky= ${self.$refs.w1.form.cislo}`)).data.data[0]
@@ -1589,12 +1656,16 @@ deactivated: function () {
           var d = (await Q.post(self.idefix,q))
           //Vlozit (zmenit ) polozky z kalkulace
           // f.Alert(self.cTable)
+          var dporadi=`update ${self.cTable} set poradi = id where poradi is null`
+          //f.Alert('ZakTus' ,dporadi)
+          var uporadi = (await Q.post(self.idefix,dporadi))
           var iset=(await self.InsertSet(c.idefix))
           var del = (await Q.post(self.idefix,`delete from zak_t_items where obsah::text > '' and idefix_zak = ${c.idefix}`))
           var qitems = `insert into zak_t_items
             ${iset}
             from ${self.cTable} where obsah::text >''
           `
+          //f.Alert2(qitems)
           var e = (await Q.post(self.idefix,qitems))
           this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislozakazky}` , type: 'success', offset: 100, duration: 3000 })
           self.Seznam('zak')
@@ -1621,6 +1692,9 @@ deactivated: function () {
         var qset=(await self.UpdateSet(data2))
         var q= `update nab_t_list ${qset} where idefix = ${c.idefix}`
         var d = (await Q.post(self.idefix,q))
+        var dporadi=`update ${self.cTable} set poradi = id where poradi is null`
+          //f.Alert('ZakTus' ,dporadi)
+        var uporadi = (await Q.post(self.idefix,dporadi))
 
 
         var iset=(await self.InsertSet(c.idefix, 'idefix_nab'))
@@ -1668,6 +1742,9 @@ deactivated: function () {
 
         //Vlozit (zmenit ) polozky z kalkulace
         //f.Alert(self.cTable)
+        var dporadi=`update ${self.cTable} set poradi = id where poradi is null`
+          //f.Alert('ZakTus' ,dporadi)
+        var uporadi = (await Q.post(self.idefix,dporadi))
         var iset=(await self.InsertSet(c.idefix))
         var del = (await Q.post(self.idefix,`delete from zak_t_items where obsah::text > '' and idefix_zak = ${c.idefix}`))
         var qitems = `insert into zak_t_items
@@ -1709,11 +1786,13 @@ deactivated: function () {
    },
    ZpravaValidace(data2) {
      var zpravatxt=""
-         if (f.isEmpty(data2.nazevfirmy)) {
+         //if (f.isEmpty(data2.nazevfirmy)) {
+        if (f.isEmpty(data2.idefix_firma)) {
            zpravatxt+= ', Firma '
            eventBus.$emit("Focus",{pole: 'firma'})
 
          }
+
          if (f.isEmpty(data2.idefix_obchodnik)) {
            zpravatxt+= ', Obchodnik '
         }
@@ -1798,7 +1877,7 @@ deactivated: function () {
 
             qset+=`vl_rozsah           =  '',`  // vymenit za funkci
             qset+=`idefix_firma        =  ${data2.idefix_firma},`  // pujde ci nepujde menit ?
-            qset+=`idefix_firmaosoba   =  ${data2.idefix_firmaosoba},`  // pujde ci nepujde menit ?
+            qset+=`idefix_firmaosoba   =  coalesce(${data2.idefix_firmaosoba},0),`  // pujde ci nepujde menit ?
             qset+=`nazev               =  '${data2.nazev}',`  // pujde ci nepujde menit ?
             qset+=`cisloobjednavky     =  '${data2.cisloobjednavky}',`  // pujde ci nepujde menit ?
             qset+=`cislofaktury        =  '${data2.cislofaktury}',`  // pujde ci nepujde menit ?

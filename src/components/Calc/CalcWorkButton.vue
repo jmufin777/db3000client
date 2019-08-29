@@ -43,7 +43,7 @@
       </td>
       <!-- ;seznamPoz('seek'+ID2) //-->
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 0px white;width:40em;height:28px" class="honza_color" >
-          <input type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '" class="honza_text"
+       <input type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '" class="honza_text"
         :id="'seek'+ID2"
         :IDEFIX="'seek'+IDEFIX"
         @focus="fokus('seek'+ID2);showTemplates=true"
@@ -52,7 +52,7 @@
         @keydown="showTemplates=ZobrazMenu;ZobrazMenu ? seznam('seek'+ID2+'_list_'+0,1,$event) : false"
         :title="(form.nazev>'')?'Text na fakture':''"
         >
-        cale {{cTable}}
+        <!-- cale {{cTable}} -->
       </td>
       <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em;height:28px" class="honza_color" >
         <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%" >
