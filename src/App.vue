@@ -260,6 +260,43 @@ div[role="region"] {
     border-right: 1px !important;
     font-size: 12px !important ;
 }
+.el-input
+{
+  font-size:13px;
+  font-weight: bold;
+
+  height:10px;
+  padding-top:0px;
+  padding-left:0px;
+  padding-bottom:10px;
+  position:relative;
+  top:-5px;
+  left:-1em;
+}
+
+ .el-input--mini, .el-input--suffix, .is-focus, .el-input__inner, .el-input__suffix,  .el-input__suffix-inner,  .el-input__icon, .el-icon-arrow-up, .is-reverse {
+
+
+
+ }
+
+.el-input__inner {
+  border:none;
+  border-bottom: dotted 1px ;
+  border-radius: 0px;
+  font-size: 13px;
+  font-weight: bold;
+
+}
+.el-select__caret {
+  position: relative;
+  top: 15px !important;
+  left: -15px !important;
+}
+
+
+
+
 .h-1 {
   height:0.1px;
   font-size:0.1px

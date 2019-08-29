@@ -7,7 +7,7 @@
     <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
      <div >
       <input type="hidden" id="Zmenad" value="0" class="black white--text" style="width:100px">
-      <work-but-menu :ID="ID" ref="w1">
+      <work-but-menu :ID="ID" ref="w1" >
         <span slot="tlacitkazakazky">
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="Nova()"
@@ -20,8 +20,10 @@
           Ulozit
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+          @click="Nova(true)"
           >
           Nova upravou
+
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           >
@@ -339,9 +341,7 @@
 <div style="position:fixed; top:30em;right:30%;opacity:0.5">
       <span v-if="MAINMENULAST=='zakazky'   && obrazovka_zak == 3" style="color:red; font-size:10em">3Z</span>
       <span v-if="MAINMENULAST=='kalkulace' && obrazovka_nab == 3" style="color:red; font-size:10em">3N</span>
-  </div>
-
-
+</div>
 
    <div v-cloak v-for="(aBefore,iBefore ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix<IDEFIXACTIVE || IDEFIXACTIVE==0) })" :key="iBefore"
      slot="kalkulace"
@@ -353,14 +353,15 @@
       :dataDB="aBefore"
       :ID2="ID+iBefore"
       :IDEFIX="+aBefore.idefix"
+
       :key="'AWB_'+iBefore+''+idRend"
       style="position:relative;left:4px"
+      :cTable="cTable"
        ></work-but>
         <!-- / {{aBefore.idefix }} -->
    </div>
 
   <div v-cloak v-for="idxK in 1" :key="'x'+idxK" slot="kalkulace"  >
-
         <work v-cloak slot="kalkulace" :typid="1" :kalkulkaceid="iKalk.kalkulkaceid"  :Poradi="0" v-for="(iKalk ,iK) in aKalkulace" :key="iK" class="myska" >
           <span v-if="iK==0"  slot="tlacitka" style="position:relative;left:4px">
             <!-- ||  IDEFIXACTIVE==0 -->
@@ -370,6 +371,7 @@
             :ZobrazMenu="true" :isOpen="true"
             :key="'AWC_'+iK+''+idRend"
             :IDEFIXACTIVE="IDEFIXACTIVE"
+            :cTable="cTable"
             >
           </work-but>
 
@@ -383,6 +385,7 @@
            :ZobrazMenu="true"
            :isOpen="true"
            :key="'AWD_'+iBefore1+''+idRend+''+900000"
+           :cTable="cTable"
            ></work-but>
             <!-- NAD {{IDEFIXACTIVE}} {{ NAZEVACTIVE }} -->
 
@@ -396,6 +399,7 @@
             :ID2="ID+999666"
             :IDEFIX="IDEFIXACTIVE"
             :IDEFIXACTIVE="IDEFIXACTIVE"
+
 
 
             >
@@ -448,6 +452,7 @@
       :IDEFIX="+aBefore2.idefix"
       :IDEFIXACTIVE="IDEFIXACTIVE"
       :key="'AWE_'+iBefore2+''+idRend"
+      :cTable="cTable"
        ></work-but>
        <!-- POD {{IDEFIXACTIVE}} / {{aBefore2.idefix }} -->
    </div>
@@ -855,7 +860,7 @@ beforeDestroy: function () {
     //f.Alert('Nazdar bazer dest')
 },
 deactivated: function () {
-     //f.Alert('Nazdar bazer 2 INDEX')
+
      // eventBus.$off('MenuHlavni')
      // eventBus.$off('MenuLeft')
      // eventBus.$off('SAVETEMPLATE')
@@ -870,7 +875,7 @@ deactivated: function () {
 
  async created () {
       const self = this
-     self.cTable = 'calc_my_' + self.idefix
+      //self.cTable = 'calc_my_' + self.idefix
       eventBus.$off('MenuHlavni')
       eventBus.$off('MenuLeft')
       eventBus.$off('SAVETEMPLATE')
@@ -973,11 +978,14 @@ deactivated: function () {
           self.MAINMENULAST=server.item
 
           if (self.MAINMENULAST== 'kalkulace'){
+            self.cTable = 'calc_my_' + self.idefix+"_nab"
             self.Seznam('nab')
             self.FillFormWait(self.polozka_nab)
 
+
           } else
           if (self.MAINMENULAST== 'zakazky'){
+            self.cTable = 'calc_my_' + self.idefix+"_zak"
             self.Seznam('zak')
             self.FillFormWait(self.polozka_zak)
           }
@@ -1030,7 +1038,8 @@ deactivated: function () {
            .then(res=> {
              self.aKalkBefore=[]
              self.aKalkAfter=[]
-             f.Alert2('Hotovo')
+           //  f.Alert2('Hotovo')
+             this.$notify( { title: self.MAINMENULAST,  message: `Kalkulace vycistena` , type: 'error', offset: 100, duration: 3000 })
            })
          })
          .catch(e => {
@@ -1214,8 +1223,10 @@ deactivated: function () {
 //   f.Info(queryKalk)
 
   const self=this
-   this.ID = Math.round(Math.random() * 19834581377)
+  this.ID = Math.round(Math.random() * 19834581377)
   this.aKalkulace = this.$store.state.Kalkulace
+
+
 
   self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
   await self.setIdefixActive()
@@ -1236,8 +1247,15 @@ deactivated: function () {
 
   //Po startu se nacte seznam zakazek
   await self.Seznam('zak')
+  if (self.MAINMENULAST== 'zakazky'){
+      self.cTable = 'calc_my_' + self.idefix+"_zak"
+  }
+  if (self.MAINMENULAST== 'kalkulace'){
+      self.cTable = 'calc_my_' + self.idefix+"_nab"
+  }
+
   self.Sirka=  Math.ceil((window.innerWidth ) * 0.9)
-//  f.Alert(  self.Sirka)
+  //f.Alert("1",  self.cTable)
 
 
 
@@ -1361,7 +1379,7 @@ deactivated: function () {
 
        self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
        //self.$refs.w1.aFirma=   await SQL.getFirmaOsoba(polozka.idefix_firma)
-       self.$refs.w1.aFirma=   await SQL.getFirma(0,polozka.firma,100000)
+       self.$refs.w1.aFirma=   await SQL.getFirma(polozka.idefix_firma,'',100000)
 
        self.$refs.w1.form.osoba =""
        if (self.MAINMENULAST=="zakazky") {
@@ -1435,9 +1453,21 @@ deactivated: function () {
 
 
 
-       eventBus.$emit(666)
+       //eventBus.$emit(666)
        //var a = (await Q.post(self.idefix,`drop table if exists ${self.cTable}`))
-       var qb=`create table ${self.cTable} without oids  as select * from zak_t_items where idefix_zak = ${polozka.idefix_zak}`
+       /*
+       drop table if exists ${self.cTable} ;drop sequence if exists ${self.cTable}_seq
+         ;create sequence ${self.cTable}_seq
+         ;create table ${self.cTable} without oids as select * from calc_templates limit 0
+         ;alter table ${self.cTable} add poradi serial
+         ;alter table ${self.cTable} add active bool default false
+         ;alter table ${self.cTable} add idefix_src bigint default 0
+         ;alter table ${self.cTable} alter idefix  set default nextval('list2_seq')
+         ;alter table ${self.cTable} alter id set default nextval('${self.cTable}_seq')
+         */
+       //f.Alert2(f.Jstr(polozka))
+       var qb=`create table ${self.cTable} without oids  as select * from zak_t_items where idefix_zak = ${polozka.idefix}`
+       f.Alert2(qb);
        //var b = (await Q.post(self.idefix,qb))
 
        //await  self.setZabalit()
@@ -1445,7 +1475,7 @@ deactivated: function () {
 
 
 
-      f.Alert2('3Z?', qb)
+      // f.Alert2('3Z?', qb)
    },
    async to3N(polozka) {
       const self= this
@@ -1455,11 +1485,12 @@ deactivated: function () {
        // var b = (await Q.post(self.idefix,`create table ${self.cTable} without oids  asselect * from zak_t_items where idefix_zak = ${polozka.idefix_zak}`))
 
        //await  self.setZabalit()
+       var qb=`create table ${self.cTable} without oids  as select * from nab_t_items where idefix_nab = ${polozka.idefix}`
+       //f.Alert2(qb);
+       //var b = (await Q.post(self.idefix,qb))
 
 
-
-
-      f.Alert('3N?')
+      f.Alert2('3N?' , qb)
    },
   async to2N(polozka) {
   const self = this
@@ -1928,7 +1959,7 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
 
    },
 
-   async Nova(){
+   async Nova(upravou=false){
      const self = this
      var c= 0
 
@@ -1949,7 +1980,7 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
     c.zadani = f.datum20(c.zadani)
 
     //f.Alert('B',f.Jstr(c));
-
+    if (upravou==false) {
        eventBus.$emit('NovaZN', {
          id: self.MAINMENULAST,
          cislo: c.cislo,
@@ -1959,6 +1990,18 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
          zadani:c.zadani
 
      })
+     } else
+     if (upravou==true) {
+       eventBus.$emit('NovaZNU', {
+         id: self.MAINMENULAST,
+         cislo: c.cislo,
+         exp: c.exp,
+         prod: self.idefix,
+         prod_txt : c.produkce,
+         zadani:c.zadani
+
+     })
+     }
 
 
      //await self.setVL(self.IDEFIXACTIVE,1)
@@ -3162,6 +3205,8 @@ input {
   transform: translateX(10px);
   opacity: 0;
 }
+
+
 
 
 

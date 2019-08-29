@@ -54,35 +54,50 @@
           <table style="width:100%;height:100%">
            <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava">Číslo zakázky:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4" ><input type="text" size="mini"  style="width:90%" class="tdl tdn"
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4 tdn" >
+              <input type="hidden" size="mini"   class="tdl tdn"
               :id="'cislo' + ID "
-              v-model="form.cislo"
-              ></td>
+              v-model="form.cislo" >
+              <input type="text" size="mini"  style="width:3.1em;border:none;text-align:right" class="tdl tdn pl-1"
+              :id="'cislo' + ID "
+              :value="form.cislo >'0'?form.cislo.substr(0,5):'00000'"
+              readonly
+               >&nbsp;<input type="text" size="mini"  style="width:5em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
+              :id="'cislo' + ID "
+
+              :value="form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'"
+              readonly
+               >
+              </td>
             </tr>
            <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%;" class="prava"><a @click="editF(form.idefix_firma)" ><b >Název firmy:</b></a></td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
               <el-select v-model="form.idefix_firma"
-              v-if="false && (aFirma.length>0 ||  true)"
-              filterable clearable
+              v-if=" (aFirma.length>0 ||  true)"
+              filterable
               no-match-text="Nenalezeno"
               no-data-text="Cekam na data"
               default-first-option
               size="mini"  class="pt-0 pl-1"
+              :style="'width:92%;'"
               remote
               :remote-method="remoteMethod"
               :loading="loading"
-              @change="getOsoba()"
+              @change="setKontakt()"
 
-
-                >
-                <el-option
-
+              >
+              <el-option
                 v-for="item9 in aFirma"
                 :key="item9.idefix"
                 :label="item9.nazev"
                 :value="item9.idefix"
-              >{{item9.nazev}}</el-option>
+              >
+               <span style="float: left">{{item9.nazev}}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{item9.ico}}</span>
+
+
+              </el-option>
             </el-select>
             <input v-else
               type="text" size="mini"  style="width:90%;display:none"
@@ -96,7 +111,7 @@
               READONLY
               >
 
-              <input v-if="true"
+              <input v-if="false"
               type="text"
               :id="fields['firma']['nazev']"
               size="mini"
@@ -144,16 +159,16 @@
                 </a>
                 </td>
               <!-- <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"> -->
-                <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4">
+                <td style="position:relative;top:0px;color:#000000;width:70%;" class="leva pl-4">
 
               <el-select v-model="form.idefix_firmaosoba"
               v-if="aOsoba.length>0 ||  true"
-              filterable clearable
+              filterable
               no-match-text="Nenalezeno"
               no-data-text="Cekam na data"
               default-first-option
               size="mini"  class="pt-0 pl-0 pa-0 ma-0"
-              :style="'width:90%;border-bottom:dotted 1px'"
+              :style="'width:92%; '"
               popper-class="silver lighten-5"
               placeholder="Osoba"
 
@@ -204,6 +219,7 @@
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum"
               :id="'datumzadani_'+ID"
               v-model="form.datumzadani"
+              readonly
               ></td>
             </tr>
           </table>
@@ -225,7 +241,31 @@
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Account:</td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
-                <input type="text" size="mini"  style="width:90%" class="tdl tdn"
+           <el-select v-model="form.idefix_obchodnik"
+              v-if="aObchodnik.length>0 ||  true"
+              filterable
+              no-match-text="Nenalezeno"
+              no-data-text="Cekam na data"
+              default-first-option
+              size="mini"  class="pt-0 pl-0 pa-0 ma-0"
+              :style="'width:92%; '"
+              popper-class="silver lighten-5"
+              placeholder="Osoba"
+
+
+              >
+                <el-option
+                v-for="item81 in aObchodnik"
+                :key="item81.idefix"
+                :label="item81.fullname"
+                :value="item81.idefix"
+                style="font-size:13px"
+              >{{item81.fullname}}</el-option>
+            </el-select>
+
+
+
+                <input v-if="false" type="text" size="mini"  style="width:90%" class="tdl tdn"
 
                 @focus="fokus('obchodnik');fields['obchodnik'].ZobrazMenu=true"
                 @blur="Opust('obchodnik');"
@@ -238,7 +278,28 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Produkce:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input  size="mini"  style="width:90%" class="tdl tdn"
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4">
+             <el-select v-model="form.idefix_produkce"
+                v-if="aProdukce.length>0 ||  true"
+                filterable
+                no-match-text="Nenalezeno"
+                no-data-text="Cekam na data"
+                default-first-option
+                size="mini"  class="pt-0 pl-0 pa-0 ma-0"
+                :style="'width:92%; '"
+                popper-class="silver lighten-5"
+                placeholder="Osoba"
+              >
+                <el-option
+                v-for="item82 in aProdukce"
+                :key="item82.idefix"
+                :label="item82.fullname"
+                :value="item82.idefix"
+                style="font-size:13px"
+              >{{item82.fullname}}</el-option>
+            </el-select>
+
+                <input v-if="false" size="mini"  style="width:90%" class="tdl tdn"
                 @focus="fokus('produkce');fields['produkce'].ZobrazMenu=true"
                 @blur="Opust('produkce');"
                 @click="fields['produkce'].ZobrazMenu=true"
@@ -344,7 +405,7 @@
 
 
        <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none"
-          v-if="aFirma.length > 0 "
+          v-if="false && aFirma.length > 0 "
           class="elevation-12 teal"
           :id="fields['firma'].nazev+'_list'"
           :style="fields['firma'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:none'"
@@ -393,7 +454,7 @@
 
        <!-- <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none" -->
        <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:block"
-          v-if="aOsoba.length > 0 "
+          v-if="false && aOsoba.length > 0 "
           class="elevation-12 teal"
           :id="fields['osoba'].nazev+'_list'"
           :style="fields['osoba'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:block'"
@@ -443,7 +504,7 @@
         </div>
 
          <div style="min-height:0px;max-height:20em;overflow-y:scroll;position:absolute;z-index:510000001;top:0px;display:none"
-          v-if="aObchodnik.length > 0 "
+          v-if="false && aObchodnik.length > 0 "
           class="elevation-12 teal"
           :id="fields['obchodnik'].nazev+'_list'"
           :style="fields['obchodnik'].ZobrazMenu &&  FilterFirma()  ? 'display:block' : 'display:none'"
@@ -590,6 +651,8 @@ export default {
      showTemplates: true,
      showFirma: true,
      ZobrazMenu: true,
+     loading: false,
+
 
 
 
@@ -616,8 +679,8 @@ export default {
        form:{
          cislo             : 0,   //zakazky . nabidky - vyresit pri ulozeni
          vl_rozsah         : '',
-         idefix_firma      : 0,
-         idefix_firmaosoba : 0,
+         idefix_firma      : null,
+         idefix_firmaosoba : null,
          nazev             : '',
          cisloobjednavky   : '',
          datumzadani       : null,
@@ -635,8 +698,8 @@ export default {
          login             : '', // pomucka 0- vypise se
          vyrobapopis_print : '',
          cislofaktury      : '',
-         idefix_obchodnik  : 0,
-         idefix_produkce   : 0,
+         idefix_obchodnik  : null,
+         idefix_produkce   : null,
          idefix_last       : 0,
          idefix_nabidka    : 0,
          dodak0            : '',  //pdf soubory - nazvy
@@ -695,12 +758,25 @@ deactivated: function () {
  async created() {
      const self=this
      //alert(11111)
-     self.aFirma =  await SQL.getFirma(0,'',10)
 
-     self.aObchodnik  =  await SQL.getOsoba(0,'obchod')
-     self.aProdukce = self.aObchodnik
-     eventBus.$off('NovaZN')
-     eventBus.$on("NovaZN", (server)=>{
+        self.aFirma =  await SQL.getFirma(0,'',10)
+
+        self.aObchodnik  =  await SQL.getOsoba(0,'obchod')
+        self.aProdukce = self.aObchodnik
+        eventBus.$off('NovaZN')
+        eventBus.$on("NovaZN", (server)=>{
+        //f.Alert('zalozim', server.id)
+        self.cleanForm()
+        self.form.cislo = server.cislo
+        self.form.datumexpedice = server.exp
+        self.form.produkce= server.prod_txt
+        self.form.idefix_produkce = server.prod
+        self.form.datumzadani = server.zadani
+        //f.Alert(f.Jstr(server))
+
+      })
+     eventBus.$off('NovaZNU')
+     eventBus.$on("NovaZNU", (server)=>{
         //f.Alert('zalozim', server.id)
         self.form.cislo = server.cislo
         self.form.datumexpedice = server.exp
@@ -821,7 +897,9 @@ deactivated: function () {
 
 async remoteMethod(query) {
   const self=this
+  self.loading = true;
   self.aFirma =  await SQL.getFirma(0,query, 50)
+  self.loading = false;
 
 },
   async   aktFirma(){
@@ -847,6 +925,33 @@ async remoteMethod(query) {
                 ).length >0
  },
 
+async setKontakt(val) {
+  const self=this
+await self.getOsoba()
+await f.asyncForEach(self.aFirma,async (el)=> {
+  if (el.idefix == self.form.idefix_firma){
+    //f.Alert("nalze",f.Jstr(el))
+    self.form.obchodnik=el.idefix2fullname
+    self.form.idefix_obchodnik= el.idefix_user
+    return
+  }
+} )
+  if (self.aOsoba.length==1){
+    self.form.idefix_firmaosoba = self.aOsoba[0].idefix
+    self.form.osoba   = self.aOsoba[0].nazev
+
+  } else {
+    self.form.idefix_firmaosoba = null
+    self.form.osoba   = ''
+  }
+
+
+// [{"idefix":"59320","idefix_firma":"12759","nazev":"Vomacka Josef","aktivni":true,"mail":"jx@cx.cz","tel":"732555999"}]
+
+  //f.Alert2(self.form.idefix_firma, f.Jstr(self.aOsoba))
+
+
+},
  async setF(itemCela){
       const self = this
       var isZmena = false ;
@@ -911,6 +1016,7 @@ async remoteMethod(query) {
  },
  async getOsoba()  {
    const self=this
+
    self.aOsoba=   await SQL.getFirmaOsoba(self.form.idefix_firma)
  },
  async setOsoba(itemCela){
@@ -1446,6 +1552,45 @@ async remoteMethod(query) {
 
     return
   },
+  async cleanForm() {
+    const self= this
+    this.form = {
+         cislo             : 0,   //zakazky . nabidky - vyresit pri ulozeni
+         vl_rozsah         : '',
+         idefix_firma      : null,
+         idefix_firmaosoba : null,
+         nazev             : '',
+         cisloobjednavky   : '',
+         datumzadani       : null,
+         datumexpedice     : null,
+         datumsplatnosti   : null,
+         vyrobapopis       : '',
+         naklad            : 0,   //Asi smazat
+         poznamky          : '',
+         zamknuto          : null, //datum
+         idefix_user_lock  : 0,
+         odemknuto         : null,//datum
+         idefix_user_unlock: 0,
+         zamek             : false,
+         uct_rok           : 2019, //nevim ,asi smazt
+         login             : '', // pomucka 0- vypise se
+         vyrobapopis_print : '',
+         cislofaktury      : '',
+         idefix_obchodnik  : null,
+         idefix_produkce   : self.idefix,
+         idefix_last       : 0,
+         idefix_nabidka    : 0,
+         dodak0            : '',  //pdf soubory - nazvy
+         objednavka0       : '',
+         pdf0              : '',
+         informace         : '',
+         nazevfirmy        : '',  //pridaner texty co nejsou ve strkture
+         osoba             : '',  //osoba
+         obchodnik         : '',  //obchodnik - text
+         produkce          : '',  //produkce - text
+       }
+
+  },
  }
 }
 </script>
@@ -1550,9 +1695,7 @@ table tr td  {
 ::-ms-input-placeholder { /* Microsoft Edge */
   color: #ffffff;
 }
-.el-input, .el-input--mini,.el-input--suffix, .is-focus {
-  display:none
-}
+
 
 </style>
 

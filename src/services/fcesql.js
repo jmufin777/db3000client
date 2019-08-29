@@ -195,6 +195,15 @@ export default {
   left join (select distinct on (idefix_firma) idefix_firma,idefix_user,idefix2fullname(idefix_user) as fullname from list_firmaaccount where _do is null or _do <= now()::date order by idefix_firma, _do desc) b
       on a.idefix = b.idefix_firma
   order by nazev `;
+  if (idefix_firma>0){
+
+      q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
+      left join (select distinct on (idefix_firma) idefix_firma,idefix_user,idefix2fullname(idefix_user) as fullname from list_firmaaccount where _do is null or _do <= now()::date order by idefix_firma, _do desc) b
+      on a.idefix = b.idefix_firma
+      where a.idefix = ${idefix_firma}  order by a.nazev `;
+      //f.Alert2(q)
+
+  } else
   if (firmanazev>'') {
       q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
       left join (select distinct on (idefix_firma) idefix_firma,idefix_user,idefix2fullname(idefix_user) as fullname from list_firmaaccount where _do is null or _do <= now()::date order by idefix_firma, _do desc) b

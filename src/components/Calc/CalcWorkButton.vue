@@ -36,6 +36,7 @@
            </div>
          </button>
 
+
         </td>
         </tr></table>
        </div>
@@ -51,6 +52,7 @@
         @keydown="showTemplates=ZobrazMenu;ZobrazMenu ? seznam('seek'+ID2+'_list_'+0,1,$event) : false"
         :title="(form.nazev>'')?'Text na fakture':''"
         >
+        cale {{cTable}}
       </td>
       <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em;height:28px" class="honza_color" >
         <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%" >
@@ -332,6 +334,11 @@ export default {
     dataDB: {
         required: false,
     },
+    cTable: {
+      type: String,
+      default:"xTable",
+      required: true,
+    }
 
 
   },
@@ -630,13 +637,13 @@ deactivated: function () {
   },
  async prepocetVL(){
        const self=this
-       self.cTable = 'calc_my_' + self.idefix
+       //self.cTable = 'calc_my_' + self.idefix
        var nK= await(queryKalk.getTemplateUser(self.IDEFIX,self.cTable))   //Aktualni kalulkulace
        self.form.naklad = await(prepocty.getNaklad(nK[0].obsah))
  },
  async prettyVL() {
        const self=this
-       self.cTable = 'calc_my_' + self.idefix
+       //self.cTable = 'calc_my_' + self.idefix
        var q = `select json_pretty(obsah) as vypis from ${self.cTable} where idefix= ${self.IDEFIX}`
        var atmp= (await Q.all(self.idefix,q)).data.data
        if (atmp.length>0) {
