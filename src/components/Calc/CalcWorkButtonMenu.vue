@@ -21,7 +21,7 @@
           Nic neni vybrano
       </div>
       <div v-if="setmenu=='kalkulace' || setmenu=='zakazky'" style="position:relative;top:0px;background:#e4eff8;text-align:left;height:3.2em;font-size:14px;">
-        <table><tr>
+        <table v-if="(setmenu=='kalkulace' && obrazovka_nab==3) || (setmenu=='zakazky' && obrazovka_zak==3)"><tr>
           <td v-for="(item2,i2) in aSubKalkulace" :key="i2"   style="max-width: 8em;background:#e4eff8;font-size:14px;">
           <button
           class="px-1  pt-2 hoVer"
@@ -235,8 +235,13 @@
               type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
            <tr>
-              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Platba:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Splatnost:</td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4">
+
+                {{form.hotovost==1?'Hotovost':'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+form.splatnost}}
+                <!-- <input type="text" size="mini"  style="width:90%" class="tdl tdn"> -->
+                </td>
+
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Account:</td>
@@ -320,7 +325,10 @@
             </tr>
            <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Vyfakturovano:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn "></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4">
+                <!-- <input type="text" size="mini"  style="width:90%" class="tdl tdn "> -->
+                {{form.stav}}
+                </td>
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Cislo obj:</td>
@@ -332,7 +340,6 @@
             </tr>
           </table>
         </div>
-
 
     </div>
     <hr style="color:#cacade">
@@ -347,8 +354,8 @@
     <div style="position:relative;top:0px;color:#258bce;float:left;background:#ffffff;height:2.5em" class="leva pr-2">
 
 
-              <div style="position:relative;top:0px;color:#258bce;float:left;background:#ffffff;" class="leva pl-4 pr-4 pt-2">Text na fakturu:</div>
-              <div style="position:relative;top:0px;color:#000000;float:left;background:#ffffff;width:25em" class="prava pr-4">
+              <div v-if="(setmenu=='kalkulace' && obrazovka_nab>1) || (setmenu=='zakazky' && obrazovka_zak>1)" style="position:relative;top:0px;color:#258bce;float:left;background:#ffffff;" class="leva pl-4 pr-4 pt-2">Text na fakturu:</div>
+              <div v-if="(setmenu=='kalkulace' && obrazovka_nab>1) || (setmenu=='zakazky' && obrazovka_zak>1)" style="position:relative;top:0px;color:#000000;float:left;background:#ffffff;width:25em" class="prava pr-4">
                 <!-- <input v-model="form.vyrobapopis_print" type="text" size="mini"  style="width:25em" class="tdl tdn"> -->
                 <textarea-autosize type="text"
                 class="tdl tdn"
@@ -357,8 +364,8 @@
                 style="width:100%; height:3em;max-height:3em;border:bottom: solid 10px red;font-size:100%;padding-left:5px;">
                 </textarea-autosize>
                 </div>
-              <div style="position:relative;top:0px;color:#258bce;float:left;background:#ffffff;" class="leva pl-4 pr-4 pt-2">Vyroba popis:</div>
-              <div style="position:relative;top:0px;color:#000000;float:left;background:#ffffff;width:25em" class="prava pr-4">
+              <div v-if="(setmenu=='kalkulace' && obrazovka_nab>1) || (setmenu=='zakazky' && obrazovka_zak>1)" style="position:relative;top:0px;color:#258bce;float:left;background:#ffffff;" class="leva pl-4 pr-4 pt-2">Vyroba popis:</div>
+              <div v-if="(setmenu=='kalkulace' && obrazovka_nab>1) || (setmenu=='zakazky' && obrazovka_zak>1)" style="position:relative;top:0px;color:#000000;float:left;background:#ffffff;width:25em" class="prava pr-4">
                 <textarea-autosize type="text"
                 class="tdl tdn"
                 v-model="form.vyrobapopis_print"
@@ -636,10 +643,17 @@ export default {
 
  },
   props: {
-    ID:0,
+    ID:{default: 0,
     required: false
-
-
+    },
+    obrazovka_zak: {
+      default:0,
+      required: false,
+    },
+    obrazovka_nab: {
+      default:0,
+      required: false,
+    }
   },
  data () {
    return {
@@ -710,6 +724,9 @@ export default {
          osoba             : '',  //osoba
          obchodnik         : '',  //obchodnik - text
          produkce          : '',  //produkce - text
+         splatnost         : 0,
+         hotovost          : 0,
+         stav              : 'Nova',
        },
        aFirma: [],
        aOsoba: [],
@@ -936,11 +953,12 @@ await f.asyncForEach(self.aFirma,async (el)=> {
     return
   }
 } )
-  if (self.aOsoba.length==1){
+  if (self.aOsoba.length>=1){
     self.form.idefix_firmaosoba = self.aOsoba[0].idefix
     self.form.osoba   = self.aOsoba[0].nazev
 
   } else {
+
     self.form.idefix_firmaosoba = null
     self.form.osoba   = ''
   }
@@ -999,6 +1017,9 @@ await f.asyncForEach(self.aFirma,async (el)=> {
              if (self.aOsoba.length==1) {
               self.form.idefix_firmaosoba = self.aOsoba[0].idefix
               self.form.osoba = self.aOsoba[0].nazev
+             } else {
+               self.form.idefix_firmaosoba = self.aOsoba[0].idefix
+               self.form.osoba = self.aOsoba[0].nazev
              }
 
             setTimeout(function(){
@@ -1588,6 +1609,9 @@ await f.asyncForEach(self.aFirma,async (el)=> {
          osoba             : '',  //osoba
          obchodnik         : '',  //obchodnik - text
          produkce          : '',  //produkce - text
+         splatnost         : 0,
+         hotovost          : 0,
+         stav              : 'Nova',
        }
 
   },

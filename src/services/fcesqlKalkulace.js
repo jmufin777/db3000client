@@ -554,7 +554,6 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
   var defer = $.Deferred();
   var idefix=store.state.idefix
 
-
   var q= `select
           a.idefix,
           a.nazev,

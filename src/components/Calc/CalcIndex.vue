@@ -7,8 +7,8 @@
     <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
      <div >
       <input type="hidden" id="Zmenad" value="0" class="black white--text" style="width:100px">
-      <work-but-menu :ID="ID" ref="w1" >
-        <span slot="tlacitkazakazky">
+      <work-but-menu :ID="ID" ref="w1" :obrazovka_zak="obrazovka_zak" :obrazovka_nab="obrazovka_nab" >
+        <span  slot="tlacitkazakazky" >
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="Nova()"
           >
@@ -94,15 +94,17 @@
   <table slot="head"  :style="f.pof(Sirka,98)"  >
     <thead class="c-1 tdline">
 
-      <th :style="f.pof(Sirka, 5)">Ikony</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('zak','','cislozakazky')">Č.zakazky</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('zak','','firma')">Klient</th>
-      <th :style="f.pof(Sirka,20)" @click="Seznam('zak','','nazev')">Název</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('zak','','datumzadani')">Vytvoření</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('zak','','time_update')">Změna</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('zak','','nakladsum')">Nákladová cena</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('zak','','prodejsum')">Prodej</th>
-      <th :style="f.pof(Sirka, 5)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Zisk</th>
+      <th :style="f.pof(Sirka,  5)">Ikony</th>
+      <th :style="f.pof(Sirka,  5)" @click="Seznam('zak','','cislozakazky')">Č.zakazky</th>
+      <th :style="f.pof(Sirka, 15)" @click="Seznam('zak','','firma')">Klient</th>
+      <th :style="f.pof(Sirka, 15)" @click="Seznam('zak','','nazev')">Název</th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('zak','','datumzadani')">Vytvoření</th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('zak','','time_update')">Změna</th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('zak','','nakladsum')">Nákladová cena</th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('zak','','prodejsum')">Prodej</th>
+      <th :style="f.pof(Sirka,  5)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Zisk</th>
+      <th :style="f.pof(Sirka, 15)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Chodnik</th>
+      <th :style="f.pof(Sirka,  5)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Stav</th>
 
     </thead>
   </table>
@@ -111,16 +113,28 @@
       <tr v-for="(polozka,idx) in seznam_zak" :key="idx"  @dblclick="to2Z(polozka);"  @click="FillFormWait(polozka)" style="cursor:pointer"
         :id="'tr_'+polozka.idefix"
         class="hoVer"
+
       >
-        <td :style="f.pof(Sirka, 5)" ><button class="num green">Ikona</button></td>
-        <td :style="f.pof(Sirka,10)"  >{{polozka.cislozakazky}}</td>
-        <td :style="f.pof(Sirka,10)" class="leva pl-2" >{{polozka.firma}}</td>
-        <td :style="f.pof(Sirka,20)" class="leva pl-2" >{{polozka.nazev}}</td>
-        <td :style="f.pof(Sirka,10)" class="stred pl-2" >{{f.datum3(polozka.datumzadani)}}</td>
-        <td :style="f.pof(Sirka,10)" class="leva pl-2" >{{f.datum3(polozka.time_update)}}</td>
-        <td :style="f.pof(Sirka,10)" class="prava pr-4" >{{polozka.nakladsum}}</td>
-        <td :style="f.pof(Sirka,10)" class="prava pr-4" >{{polozka.prodejsum}}</td>
-        <td :style="f.pof(Sirka, 5)" class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo}"  :style="f.pof(Sirka, 5)" >
+        <button @click="delzak(polozka)">
+          <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        </button>
+        &nbsp;&nbsp;&nbsp;
+        <button>
+          <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        </button>
+          </td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" >{{polozka.cislozakazky}}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.firma}}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.nazev}}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="stred pl-2" >{{f.datum3(polozka.datumzadani)}}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="leva pl-2" >{{f.datum3(polozka.time_update)}}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.nakladsum}}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.prodejsum}}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pr-4" >{{polozka.obchodnik }}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="leva pr-4" >{{polozka.stav }}</td>
+
 
       </tr>
     </tbody>
@@ -154,29 +168,39 @@
 </div>
 
 
-  <table style="width:70%">
+  <table style="width:80%;border: solid 1px silver">
     <thead>
-      <th>Ikony</th>
-      <th>Práce</th>
-      <th>Dodavatel</th>
-      <th>Kč/ks</th>
-      <th>ks</th>
-      <th>Naklady celkem</th>
-      <th>Marze</th>
-      <th>Text na faktuře</th>
+      <th style="width:3em">Ikony</th>
+      <th style="width:20em">Text na faktuře</th>
+      <th style="width:10em">Práce</th>
+      <th style="width:20em">Dodavatel</th>
+      <th style="width:">Kč/ks</th>
+      <th style="width:">ks</th>
+      <th style="width:">Naklady celkem</th>
+      <th style="width:">Marze</th>
+      <th style="width:">Faktura</th>
+
 
     </thead>
     <tbody>
-      <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"  @click="to3Z(polozka2,2)" style="cursor:pointer">
-      <td>Ikony</td>
-      <td>Práce</td>
-      <td>Dodavatel</td>
-      <td>{{polozka2.kcks}}</td>
-      <td>{{polozka2.ks}}</td>
-      <td>{{polozka2.naklad}}</td>
-      <td>{{polozka2.marze}}</td>
-      <td>{{polozka2.nazev}}</td>
+      <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"  @dblclick="f.Alert2(polozka2.obsah);to3Z(polozka2,2)" style="cursor:pointer;border: solid 1px silver">
+      <td>
+        <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        &nbsp;&nbsp;&nbsp;
+        <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+
+      </td>
+      <td class="rborder leva pl-2 pr-2">{{polozka2.nazev}}</td>
+      <td class="rborder pr-2">{{polozka2.idefix_prace}}</td>
+      <td class="rborder pr-2">{{polozka2.idefix_dod}}</td>
+      <td class="rborder pr-2">{{polozka2.kcks}}</td>
+      <td class="rborder pr-2">{{polozka2.ks}}</td>
+      <td class="rborder pr-2">{{polozka2.naklad}}</td>
+      <td class="rborder pr-2">{{polozka2.prodej - polozka2.naklad}}</td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
+      <td class="rborder pr-2">{{polozka2.faktura}}huh1u</td>
+
       </tr>
+
     </tbody>
   </table>
 
@@ -223,15 +247,17 @@
   <table slot="head"  :style="f.pof(Sirka,98)"  >
     <thead class="c-1 tdline">
 
-      <th :style="f.pof(Sirka, 5)">Ikony</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('nab','','cislonabidky')">Č.zakazky</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('nab','','firma')">Klient</th>
-      <th :style="f.pof(Sirka,20)" @click="Seznam('nab','','nazev')">Název</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('nab','','datumzadani')">Vytvoření</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('nab','','time_update')">Změna</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('nab','','nakladsum')">Nákladová cena</th>
-      <th :style="f.pof(Sirka,10)" @click="Seznam('nab','','prodejsum')">Prodej</th>
-      <th :style="f.pof(Sirka, 5)" @click="Seznam('nab','','(prodejsum-nakladsum)')">Zisk</th>
+      <th :style="f.pof(Sirka,  5)">Ikony</th>
+      <th :style="f.pof(Sirka,  5)" @click="Seznam('nab','','cislonabidky')">Č.zakazky</th>
+      <th :style="f.pof(Sirka, 15)" @click="Seznam('nab','','firma')">Klient</th>
+      <th :style="f.pof(Sirka, 15)" @click="Seznam('nab','','nazev')">Název</th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('nab','','datumzadani')">Vytvoření</th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('nab','','time_update')">Změna</th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('nab','','nakladsum')">Nákladová cena</th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('nab','','prodejsum')">Prodej</th>
+      <th :style="f.pof(Sirka,  5)" @click="Seznam('nab','','(prodejsum-nakladsum)')">Zisk</th>
+      <th :style="f.pof(Sirka, 15)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Chodnik</th>
+      <th :style="f.pof(Sirka,  5)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Stav</th>
 
     </thead>
   </table>
@@ -241,15 +267,29 @@
         :id="'tr_'+polozka.idefix"
         class="hoVer"
       >
-        <td :style="f.pof(Sirka, 5)" ><button class="num green">Ikona</button></td>
-        <td :style="f.pof(Sirka,10)" >{{polozka.cislonabidky}}</td>
-        <td :style="f.pof(Sirka,10)" class="leva pl-2" >{{polozka.firma}}</td>
-        <td :style="f.pof(Sirka,20)" class="leva pl-2" >{{polozka.nazev}}</td>
-        <td :style="f.pof(Sirka,10)" class="stred pl-2" >{{f.datum3(polozka.datumzadani)}}</td>
-        <td :style="f.pof(Sirka,10)" class="leva pl-2" >{{f.datum3(polozka.time_update)}}</td>
-        <td :style="f.pof(Sirka,10)" class="prava pr-4" >{{polozka.nakladsum}}</td>
-        <td :style="f.pof(Sirka,10)" class="prava pr-4" >{{polozka.prodejsum}}</td>
-        <td :style="f.pof(Sirka, 5)" class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo}"  :style="f.pof(Sirka, 5)" >
+        <button
+        @click="delnab(polozka)"
+        >
+          <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+
+        </button>
+        &nbsp;&nbsp;&nbsp;
+        <button >
+          <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        </button>
+
+          </td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" >{{polozka.cislonabidky}}</td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.firma}}</td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.nazev}}</td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="stred pl-2" >{{f.datum3(polozka.datumzadani)}}</td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="leva pl-2" >{{f.datum3(polozka.time_update)}}</td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.nakladsum}}</td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.prodejsum}}</td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
+        <td :class="{'green lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pr-4" >{{polozka.obchodnik }}</td>
+        <td :class="{'green lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="leva pr-4" >{{polozka.stav }}</td>
 
       </tr>
     </tbody>
@@ -282,27 +322,37 @@
     </button>
 </div>
 
-  <table style="width:90%"  >
+  <table style="width:80%"  >
     <thead>
-      <th>Ikony</th>
-      <th>Práce</th>
-      <th>Dodavatel</th>
-      <th>Kč/ks</th>
-      <th>ks</th>
-      <th>Naklady celkem</th>
-      <th>Marze</th>
-      <th>Text na faktuře</th>
+      <th style="width:3em">Ikony</th>
+      <th style="width:20em">Text na faktuře</th>
+      <th style="width:10em">Práce</th>
+      <th style="width:20em">Dodavatel</th>
+      <th style="width:">Kč/ks</th>
+      <th style="width:">ks</th>
+      <th style="width:">Naklady celkem</th>
+      <th style="width:">Marze</th>
+      <th style="width:">Faktura</th>
+
     </thead>
     <tbody>
-      <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"  @click="to3N(polozka2,2)" style="cursor:pointer">
-      <td>Ikony</td>
-      <td>Práce</td>
-      <td>Dodavatel</td>
-      <td>{{polozka2.kcks}}</td>
-      <td>{{polozka2.ks}}</td>
-      <td>{{polozka2.naklad}}</td>
-      <td>{{polozka2.marze}}</td>
-      <td>{{polozka2.nazev}}</td>
+      <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"  @dblclick="to3N(polozka2,2)" style="cursor:pointer">
+       <td>
+        <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        &nbsp;&nbsp;&nbsp;
+        <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+
+      </td>
+      <td class="rborder leva pl-2 pr-2">{{polozka2.nazev}}</td>
+      <td class="rborder pr-2">{{polozka2.idefix_prace}}</td>
+      <td class="rborder pr-2">{{polozka2.idefix_dod}}</td>
+      <td class="rborder pr-2">{{polozka2.kcks}}</td>
+      <td class="rborder pr-2">{{polozka2.ks}}</td>
+      <td class="rborder pr-2">{{polozka2.naklad}}</td>
+      <td class="rborder pr-2">{{polozka2.prodej - polozka2.naklad}}</td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
+      <td class="rborder pr-2">{{polozka2.faktura}}huh2u</td>
+
+
       </tr>
     </tbody>
   </table>
@@ -477,7 +527,7 @@
 
 </div>
 
-   <div style="right:1%;;top:216px;z-index:99999;" class="plovouci  grey lighten-1 pt-2 pb-2"  slot="Plovouci2" id="plovoucimapa11">
+   <div v-if="obrazovka_nab==3 || obrazovka_zak==3" style="right:1%;;top:16px;z-index:99999;" class="plovouci  grey lighten-1 pt-2 pb-2"  slot="Plovouci2" id="plovoucimapa11">
      <!--2 = prepinac -->
        <v-btn @click="panel(2,$event)" small class="yellow">MAPA</v-btn><br>
        <v-btn @click="panelPrehled(2,$event)" small class="yellow">Kalkulace</v-btn><br>
@@ -821,6 +871,10 @@ export default {
      polozky_zak:[],
      polozky_nab:[],
 
+     polozky_zak_add:[],
+     polozky_nab_add:[],
+
+
      aktivni_zak:0,
      aktivni_nab:0,
 
@@ -951,7 +1005,6 @@ deactivated: function () {
             //queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", true, server.idefix, SaveKalkulkace )
           }
 
-
        }
        //f.Alert(JSON.stringify(server))
      }),
@@ -1041,7 +1094,7 @@ deactivated: function () {
              self.aKalkBefore=[]
              self.aKalkAfter=[]
            //  f.Alert2('Hotovo')
-             this.$notify( { title: self.MAINMENULAST,  message: `Kalkulace vycistena` , type: 'error', offset: 100, duration: 3000 })
+             this.$notify( { title: self.MAINMENULAST,  message: `Kalkulace vycistena` , type: 'error', offset: 100, duration: 5000 })
            })
          })
          .catch(e => {
@@ -1360,6 +1413,38 @@ if (self.MAINMENULAST== 'zakazky'){
  //  this.$destroy()
  },
  methods: {
+   async delzak(polozka) {
+     const self= this
+
+
+      var q0= `update zak_t_items set prodej = 0 where idefix_zak = ${polozka.idefix} ;`
+      var q= `${q0} ; update zak_t_list set nazev = 'STORNO' where idefix = ${polozka.idefix}`
+      var b = (await Q.post(self.idefix,q))
+
+      await self.Seznam('zak')
+
+      self.$refs.w1.form.nazev                = 'STORNO'
+
+      //f.Alert2(f.Jstr(polozka))
+   },
+   async delnab(polozka) {
+     const self= this
+//     alert('delzak')
+      var q0= `update nab_t_items set prodej = 0 where idefix_nab = ${polozka.idefix} ;`
+      var q= `${q0} ; update nab_t_list set nazev = 'STORNO' where idefix = ${polozka.idefix}`
+
+      var b = (await Q.post(self.idefix,q))
+      self.Seznam('nab')
+      self.$refs.w1.form.nazev                = 'STORNO'
+
+
+
+
+
+
+      //f.Alert2(q, f.Jstr(polozka))
+   },
+
    async FillFormWait(polozka) {
       const self = this
       await self.FillForm(polozka);
@@ -1408,6 +1493,10 @@ if (self.MAINMENULAST== 'zakazky'){
        self.$refs.w1.form.produkce             = polozka.produkce
        self.$refs.w1.form.osoba                = polozka.osoba
 
+       self.$refs.w1.form.splatnost            = polozka.splatnost
+       self.$refs.w1.form.hotovost             = polozka.hotovost
+       self.$refs.w1.form.stav             = polozka.stav
+
        self.$refs.w1.form.datumzadani               = f.datum20(polozka.datumzadani)
        self.$refs.w1.form.datumexpedice             = f.datum3(polozka.datumexpedice)
 
@@ -1439,7 +1528,7 @@ if (self.MAINMENULAST== 'zakazky'){
        //self.$refs.w1.form.osoba   = polozka.idefix_firma
        //f.Alert(polozka.idefix, f.Jstr(polozka))
      } else {
-       this.$notify( { title: self.MAINMENULAST,  message: `Chyba pri nacteni polozek` , type: 'error', offset: 100, duration: 3000 })
+       this.$notify( { title: self.MAINMENULAST,  message: `Chyba pri nacteni polozek` , type: 'error', offset: 100, duration: 5000 })
      }
    },
 
@@ -1566,7 +1655,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
      } else {
-       this.$notify( { title: self.MAINMENULAST,  message: `Chyba pri nacteni polozek` , type: 'error', offset: 100, duration: 3000 })
+       this.$notify( { title: self.MAINMENULAST,  message: `Chyba pri nacteni polozek` , type: 'error', offset: 100, duration: 5000 })
 
      }
 
@@ -1638,7 +1727,7 @@ if (self.MAINMENULAST== 'zakazky'){
            //f.Alert2(qitems)
            var e = (await Q.post(self.idefix,qitems))
 
-           this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislonabidky}` , type: 'success', offset: 100, duration: 3000 })
+           this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislonabidky}` , type: 'success', offset: 100, duration: 5000 })
            self.Seznam('nab')
 
            self.status_nab=2;
@@ -1667,7 +1756,7 @@ if (self.MAINMENULAST== 'zakazky'){
           `
           //f.Alert2(qitems)
           var e = (await Q.post(self.idefix,qitems))
-          this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislozakazky}` , type: 'success', offset: 100, duration: 3000 })
+          this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislozakazky}` , type: 'success', offset: 100, duration: 5000 })
           self.Seznam('zak')
           self.status_zak=2;
 
@@ -1705,7 +1794,7 @@ if (self.MAINMENULAST== 'zakazky'){
           from ${self.cTable} where obsah::text >''
         `
         var e = (await Q.post(self.idefix,qitems))
-        this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno ${ c.cislo}`, type: 'success', offset: 100, duration: 3000 })
+        this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno ${ c.cislo}`, type: 'success', offset: 100, duration: 5000 })
         self.status_nab=2;
         self.Seznam('nab')
 
@@ -1752,7 +1841,7 @@ if (self.MAINMENULAST== 'zakazky'){
           from ${self.cTable} where obsah::text >''
         `
         var e = (await Q.post(self.idefix,qitems))
-        this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno  ${ c.cislo}` , type: 'success', offset: 100, duration: 3000 })
+        this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno  ${ c.cislo}` , type: 'success', offset: 100, duration: 5000 })
         self.status_zak=2;
         self.Seznam('zak')
 
@@ -1910,10 +1999,11 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
     var cWhereCislo=""
     var cWhereRok=""
     var cislo=""
-     var q=`select a.*,b.nazev as firma,c.*, osoba( coalesce(o.idefix,0)) as osoba
+     var q=`select a.*,b.nazev as firma,b.splatnost,b.hotovost,b.vlastnik,c.*, osoba( coalesce(o.idefix,0)) as osoba
             , idefix2fullname(idefix_obchodnik) as obchodnik
             , idefix2fullname(idefix_produkce)  as produkce
             , coalesce(o.idefix,0) as idefix_osoba
+            , 'F,N,KOSIK'::text as  stav
           from ${ceho}_t_list a
           join list_dodavatel b on a.idefix_firma= b.idefix
           left join list_firmaosoba o on a.idefix_firmaosoba = o.idefix
@@ -2282,7 +2372,7 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
                 message: 'Vlozeno',
                 type: 'error',
                 center: true,
-                duration: 3000
+                duration: 5000
              })
         })
 
@@ -3285,7 +3375,9 @@ input {
   opacity: 0;
 }
 
-
+.rborder {
+  border-left: solid 1px silver
+}
 
 
 

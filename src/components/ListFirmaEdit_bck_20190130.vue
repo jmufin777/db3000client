@@ -1876,8 +1876,11 @@ renderFunc(h, option) {
           var neco3  = (await ListFirma.one(this.user,self.idefixThis, 102,''))
           var neco4 = (await ListFirma.one(this.user,self.idefixThis, 1012,''))
           this.list.data.enumosoba = neco4.data.enumosoba
-          self.list.data.firmaosoba = []
-          self.list.data.firmaosoba =neco3.data.firmaosoba
+          //self.list.data.firmaosoba = []
+          //self.list.data.firmaosoba =neco3.data.firmaosoba
+          self.list.data.firmaosoba = (await Q.all(self.idefix,`select * from list_firmaosoba where idefix_firma=${clovek.idefix_firma}
+        order by case when prioritni then 1 else 2 end,jmeno
+       `)).data.data
 
     },
     async insertKontakt(nPar) {

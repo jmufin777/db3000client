@@ -201,7 +201,12 @@ html div {
 }
 .seda {
   /* background: #eee !important; */
-  background: #e6f2fc  !important;;
+  background: #e6f2fc  !important;
+}
+.sedadel {
+  /* background: #eee !important; */
+  background: #e6f2fc  !important;
+  color:red;
 }
 .bila{
   background-color: white !important;

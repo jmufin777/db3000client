@@ -239,7 +239,14 @@ export default {
 ,async getFirmaOsoba(idefix_firma=0){
   var idefix=store.state.idefix
 
-  var q=`select idefix, idefix_firma, osoba(idefix ) as nazev, aktivni,mail,tel from list_firmaosoba where idefix_firma = ${idefix_firma} and aktivni = true order by jmeno`
+  var q=`select idefix, idefix_firma, osoba(idefix ) as nazev, aktivni,mail,tel, prioritni from list_firmaosoba where idefix_firma = ${idefix_firma} and aktivni = true
+      order by
+        case when aktivni then 1 else 2 end,
+        case when prioritni then 1 else 2 end,
+        jmeno`
+
+
+
   var defer = $.Deferred();
   var atmp=[]
   try {

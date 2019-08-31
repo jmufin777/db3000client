@@ -488,13 +488,14 @@
                          <th class="tdline stred" :style="pof(Sirka*SirkaStred,10)" >Jmeno</th>
                          <th class="tdline stred" :style="pof(Sirka*SirkaStred,15)" >Prijmeni </th>
                          <th class="tdline stred" :style="pof(Sirka*SirkaStred,25)" >Mail</th>
-                         <th class="tdline stred" :style="pof(Sirka*SirkaStred,25)" >Tel</th>
+                         <th class="tdline stred" :style="pof(Sirka*SirkaStred,15)" >Tel</th>
 
                          <th class="tdline stred" :style="pof(Sirka*SirkaStred, 7)" >Obrat</th>
                          <th class="tdline stred" :style="pof(Sirka*SirkaStred, 7)" >Zakazky</th>
+                         <th class="tdline stred" :style="pof(Sirka*SirkaStred, 5)" >Prvni</th>
                          <th class="tdline stred" :style="pof(Sirka*SirkaStred, 5)" >
-                         </th>
                            <button  type="button" style="width:22px;height:22px; font-color:black" class="pl-0 info elevation-3"  @click="kontaktEditInsert=!kontaktEditInsert ; kontaktEdit=(kontaktEditInsert)?false:(kontaktEdit );focus()" ><i class="el-icon-plus" size="mini"></i></button>
+                          </th>
                        </thead>
                      </table>
 
@@ -510,14 +511,14 @@
                        <tr v-for="(clovek, i) in list.data.firmaosoba" :key="i"
                          v-if="clovek.aktivni==true || kontaktAktivni == true "
                          class="tdline nb tdlr"
-                         v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'seda' : ( clovek.aktivni==false )  }"
+                         v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'sedadel' : ( clovek.aktivni==false )  }"
                          @dblclick="editKontakt(clovek)"
                        >
                          <td class="tdline pl-1 " :style="pof(Sirka*SirkaStred,10)"
-                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'seda' : ( clovek.aktivni==false )  }"
+                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'sedadel' : ( clovek.aktivni==false )  }"
                          >{{clovek.jmeno}}</td>
                          <td :style="pof(Sirka*SirkaStred,15)"
-                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'seda' : ( clovek.aktivni==false )  }"
+                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'sedadel' : ( clovek.aktivni==false )  }"
                           style="cursor:pointer"
                           class="tdline pl-1"
                          > {{clovek.prijmeni}}</td>
@@ -529,24 +530,32 @@
 
 
                          </td>
-                         <td :style="pof(Sirka*SirkaStred,25)"
-                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'seda' : ( clovek.aktivni==false )  }"
+                         <td :style="pof(Sirka*SirkaStred,15)"
+                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'sedadel' : ( clovek.aktivni==false )  }"
                           class="tdline pl-1"
 
                          >{{clovek.tel}} &nbsp;</td>
 
 
                          <td :style="pof(Sirka*SirkaStred,7)"
-                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'seda' : ( clovek.aktivni==false )  }"
+                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'sedadel' : ( clovek.aktivni==false )  }"
                           class="tdline c-1"
                          >11</td>
 
                          <td :style="pof(Sirka*SirkaStred,7)"
-                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'seda' : ( clovek.aktivni==false )  }"
+                          v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'sedadel' : ( clovek.aktivni==false )  }"
                           class="tdline c-1"
                          >10</td>
                          <td :style="pof(Sirka*SirkaStred,5)"
-                           v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'seda' : ( clovek.aktivni==false )  }"
+                           v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'sedadel' : ( clovek.aktivni==false )  }"
+                          class="tdline c-1"
+                          style="text-align:center">
+
+                          <input size="mini" style="height:20px;width:20px" v-model="clovek.prioritni" type="checkbox" @change="clovekprioritni(clovek)" name="Pripominka" value="true"  :checked="(clovek.prioritni==true)">
+
+                         </td>
+                         <td :style="pof(Sirka*SirkaStred,5)"
+                           v-bind:class="{ 'prvni' : ( clovek.aktivni==true && i %2 == 0) , 'prvni' : ( clovek.aktivni==true && i %2 != 0) , 'sedadel' : ( clovek.aktivni==false )  }"
                           class="tdline c-1"
                           style="text-align:center">
                            <button  type="button" style="height:22px;width:22px" class="pl-0 elevation-3"  @click="editKontakt(clovek)" ><i class="el-icon-edit" size="mini"></i></button>
@@ -1900,6 +1909,20 @@ renderFunc(h, option) {
      jarda () {
        alert('jarda')
      },
+     async clovekprioritni(clovek){
+       var q0=`update  list_firmaosoba set prioritni = 'false' where idefix_firma = ${clovek.idefix_firma}`
+       var q=`${q0} ; update  list_firmaosoba set prioritni = '${clovek.prioritni}' where idefix = ${clovek.idefix}`
+       await Q.post(self.idefix,q)
+       this.list.data.firmaosoba = (await Q.all(self.idefix,`select * from list_firmaosoba
+       where
+            idefix_firma=${clovek.idefix_firma}
+        order by
+            case when aktivni then 1 else 2 end,
+            case when prioritni then 1 else 2 end
+            ,jmeno
+       `)).data.data
+       return
+     },
      changePripominka(e) {
        // alert(e.isedit)
        return
@@ -2120,8 +2143,14 @@ renderFunc(h, option) {
           var neco3  = (await ListFirma.one(this.user,self.idefixThis, 102,''))
           var neco4 = (await ListFirma.one(this.user,self.idefixThis, 1012,''))
           this.list.data.enumosoba = neco4.data.enumosoba
-          self.list.data.firmaosoba = []
-          self.list.data.firmaosoba =neco3.data.firmaosoba
+          //self.list.data.firmaosoba = []
+          //self.list.data.firmaosoba =neco3.data.firmaosoba
+          self.list.data.firmaosoba = (await Q.all(self.idefix,`select * from list_firmaosoba where idefix_firma=${clovek.idefix_firma}
+            order by
+            case when aktivni then 1 else 2 end,
+            case when prioritni then 1 else 2 end
+            ,jmeno
+       `)).data.data
 
     },
     async insertKontakt(nPar) {
@@ -2175,6 +2204,13 @@ renderFunc(h, option) {
           var neco3  = (await ListFirma.one(this.user,self.idefixThis, 102,''))
           self.list.data.firmaosoba = []
           self.list.data.firmaosoba =neco3.data.firmaosoba
+
+                    self.list.data.firmaosoba = (await Q.all(self.idefix,`select * from list_firmaosoba where idefix_firma=${clovek.idefix_firma}
+            order by
+            case when aktivni then 1 else 2 end,
+            case when prioritni then 1 else 2 end
+            ,jmeno
+       `)).data.data
 
           var neco4 = (await ListFirma.one(this.user,self.idefixThis, 1012,''))
           this.list.data.enumosoba = neco4.data.enumosoba
