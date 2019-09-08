@@ -261,44 +261,6 @@ div[role="region"] {
 
    width: 18px;
  }
- .el-input-group__prepend {
-    border-right: 1px !important;
-    font-size: 12px !important ;
-}
-.el-input
-{
-  font-size:13px;
-  font-weight: bold;
-
-  height:10px;
-  padding-top:0px;
-  padding-left:0px;
-  padding-bottom:10px;
-  position:relative;
-  top:-5px;
-  left:-1em;
-}
-
- .el-input--mini, .el-input--suffix, .is-focus, .el-input__inner, .el-input__suffix,  .el-input__suffix-inner,  .el-input__icon, .el-icon-arrow-up, .is-reverse {
-
-
-
- }
-
-.el-input__inner {
-  border:none;
-  border-bottom: dotted 1px ;
-  border-radius: 0px;
-  font-size: 13px;
-  font-weight: bold;
-
-}
-.el-select__caret {
-  position: relative;
-  top: 15px !important;
-  left: -15px !important;
-}
-
 
 
 
@@ -564,9 +526,41 @@ button:focus {
   display: none;
 }
 
+.el-input-group__prepend {
+    border-right: 0px !important;
+    font-size: 12px !important ;
+}
 
+.el-input
+{
+  font-size: 13px !important;
+  font-weight: bold !important;
+  height: 10px !important;
+  padding-top: 0px !important;
+  padding-left: 0px !important;
+  padding-bottom: 10px !important;
+  position: relative !important;
+  top:  -5px !important;
+  left: -1em !important;
+}
 
+.el-input--mini, .el-input--suffix, .is-focus, .el-input__inner, .el-input__suffix,  .el-input__suffix-inner,  .el-input__icon, .el-icon-arrow-up, .is-reverse {
 
+}
+
+.el-input__inner {
+  border:none !important;
+  border-bottom: dotted 1px !important;
+  border-radius: 0px !important;
+  font-size: 13px !important;
+  font-weight: bold !important;
+}
+
+.el-select__caret {
+  position: relative !important;
+  top:   15px !important;
+  left: -15px !important;
+}
 </style>
 <style lang="stylus">
   $color-pack = false

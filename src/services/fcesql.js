@@ -175,9 +175,15 @@ export default {
   var q="select b.nazev as firma,c.nazev as prace, a.idefix_prace, a.idefix_firma from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix";
   return q;
 }
-,getPrace(){
+,getPrace(idefix_dod=0,nazevPrace=''){
   var q=`select distinct c.nazev as prace, a.idefix_prace,array_agg(b.idefix) as dod_seznam from list_firmaprace a
-        join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix group by c.nazev,a.idefix_prace order by c.nazev`;
+        join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix
+        where
+        (${idefix_dod}=0 or a.idefix_firma = ${idefix_dod} )
+        and
+        ( '${nazevPrace}' = '' or ('${nazevPrace}' > '' and to_aascii(c.nazev) ~*  to_aascii('${nazevPrace}')  ))
+
+        group by c.nazev,a.idefix_prace order by c.nazev`;
   return q;
 }
 ,getDod(idefix_prace=0){

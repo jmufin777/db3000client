@@ -120,7 +120,7 @@
           <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </button>
         &nbsp;&nbsp;&nbsp;
-        <button>
+        <button @click="FillFormWait(polozka,true)">
           <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </button>
           </td>
@@ -172,7 +172,7 @@
     <thead>
       <th style="width:3em">Ikony</th>
       <th style="width:20em">Text na faktuře</th>
-      <th style="width:10em">Práce</th>
+      <th style="width:20em">Práce</th>
       <th style="width:20em">Dodavatel</th>
       <th style="width:">Kč/ks</th>
       <th style="width:">ks</th>
@@ -183,16 +183,76 @@
 
     </thead>
     <tbody>
-      <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"  @dblclick="f.Alert2(polozka2.obsah);to3Z(polozka2,2)" style="cursor:pointer;border: solid 1px silver">
+        <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"  @dblclick="to3Z(polozka2,2)" style="cursor:pointer;border: solid 1px silver">
       <td>
         <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
         <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
 
       </td>
-      <td class="rborder leva pl-2 pr-2">{{polozka2.nazev}}</td>
-      <td class="rborder pr-2">{{polozka2.idefix_prace}}</td>
-      <td class="rborder pr-2">{{polozka2.idefix_dod}}</td>
+      <td class="rborder leva pl-2 pr-2">
+        <!-- {{polozka2.nazev}} -->
+        <input type="text" v-model="polozka2.nazev">
+        </td>
+      <td class="rborder pr-0 pt-1 pl-2">
+        <!-- {{polozka2.idefix_prace}}  -->
+        <!-- remote -->
+        <!-- :remote-method="CisPrace" -->
+              <!-- :loading="loading" -->
+           <el-select v-model="polozka2.idefix_prace"
+              v-if="cis_prace.length>=0"
+              filterable
+              no-match-text="Nenalezeno"
+              no-data-text="Cekam na data"
+              default-first-option
+              size="mini"
+              class="pb-0 pl-0 pa-0 ma-0"
+              :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
+              popper-class="silver lighten-5"
+              placeholder="Prace"
+
+
+              @change="ZmenPolozku('zak',polozka2)"
+              >
+                <el-option
+                v-for="item01 in x.filter(cis_prace, function(o){ return true || filterPrace(polozka2,o) })"
+                :key="item01.idefix_prace"
+                :label="item01.prace"
+                :value="item01.idefix_prace"
+                style="font-size:13px"
+              >{{item01.prace}}:{{item01}}</el-option>
+            </el-select>
+      </td>
+      <td class="rborder pr-2 pt-1 pl-1">
+
+        <!-- {{polozka2.idefix_dod}} -->
+             <el-select v-model="polozka2.idefix_dod"
+              v-if="cis_dod.length>=0"
+              filterable
+              no-match-text="Nenalezeno"
+              no-data-text="Cekam na data"
+              default-first-option
+              size="mini"
+              class="pb-0 pl-0 pa-0 ma-0"
+              :style="'width:98%; '"
+              popper-class="silver lighten-5"
+              placeholder="Prace"
+              remote
+              :remote-method="CisDod"
+              :loading="loading"
+              @change="ZmenPolozku('zak',polozka2)"
+
+              >
+                <el-option
+                v-for="item02 in x.filter(cis_dod, function(o){ return filterDod(polozka2, o) })"
+                :key="item02.idefix_firma"
+                :label="item02.firma"
+                :value="item02.idefix_firma"
+                style="font-size:13px"
+              >{{item02.firma}}/{{item02}}</el-option>
+            </el-select>
+
+        </td>
       <td class="rborder pr-2">{{polozka2.kcks}}</td>
       <td class="rborder pr-2">{{polozka2.ks}}</td>
       <td class="rborder pr-2">{{polozka2.naklad}}</td>
@@ -275,11 +335,12 @@
 
         </button>
         &nbsp;&nbsp;&nbsp;
-        <button >
+
+        <button @click="FillFormWait(polozka,true)">
           <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </button>
 
-          </td>
+        </td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" >{{polozka.cislonabidky}}</td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.firma}}</td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.nazev}}</td>
@@ -288,8 +349,8 @@
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.nakladsum}}</td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.prodejsum}}</td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
-        <td :class="{'green lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pr-4" >{{polozka.obchodnik }}</td>
-        <td :class="{'green lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="leva pr-4" >{{polozka.stav }}</td>
+        <td :class="{'green lighten-4 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pr-4" >{{polozka.obchodnik }}</td>
+        <td :class="{'green lighten-4 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="leva pr-4" >{{polozka.stav }}</td>
 
       </tr>
     </tbody>
@@ -326,7 +387,7 @@
     <thead>
       <th style="width:3em">Ikony</th>
       <th style="width:20em">Text na faktuře</th>
-      <th style="width:10em">Práce</th>
+      <th style="width:20em">Práce</th>
       <th style="width:20em">Dodavatel</th>
       <th style="width:">Kč/ks</th>
       <th style="width:">ks</th>
@@ -336,7 +397,7 @@
 
     </thead>
     <tbody>
-      <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"  @dblclick="to3N(polozka2,2)" style="cursor:pointer">
+      <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"  @dblclick="to3N(polozka2,2)" style="cursor:pointer; height:30px; border-bottom:dotted 1px;">
        <td>
         <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
@@ -344,8 +405,66 @@
 
       </td>
       <td class="rborder leva pl-2 pr-2">{{polozka2.nazev}}</td>
-      <td class="rborder pr-2">{{polozka2.idefix_prace}}</td>
-      <td class="rborder pr-2">{{polozka2.idefix_dod}}</td>
+
+      <td class="rborder pr-0 pt-1 pl-2">
+        <!-- {{polozka2.idefix_prace}} -->
+              <!-- remote
+              :remote-method="CisPrace"
+              :loading="loading" -->
+             <el-select v-model="polozka2.idefix_prace"
+              v-if="cis_prace.length>=0"
+              filterable
+              no-match-text="Nenalezeno"
+              no-data-text="Cekam na data"
+              default-first-option
+              size="mini"
+              class="pb-0 pl-0 pa-0 ma-0 "
+
+              :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
+              popper-class="silver lighten-5"
+              placeholder="Prace"
+              @change="ZmenPolozku('nab',polozka2)"
+              >
+                <el-option
+                v-for="item01 in x.filter(cis_prace, function(o){ return true || filterPrace(polozka2,o) })"
+                :key="item01.idefix_prace"
+                :label="item01.prace"
+                :value="item01.idefix_prace"
+                style="font-size:13px"
+              >{{item01.prace}}//{{item01}}</el-option>
+            </el-select>
+        </td>
+
+      <td class="rborder pr-2 pt-1 pl-1">
+
+              <!-- remote
+              :remote-method="CisDod"
+              :loading="loading" -->
+
+        <!-- {{polozka2.idefix_dod}} -->
+             <el-select v-model="polozka2.idefix_dod"
+              v-if="cis_dod.length>=0"
+              filterable
+              no-match-text="Nenalezeno"
+              no-data-text="Cekam na data"
+              default-first-option
+              size="mini"
+              class="pb-0 pl-0 pa-0 ma-0"
+              :style="'width:98%; '"
+
+              popper-class="silver lighten-5"
+              placeholder="Dodavatel"
+              @change="ZmenPolozku('nab',polozka2)"
+              >
+                <el-option
+                v-for="item02 in x.filter(cis_dod, function(o){ return filterDod(polozka2, o) })"
+                :key="item02.idefix_firma"
+                :label="item02.firma"
+                :value="item02.idefix_firma"
+                style="font-size:13px"
+              >{{item02.firma}}//{{item02}}</el-option>
+            </el-select>
+        </td>
       <td class="rborder pr-2">{{polozka2.kcks}}</td>
       <td class="rborder pr-2">{{polozka2.ks}}</td>
       <td class="rborder pr-2">{{polozka2.naklad}}</td>
@@ -802,6 +921,8 @@ import SQL from '../../services/fcesql'
 import Prehled from './CalcPrehled.vue' // Prehledova dole
 import { stringify } from 'querystring';
 
+import _ from 'lodash'
+
 // import JQuery from 'jquery'
 // let $ = JQuery
 
@@ -846,6 +967,7 @@ export default {
      timeoutDrag: null,
      $: $,
      f: f,
+     x: _,
      w1: WorkButMenu,
      idTmp:0,
      drag: false,
@@ -892,7 +1014,12 @@ export default {
      desc_zak:"",
      desc_nab:"",
 
-
+     cis_prace:[],
+     cis_dod:  [],
+     cis_prace_vlastnik:[],  //asi to samy jne vlastnik bude na prvni pozici, jestli to chapu dobre
+     cis_dod_vlastnik:  [],
+     idefix_vlastnik: 0,
+     loading: false,
      timeout: false,
 
    }
@@ -942,6 +1069,8 @@ deactivated: function () {
      eventBus.$off('Rend')
      console.log(serverDel)
      })
+
+
 
 
      //eventBus.$off()
@@ -1308,7 +1437,20 @@ if (self.MAINMENULAST== 'zakazky'){
 */
 
   //Po startu se nacte seznam zakazek
+  await self.Vlastnik();
   await self.Seznam('zak')
+  await self.CisPraceDod();
+
+
+  /*
+  f.Alert2(f.Jstr(self.x.filter(self.cis_prace, function(o) {
+    return o.prace=='Doprava';
+  } )))
+  */
+
+  //f.Alert(f.Jstr(self.cis_prace))
+
+  //f.Alert(qDod)
 
   self.Sirka=  Math.ceil((window.innerWidth ) * 0.9)
   //f.Alert("1",  self.cTable)
@@ -1413,29 +1555,87 @@ if (self.MAINMENULAST== 'zakazky'){
  //  this.$destroy()
  },
  methods: {
+    filterPrace(polozka, radekDod){
+     const self=this
+     var lRet= false
+
+     if (polozka.idefix_dod==0) {
+       lRet = true
+     }
+     if (polozka.idefix_dod>0) {
+        console.log(radekDod.prace_seznam)
+        radekDod.dod_seznam.forEach(el2=>{
+          if (el2==polozka.idefix_dod ) {
+            lRet=true
+            return
+          }
+        })
+     }
+     return lRet
+   },
+    filterDod(polozka, radekDod){
+     const self=this
+     var lRet= false
+
+     if (polozka.idefix_prace==0) {
+       lRet = true
+     }
+     if (polozka.idefix_prace>0) {
+        console.log(radekDod.prace_seznam)
+        radekDod.prace_seznam.forEach(el2=>{
+          if (el2==polozka.idefix_prace ) {
+            lRet=true
+            return
+          }
+        })
+     }
+     return lRet
+   },
+
    async delzak(polozka) {
      const self= this
-
+     if (polozka.nazev=='STORNO'){
+       this.$notify( { title: self.MAINMENULAST,  message: `Jiz bylo stornovano` , type: 'error', offset: 100, duration: 5000 })
+       return
+     }
+     if (!f.Confirm(`Storno pro  ${polozka.cislozakazky} ?`)) {
+       return
+     }
 
       var q0= `update zak_t_items set prodej = 0 where idefix_zak = ${polozka.idefix} ;`
       var q= `${q0} ; update zak_t_list set nazev = 'STORNO' where idefix = ${polozka.idefix}`
       var b = (await Q.post(self.idefix,q))
 
       await self.Seznam('zak')
+      setTimeout(function(){
+        self.$refs.w1.form.nazev           = 'STORNO'
+      },500)
 
-      self.$refs.w1.form.nazev                = 'STORNO'
+      this.$notify( { title: self.MAINMENULAST,  message: `Zakazka ${polozka.cislozakazky} byla stornovana` , type: 'error', offset: 100, duration: 5000 })
 
       //f.Alert2(f.Jstr(polozka))
    },
    async delnab(polozka) {
      const self= this
+     if (polozka.nazev=='STORNO'){
+        this.$notify( { title: self.MAINMENULAST,  message: `Jiz bylo stornovano` , type: 'error', offset: 100, duration: 5000 })
+       return
+     }
+     if (!f.Confirm(`Storno pro  ${polozka.cislonabidky} ?`)) {
+       return
+     }
 //     alert('delzak')
       var q0= `update nab_t_items set prodej = 0 where idefix_nab = ${polozka.idefix} ;`
       var q= `${q0} ; update nab_t_list set nazev = 'STORNO' where idefix = ${polozka.idefix}`
 
       var b = (await Q.post(self.idefix,q))
       self.Seznam('nab')
-      self.$refs.w1.form.nazev                = 'STORNO'
+      setTimeout(function(){
+        self.$refs.w1.form.nazev           = 'STORNO'
+      },500)
+
+      this.$notify( { title: self.MAINMENULAST,  message: `Zakazka ${polozka.cislonabidky} byla stornovana` , type: 'error', offset: 100, duration: 5000 })
+
 
 
 
@@ -1445,17 +1645,59 @@ if (self.MAINMENULAST== 'zakazky'){
       //f.Alert2(q, f.Jstr(polozka))
    },
 
-   async FillFormWait(polozka) {
+  async cleanItems(polozka){
+    const self=this
+    var typ='zak'
+    var idfx = 0
+
+    if (self.MAINMENULAST=='zakazky') {
+      typ='zak'
+      idfx=polozka.idefix
+
+    }
+    if (self.MAINMENULAST=='kalkulace') {
+      typ='nab'
+      idfx=polozka.idefix
+    }
+    var qb=`drop table if exists ${self.cTable} ;drop sequence if exists ${self.cTable}_seq
+         ;create sequence ${self.cTable}_seq
+         ;create table ${self.cTable} without oids  as select * from ${typ}_t_items where idefix_${typ} = ${idfx}
+
+         ;alter table ${self.cTable} alter idefix  set default nextval('list2_seq')
+         ;alter table ${self.cTable} alter id set default nextval('${self.cTable}_seq')
+        `
+       //f.Alert2(f.Jstr(polozka))
+       //var qb=`create table ${self.cTable} without oids  as select * from zak_t_items where idefix_zak = ${polozka.idefix}`
+
+       var b = (await Q.post(self.idefix,qb))
+  },
+   async FillFormWait(polozka, nova = false) {
       const self = this
+      await self.cleanItems(polozka)
       await self.FillForm(polozka);
 
-      if (self.timeout){
+      if (self.timeout && nova==false){
        clearTimeout(self.timeout)
        self.timeout=false
        return
      }
        self.timeout=setTimeout(function() {
           self.FillForm(polozka);
+          if (nova==true){   //nova upravou
+            setTimeout(function() {
+
+              self.Nova(true)
+              if (self.MAINMENULAST=="zakazky"){
+                self.$notify( { title: self.MAINMENULAST,  message: `Zalozena nova pro upravou z ${polozka.cislozakazky}` , type: 'error', offset: 100, duration: 5000 })
+              }
+              if (self.MAINMENULAST=="kalkulace"){
+                self.$notify( { title: self.MAINMENULAST,  message: `Zalozena nova pro upravou z ${polozka.cislonabidky}` , type: 'error', offset: 100, duration: 5000 })
+              }
+
+              //f.Alert('Nova Up')
+            },100)
+
+          }
          //console.log("Render col ", self.TestRend )
 
      }, 500)
@@ -1513,17 +1755,41 @@ if (self.MAINMENULAST== 'zakazky'){
                $('#'+self.$refs.w1.fields['osoba']['nazev']).focus()
             },1000)
          }
+   },
+   async addPol(ceho='zak',idefix_zaknab=-1 ) {
+       const self = this
+       var addPol=[]
 
+       addPol=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where vzor=1`)).data.data
+       addPol.forEach(el=>{
+         if (ceho=='zak'){
+           el.idefix_zak=idefix_zaknab
+           self.polozky_zak.push(el)
+         }else
+         if (ceho=='nab'){
+           el.idefix_nab=idefix_zaknab
+           self.polozky_nab.push(el)
+         }
 
+       })
+       //f.Alert(f.Jstr(addPol))
 
    },
    async to2Z(polozka) {
      const self = this
+
       self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
      if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
        self.status_zak=2
        self.obrazovka_zak=2
-       self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix}`)).data.data
+       //update zak_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=1, obsah=null  where idefix in ( 67198, 67199 ) ;
+       //update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null  where idefix in ( 67156, 67157 ) ;
+
+       self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)).data.data
+       self.addPol('zak',polozka.idefix)
+
+
+
        await self.FillForm(polozka);
        //self.$refs.w1.form.osoba   = polozka.idefix_firma
        //f.Alert(polozka.idefix, f.Jstr(polozka))
@@ -1536,45 +1802,67 @@ if (self.MAINMENULAST== 'zakazky'){
       const self= this
       var idfx = 0
       var idfxKalkulace=0
-      self.obrazovka_nab=3
+      var presun= true
+
+
 
       if (odkud == 2) {
-   //     f.Alert('2 --  ',f.Jstr(polozka.idefix_nab))
+        //f.Alert2('2 --  ',f.Jstr(polozka.idefix_dod), '::',  self.idefix_vlastnik)
+        if (polozka.idefix_dod== self.idefix_vlastnik) {
+          presun = true
+
+        } else {
+          presun = false
+          this.$notify( { title: self.MAINMENULAST,  message: `Pro cizi dodavatele nejsou  kalkulacek dispozici` , type: 'error', offset: 100, duration: 5000 })
+          return
+
+        }
+
         idfxKalkulace = polozka.idefix
         idfx=polozka.idefix_nab
+
+
       } else
       if (odkud == 1) {
         idfx=polozka.idefix
       }
       //f.Alert('3 --  ', idfx)
-      await self.to3(polozka,'nab', idfx, idfxKalkulace)
+      if (presun == true ) {
+        self.obrazovka_nab=3
+        await self.to3(polozka,'nab', idfx, idfxKalkulace)
+
+      } else {
+      }
+
    },
 
    async to3Z(polozka,odkud=1){
       const self= this
       var idfx = 0
       var idfxKalkulace=0
-      self.obrazovka_zak=3
+      var presun= true
+
 
       if (odkud == 2) { //Polozky
+        if (polozka.idefix_dod== self.idefix_vlastnik) {
+          presun = true
+
+        } else {
+          presun = false
+          this.$notify( { title: self.MAINMENULAST,  message: `Pro cizi dodavatele nejsou  kalkulacek dispozici` , type: 'error', offset: 100, duration: 5000 })
+          return
+        }
         idfxKalkulace = polozka.idefix
         idfx=polozka.idefix_zak
-
       } else
       if (odkud == 1) {
-
         idfx=polozka.idefix
       }
-      //  f.Alert('3 --  ', idfx)
-
-      // if (!f.isEmpty(polozka.idefix_zak)) {
-      //   idfx=polozka.idefix_zak
-      // } else {
-      //   idfx=polozka.idefix
-
-      // }
-
-      await self.to3(polozka,'zak', idfx,  idfxKalkulace )
+      if (presun == true ) {
+        self.obrazovka_zak=3
+        await self.to3(polozka,'zak', idfx,  idfxKalkulace )
+      } else {
+      }
    },
    async to3(polozka,typ='zak', idfx=0, idfxKalkulace) {
       const self= this
@@ -1609,7 +1897,9 @@ if (self.MAINMENULAST== 'zakazky'){
 
        var b = (await Q.post(self.idefix,qb))
        //f.Alert2( qb);
+
        self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+
        //f.Alert(f.Jstr(self.aKalkBefore))
        await self.setZabalit()
        if (idfxKalkulace>0) {
@@ -1991,6 +2281,85 @@ if (self.MAINMENULAST== 'zakazky'){
             return qset
 
    },
+  async CisPrace(query="")   {
+    const self= this
+       var qPrace= SQL.getPrace(0, query)
+       console.log(qPrace)
+
+       self.loading=true
+        try {
+         self.cis_prace=(await Q.all(self.idefix,qPrace)).data.data
+         self.cis_prace_vlastnik = self.cis_prace.filter(el => {
+         return _.findIndex(el.dod_seznam, function(o) { return o*1 == self.idefix_vlastnik*1; })  >-1
+         // return true
+
+         })
+         //f.Alert(f.Jstr(self.cis_prace_vlastnik), self.idefix_vlastnik )
+         self.loading=false;
+        } catch(e){
+          console.log(e)
+        }
+  },
+  async CisDod(idefix_prace=0)   {
+    const self= this
+    var qDod  = SQL.getDod(idefix_prace)
+        self.loading=true
+        //await self.Vlastnik()
+      try {
+          self.cis_dod=(await Q.all(self.idefix,qDod)).data.data
+          self.cis_dod_vlastnik= self.cis_dod.filter(el=>{
+            return el.idefix_firma == self.idefix_vlastnik
+          })
+
+         // f.Alert(f.Jstr(self.cis_dod_vlastnik), self.idefix_vlastnik)
+          self.loading=false;
+        } catch(e){
+          console.log(e)
+        }
+  },
+  async Vlastnik(){
+    const self= this
+    var qVlastnik = `select idefix from list_dodavatel where vlastnik = 1 order by time_update  desc limit 10 ;`
+    var aRet=[]
+
+      try {
+          aRet=(await Q.all(self.idefix,qVlastnik)).data.data
+          if (aRet.length==0) {
+            f.Alert('Vlastnik neni definovan')
+          } else
+          if (aRet.length==1) {
+          self.idefix_vlastnik= aRet[0].idefix
+          } else
+          if (aRet.length>1) {
+            self.idefix_vlastnik= aRet[0].idefix
+            f.Alert('Je definovano vice vlastniku aplikace, bude urcen ten kde je nejnovejsi zmena')
+          }
+          //f.Alert(self.idefix_vlastnik)
+        } catch(e){
+          console.log(e)
+        }
+  },
+  async CisPraceDod()  {
+    const self= this
+    await self.CisDod()
+    await self.CisPrace()
+  },
+  async ZmenPolozku(ceho = 'zak', polozka){
+    const self=this
+    var q=`update  ${ceho}_t_items a set
+          idefix_prace = ${polozka.idefix_prace} ,
+          idefix_dod =   ${polozka.idefix_dod},
+          nazev      =   trim('${polozka.nazev}')
+          where idefix = ${polozka.idefix}`
+    try {
+      var b = (await Q.post(self.idefix,q))
+      this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena` , type: 'error', offset: 100, duration: 1000 })
+    } catch (e){
+      this.$notify( { title: self.MAINMENULAST,  message: `Doslo k chybe pri ulozeni` , type: 'error', offset: 100, duration: 5000 })
+      //f.Alert('jsem tu ', q, f.Jstr(polozka ))
+    }
+
+  },
 async Seznam(ceho = 'zak', where ='', orderby=''){
     const self=this
     var desc=""
@@ -3379,8 +3748,13 @@ input {
   border-left: solid 1px silver
 }
 
+</style>
+
+<style>
+
 
 
 </style>
+
 
 
