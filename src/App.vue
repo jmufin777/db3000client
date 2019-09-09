@@ -205,8 +205,13 @@ html div {
 }
 .sedadel {
   /* background: #eee !important; */
-  background: #e6f2fc  !important;
-  color:red;
+  /* background: #e6f2fc  !important; */
+   /* color:#606061; */
+   color:#cccccc !important;
+   font-style: italic;
+   text-decoration: line-through;
+
+
 }
 .bila{
   background-color: white !important;

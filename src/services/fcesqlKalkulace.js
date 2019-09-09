@@ -570,7 +570,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
           a.active,
           b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix `;
 
-  q= `${q} where true `
+  q= `${q} where  true and obsah is not null `
 
   if (poradiFrom > 0) {
     q= `${q} and poradi>= ${poradiFrom} `

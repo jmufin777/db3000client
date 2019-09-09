@@ -128,12 +128,12 @@
         <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.firma}}</td>
         <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.nazev}}</td>
         <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="stred pl-2" >{{f.datum3(polozka.datumzadani)}}</td>
-        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="leva pl-2" >{{f.datum3(polozka.time_update)}}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="stred pl-2" >{{f.datum3(polozka.time_update)}}</td>
         <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.nakladsum}}</td>
         <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.prodejsum}}</td>
         <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
-        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pr-4" >{{polozka.obchodnik }}</td>
-        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="leva pr-4" >{{polozka.stav }}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.obchodnik }}</td>
+        <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="leva pl-2" >{{polozka.stav }}</td>
 
 
       </tr>
@@ -185,14 +185,15 @@
     <tbody>
         <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"  @dblclick="to3Z(polozka2,2)" style="cursor:pointer;border: solid 1px silver">
       <td>
-        <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        <i v-if="polozka2.vzor==0" class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('zak',polozka2)"></i>
+        <i v-else  class="el-icon-minus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
-        <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;" ></i>
 
       </td>
       <td class="rborder leva pl-2 pr-2">
         <!-- {{polozka2.nazev}} -->
-        <input type="text" v-model="polozka2.nazev">
+        <input type="text" v-model="polozka2.nazev" @change="ZmenPolozku('zak',polozka2)">
         </td>
       <td class="rborder pr-0 pt-1 pl-2">
         <!-- {{polozka2.idefix_prace}}  -->
@@ -220,7 +221,7 @@
                 :label="item01.prace"
                 :value="item01.idefix_prace"
                 style="font-size:13px"
-              >{{item01.prace}}:{{item01}}</el-option>
+              >{{item01.prace}}</el-option>
             </el-select>
       </td>
       <td class="rborder pr-2 pt-1 pl-1">
@@ -249,15 +250,25 @@
                 :label="item02.firma"
                 :value="item02.idefix_firma"
                 style="font-size:13px"
-              >{{item02.firma}}/{{item02}}</el-option>
+              >{{item02.firma}}</el-option>
             </el-select>
 
         </td>
       <td class="rborder pr-2">{{polozka2.kcks}}</td>
-      <td class="rborder pr-2">{{polozka2.ks}}</td>
-      <td class="rborder pr-2">{{polozka2.naklad}}</td>
+      <td class="rborder pr-2">
+        <!-- {{polozka2.ks}} -->
+        <input type="text" v-model="polozka2.ks" @change="ZmenPolozku('zak',polozka2)">
+        </td>
+      <td class="rborder pr-2">
+        <!-- {{polozka2.naklad}} -->
+        <input type="text" v-model="polozka2.naklad" @change="ZmenPolozku('zak',polozka2)">
+        </td>
       <td class="rborder pr-2">{{polozka2.prodej - polozka2.naklad}}</td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
-      <td class="rborder pr-2">{{polozka2.faktura}}huh1u</td>
+      <td class="rborder pr-2">
+        <!-- {{polozka2.faktura}} -->
+        <input type="text" v-model="polozka2.faktura" @change="ZmenPolozku('zak',polozka2)">
+
+        </td>
 
       </tr>
 
@@ -345,12 +356,12 @@
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.firma}}</td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.nazev}}</td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="stred pl-2" >{{f.datum3(polozka.datumzadani)}}</td>
-        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="leva pl-2" >{{f.datum3(polozka.time_update)}}</td>
+        <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="stred pl-2" >{{f.datum3(polozka.time_update)}}</td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.nakladsum}}</td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 8)" class="prava pr-4" >{{polozka.prodejsum}}</td>
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
-        <td :class="{'green lighten-4 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pr-4" >{{polozka.obchodnik }}</td>
-        <td :class="{'green lighten-4 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="leva pr-4" >{{polozka.stav }}</td>
+        <td :class="{'green lighten-4 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.obchodnik }}</td>
+        <td :class="{'green lighten-4 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='STORNO'}"  :style="f.pof(Sirka, 5)" class="leva pl-2" >{{polozka.stav }}</td>
 
       </tr>
     </tbody>
@@ -399,12 +410,16 @@
     <tbody>
       <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"  @dblclick="to3N(polozka2,2)" style="cursor:pointer; height:30px; border-bottom:dotted 1px;">
        <td>
-        <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        <i v-if="polozka2.vzor==0" class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('nab',polozka2)"></i>
+        <i v-else  class="el-icon-minus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
         <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
 
       </td>
-      <td class="rborder leva pl-2 pr-2">{{polozka2.nazev}}</td>
+      <td class="rborder leva pl-2 pr-2">
+        <!-- {{polozka2.nazev}} -->
+        <input type="text" v-model="polozka2.nazev" @change="ZmenPolozku('nab',polozka2)">
+        </td>
 
       <td class="rborder pr-0 pt-1 pl-2">
         <!-- {{polozka2.idefix_prace}} -->
@@ -431,7 +446,7 @@
                 :label="item01.prace"
                 :value="item01.idefix_prace"
                 style="font-size:13px"
-              >{{item01.prace}}//{{item01}}</el-option>
+              >{{item01.prace}}</el-option>
             </el-select>
         </td>
 
@@ -462,15 +477,24 @@
                 :label="item02.firma"
                 :value="item02.idefix_firma"
                 style="font-size:13px"
-              >{{item02.firma}}//{{item02}}</el-option>
+              >{{item02.firma}}</el-option>
             </el-select>
         </td>
       <td class="rborder pr-2">{{polozka2.kcks}}</td>
-      <td class="rborder pr-2">{{polozka2.ks}}</td>
-      <td class="rborder pr-2">{{polozka2.naklad}}</td>
-      <td class="rborder pr-2">{{polozka2.prodej - polozka2.naklad}}</td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
-      <td class="rborder pr-2">{{polozka2.faktura}}huh2u</td>
+      <td class="rborder pr-2">
+        <input type="text" v-model="polozka2.ks">
+        <!-- {{polozka2.ks}} -->
 
+      </td>
+      <td class="rborder pr-2">
+        <!-- {{polozka2.naklad}} -->
+        <input type="text" v-model="polozka2.naklad" @change="ZmenPolozku('nab',polozka2)">
+        </td>
+      <td class="rborder pr-2">{{polozka2.prodej - polozka2.naklad}}</td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
+      <td class="rborder pr-2">
+        <!-- {{polozka2.faktura}} -->
+        <input type="text" v-model="polozka2.faktura" @change="ZmenPolozku('nab',polozka2)">
+        </td>
 
       </tr>
     </tbody>
@@ -1592,6 +1616,21 @@ if (self.MAINMENULAST== 'zakazky'){
      return lRet
    },
 
+   async deleteItem(ceho='zak',polozka) {
+     const self=this
+     var idefix_ceho=(ceho=='zak')?polozka.idefix_zak:polozka.idefix_nab
+      var b = (await Q.post(self.idefix,`delete from ${ceho}_t_items where idefix = ${polozka.idefix} and vzor=0`))
+      //f.Alert2(`delete from ${ceho}_t_items where idefix = ${polozka.idefix} and vzor=0`)
+
+      self.polozky_zak=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where idefix_${ceho}= ${idefix_ceho} order by idefix`)).data.data
+
+
+      await self.addPol(ceho,idefix_ceho)
+      //await f.sleep(1000)
+
+
+   },
+
    async delzak(polozka) {
      const self= this
      if (polozka.nazev=='STORNO'){
@@ -1764,11 +1803,16 @@ if (self.MAINMENULAST== 'zakazky'){
        addPol.forEach(el=>{
          if (ceho=='zak'){
            el.idefix_zak=idefix_zaknab
-           self.polozky_zak.push(el)
+           if (_.findIndex(self.polozky_zak, function(o) { return o.nazev == el.nazev && o.idefix_dod==el.idefix_dod })  ==-1) {
+             self.polozky_zak.push(el)
+           }
+
          }else
          if (ceho=='nab'){
            el.idefix_nab=idefix_zaknab
-           self.polozky_nab.push(el)
+           if (_.findIndex(self.polozky_nab, function(o) { return o.nazev == el.nazev && o.idefix_dod==el.idefix_dod })  ==-1) {
+            self.polozky_nab.push(el)
+           }
          }
 
        })
@@ -1784,9 +1828,13 @@ if (self.MAINMENULAST== 'zakazky'){
        self.obrazovka_zak=2
        //update zak_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=1, obsah=null  where idefix in ( 67198, 67199 ) ;
        //update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null  where idefix in ( 67156, 67157 ) ;
+       //update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null,idefix_dod = 0  where idefix in (  67157 ) ;
+       //update zak_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=1, obsah=null,idefix_dod = 0  where idefix in (  67199 ) ;
+
 
        self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)).data.data
        self.addPol('zak',polozka.idefix)
+
 
 
 
@@ -1909,27 +1957,9 @@ if (self.MAINMENULAST== 'zakazky'){
        $("#Zmenad").get(0).value=0
 
 
-
-
-
       // f.Alert2('3Z?', qb)
    },
-   async to3Nxxx(polozka) {
-      const self= this
-       self.obrazovka_nab=3
-       //eventBus.$emit(666)
-       //var a = (await Q.post(self.idefix,`drop table if exists ${self.cTable}`))
-       // var b = (await Q.post(self.idefix,`create table ${self.cTable} without oids  asselect * from zak_t_items where idefix_zak = ${polozka.idefix_zak}`))
 
-       //await  self.setZabalit()
-       var qb=`create table ${self.cTable} without oids  as select * from nab_t_items where idefix_nab = ${polozka.idefix}`
-       //f.Alert2(qb);
-       var b = (await Q.post(self.idefix,qb))
-
-
-
-      f.Alert2('3N?' , qb)
-   },
   async to2N(polozka) {
   const self = this
       self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
@@ -1939,6 +1969,7 @@ if (self.MAINMENULAST== 'zakazky'){
        self.obrazovka_nab=2
 
        self.polozky_nab=  (await Q.all(self.idefix,`select * from nab_t_items where idefix_nab= ${polozka.idefix}`)).data.data
+      self.addPol('nab',polozka.idefix)
        await self.FillForm(polozka);
        //self.$refs.w1.form.osoba   = polozka.idefix_firma
        //f.Alert(polozka.idefix, f.Jstr(polozka))
@@ -2346,18 +2377,126 @@ if (self.MAINMENULAST== 'zakazky'){
   },
   async ZmenPolozku(ceho = 'zak', polozka){
     const self=this
-    var q=`update  ${ceho}_t_items a set
+    var q=''
+    var idefix_ceho=(ceho=='zak')?polozka.idefix_zak:polozka.idefix_nab
+    if (polozka.vzor==0) {
+        q=`update  ${ceho}_t_items a set
           idefix_prace = ${polozka.idefix_prace} ,
           idefix_dod =   ${polozka.idefix_dod},
           nazev      =   trim('${polozka.nazev}')
           where idefix = ${polozka.idefix}`
+
+    }
+
+    if (polozka.vzor==1 && !polozka.nazev.match(/^Pr.zdn.$/)){
+
+
+      var qCols=`(
+       nazev
+      ,obsah
+      ,kcks
+      ,ks
+      ,naklad
+      ,marze
+      ,prodej
+      ,marze_pomer
+      ,poradi
+      ,idefix_tmp
+      ,idefix_${ceho}
+      ,idefix_src
+      ,id_src
+      ,active
+      ,time_insert
+      ,time_update
+      ,user_insert_idefix
+      ,user_update_idefix
+      ,idefix_dod
+      ,idefix_prace
+      ,d_fak
+      ,faktura
+      ,vzor
+      ,expedice_datum
+      ,expedice_cas
+      ,datum
+       ) `
+
+      var qVals=`(
+       '${polozka.nazev              }'
+      ,'${polozka.obsah              }'
+      ,'${polozka.kcks               }'
+      ,'${polozka.ks                 }'
+      ,'${polozka.naklad             }'
+      ,'${polozka.marze              }'
+      ,'${polozka.prodej             }'
+      ,'${polozka.marze_pomer        }'
+      ,'${polozka.poradi             }'
+      ,'${polozka.idefix_tmp         }'
+      ,'${idefix_ceho         }'
+      ,'${polozka.idefix_src         }'
+      ,'${polozka.id_src             }'
+      ,'${polozka.active             }'
+      ,now()
+      ,now()
+      ,'${self.idefix }'
+      ,'${self.idefix }'
+      ,'${polozka.idefix_dod         }'
+      ,'${polozka.idefix_prace       }'
+      ,'${polozka.d_fak              }'
+      ,'${polozka.faktura            }'
+      ,0
+      ,now()::date
+      ,now()::time
+      ,now()
+      ) `
+      qVals=qVals.replace(/'null'/g,'null')
+
+      var q=`insert into ${ceho}_t_items ${qCols} values ${qVals}`
+
+
+
+
+    } else
+    if (polozka.vzor==1 && polozka.nazev.match(/^Pr.zdn.$/)){
+
+      f.Alert('Nedelam nic')
+      return
+    }
+    // f.Alert2("VKLAD", q)
+
+
     try {
       var b = (await Q.post(self.idefix,q))
       this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena` , type: 'error', offset: 100, duration: 1000 })
     } catch (e){
-      this.$notify( { title: self.MAINMENULAST,  message: `Doslo k chybe pri ulozeni` , type: 'error', offset: 100, duration: 5000 })
-      //f.Alert('jsem tu ', q, f.Jstr(polozka ))
+      this.$notify( { title: self.MAINMENULAST,  message: `Doslo k chybe pri ulozeni ` , type: 'error', offset: 100, duration: 5000 })
+
+      f.Alert2('jsem tu ', q, f.Jstr(polozka ))
     }
+    await self.DocasneReseni()
+    if (ceho=='zak') {
+          self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix_zak} order by idefix`)).data.data
+          self.addPol('zak',polozka.idefix_zak)
+    } else
+    if (ceho=='nab') {
+          self.polozky_zak=  (await Q.all(self.idefix,`select * from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`)).data.data
+          self.addPol('nab',polozka.idefix_nab)
+    }
+
+  },
+  async DocasneReseni() {
+    const self=this
+    //9015
+    var qqTemp=`update zak_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=1, obsah=null  where idefix in ( 67272,67273 ) ;
+    update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null  where idefix in ( 67156, 67157 ) ;
+    update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null,idefix_dod = 0  where idefix in (  67157 ) ;
+    update zak_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=1, obsah=null,idefix_dod = 0  where idefix in (  67272,67273 ) ;
+    update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null,idefix_dod  = ${self.idefix_vlastnik},idefix_prace=9015  where idefix in (  67156 ) ;
+    update zak_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=1, obsah=null,idefix_dod  =  ${self.idefix_vlastnik},idefix_prace=9015   where idefix in ( 67272 ) ;
+    update zak_t_items set expedice_datum= now(), expedice_cas=now(), datum = now() where expedice_datum is null ;
+    update nab_t_items set expedice_datum= now(), expedice_cas=now(), datum = now() where expedice_datum is null ;
+    `
+
+    var b = (await Q.post(self.idefix,qqTemp))
 
   },
 async Seznam(ceho = 'zak', where ='', orderby=''){
