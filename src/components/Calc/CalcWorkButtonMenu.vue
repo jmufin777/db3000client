@@ -39,12 +39,17 @@
             >{{item2.txt}}</b>
         </td></tr></table>
        </button>
-          </td>
+        </td>
 
         </tr></table>
         <!-- {{ aSubKalkulace}} -->
 
       </div>
+      <div v-else-if="setmenu=='Prevod' " style="position:relative;top:0px;background:#e4eff8;text-align:left;height:13.2em;font-size:14px;">
+        <prevod-dat></prevod-dat>
+        <!-- Prevadim data ze stare db -->
+      </div>
+
       <div v-else style="position:relative;top:0px;background:#e4eff8;text-align:left;height:4.05em;font-size:11px;" >
           Aktualne v procesu
     </div>
@@ -631,6 +636,7 @@ import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval, setInterval } from 'timers'
 import f from '@/services/fce'
 import SQL from '../../services/fcesql'
+import Prevod from './CalcPrevodDat.vue'
 
 
 
@@ -639,6 +645,7 @@ import SQL from '../../services/fcesql'
 
 export default {
    components: {
+       'prevod-dat': Prevod,
 
 
  },
@@ -679,7 +686,7 @@ export default {
         {id: "vyroba",  txt:  "Výroba"},
         {id: "studio",  txt:  "Studio"},
         {id: "doprava", txt:  "Dopravy"},
-        {id: "xxx", txt:  "???"},
+        {id: "Prevod", txt:  "Prevod"},
        ],
        aSubKalkulace:[
         {id:9, txt: "Nová sada",set: 0},
