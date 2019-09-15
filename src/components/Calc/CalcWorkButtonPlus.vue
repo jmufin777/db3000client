@@ -75,8 +75,6 @@ export default {
    eventBus.$on('DATARADKASENDDATA',(server)=>{
      self.form=server.data
      f.Alert2(JSON.stringify(self.form))
-
-
     })
    // f.Alert(self.st.KalkulaceThis)
 

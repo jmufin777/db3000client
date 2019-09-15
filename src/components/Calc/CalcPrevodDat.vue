@@ -76,7 +76,7 @@ export default {
        try {
         res1=  (await Q.post(self.idefix,`create index   zak_t_list_old_kod on zak_t_list (old_kod)`))
         } catch (e) {
-        console.log('Tvorba polozek 3 jiz je asi todlencto .... hotova vlastne')
+        console.log('Tvorba polozek 4 jiz je asi todlencto .... hotova vlastne')
        }
 
 
@@ -89,7 +89,7 @@ export default {
           c_zam_login(account2) as l2,
           datumexpedice::date::text as datumx,
           *
-          from zak_list a where uct_rok=${i} and year(datumexpedice) = uct_rok and datumexpedice is not null and kodzakazkoveholistu <=34574
+          from zak_list a where uct_rok=${i} and year(datumexpedice) = uct_rok and datumexpedice is not null and kodzakazkoveholistu <=34573
 
           order by kodzakazkoveholistu
           limit 50000

@@ -23,7 +23,9 @@ const cols = `
 
   `
 
-  //--obsah,
+  var idefix_vlastnik=0
+  var idefix_vlastnikPrace=0
+
 
 export default {
 
@@ -268,9 +270,19 @@ async Vklad(data, kalkulace2 ){
   var idefix=store.state.idefix
   var atmp=[]
   var nret = 0
-  var q = `insert into calc_templates ( ${cols},user_insert_idefix,user_update_idefix)
+  if (idefix_vlastnikPrace==0){
+    await this.Vlastnik()
+    await this.VlastnikPrace()
+  // })
+
+    f.Alert('hoooohohoho', idefix_vlastnikPrace)
+  }
+  f.Alert('hoooohohoho 1', idefix_vlastnikPrace)
+  var q = `insert into calc_templates ( ${cols},user_insert_idefix,user_update_idefix
+    ,idefix_dod,idefix_prace)
   values (
     trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${data.expedice_datum}','${data.expedice_cas}','${idefix}','${idefix}'
+    ,'${idefix_vlastnik}','${idefix_vlastnikPrace}'
 
   ) `;
   await Q.post(0,q)
@@ -292,9 +304,18 @@ async Vklad(data, kalkulace2 ){
 
 },
 async CopyUser(idefixactive=0,cTable="") {
+  if (idefix_vlastnikPrace==0){
+    await this.Vlastnik()
+    await this.VlastnikPrace()
+  }
+  //f.Alert('hoooohohoho 2', idefix_vlastnikPrace)
 
-  var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix, active)
-  select ${cols},user_insert_idefix,user_update_idefix, true from ${cTable} where idefix=${idefixactive}
+  var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix, active
+    ,idefix_dod,idefix_prace
+    )
+  select ${cols},user_insert_idefix,user_update_idefix, true
+  ,'${idefix_vlastnik}','${idefix_vlastnikPrace}'
+   from ${cTable} where idefix=${idefixactive}
   `
   await Q.post(0,`update ${cTable} set active=false where active`)
   .then ( res=>{
@@ -319,6 +340,51 @@ async CopyUser(idefixactive=0,cTable="") {
   })
 
 },
+async Vlastnik(){
+  const self= this
+  var qVlastnik = `select idefix from list_dodavatel where vlastnik = 1 order by time_update  desc limit 10 ;`
+  var aRet=[]
+
+    try {
+        aRet=(await Q.all(self.idefix,qVlastnik)).data.data
+        if (aRet.length==0) {
+          f.Alert('Vlastnik neni definovan')
+        } else
+        if (aRet.length==1) {
+          idefix_vlastnik= aRet[0].idefix
+        } else
+        if (aRet.length>1) {
+          idefix_vlastnik= aRet[0].idefix
+          f.Alert('Je definovano vice vlastniku aplikace, bude urcen ten kde je nejnovejsi zmena')
+        }
+        //f.Alert(self.idefix_vlastnik)
+      } catch(e){
+        console.log(e)
+      }
+},
+async VlastnikPrace(){
+  const self= this
+  var qVlastnik = `select * from list_firmaprace where vlastnik = 1 limit 2`
+  var aRet=[]
+
+    try {
+        aRet=(await Q.all(self.idefix,qVlastnik)).data.data
+        if (aRet.length==0) {
+          f.Alert('Vlastnik neni definovan')
+        } else
+        if (aRet.length==1) {
+          idefix_vlastnikPrace= aRet[0].idefix_prace
+        } else
+        if (aRet.length>1) {
+          idefix_vlastnikPrace= aRet[0].idefix_prace
+          f.Alert('Je definovano vice vlastniku aplikace, bude urcen ten kde je nejnovejsi zmena')
+        }
+        //f.Alert(self.idefix_vlastnik)
+      } catch(e){
+        console.log(e)
+      }
+},
+
 async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=0, SaveKalkulkace=true, SaveData=true){
 
   var idefix=store.state.idefix
@@ -326,12 +392,20 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
   var nret = 0
   var dataBck=f.Jparse(data)
   var aCols = cols.split(",")
+  if (idefix_vlastnikPrace==0){
+    await this.Vlastnik()
+    await this.VlastnikPrace()
+  }
+  f.Alert('hoooohohoho 3', idefix_vlastnikPrace)
   if (nazev >''){
     data.nazev=nazev
   }
   if (nazev=="undefined"){
     alert('sakra')
   }
+  // await this.Vlastnik()
+  // await this.VlastnikPrace()
+
   //if (f.isEmpty(data.nazev)) {
     //data.nazev=''
 
@@ -371,6 +445,16 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
         data.kcks = 0
       }
 
+      // var q = `
+      // ;create table ${cTable} without oids as select * from calc_templates limit 0
+      // ;alter table ${cTable} add poradi serial
+      // ;alter table ${cTable} add active bool default false
+      // ;alter table ${cTable} add idefix_src bigint default 0
+      // ;alter table ${cTable} alter idefix  set default nextval('list2_seq')
+      // ;alter table ${cTable} alter id set default nextval('${cTable}_seq')
+      // `
+      // Q.post(0,q)
+
 
       // alert("B" + data.naklad)
     //}
@@ -378,13 +462,18 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
     await Q.post(0,`update ${cTable} set active=false where active`)
     //Prepocet
   if (active==true || idefixactive==0)  {
-  var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix, active)
+  var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix, active
+    ,idefix_dod,idefix_prace)
   values (
     trim('${data.nazev}'),'${data.kcks}','${data.ks}','${data.naklad}','${data.marze}','${data.prodej}','${data.marze_pomer}','${kalkulace2}','${data.expedice_datum}','${data.expedice_cas}'
-    ,'${idefix}','${idefix}','${active}'
+    ,'${idefix}','${idefix}','${active}',
+    '${idefix_vlastnik}','${idefix_vlastnikPrace}'
 
   ) `
-  //f.Alert("Isert " , idefixactive , active)
+
+  // f.Alert("Isert " , idefixactive , active)
+  // f.Alert(idefix_vlastnik, idefix_vlastnikPrace, q)
+
   } else {
     if (SaveKalkulkace==true && SaveData==true) {
         var q = `update ${cTable} set
@@ -675,6 +764,8 @@ async deleteTemplate(_idefix) {
   ///f.Alert(JSON.stringify(atmp))
 
 },
+
+
 
 
 //Stroj

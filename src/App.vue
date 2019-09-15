@@ -527,6 +527,14 @@ button:focus {
 
 }
 
+.hoVer2:hover {
+      font-weight: 900;
+      background-color: green;
+      opacity: 0.9;
+
+}
+
+
 [v-cloak] {
   display: none;
 }
