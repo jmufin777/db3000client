@@ -778,15 +778,15 @@ deactivated: function () {
        self.form.nazevOrig=cItem.nazev
        self.form.ID = self.ID2
 
-        try {
-
+      try {
 
        var nK= await(queryKalk.getTemplate(self.form.idefix))
        //,
        //await (f.Alert2('Ahoj //',JSON.stringify(nK[0].obsah.length) ," // ") )
        //alert('tEd ')
 
-       var obsah = await(self.KalkulacePrepocetKusy(nK[0].obsah,neco))
+       // var obsah = await(self.KalkulacePrepocetKusy(nK[0].obsah,neco))
+       var obsah = await(prepocty.KalkulacePrepocetKusy(nK[0].obsah,neco))
 
        self.form.naklad = await(prepocty.getNaklad(obsah))
 
@@ -816,7 +816,7 @@ deactivated: function () {
         }
 
   },
-async KalkulacePrepocetKusy(k, ks=1){
+async KalkulacePrepocetKusySmazat(k, ks=1){
   //f.Alert("K" , k.length)
   //return
   var defer = $.Deferred();

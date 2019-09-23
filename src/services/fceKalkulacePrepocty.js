@@ -58,6 +58,94 @@ getNakladSloupce(data, sloupec){ // data jsou leva strana kalkulace
 
   return nSum
 },
+async KalkulacePrepocetKusy(k, ks=1){
+  //f.Alert2("K " , f.Jparse(k))
+  //k=f.Jparse(k)
+  //k=JSON.parse(k)
+  //f.Alert2("K " , f.Jparse(k))
+
+
+
+  //return
+  var defer = $.Deferred();
+  //f.Alert("Propocet 1")
+  k.forEach(element => {
+
+      //f.Alert("E :: " , f.isEmpty(element.data.FormatNakladKs ), f.isEmpty(10))
+      if (f.isEmpty(element.data.FormatNakladKs)) {
+        element.data.FormatNakladKs = ks
+        element.data.ResultM2= ((element.data.FormatSirka/1000) * (element.data.FormatVyska/1000) ) * element.data.FormatNakladKs
+      } else {
+        element.data.FormatNakladKs = element.data.FormatNakladKs * ks
+        element.data.ResultM2= ((element.data.FormatSirka/1000) * (element.data.FormatVyska/1000) ) * element.data.FormatNakladKs
+      }
+  });
+
+  defer.resolve(k);
+
+  return defer.promise();
+
+},
+async KalkulacePrepocetKusyNa1(k, ks=1){
+  //f.Alert("K" , k.length)
+  //return
+
+
+  var defer = $.Deferred();
+//  defer.resolve(k);
+  //return defer.promise();
+
+  // f.Alert2
+  // var k2=f.Jparse(k2)
+  // f.Alert2("Propocet na 1", k )
+  var k2 = f.Jstr(k)
+  var ksOld=0
+  var ksNew=0
+  k2= f.Jparse(k)
+  try {
+  k2.forEach(element => {
+
+      //f.Alert("E :: " , f.isEmpty(element.data.FormatNakladKs ), f.isEmpty(10))
+      if (f.isEmpty(element.data.FormatNakladKs)) {
+        //element.data.FormatNakladKs = ks
+        element.data.FormatNakladKs = 1
+      } else {
+        //element.data.FormatNakladKs = element.data.FormatNakladKs * ks
+        ksOld =  element.data.FormatNakladKs;
+        if (ks==1){
+          element.data.FormatNakladKs
+        }
+        if (ks > 1) {
+          //bylo : 10
+          //chci 1
+          //mam: 20
+          //ksPomer= ksOld / ks
+          ksNew = parseInt(ksOld / ks)
+          // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) )*self.form.nakladks })
+          // f.Alert(ksNew, ksOld)
+          element.data.ResultM2= ((element.data.FormatSirka/1000) * (element.data.FormatVyska/1000) ) * ksNew
+
+
+          element.data.FormatNakladKs = ksNew
+
+        }
+
+
+      }
+  });
+  defer.resolve(k2);
+} catch (e) {
+
+  console.log('Chyba prepoctu vracim original ', e)
+  defer.resolve(k);
+
+}
+
+
+
+  return defer.promise();
+
+},
 ///Prace
 
 

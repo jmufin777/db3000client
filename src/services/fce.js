@@ -1092,8 +1092,18 @@ Jstr(str) {
   return JSON.stringify(str)
 },
 Jparse(str) {
+
   return JSON.parse(JSON.stringify(str))
 },
+isJson(str) {
+  try {
+      JSON.parse(str);
+  } catch (e) {
+      return false;
+  }
+  return true;
+},
+
 ID2() {
   return  Math.round((Math.round(Math.random() * 1983458) * Math.round(Math.random() * 1983777458)) / Math.round(Math.random() * 198323458))
 },

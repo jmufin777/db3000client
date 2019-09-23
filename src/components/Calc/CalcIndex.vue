@@ -12,7 +12,7 @@
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="Nova()"
           >
-          Nova
+          Nova {{status_zak}}
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
               @click="Ulozit()"
@@ -111,8 +111,8 @@
   </table>
   <table slot="body"  :style="f.pof(Sirka,98)"  >
     <tbody>
-      <tr v-for="(polozka,idx) in seznam_zak" :key="idx"  @dblclick="to2Z(polozka);"  @click="FillFormWait(polozka)" style="cursor:pointer"
-        :id="'tr_'+polozka.idefix"
+      <tr v-for="(polozka,idx) in seznam_zak" :key="idx"  @dblclick="to2Z(polozka);"  @click="FillFormWait(polozka);aktivni_zak=polozka.idefix" style="cursor:pointer"
+        :id="'trz_'+polozka.idefix"
         class="hoVer2"
 
       >
@@ -152,7 +152,8 @@
 <div class="leva pt-0 pb-0">
 
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-        @click="obrazovka_zak=1"
+        @click="to1Z()"
+
         >
         Kniha 1Z
     </button>
@@ -186,21 +187,40 @@
 
     </thead>
     <tbody>
-      <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"  @dblclick="to3Z(polozka2,2)"
+      <tr v-for="(polozka2,idx2) in polozky_zak" :key="idx2"
       class="hoVer2"
 
-      style="cursor:pointer; height:30px; border-bottom:dotted 0px;">
-       <td :key="'zak'+klikyzak+''+idx2" class="pl-1" style="border-bottom:none">
+      style="cursor:pointer; height:30px; border-bottom:dotted 0px;"
+
+
+      >
+       <td :key="'zak'+klikyzak+''+idx2" class="pl-1" style="border-bottom:none"
+       :class="{
+         'blue lighten-5 ': (polozka2.vzor==2 ) || ( polozka2.vzor==0 && !f.isEmpty(polozka2.obsah) ),
+         'green lighten-5 ': (polozka2.vzor==1 && polozka2.idefix_dod==idefix_vlastnik ) || (polozka2.vzor==0 && polozka2.idefix_dod==idefix_vlastnik && f.isEmpty(polozka2.obsah) )
+       }"
+
+
+       >
+
         <div   style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-1">
+
+        <span v-if="!f.isEmpty(polozka2.obsah) " class="white--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="polozka2.vzor==0?to3Z(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
+        <span v-else class="white--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+
         <i v-if="polozka2.vzor==0" class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('zak',polozka2)"></i>
         <i v-else  class="el-icon-minus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
+
+
         <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </div>
 
       </td>
       <td class="rborder leva pl-2 pr-2" style="border-bottom:none">
-        <input type="text" v-model="polozka2.nazev" @change="ZmenPolozku('zak',polozka2)" style="height:90%; border-bottom:dotted 1px;">
+        <input type="text" v-model="polozka2.nazev" @change="ZmenPolozku('zak',polozka2)" style="height:90%; border-bottom:dotted 1px;"
+        :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
+        >
       </td>
 
 
@@ -347,8 +367,8 @@
   </table>
   <table slot="body"  :style="f.pof(Sirka,98)"  >
     <tbody>
-      <tr v-for="(polozka,idx) in seznam_nab" :key="idx"  @dblclick="to2N(polozka);"  @click="FillFormWait(polozka)" style="cursor:pointer"
-        :id="'tr_'+polozka.idefix"
+      <tr v-for="(polozka,idx) in seznam_nab" :key="idx"  @dblclick="to2N(polozka);"  @click="FillFormWait(polozka);aktivni_nab=polozka.idefix" style="cursor:pointer"
+        :id="'trn_'+polozka.idefix"
         class="hoVer2"
       >
         <td :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo}"  :style="f.pof(Sirka, 5)" >
@@ -391,7 +411,7 @@
 </div>
 <div class="leva pt-0 pb-0">
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-        @click="obrazovka_nab=1"
+        @click="to1N()"
         >
         Kniha 1N
     </button>
@@ -422,20 +442,32 @@
 
     </thead>
     <tbody>
-      <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"  @dblclick="to3N(polozka2,2)" style="cursor:pointer; height:30px; border-bottom:dotted 0px;"
+      <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"   style="cursor:pointer; height:30px; border-bottom:dotted 0px;"
           class="hoVer2"
       >
-       <td :key="'nab'+klikynab+''+idx2" class="pl-1" style="border-bottom:none">
+       <td :key="'nab'+klikynab+''+idx2" class="pl-1" style="border-bottom:none"
+         :class="{
+         'blue lighten-5 ': (polozka2.vzor==2 ) || ( polozka2.vzor==0 && !f.isEmpty(polozka2.obsah) ),
+         'green lighten-5 ': (polozka2.vzor==1 && polozka2.idefix_dod==idefix_vlastnik ) || (polozka2.vzor==0 && polozka2.idefix_dod==idefix_vlastnik && f.isEmpty(polozka2.obsah) )
+       }"
+       >
         <div   style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1">
+
+        <span v-if="!f.isEmpty(polozka2.obsah) " class="white--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="polozka2.vzor==0?to3N(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
+        <span v-else class="white--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+
         <i v-if="polozka2.vzor==0" class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('nab',polozka2)"></i>
         <i v-else  class="el-icon-minus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
         <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        {{polozka2.vzor}}
         </div>
 
       </td>
       <td class="rborder leva pl-2 pr-2" style="border-bottom:none">
-        <input type="text" v-model="polozka2.nazev" @change="ZmenPolozku('nab',polozka2)" style="height:100%; border-bottom:dotted 1px;">
+        <input type="text" v-model="polozka2.nazev" @change="ZmenPolozku('nab',polozka2)" style="height:100%; border-bottom:dotted 1px;"
+         :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
+        >
       </td>
 
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none">
@@ -528,7 +560,7 @@
 <div  v-if="(obrazovka_nab==3 && MAINMENULAST=='kalkulace')  || (obrazovka_zak==3 && MAINMENULAST=='zakazky')" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%" id="obalKalkulace">
   <div class="leva pt-0 pb-2">
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer" v-if="MAINMENULAST=='kalkulace'"
-        @click="obrazovka_nab=1"
+        @click="to1N()"
         >
         Kniha 1N
     </button>
@@ -1028,8 +1060,8 @@ export default {
      IDEFIXACTIVELAST:0,
      NAZEVACTIVE:'',
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
-     MAINMENULAST:'zakazky',
-     obrazovka_nab:1,
+     MAINMENULAST:'kalkulace',
+     obrazovka_nab:3,
      obrazovka_zak:1,
      status:0,  //status pro ulozeni 1 = nova
      status_zak:0,  //status pro ulozeni 1 = nova
@@ -1470,9 +1502,15 @@ if (self.MAINMENULAST== 'zakazky'){
   if (self.MAINMENULAST== 'kalkulace'){
       self.cTable = 'calc_my_' + self.idefix+"_nab"
   }
-//f.Alert('tab  ', self.cTable, self.MAINMENULAST)
+
+ // f.Alert('tab  ', self.cTable, self.MAINMENULAST)
+ // f.Alert(self.MAINMENULAST, self.cTable)
 
   self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+//   self.aKalkBefore = []
+
+
+
   await self.setIdefixActive()
   $("*").removeAttr('autocomplete');
   setInterval(function(){
@@ -1490,10 +1528,13 @@ if (self.MAINMENULAST== 'zakazky'){
 */
 
   //Po startu se nacte seznam zakazek
+
   await self.Vlastnik();
   await self.VlastnikPrace();
   await self.Seznam('zak')
   await self.CisPraceDod();
+
+
 
 
   /*
@@ -1585,6 +1626,8 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
      })
+      //self.MAINMENULAST='kalkulace'
+      //f.Alert(self.MAINMENULAST, self.cTable)
 
 
 
@@ -1771,15 +1814,18 @@ if (self.MAINMENULAST== 'zakazky'){
        return
      }
        self.timeout=setTimeout(function() {
+
           self.FillForm(polozka);
           if (nova==true){   //nova upravou
             setTimeout(function() {
 
               self.Nova(true)
               if (self.MAINMENULAST=="zakazky"){
+
                 self.$notify( { title: self.MAINMENULAST,  message: `Zalozena nova pro upravou z ${polozka.cislozakazky}` , type: 'error', offset: 100, duration: 5000 })
               }
               if (self.MAINMENULAST=="kalkulace"){
+
                 self.$notify( { title: self.MAINMENULAST,  message: `Zalozena nova pro upravou z ${polozka.cislonabidky}` , type: 'error', offset: 100, duration: 5000 })
               }
 
@@ -1849,7 +1895,7 @@ if (self.MAINMENULAST== 'zakazky'){
        const self = this
        var addPol=[]
 
-       addPol=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where vzor=1`)).data.data
+       addPol=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where vzor>=1 order by idefix_dod desc`)).data.data
        addPol.forEach(el=>{
          if (ceho=='zak'){
            el.idefix_zak=idefix_zaknab
@@ -1869,8 +1915,89 @@ if (self.MAINMENULAST== 'zakazky'){
        //f.Alert(f.Jstr(addPol))
 
    },
+   async to1Z(){
+        const self = this
+       if (self.MAINMENULAST=='zakazky' && self.status_zak==1){
+          this.$confirm('Zrusit zakladni nove zakazky ? ' , '', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: 'Ano?',
+          cancelButtonText: 'Ne'
+         })
+        .then(()=>{
+          self.obrazovka_zak=1
+
+            eventBus.$emit('SavedZN', {
+                  id: self.MAINMENULAST,
+                  // cislo: c.cislo,
+                  // exp: c.exp,
+                  // prod: self.idefix,
+                  // prod_txt : c.produkce,
+                  // zadani:c.zadani,
+                  status_zak: 0,
+                  status_nab: self.status_nab,
+
+                })
+
+
+          if (self.aktivni_zak>0){
+            //document.getElementById('trn_'+self.aktivni_zak)
+            setTimeout(function(){
+              if ( document.getElementById('trz_'+self.aktivni_zak) ){
+                  document.getElementById('trz_'+self.aktivni_zak).click()
+
+                 //f.Alert('trn_'+self.aktivni_zak, document.getElementById('trz_'+self.aktivni_zak)  )
+              }
+
+            },1000)
+
+          }
+        })
+     } else {
+         self.obrazovka_zak=1
+    }
+
+   },
+      async to1N(){
+        const self = this
+
+       if (self.MAINMENULAST=='kalkulace' && self.status_nab==1){
+          this.$confirm('Zrusit zakladni nove kalkulace ? ' , '', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: 'Ano?',
+          cancelButtonText: 'Ne'
+         })
+        .then(()=>{
+          self.obrazovka_nab=1
+          eventBus.$emit('SavedZN', {
+                  id: self.MAINMENULAST,
+                  // cislo: c.cislo,
+                  // exp: c.exp,
+                  // prod: self.idefix,
+                  // prod_txt : c.produkce,
+                  // zadani:c.zadani,
+                  status_zak: self.status_zak,
+                  status_nab: 0,
+
+                })
+
+          if (self.aktivni_nab>0){
+            setTimeout(function(){
+              if ( document.getElementById('trn_'+self.aktivni_nab) ){
+                 document.getElementById('trn_'+self.aktivni_nab).click()
+              }
+
+            },1000)
+
+          }
+        })
+     } else {
+         self.obrazovka_nab=1
+    }
+
+   },
    async to2Z(polozka) {
      const self = this
+
 
       self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
      if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
@@ -1880,6 +2007,10 @@ if (self.MAINMENULAST== 'zakazky'){
        //update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null  where idefix in ( 67156, 67157 ) ;
        //update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null,idefix_dod = 0  where idefix in (  67157 ) ;
        //update zak_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=1, obsah=null,idefix_dod = 0  where idefix in (  67199 ) ;
+       //update zak_t_items  set nazev='Prázdný s',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=2  where idefix in (  135369 ) ;
+       //update nab_t_items  set nazev='Prázdný s',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=2  where idefix in (  135371 ) ;
+
+
 
 
        self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)).data.data
@@ -2174,6 +2305,16 @@ if (self.MAINMENULAST== 'zakazky'){
         var e = (await Q.post(self.idefix,qitems))
         this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno ${ c.cislo}`, type: 'success', offset: 100, duration: 5000 })
         self.status_nab=2;
+        eventBus.$emit('SavedZN', {
+          id: self.MAINMENULAST,
+          // cislo: c.cislo,
+          // exp: c.exp,
+          // prod: self.idefix,
+          // prod_txt : c.produkce,
+          // zadani:c.zadani,
+          status_zak: self.status_zak,
+          status_nab: self.status_nab,
+       })
         self.Seznam('nab')
 
 
@@ -2221,6 +2362,16 @@ if (self.MAINMENULAST== 'zakazky'){
         var e = (await Q.post(self.idefix,qitems))
         this.$notify( { title: self.MAINMENULAST,  message: `Ulozeno  ${ c.cislo}` , type: 'success', offset: 100, duration: 5000 })
         self.status_zak=2;
+        eventBus.$emit('SavedZN', {
+          id: self.MAINMENULAST,
+          // cislo: c.cislo,
+          // exp: c.exp,
+          // prod: self.idefix,
+          // prod_txt : c.produkce,
+          // zadani:c.zadani,
+          status_zak: self.status_zak,
+          status_nab: self.status_nab,
+       })
         self.Seznam('zak')
 
 
@@ -2478,7 +2629,14 @@ if (self.MAINMENULAST== 'zakazky'){
 
     }
 
-    if (polozka.vzor==1 && !polozka.nazev.match(/^Pr.zdn.$/)){
+    if (polozka.vzor>=1 && !polozka.nazev.match(/^Pr.zdn.$/)){
+      //
+      if (!f.isEmpty(polozka.obsah)) {
+        polozka.obsah=f.Jstr(polozka.obsah)
+        //f.Alert(polozka.obsah)
+      }
+
+
 
 
       var qCols=`(
@@ -2549,7 +2707,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
     } else
-    if (polozka.vzor==1 && polozka.nazev.match(/^Pr.zdn.$/)){
+    if (polozka.vzor>=1 && polozka.nazev.match(/^Pr.zdn.$/)){
 
       f.Alert('Nedelam nic')
       return
@@ -2558,8 +2716,10 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
     try {
+
       var b = (await Q.post(self.idefix,q))
-      this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena` , type: 'success', offset: 100, duration: 1000 })
+      this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena ${polozka.vzor}` , type: 'success', offset: 100, duration: 1000 })
+      polozka.vzor=0
     } catch (e){
       this.$notify( { title: self.MAINMENULAST,  message: `Doslo k chybe pri ulozeni ` , type: 'error', offset: 100, duration: 5000 })
 
@@ -2574,6 +2734,10 @@ if (self.MAINMENULAST== 'zakazky'){
           self.polozky_zak=  (await Q.all(self.idefix,`select * from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`)).data.data
           self.addPol('nab',polozka.idefix_nab)
     }
+
+  },
+  mAlert(txt){
+    this.$notify( { title: self.MAINMENULAST,  message: `${txt}` , type: 'error', offset: 100, duration: 5000 })
 
   },
   async DocasneReseni() {
@@ -2766,6 +2930,7 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
 
       self.status_zak=1
       self.obrazovka_zak=2
+        var cisti=(await Q.post(self.idefix,`delete from zak_t_items where user_insert_idefix = ${self.idefix} and idefix_zak=-100`))
 
         var c = (await Q.all(self.idefix,`select newzak(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce`)).data.data[0]
         if (upravou==false) {
@@ -2778,6 +2943,7 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
     if (self.MAINMENULAST=='kalkulace')  {
       self.status_nab=1
       self.obrazovka_nab=3
+      var cisti=(await Q.post(self.idefix,`delete from nab_t_items where user_insert_idefix = ${self.idefix} and idefix_nab=-100`))
 
       if (upravou==false) {
 
@@ -2805,7 +2971,10 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
          exp: c.exp,
          prod: self.idefix,
          prod_txt : c.produkce,
-         zadani:c.zadani
+         zadani:c.zadani,
+         status_zak: self.status_zak,
+         status_nab: self.status_nab,
+
 
      })
      } else
@@ -2816,7 +2985,11 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
          exp: c.exp,
          prod: self.idefix,
          prod_txt : c.produkce,
-         zadani:c.zadani
+         zadani:c.zadani,
+         status_zak: self.status_zak,
+         status_nab: self.status_nab,
+
+
 
      })
      }

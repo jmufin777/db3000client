@@ -49,13 +49,40 @@ async setKalk(data,kalkulace,_idefix=0) {
   data.marze*=1 // Spocitat z prodej naklad
   data.marze_pomer*=1 // Spocitat take z prodej naklad
 
+
+  // f.Alert("Prepocet na jeden kus", data.ks)
+  //prepocty.KalkulacePrepocetKusyNa1(kalkulace,data.ks)
   var kalkulace2= JSON.stringify(kalkulace)
+      //kalkulace2= f.Jparse(kalkulace2)
+      await(prepocty.KalkulacePrepocetKusyNa1(kalkulace,data.ks))
+      try {
+         // kalkulace2= await(prepocty.KalkulacePrepocetKusyNa1(kalkulace,data.ks))
+         kalkulace2 = await(prepocty.KalkulacePrepocetKusyNa1(kalkulace,data.ks))
+         kalkulace2= JSON.stringify(kalkulace2)
+         data.ks=1
+        //kalkulace2=  await(prepocty.KalkulacePrepocetKusy(nK[0].obsah,neco))
+        //kalkulace2= prepocty.KalkulacePrepocetKusy(kalkulace2,data.ks)
+      } catch(e) {
+        f.Alert('Nejde mi to prepocitat')
+
+
+      }
+
+      //return
+
+
+  // kalkulace2= JSON.stringify(kalkulace2)
+
+
 
   var atmp=[]
 
   // f.Alert('1')
   //   title: "Success" + data.idefix+ ' '+ data.nazev + '/ ' + data.nazevOrig + data.user_update_idefix + ' '+ idefix,
 //  f.Alert2(data.user_update_idefix,data.nazev, idefix)
+
+
+
 
   if (data.user_update_idefix*1 > 0 && idefix*1 !== data.user_update_idefix*1){
     // f.Alert('2')
@@ -145,9 +172,9 @@ async setKalk(data,kalkulace,_idefix=0) {
       console.log("ERR Kalk1", e)
     }
   }
-  f.Alert('3.5', data.nazev , ' : ', idefixOver )
+  // f.Alert('Template - ulozeni','3.5', data.nazev , ' : ', idefixOver )
  if (idefixOver > 0 ) {
-  f.Alert('4')
+  // f.Alert('4')
   $("#box"+data.ID ).dialog({
     modal: false,
     buttons: {
@@ -275,9 +302,9 @@ async Vklad(data, kalkulace2 ){
     await this.VlastnikPrace()
   // })
 
-    f.Alert('hoooohohoho', idefix_vlastnikPrace)
+    f.Alert('hoooohohoho 00', idefix_vlastnikPrace)
   }
-  f.Alert('hoooohohoho 1', idefix_vlastnikPrace)
+   f.Alert('hoooohohoho 1', idefix_vlastnikPrace)
   var q = `insert into calc_templates ( ${cols},user_insert_idefix,user_update_idefix
     ,idefix_dod,idefix_prace)
   values (
@@ -396,7 +423,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
     await this.Vlastnik()
     await this.VlastnikPrace()
   }
-  f.Alert('hoooohohoho 3', idefix_vlastnikPrace)
+  //f.Alert('hoooohohoho 3', idefix_vlastnikPrace)
   if (nazev >''){
     data.nazev=nazev
   }
@@ -574,22 +601,22 @@ async Zmena(data,kalkulace2,_idefix){
   var tempTable ="calc_templates"
 
   var q = `update ${tempTable} set
-  nazev          = trim('${data.nazev}'),
-  kcks           = '${data.kcks}',
-  ks             = '${data.ks}',
-  naklad         = '${data.naklad}',
-  marze          = '${data.marze}',
-  prodej         = '${data.prodej}',
-  marze_pomer    = '${data.marze_pomer}',
-  obsah          = '${kalkulace2}',
-  expedice_datum = '${data.expedice_datum}',
-  expedice_cas   = '${data.expedice_cas}',
-  user_update_idefix='${idefix}',
-  time_update = now()
-   where idefix = ${_idefix}
+            nazev          = trim('${data.nazev}'),
+            kcks           = '${data.kcks}',
+            ks             = '${data.ks}',
+            naklad         = '${data.naklad}',
+            marze          = '${data.marze}',
+            prodej         = '${data.prodej}',
+            marze_pomer    = '${data.marze_pomer}',
+            obsah          = '${kalkulace2}',
+            expedice_datum = '${data.expedice_datum}',
+            expedice_cas   = '${data.expedice_cas}',
+            user_update_idefix='${idefix}',
+            time_update = now()
+          where idefix = ${_idefix}
   `
   //obsah='${kalkulace}',
-     f.Alert('Update idfix' ,_idefix )
+     //f.Alert('Update idfix' ,_idefix )
      console.log('Update ' ,q)
 
     await Q.post(0,q)

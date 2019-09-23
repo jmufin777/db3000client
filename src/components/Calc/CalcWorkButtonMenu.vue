@@ -67,12 +67,29 @@
               :id="'cislo' + ID "
               :value="form.cislo >'0'?form.cislo.substr(0,5):'00000'"
               readonly
-               >&nbsp;<input type="text" size="mini"  style="width:5em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
-              :id="'cislo' + ID "
+               >&nbsp;
 
-              :value="form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'"
+               <input v-if="setmenu=='zakazky'"
+               type="text" size="mini"  style="width:15em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
+               :id="'cislo' + ID "
+
+              :value="status_zak==1?'Nova Zakazka':(
+                form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'
+                )
+              "
               readonly
                >
+               <input v-else-if="setmenu=='kalkulace'"
+               type="text" size="mini"  style="width:15em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
+               :id="'cislo' + ID "
+
+               :value="status_nab==1?'Nova Nabidka':(
+                form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'
+                )
+              "
+              readonly
+               >
+
               </td>
             </tr>
            <tr>
@@ -665,7 +682,7 @@ export default {
  data () {
    return {
      ID0: this.ID,
-     setmenu:"zakazky",
+     setmenu:"kalkulace",
      setsub:0,
      f:f,
 
@@ -734,11 +751,15 @@ export default {
          splatnost         : 0,
          hotovost          : 0,
          stav              : 'Nova',
+
        },
        aFirma: [],
        aOsoba: [],
        aObchodnik: [],
        aProdukce: [],
+       status_zak:0,
+       status_nab:0,
+       //MAINMENULAST:'',
 
       fields: {
         'firma': {
@@ -796,6 +817,9 @@ deactivated: function () {
         self.form.produkce= server.prod_txt
         self.form.idefix_produkce = server.prod
         self.form.datumzadani = server.zadani
+        self.status_zak = server.status_zak
+        self.status_nab = server.status_nab
+
         //f.Alert(f.Jstr(server))
 
       })
@@ -807,10 +831,40 @@ deactivated: function () {
         self.form.produkce= server.prod_txt
         self.form.idefix_produkce = server.prod
         self.form.datumzadani = server.zadani
+        self.status_zak = server.status_zak
+        self.status_nab = server.status_nab
         //f.Alert(f.Jstr(server))
 
 
       })
+     eventBus.$off('SavedZN')
+     eventBus.$on("SavedZN", (server)=>{
+        //f.Alert('SavedZN', server.id)
+          // id: self.MAINMENULAST,
+       if (!f.isEmpty(server.cislo)){
+         //f.Alert('SavedZN', server.id,f.Jstr(server))
+
+        self.form.cislo = server.cislo
+        self.form.datumexpedice = server.exp
+        self.form.produkce= server.prod_txt
+        self.form.idefix_produkce = server.prod
+        self.form.datumzadani = server.zadani
+       }
+
+       if (!f.isEmpty(server.idefix_obchodnik)){
+          self.form.obchodnik= server.obchodnik
+          self.form.idefix_obchodnik = server.idefix_obchodnik
+
+        }
+
+        self.status_zak = server.status_zak
+        self.status_nab = server.status_nab
+        //f.Alert(f.Jstr(server))
+
+
+      })
+
+
 
      eventBus.$off('Focus')
      eventBus.$on("Focus", (server)=>{
