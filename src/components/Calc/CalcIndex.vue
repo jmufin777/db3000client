@@ -1515,6 +1515,27 @@ if (self.MAINMENULAST== 'zakazky'){
   $("*").removeAttr('autocomplete');
   setInterval(function(){
     self.IsZmena()
+//    $(document).ready(function() {
+    //$("input:text").focus(function() { $(this).select(); } )
+    $("input[type=text]").on('focus', function(){
+      var neco2=this
+      setTimeout(function(){
+        $(neco2).select();
+      },100)
+    })
+    $("input[type=number]").on('focus', function(){
+      var neco2=this
+      setTimeout(function(){
+        $(neco2).select();
+      },100)
+
+      //self.mAlert('cislo', 2000)
+    })
+
+    //this.setSelectionRange(0, 9999);
+
+    //self.mAlert('Vlezl jsem sem',1000)
+//});
   },1000)
   var xd = new Date()
   self.search_nab_rok= xd.getFullYear()
@@ -2150,9 +2171,13 @@ if (self.MAINMENULAST== 'zakazky'){
        self.status_nab=2
        self.obrazovka_nab=2
 
-       self.polozky_nab=  (await Q.all(self.idefix,`select * from nab_t_items where idefix_nab= ${polozka.idefix}`)).data.data
+      self.polozky_nab=  (await Q.all(self.idefix,`select * from nab_t_items where idefix_nab= ${polozka.idefix}`)).data.data
       self.addPol('nab',polozka.idefix)
-       await self.FillForm(polozka);
+      await self.FillForm(polozka);
+      // var clean=  (await Q.post(self.idefix,`truncate table ${self.cTable}`))
+      // self.$store.dispatch('cleanKalk')
+      // self.aKalkulace=[]
+
        //self.$refs.w1.form.osoba   = polozka.idefix_firma
        //f.Alert(polozka.idefix, f.Jstr(polozka))
 
@@ -2202,6 +2227,11 @@ if (self.MAINMENULAST== 'zakazky'){
      if (true ||  self.status_zak==2){
 
        if (self.status_nab==2 && self.MAINMENULAST=='kalkulace'){  //Tohle domyslet co vlastne vidim
+          if (self.obrazovka_nab==2) {
+            //self.mAlert('a'+ self.obrazovka_nab)
+            return
+          }
+
 
            //self.$refs.w1.form.cislo
    //        f.Alert2(`select * from nab_t_list where cislonabidky= ${self.$refs.w1.form.cislo}`, ' :: ', self.status_zak, ' :: ',self.status_nab)
@@ -2231,11 +2261,16 @@ if (self.MAINMENULAST== 'zakazky'){
            var e = (await Q.post(self.idefix,qitems))
 
            this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislonabidky}` , type: 'success', offset: 100, duration: 5000 })
+
            self.Seznam('nab')
 
            self.status_nab=2;
        }
        if (self.status_zak==2 && self.MAINMENULAST=='zakazky'){
+         if (self.obrazovka_zak==2) {
+            //self.mAlert('a'+ self.obrazovka_nab)
+            return
+          }
 
           //self.$refs.w1.form.cislo = c.cislo
 
@@ -2637,8 +2672,6 @@ if (self.MAINMENULAST== 'zakazky'){
       }
 
 
-
-
       var qCols=`(
        nazev
       ,obsah
@@ -2718,7 +2751,8 @@ if (self.MAINMENULAST== 'zakazky'){
     try {
 
       var b = (await Q.post(self.idefix,q))
-      this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena ${polozka.vzor}` , type: 'success', offset: 100, duration: 1000 })
+      self.mAlert(q,10000)
+      this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena ${polozka.vzor} ${polozka.idefix}` , type: 'success', offset: 100, duration: 1000 })
       polozka.vzor=0
     } catch (e){
       this.$notify( { title: self.MAINMENULAST,  message: `Doslo k chybe pri ulozeni ` , type: 'error', offset: 100, duration: 5000 })
@@ -2736,7 +2770,7 @@ if (self.MAINMENULAST== 'zakazky'){
     }
 
   },
-  mAlert(txt){
+    mAlert(txt, dur=5000){
     this.$notify( { title: self.MAINMENULAST,  message: `${txt}` , type: 'error', offset: 100, duration: 5000 })
 
   },
@@ -2906,8 +2940,6 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
          }
 
 
-
-
    },
 
    async Nova(upravou=false){
@@ -2924,7 +2956,6 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
         // f.Alert(self.cTable)
 
         //self.cleanItems
-
 
     if (self.MAINMENULAST=='zakazky')  {
 

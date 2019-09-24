@@ -238,7 +238,7 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Datum zadani:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum"
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum2"
               :id="'datumzadani_'+ID"
               v-model="form.datumzadani"
               readonly
@@ -958,6 +958,11 @@ deactivated: function () {
     // })
     this.$nextTick(function () {
       $( ".datum" ).datepicker();
+      /*
+      $(".date-picker").on('focus blur click',function () {
+        $(".ui-datepicker-calendar").hide();
+      });
+      */
 
     })
 
