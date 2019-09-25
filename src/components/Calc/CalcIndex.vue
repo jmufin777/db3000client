@@ -6,7 +6,7 @@
       <div slot="hlavninew" style="position:fixed;top:4.8em;left:10px;background:#ffffff;text-align:left;width:100%" id="hlavninabidka" class="HlavniNabidka">
     <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
      <div >
-      <input type="hidden" id="Zmenad" value="0" class="black white--text" style="width:100px">
+      <input type="hidden" id="Zmenad" value="0" class="black black--text" style="width:100px">
       <work-but-menu :ID="ID" ref="w1" :obrazovka_zak="obrazovka_zak" :obrazovka_nab="obrazovka_nab" >
         <span  slot="tlacitkazakazky" >
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
@@ -118,11 +118,11 @@
       >
         <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo}"  :style="f.pof(Sirka, 5)" >
         <button @click="delzak(polozka)">
-          <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+          <i class="el-icon-delete black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </button>
         &nbsp;&nbsp;&nbsp;
         <button @click="FillFormWait(polozka,true)">
-          <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+          <i class="el-icon-plus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </button>
           </td>
         <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"  :style="f.pof(Sirka, 5)" >{{polozka.cislozakazky}}</td>
@@ -205,15 +205,15 @@
 
         <div   style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-1">
 
-        <span v-if="!f.isEmpty(polozka2.obsah) " class="white--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="polozka2.vzor==0?to3Z(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
-        <span v-else class="white--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="polozka2.vzor==0?to3Z(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
+        <span v-else class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
 
-        <i v-if="polozka2.vzor==0" class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('zak',polozka2)"></i>
-        <i v-else  class="el-icon-minus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        <i v-if="polozka2.vzor==0" class="el-icon-delete black--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('zak',polozka2)"></i>
+        <i v-else  class="el-icon-minus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
 
 
-        <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        <i class="el-icon-plus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </div>
 
       </td>
@@ -375,13 +375,13 @@
         <button
         @click="delnab(polozka)"
         >
-          <i class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+          <i class="el-icon-delete black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
 
         </button>
         &nbsp;&nbsp;&nbsp;
 
         <button @click="FillFormWait(polozka,true)">
-          <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+          <i class="el-icon-plus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </button>
 
         </td>
@@ -453,13 +453,13 @@
        >
         <div   style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1">
 
-        <span v-if="!f.isEmpty(polozka2.obsah) " class="white--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="polozka2.vzor==0?to3N(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
-        <span v-else class="white--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="polozka2.vzor==0?to3N(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
+        <span v-else class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
 
-        <i v-if="polozka2.vzor==0" class="el-icon-delete white--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('nab',polozka2)"></i>
-        <i v-else  class="el-icon-minus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        <i v-if="polozka2.vzor==0" class="el-icon-delete black--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('nab',polozka2)"></i>
+        <i v-else  class="el-icon-minus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
-        <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        <i class="el-icon-plus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         {{polozka2.vzor}}
         </div>
 
@@ -1512,7 +1512,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
   await self.setIdefixActive()
-  $("*").removeAttr('autocomplete');
+  //$("*").removeAttr('autocomplete');
   setInterval(function(){
     self.IsZmena()
 //    $(document).ready(function() {
@@ -1528,6 +1528,12 @@ if (self.MAINMENULAST== 'zakazky'){
       setTimeout(function(){
         $(neco2).select();
       },100)
+
+    //var some_id = $('#some_id');
+    // some_id.prop('type', 'text');
+    $("input[type=text]").removeAttr('autocomplete');
+    $("input[type=text]").attr("autocomplete", "randomString");
+
 
       //self.mAlert('cislo', 2000)
     })
@@ -1916,7 +1922,7 @@ if (self.MAINMENULAST== 'zakazky'){
        const self = this
        var addPol=[]
 
-       addPol=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where vzor>=1 order by idefix_dod desc`)).data.data
+       addPol=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where vzor>=1 order by idefix_dod desc limit 2`)).data.data
        addPol.forEach(el=>{
          if (ceho=='zak'){
            el.idefix_zak=idefix_zaknab

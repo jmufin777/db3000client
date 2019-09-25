@@ -922,6 +922,7 @@ setCislo(ctxt1="",cval="0") {
   //$(otxt).css("border","none")
   //style="width:90%; height:15px; text-align:right"
   obj.appendChild(otxt)
+  //$(otxt).focus()
   //var $dlg=$("<div><input type='number' id='myCislo'></div>").dialog({
   var $dlg=$('#myValue').dialog({
     modal: true,

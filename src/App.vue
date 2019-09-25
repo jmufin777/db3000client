@@ -480,6 +480,21 @@ button:focus {
                0 1px 1px rgba(0,0,0,.15);
 
 }
+.d3black {
+  text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 1px 0 #bbb,
+               0 1px 0 #b9b9b9,
+               0 1px 0 #aaa,
+               0 1px 1px rgba(0,0,0,.1),
+               0 0 1px rgba(0,0,0,.1),
+               0 1px 1px rgba(0,0,0,.3),
+               0 1px 1px rgba(0,0,0,.2),
+               0 1px 1px rgba(0,0,0,.25),
+               0 1px 1px rgba(0,0,0,.2),
+               0 1px 1px rgba(0,0,0,.15);
+
+}
 .d3a {
   text-shadow: 0 1px 0 #ccc,
                0 2px 0 #c9c9c9,

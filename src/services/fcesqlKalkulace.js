@@ -305,6 +305,9 @@ async Vklad(data, kalkulace2 ){
     f.Alert('hoooohohoho 00', idefix_vlastnikPrace)
   }
    f.Alert('hoooohohoho 1', idefix_vlastnikPrace)
+   if (!f.Jstr(kalkulace2).match(/a-z/)) {
+     f.Alert('kalkulace je prazdna?')
+   }
   var q = `insert into calc_templates ( ${cols},user_insert_idefix,user_update_idefix
     ,idefix_dod,idefix_prace)
   values (
@@ -599,7 +602,13 @@ async Zmena(data,kalkulace2,_idefix){
   var atmp=[]
   var nret = 0
   var tempTable ="calc_templates"
-
+  var addObsah=""
+  if (!f.Jstr(kalkulace2).match(/[a-z]/)) {
+    //f.Alert('kalkulace je prazdna?', f.Jstr(kalkulace2))
+    addObsah=""
+  } else {
+    addObsah=`obsah          = '${kalkulace2}',`
+  }
   var q = `update ${tempTable} set
             nazev          = trim('${data.nazev}'),
             kcks           = '${data.kcks}',
@@ -608,7 +617,7 @@ async Zmena(data,kalkulace2,_idefix){
             marze          = '${data.marze}',
             prodej         = '${data.prodej}',
             marze_pomer    = '${data.marze_pomer}',
-            obsah          = '${kalkulace2}',
+            ${addObsah}
             expedice_datum = '${data.expedice_datum}',
             expedice_cas   = '${data.expedice_cas}',
             user_update_idefix='${idefix}',

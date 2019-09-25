@@ -199,12 +199,13 @@
          </div>
       <div
         style="position:absolute;overflow:scroll;max-height:14em;z-index:999999999"
-        :style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'"
+        :style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;leftx:'+f1.getLeft('seek'+ID2, 0)+'px'"
         :id="'seek'+ID2+'_list2'"
         v-if=" showTemplates && ZobrazMenu  " class="elevation-12 honza_color_seznam"
       >
              <!-- {{showTemplates}} {{dataTemplates.length}} -->
               <table  width="100%" v-if="showTemplates " class="pa-2 honza_color_seznam" border="0">
+                <tr v-if="false"><td colspan="20">POZ : {{'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'}}</td></tr>
                   <tr v-for="(m1b, i1b) in
                   dataTemplates.filter(
                     el =>
@@ -214,8 +215,9 @@
                   <td class="pa-0 pl-1 honza_color_seznam" style="width:90%;border-bottom:solid 1px black">
                   <v-card class="pa-0 elevation-0 honza_color_seznam" style="width:100%;;border:solid 0px" >
                     <a :href="'#'" :id="'seek'+ID2+'_list_'+i1b"
-                     @keydown="seznam('seek'+ID2+'_list_'+i1b,1,$event)"
-                     @click="setTemplate(m1b);showTemplates=false"
+
+                     @keydown="$event.keyCode==13?(setTemplate(m1b)):seznam('seek'+ID2+'_list_'+i1b,1,$event)"
+                     @click="showTemplates=false;setTemplate(m1b)"
                      @focus="fokus('seek'+ID)"
                      class="honza_color_seznam"
                      >
@@ -264,6 +266,14 @@
                 </tr>
               </table>
   </div>
+  <!-- <div
+        style="position:absolute;overflow:scroll;max-height:14em;z-index:999999999"
+        :style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;'"
+        :id="'seekTest'+ID2+'_list2'"
+        class="elevation-12 honza_color_seznam"
+      >
+      SEEKTEST
+  </div> -->
 
   <div :id="'box'+ID2"  style="display:none" :IDEFIX="'box'+IDEFIX">
     Ulozeni template
@@ -354,6 +364,7 @@ export default {
      lastFocus:'',
      dataTemplates: [],
      ksLast: -100,
+     pocetVolani:0,
 
 
      form: {
@@ -752,7 +763,13 @@ deactivated: function () {
     const self = this
       var neco
       var ksOrig = cItem.ks
-       neco=await(f.setCislo('Pocet kusu pro kalkulaci',cItem.ks))
+      self.pocetVolani++
+      neco=await(f.setCislo(`Pocet kusu pro kalkulaci ${self.pocetVolani}`,cItem.ks))
+      //  .then((neco)=>{
+      //  //  alert(neco)
+      //  })
+     //neco=prompt("Pocet kusu pro kalkulaci ${self.pocetVolani}")
+
 
 //       alert(neco)
 
