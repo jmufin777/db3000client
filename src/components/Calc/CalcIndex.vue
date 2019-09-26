@@ -227,7 +227,7 @@
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none">
 
              <el-select v-model="polozka2.idefix_prace"
-              v-if="cis_prace.length>=0"
+              v-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah)"
               filterable
               no-match-text="Nenalezeno"
               no-data-text="Cekam na data"
@@ -247,12 +247,17 @@
                 style="font-size:13px"
               >{{item01.prace}}</el-option>
             </el-select>
+            <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
+                  {{ (cis_prace.filter(el=>{
+                    return el.idefix_prace*1==idefix_vlastnikPrace*1
+                  }) )[0]['prace']}}
+            </div>
       </td>
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none">
 
         <!-- {{polozka2.idefix_dod}} -->
-             <el-select v-model="polozka2.idefix_dod"
-              v-if="cis_dod.length>=0"
+             <el-select v-model="polozka2.idefix_dod "
+              v-if="cis_dod.length>=0 && f.isEmpty(polozka2.obsah)"
               filterable
               no-match-text="Nenalezeno"
               no-data-text="Cekam na data"
@@ -275,6 +280,11 @@
                 style="font-size:13px"
               >{{item02.firma}}</el-option>
             </el-select>
+            <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
+                  {{ (cis_dod_vlastnik.filter(el=>{
+                   return el.idefix_firma*1==idefix_vlastnik*1
+                  }) )[0]['firma']}}
+            </div>
 
         </td>
       <td class="rborder pr-2 pl-1">
@@ -476,7 +486,7 @@
               :remote-method="CisPrace"
               :loading="loading" -->
              <el-select v-model="polozka2.idefix_prace"
-              v-if="cis_prace.length>=0"
+              v-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah) "
               filterable
               no-match-text="Nenalezeno"
               no-data-text="Cekam na data"
@@ -496,6 +506,11 @@
                 style="font-size:13px"
               >{{item01.prace}}</el-option>
             </el-select>
+            <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
+                  {{ (cis_prace.filter(el=>{
+                    return el.idefix_prace*1==idefix_vlastnikPrace*1
+                  }) )[0]['prace']}}
+            </div>
         </td>
 
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none">
@@ -506,7 +521,7 @@
 
         <!-- {{polozka2.idefix_dod}} -->
              <el-select v-model="polozka2.idefix_dod"
-              v-if="cis_dod.length>=0"
+              v-if="cis_dod.length>=0 && f.isEmpty(polozka2.obsah)"
               filterable
               no-match-text="Nenalezeno"
               no-data-text="Cekam na data"
@@ -527,6 +542,11 @@
                 style="font-size:13px"
               >{{item02.firma}}</el-option>
             </el-select>
+            <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
+                  {{ (cis_dod_vlastnik.filter(el=>{
+                   return el.idefix_firma*1==idefix_vlastnik*1
+                  }) )[0]['firma']}}
+            </div>
         </td>
       <td class="rborder pr-2" >
         <!-- {{polozka2.kcks}} -->
@@ -1735,6 +1755,8 @@ if (self.MAINMENULAST== 'zakazky'){
       //f.Alert2(`delete from ${ceho}_t_items where idefix = ${polozka.idefix} and vzor=0`)
       if (ceho =='zak' ) {
         self.polozky_zak=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where idefix_${ceho}= ${idefix_ceho} order by idefix`)).data.data
+
+
         self.klikyzak++
       }
       if (ceho =='nab' ) {
@@ -2039,7 +2061,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
 
-
+      self.updateDefault()
        self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)).data.data
        self.addPol('zak',polozka.idefix)
 
@@ -2051,6 +2073,15 @@ if (self.MAINMENULAST== 'zakazky'){
        //f.Alert(polozka.idefix, f.Jstr(polozka))
      } else {
        this.$notify( { title: self.MAINMENULAST,  message: `Chyba pri nacteni polozek` , type: 'error', offset: 100, duration: 5000 })
+     }
+   },
+   async updateDefault(){
+     const self=this
+     if (self.idefix_vlastnik >0 && sellf.idefix_vlastnikPrace >0){
+      var q= `update zak_t_items set idefix_dod=${self.idefix_vlastnik}, idefix_prace= ${self.idefix_vlastnikPrace} where obsah::text  ~*  '[a-z]
+             and (idefix_dod is null  or idefix_prace!=${self.idefix_vlastnikPrace} or idefix_dod!=${self.idefix_vlastnik}) or idefix_prace is null )      '`
+
+            var a = (await Q.post(self.idefix,q))
      }
    },
 
@@ -2573,7 +2604,7 @@ if (self.MAINMENULAST== 'zakazky'){
    },
   async CisPrace(query="")   {
     const self= this
-       var qPrace= SQL.getPrace(0, query)
+       var qPrace= SQL.getPraceAll(0, query)
        console.log(qPrace)
 
        self.loading=true
@@ -2604,7 +2635,7 @@ if (self.MAINMENULAST== 'zakazky'){
          // f.Alert(f.Jstr(self.cis_dod_vlastnik), self.idefix_vlastnik)
           self.loading=false;
         } catch(e){
-          console.log(e)
+          console.log(e, qDod)
         }
   },
   async Vlastnik(){
@@ -2735,7 +2766,6 @@ if (self.MAINMENULAST== 'zakazky'){
       ,now()::date
       ,now()::time
       ,now()
-
 
       ) `
       qVals=qVals.replace(/'null'/g,'null')

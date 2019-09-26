@@ -682,7 +682,8 @@ export default {
  data () {
    return {
      ID0: this.ID,
-     setmenu:"kalkulace",
+    // setmenu:"kalkulace",
+     setmenu:"zakazky",
      setsub:0,
      f:f,
 
