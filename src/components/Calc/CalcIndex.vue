@@ -260,8 +260,13 @@
               </el-option>
             </el-select>
             </span>
-            <span style="float: right; color: #8492a6; font-size: 13px" @click="polozka2.vse=(polozka2.vse==0?1:0)">
-            <i class="el-icon-plus black--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i></span>
+
+            <span style="float: right; color: #8492a6; font-size: 13px" @click="polozka2.vse=(polozka2.vse==0?1:0)" >
+              <i v-if="polozka2.vse==0" class="el-icon-plus black--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i></span>
+              <span style="float: right; color: #8492a6; font-size: 13px" @click="polozka2.vse=(polozka2.vse==0?1:0)">
+              <i v-if="polozka2.vse==1" class="el-icon-plus orange--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i>
+            </span>
+
             </div>
             <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
                   {{ (cis_prace.filter(el=>{
@@ -308,7 +313,7 @@
                 v-for="item02 in cis_dod_all"
                  :key="item02.idefix_firma"
                  :label="item02.firma"
-                 :value="item02.idefix_firma"
+                  :value="item02.idefix_firma"
                  style="font-size:13px"
               >
                <span style="float: left">{{item02.firma}}</span>
@@ -327,17 +332,17 @@
        @focus="polozka2.vse=0">
         </td>
       <td class="rborder pr-2" >
-        <input type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2)">
+        <input type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
         <!-- {{polozka2.ks}} -->
 
       </td>
       <td class="rborder pr-2 pl-1">
         <!-- {{polozka2.naklad}} -->
-        <input type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2)">
+        <input type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
         </td>
        <td class="rborder pr-2 pl-1">
         <!-- {{polozka2.naklad}} -->
-        <input type="number" v-model="polozka2.prodej" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2)">
+        <input type="number" v-model="polozka2.prodej" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
         </td>
       <td class="rborder pr-2">{{polozka2.prodej - polozka2.naklad}}</td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
       <td class="rborder pl-2">
@@ -541,10 +546,14 @@
                 <span style="float: right; color: #8492a6; font-size: 13px">{{item01.pocet_dod}}</span>
               </el-option>
             </el-select>
+              </span>
+
+            <span style="float: right; color: #8492a6; font-size: 13px" @click="polozka2.vse=(polozka2.vse==0?1:0)" >
+              <i v-if="polozka2.vse==0" class="el-icon-plus black--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i></span>
+              <span style="float: right; color: #8492a6; font-size: 13px" @click="polozka2.vse=(polozka2.vse==0?1:0)">
+              <i v-if="polozka2.vse==1" class="el-icon-plus orange--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i>
             </span>
-            <span style="float: right; color: #8492a6; font-size: 13px" @click="polozka2.vse=(polozka2.vse==0?1:0)">
-            <i v-if="polozka2.vse==0" class="el-icon-plus black--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i></span>
-            <i v-if="polozka2.vse==1" class="el-icon-plus orange--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i></span>
+
             </div>
             <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
                   {{ (cis_prace.filter(el=>{
@@ -2863,21 +2872,29 @@ if (self.MAINMENULAST== 'zakazky'){
     await self.CisDod()
     await self.CisPrace()
   },
-  async ZmenPolozku(ceho = 'zak', polozka, ev){
+  async ZmenPolozku(ceho = 'zak', polozka, ev=1){
     const self=this
     var q=''
     var idefix_ceho=(ceho=='zak')?polozka.idefix_zak:polozka.idefix_nab
-    f.Alert(ev)
+
     if (polozka.vzor==0) {
         q=`update  ${ceho}_t_items a set
           idefix_prace = ${polozka.idefix_prace} ,
           idefix_dod =   ${polozka.idefix_dod},
           user_update_idefix =   ${self.idefix},
           time_update = now(),
-          nazev      =   trim('${polozka.nazev}')
+          nazev      =   trim('${polozka.nazev}'),
+          ks        =   ${polozka.ks},
+          naklad    =   ${polozka.naklad},
+          prodej    =   ${polozka.prodej}
+
           where idefix = ${polozka.idefix}`
 
     }
+
+
+// marze              | 0.00
+
 
     if (polozka.vzor>=1 && !polozka.nazev.match(/^Pr.zdn.$/)){
       //
@@ -2965,7 +2982,7 @@ if (self.MAINMENULAST== 'zakazky'){
     try {
 
       var b = (await Q.post(self.idefix,q))
-      self.mAlert(q,10000)
+      //self.mAlert(q,10000)
       this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena ${polozka.vzor} ${polozka.idefix}` , type: 'success', offset: 100, duration: 1000 })
       polozka.vzor=0
     } catch (e){
@@ -2976,11 +2993,16 @@ if (self.MAINMENULAST== 'zakazky'){
     await self.DocasneReseni()
     if (ceho=='zak') {
           self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix_zak} order by idefix`)).data.data
-          self.addPol('zak',polozka.idefix_zak)
+          if (ev==1){
+            self.addPol('zak',polozka.idefix_zak)
+          }
+
     } else
     if (ceho=='nab') {
           self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`)).data.data
-          self.addPol('nab',polozka.idefix_nab)
+          if (ev==1){
+            self.addPol('nab',polozka.idefix_nab)
+          }
     }
 
   },
