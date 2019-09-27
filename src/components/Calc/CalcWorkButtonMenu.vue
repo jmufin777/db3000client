@@ -115,7 +115,7 @@
                 :label="item9.nazev"
                 :value="item9.idefix"
               >
-               <span style="float: left">{{item9.nazev}}</span>
+              <span style="float: left">{{item9.nazev}}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{item9.ico}}</span>
 
 

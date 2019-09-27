@@ -23,7 +23,6 @@
           @click="Nova(true)"
           >
           Nova upravou
-
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           >
@@ -115,6 +114,7 @@
         :id="'trz_'+polozka.idefix"
         class="hoVer2"
 
+
       >
         <td :class="{'blue lighten-4 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo}"  :style="f.pof(Sirka, 5)" >
         <button @click="delzak(polozka)">
@@ -193,6 +193,7 @@
       style="cursor:pointer; height:30px; border-bottom:dotted 0px;"
 
 
+
       >
        <td :key="'zak'+klikyzak+''+idx2" class="pl-1" style="border-bottom:none"
        :class="{
@@ -212,13 +213,17 @@
         <i v-else  class="el-icon-minus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
 
-
+        <button @click="copyRadek(polozka2.idefix)">
         <i class="el-icon-plus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+        </button>
+        <!-- <span  class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="ZmenPolozku('zak',polozka2)">S</span> -->
         </div>
 
       </td>
       <td class="rborder leva pl-2 pr-2" style="border-bottom:none">
-        <input type="text" v-model="polozka2.nazev" @change="ZmenPolozku('zak',polozka2)" style="height:90%; border-bottom:dotted 1px;"
+        <input type="text" v-model="polozka2.nazev"
+        @change="false?ZmenPolozku('zak',polozka2):true"
+         style="height:90%; border-bottom:dotted 1px;"
         :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
         >
       </td>
@@ -226,27 +231,38 @@
 
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none">
 
-             <el-select v-model="polozka2.idefix_prace"
-              v-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah)"
-              filterable
-              no-match-text="Nenalezeno"
-              no-data-text="Cekam na data"
-              default-first-option
-              size="mini"
-              class="pb-0 pl-0 pa-0 ma-0 "
-              :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
-              popper-class="silver lighten-5"
-              placeholder="Prace"
-              @change="ZmenPolozku('zak',polozka2)"
+            <div  v-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah)"   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-0">
+            <span style="float: left;width:90%">
+            <el-select v-model="polozka2.idefix_prace"
+
+                filterable
+                no-match-text=""
+                no-data-text=""
+                default-first-option
+                size="mini"
+                class="pb-0 pl-0 pa-0 ma-0 "
+                :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
+                popper-class="silver lighten-5"
+                placeholder="Prace"
+
               >
+              <!-- x.filter(cis_prace, function(o){ return true || filterPrace(polozka2,o) }) -->
                 <el-option
-                v-for="item01 in x.filter(cis_prace, function(o){ return true || filterPrace(polozka2,o) })"
+                v-for="item01 in cis_prace.filter(el=>{ return    true || el.pocet_dod > 0 || el.idefix_prace*1==polozka2.idefix_prace*1   })"
                 :key="item01.idefix_prace"
                 :label="item01.prace"
                 :value="item01.idefix_prace"
                 style="font-size:13px"
-              >{{item01.prace}}</el-option>
+              >
+              <span style="float: left">{{item01.prace}}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{item01.pocet_dod}}</span>
+
+              </el-option>
             </el-select>
+            </span>
+            <span style="float: right; color: #8492a6; font-size: 13px" @click="polozka2.vse=(polozka2.vse==0?1:0)">
+            <i class="el-icon-plus black--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i></span>
+            </div>
             <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
                   {{ (cis_prace.filter(el=>{
                     return el.idefix_prace*1==idefix_vlastnikPrace*1
@@ -254,42 +270,61 @@
             </div>
       </td>
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none">
-
         <!-- {{polozka2.idefix_dod}} -->
              <el-select v-model="polozka2.idefix_dod "
-              v-if="cis_dod.length>=0 && f.isEmpty(polozka2.obsah)"
-              filterable
-              no-match-text="Nenalezeno"
-              no-data-text="Cekam na data"
-              default-first-option
-              size="mini"
-              class="pb-0 pl-0 pa-0 ma-0 "
-              :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
-              popper-class="silver lighten-5"
-              placeholder="Prace"
-              remote
-              :remote-method="CisDod"
-              :loading="loading"
-              @change="ZmenPolozku('zak',polozka2)"
+               v-if="cis_dod.length>=0 && f.isEmpty(polozka2.obsah)"
+                filterable
+                no-match-text=""
+                no-data-text="Cekam na data"
+                default-first-option
+                size="mini"
+                class="pb-0 pl-0 pa-0 ma-0 "
+                :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
+                popper-class="silver lighten-5"
+                placeholder="Prace"
+                @focus="zak_item_active=polozka2;"
+                @change="polozka2.vse==1&& polozka2.idefix_dod>0?Sparuj(polozka2):false; polozka2.vse=0"
+
               >
+              <!--
+                remote
+                :remote-method="CisDodAll"
+                :loading="loading"
+              -->
+               <!-- x.filter(cis_dod, function(o){ return filterDod(polozka2, o) }) -->
                 <el-option
+                v-if="polozka2.vse==0"
                 v-for="item02 in x.filter(cis_dod, function(o){ return filterDod(polozka2, o) })"
-                :key="item02.idefix_firma"
-                :label="item02.firma"
-                :value="item02.idefix_firma"
-                style="font-size:13px"
-              >{{item02.firma}}</el-option>
+                 :key="item02.idefix_firma"
+                 :label="item02.firma"
+                 :value="item02.idefix_firma"
+                 style="font-size:13px"
+              >
+               <span style="float: left">{{item02.firma}}</span>
+               <span style="float: right; color: #8492a6; font-size: 13px"> {{item02.pocet_praci}} </span>
+              </el-option>
+               <el-option
+                v-if="polozka2.vse==1"
+                v-for="item02 in cis_dod_all"
+                 :key="item02.idefix_firma"
+                 :label="item02.firma"
+                 :value="item02.idefix_firma"
+                 style="font-size:13px"
+              >
+               <span style="float: left">{{item02.firma}}</span>
+               <span style="float: right; color: #8492a6; font-size: 13px">{{item02.pocet_praci}} </span>
+              </el-option>
             </el-select>
             <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
                   {{ (cis_dod_vlastnik.filter(el=>{
                    return el.idefix_firma*1==idefix_vlastnik*1
                   }) )[0]['firma']}}
             </div>
-
         </td>
       <td class="rborder pr-2 pl-1">
         <!-- {{polozka2.kcks}} -->
-       <input type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2)">
+       <input type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;" class="prava"
+       @focus="polozka2.vse=0">
         </td>
       <td class="rborder pr-2" >
         <input type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2)">
@@ -307,9 +342,7 @@
       <td class="rborder pr-2">{{polozka2.prodej - polozka2.naklad}}</td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
       <td class="rborder pl-2">
         <!-- {{polozka2.faktura}} -->
-
-        <input type="text" v-model="polozka2.faktura" @change="ZmenPolozku('zak',polozka2)" style="height:100%; border-bottom:dotted 1px;" class="stred">
-
+        <input type="text" v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('zak',polozka2):false" style="height:100%; border-bottom:dotted 1px;" class="stred">
         </td>
 
       </tr>
@@ -469,8 +502,9 @@
         <i v-if="polozka2.vzor==0" class="el-icon-delete black--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('nab',polozka2)"></i>
         <i v-else  class="el-icon-minus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
+        <button @click="copyRadek(polozka2.idefix)">
         <i class="el-icon-plus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
-        {{polozka2.vzor}}
+        </button>
         </div>
 
       </td>
@@ -481,10 +515,8 @@
       </td>
 
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none">
-        <!-- {{polozka2.idefix_prace}} -->
-              <!-- remote
-              :remote-method="CisPrace"
-              :loading="loading" -->
+           <div  v-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah)"   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-0">
+            <span style="float: left;width:90%">
              <el-select v-model="polozka2.idefix_prace"
               v-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah) "
               filterable
@@ -496,16 +528,24 @@
               :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
               popper-class="silver lighten-5"
               placeholder="Prace"
-              @change="ZmenPolozku('nab',polozka2)"
+
               >
-                <el-option
+              <el-option
                 v-for="item01 in x.filter(cis_prace, function(o){ return true || filterPrace(polozka2,o) })"
                 :key="item01.idefix_prace"
                 :label="item01.prace"
                 :value="item01.idefix_prace"
                 style="font-size:13px"
-              >{{item01.prace}}</el-option>
+              >
+                <span style="float: left">{{item01.prace}}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{item01.pocet_dod}}</span>
+              </el-option>
             </el-select>
+            </span>
+            <span style="float: right; color: #8492a6; font-size: 13px" @click="polozka2.vse=(polozka2.vse==0?1:0)">
+            <i v-if="polozka2.vse==0" class="el-icon-plus black--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i></span>
+            <i v-if="polozka2.vse==1" class="el-icon-plus orange--text d3" style="font-weight:bold;height:15px;zoom:100%;"></i></span>
+            </div>
             <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
                   {{ (cis_prace.filter(el=>{
                     return el.idefix_prace*1==idefix_vlastnikPrace*1
@@ -515,11 +555,6 @@
 
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none">
 
-              <!-- remote
-              :remote-method="CisDod"
-              :loading="loading" -->
-
-        <!-- {{polozka2.idefix_dod}} -->
              <el-select v-model="polozka2.idefix_dod"
               v-if="cis_dod.length>=0 && f.isEmpty(polozka2.obsah)"
               filterable
@@ -532,15 +567,39 @@
 
               popper-class="silver lighten-5"
               placeholder="Dodavatel"
-              @change="ZmenPolozku('nab',polozka2)"
+
+              @focus="nab_item_active=polozka2"
+              @change="polozka2.vse==1&& polozka2.idefix_dod>0?Sparuj(polozka2):false; polozka2.vse=0"
+
               >
+              <!--
+               remote
+              :remote-method="CisDodAll"
+              :loading="loading" -->
+              <!-- x.filter(cis_dod, function(o){ return filterDod(polozka2, o) }) -->
                 <el-option
+                v-if="polozka2.vse==0"
                 v-for="item02 in x.filter(cis_dod, function(o){ return filterDod(polozka2, o) })"
-                :key="item02.idefix_firma"
-                :label="item02.firma"
-                :value="item02.idefix_firma"
-                style="font-size:13px"
-              >{{item02.firma}}</el-option>
+                 :key="item02.idefix_firma"
+                 :label="item02.firma"
+                 :value="item02.idefix_firma"
+                 style="font-size:13px"
+              >
+               <span style="float: left">{{item02.firma}}</span>
+               <span style="float: right; color: #8492a6; font-size: 13px"> {{ item02.pocet_praci}} </span>
+              </el-option>
+               <el-option
+                v-if="polozka2.vse==1"
+                v-for="item02 in cis_dod_all"
+                 :key="item02.idefix_firma"
+                 :label="item02.firma"
+                 :value="item02.idefix_firma"
+                 style="font-size:13px"
+              >
+               <span style="float: left">{{item02.firma}}</span>
+               <span style="float: right; color: #8492a6; font-size: 13px">{{item02.pocet_praci}} </span>
+              </el-option>
+
             </el-select>
             <div v-else   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-3">
                   {{ (cis_dod_vlastnik.filter(el=>{
@@ -550,7 +609,9 @@
         </td>
       <td class="rborder pr-2" >
         <!-- {{polozka2.kcks}} -->
-        <input type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;" class="prava">
+        <input type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;" class="prava"
+        @focus="polozka2.vse=0"
+        >
         </td>
       <td class="rborder pr-2" >
         <input type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;" class="prava">
@@ -559,17 +620,17 @@
       </td>
       <td class="rborder pr-2">
         <!-- {{polozka2.naklad}} -->
-        <input type="text" v-model="polozka2.naklad" @change="ZmenPolozku('nab',polozka2)">
+        <input type="text" v-model="polozka2.naklad" >
         </td>
        <td class="rborder pr-2">
         <!-- {{polozka2.naklad}} -->
-        <input type="text" v-model="polozka2.prodej" @change="ZmenPolozku('nab',polozka2)">
+        <input type="text" v-model="polozka2.prodej" >
         </td>
       <td class="rborder pr-2">{{polozka2.prodej - polozka2.naklad}}</td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
       <td class="rborder pl-2">
         <!-- {{polozka2.faktura}} -->
+          <input type="text" v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('zak',polozka2):false" style="height:100%; border-bottom:dotted 1px;" class="stred">
 
-          <input type="text" v-model="polozka2.faktura" @change="ZmenPolozku('nab',polozka2)" style="height:100%; border-bottom:dotted 1px;" class="stred">
         </td>
 
       </tr>
@@ -1104,6 +1165,8 @@ export default {
 
      polozka_zak:[],
      polozka_nab:[],
+     zak_item_active:[],
+     nab_item_active:[],
 
      search_zak:"",
      search_nab:"",
@@ -1118,6 +1181,7 @@ export default {
 
      cis_prace:[],
      cis_dod:  [],
+     cis_dod_all:  [],
      cis_prace_vlastnik:[],  //asi to samy jne vlastnik bude na prvni pozici, jestli to chapu dobre
      cis_dod_vlastnik:  [],
      idefix_vlastnik: 0,
@@ -1580,6 +1644,11 @@ if (self.MAINMENULAST== 'zakazky'){
   await self.VlastnikPrace();
   await self.Seznam('zak')
   await self.CisPraceDod();
+  await self.CisDod(0)
+  await self.CisDodAll(0)
+
+
+
 
 
 
@@ -1699,6 +1768,83 @@ if (self.MAINMENULAST== 'zakazky'){
  //  this.$destroy()
  },
  methods: {
+   async copyRadek(ifx) {
+     const self=this
+
+     var randTab='tmp_'+Math.ceil(Math.random()*91000879)
+     var ceho =""
+     var ifx_aktivni
+     if (self.MAINMENULAST=='zakazky'){
+       ceho="zak"
+       ifx_aktivni=self.aktivni_zak
+     } else
+     if (self.MAINMENULAST=='kalkulace'){
+       ceho="nab"
+       ifx_aktivni=self.aktivni_nab
+     }
+
+     var qC= `create table ${randTab} without oids as select * from ${ceho}_t_items where idefix=${ifx}`;
+     await Q.post(self.idefix,qC)
+
+     var qU=`update ${randTab} set idefix_${ceho} = ${ifx_aktivni}, time_insert=now(),time_update=now(),user_insert_idefix=${self.idefix},user_update_idefix=${self.idefix},idefix= nextval('list2_seq'::regclass),id=nextval('zak_t_items_id_seq'::regclass)`
+     await Q.post(self.idefix,qU)
+     var qSpoj=`insert into ${ceho}_t_items select * from ${randTab}`
+     await Q.post(self.idefix,qSpoj)
+     if (self.MAINMENULAST=='zakazky'){
+     self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${ifx_aktivni} order by idefix`)).data.data
+     } else
+     if (self.MAINMENULAST=='kalkulace'){
+       self.polozky_nab=  (await Q.all(self.idefix,`select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${ifx_aktivni} order by idefix`)).data.data
+     }
+
+
+
+
+  //   f.Alert2(qC)
+
+//     return
+
+
+     f.Alert(ifx+' ', randTab)
+   },
+   async Sparuj(polo){
+     const self = this
+
+     if (polo.idefix_prace>0 && polo.idefix_dod>0) {
+      var qOvar=`select * from list_firmaprace  where idefix_firma=${polo.idefix_dod} and idefix_prace = ${polo.idefix_prace} `
+      var afound =  (await Q.all(self.idefix,qOvar)).data.data
+      if (afound.length==0){
+        this.$confirm('Novy vztah prace  - dodavatel ' , 'Vlozit ?', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: 'Ano?',
+        cancelButtonText: 'Ne'
+     })
+     .then(()=>{
+
+       var qInsert=`insert into list_firmaprace (idefix_firma , idefix_prace ,        time_insert        , time_update         , user_insert_idefix , user_update_idefix )
+        values (
+          ${polo.idefix_dod} , ${polo.idefix_prace}, now(),now(), ${self.idefix}, ${self.idefix}
+        )
+       `
+       Q.post(self.idefix,qInsert)
+       .then(() =>{
+         self.CisDod(0)
+         self.CisDodAll(0)
+         self.CisPraceDod();
+         f.Alert('Vlozeno')
+       })
+     })
+
+      }
+      self.mAlert(f.Jstr(afound))
+
+
+     } else {
+
+     }
+
+     return true
+   },
     filterPrace(polozka, radekDod){
      const self=this
      var lRet= false
@@ -1724,8 +1870,9 @@ if (self.MAINMENULAST== 'zakazky'){
      if (polozka.idefix_prace==0) {
        lRet = true
      }
+        // console.log('Radek',radekDod)
      if (polozka.idefix_prace>0) {
-        console.log(radekDod.prace_seznam)
+        // console.log(radekDod.prace_seznam)
         radekDod.prace_seznam.forEach(el2=>{
           if (el2==polozka.idefix_prace ) {
             lRet=true
@@ -1754,13 +1901,13 @@ if (self.MAINMENULAST== 'zakazky'){
       var b = (await Q.post(self.idefix,`delete from ${ceho}_t_items where idefix = ${polozka.idefix} and vzor=0`))
       //f.Alert2(`delete from ${ceho}_t_items where idefix = ${polozka.idefix} and vzor=0`)
       if (ceho =='zak' ) {
-        self.polozky_zak=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where idefix_${ceho}= ${idefix_ceho} order by idefix`)).data.data
+        self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${idefix_ceho} order by idefix`)).data.data
 
 
         self.klikyzak++
       }
       if (ceho =='nab' ) {
-        self.polozky_nab=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where idefix_${ceho}= ${idefix_ceho} order by idefix`)).data.data
+        self.polozky_nab=  (await Q.all(self.idefix,`select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${idefix_ceho} order by idefix`)).data.data
         self.klikynab++
       }
 
@@ -1839,6 +1986,10 @@ if (self.MAINMENULAST== 'zakazky'){
     if (self.MAINMENULAST=='kalkulace') {
       typ='nab'
       idfx=polozka.idefix
+    }
+    if (f.isEmpty(idfx)) {
+      //alert('ted ne')
+      return
     }
     var qb=`drop table if exists ${self.cTable} ;drop sequence if exists ${self.cTable}_seq
          ;create sequence ${self.cTable}_seq
@@ -1944,7 +2095,7 @@ if (self.MAINMENULAST== 'zakazky'){
        const self = this
        var addPol=[]
 
-       addPol=  (await Q.all(self.idefix,`select * from ${ceho}_t_items where vzor>=1 order by idefix_dod desc limit 2`)).data.data
+       addPol=  (await Q.all(self.idefix,`select *,0 as vse from ${ceho}_t_items where vzor>=1 order by idefix_dod desc limit 2`)).data.data
        addPol.forEach(el=>{
          if (ceho=='zak'){
            el.idefix_zak=idefix_zaknab
@@ -2062,7 +2213,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
       self.updateDefault()
-       self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)).data.data
+       self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)).data.data
        self.addPol('zak',polozka.idefix)
 
 
@@ -2077,9 +2228,9 @@ if (self.MAINMENULAST== 'zakazky'){
    },
    async updateDefault(){
      const self=this
-     if (self.idefix_vlastnik >0 && sellf.idefix_vlastnikPrace >0){
-      var q= `update zak_t_items set idefix_dod=${self.idefix_vlastnik}, idefix_prace= ${self.idefix_vlastnikPrace} where obsah::text  ~*  '[a-z]
-             and (idefix_dod is null  or idefix_prace!=${self.idefix_vlastnikPrace} or idefix_dod!=${self.idefix_vlastnik}) or idefix_prace is null )      '`
+     if (self.idefix_vlastnik >0 && self.idefix_vlastnikPrace >0){
+      var q= `update zak_t_items set idefix_dod=${self.idefix_vlastnik}, idefix_prace= ${self.idefix_vlastnikPrace} where obsah::text  ~*  '[a-z]'
+             and (idefix_dod is null  or idefix_prace!=${self.idefix_vlastnikPrace} or idefix_dod!=${self.idefix_vlastnik}) or idefix_prace is null    `
 
             var a = (await Q.post(self.idefix,q))
      }
@@ -2208,7 +2359,7 @@ if (self.MAINMENULAST== 'zakazky'){
        self.status_nab=2
        self.obrazovka_nab=2
 
-      self.polozky_nab=  (await Q.all(self.idefix,`select * from nab_t_items where idefix_nab= ${polozka.idefix}`)).data.data
+      self.polozky_nab=  (await Q.all(self.idefix,`select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix}`)).data.data
       self.addPol('nab',polozka.idefix)
       await self.FillForm(polozka);
       // var clean=  (await Q.post(self.idefix,`truncate table ${self.cTable}`))
@@ -2605,7 +2756,7 @@ if (self.MAINMENULAST== 'zakazky'){
   async CisPrace(query="")   {
     const self= this
        var qPrace= SQL.getPraceAll(0, query)
-       console.log(qPrace)
+       console.log(" QPRACE::: ",qPrace)
 
        self.loading=true
         try {
@@ -2623,7 +2774,9 @@ if (self.MAINMENULAST== 'zakazky'){
   },
   async CisDod(idefix_prace=0)   {
     const self= this
+    console.log('start')
     var qDod  = SQL.getDod(idefix_prace)
+    console.log('end',qDod)
         self.loading=true
         //await self.Vlastnik()
       try {
@@ -2631,6 +2784,28 @@ if (self.MAINMENULAST== 'zakazky'){
           self.cis_dod_vlastnik= self.cis_dod.filter(el=>{
             return el.idefix_firma == self.idefix_vlastnik
           })
+
+         // f.Alert(f.Jstr(self.cis_dod_vlastnik), self.idefix_vlastnik)
+          self.loading=false;
+        } catch(e){
+          console.log(e, qDod)
+        }
+  },
+    async CisDodAll(idefix_prace=0)   {
+    const self= this
+    console.log('Hyr: ' , idefix_prace, self.MAINMENULAST ,' ', f.Jstr(self.zak_item_active ))
+    console.log('start')
+    //return
+
+    var qDod  = SQL.getDodAll(idefix_prace)
+    console.log('end',qDod)
+        self.loading=true
+        //await self.Vlastnik()
+      try {
+          self.cis_dod_all=(await Q.all(self.idefix,qDod)).data.data
+          self.cis_dod_vlastnik= self.cis_dod_all.filter(el=>{
+            return el.idefix_firma == self.idefix_vlastnik
+           })
 
          // f.Alert(f.Jstr(self.cis_dod_vlastnik), self.idefix_vlastnik)
           self.loading=false;
@@ -2688,14 +2863,17 @@ if (self.MAINMENULAST== 'zakazky'){
     await self.CisDod()
     await self.CisPrace()
   },
-  async ZmenPolozku(ceho = 'zak', polozka){
+  async ZmenPolozku(ceho = 'zak', polozka, ev){
     const self=this
     var q=''
     var idefix_ceho=(ceho=='zak')?polozka.idefix_zak:polozka.idefix_nab
+    f.Alert(ev)
     if (polozka.vzor==0) {
         q=`update  ${ceho}_t_items a set
           idefix_prace = ${polozka.idefix_prace} ,
           idefix_dod =   ${polozka.idefix_dod},
+          user_update_idefix =   ${self.idefix},
+          time_update = now(),
           nazev      =   trim('${polozka.nazev}')
           where idefix = ${polozka.idefix}`
 
@@ -2797,11 +2975,11 @@ if (self.MAINMENULAST== 'zakazky'){
     }
     await self.DocasneReseni()
     if (ceho=='zak') {
-          self.polozky_zak=  (await Q.all(self.idefix,`select * from zak_t_items where idefix_zak= ${polozka.idefix_zak} order by idefix`)).data.data
+          self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix_zak} order by idefix`)).data.data
           self.addPol('zak',polozka.idefix_zak)
     } else
     if (ceho=='nab') {
-          self.polozky_zak=  (await Q.all(self.idefix,`select * from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`)).data.data
+          self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`)).data.data
           self.addPol('nab',polozka.idefix_nab)
     }
 
@@ -2950,7 +3128,8 @@ async Seznam(ceho = 'zak', where ='', orderby=''){
         }
         var qsum=`select sum(prodejsum) as prodej,sum(nakladsum) as naklad from ( ${q} ) a`
             qsum= `select *, prodej - naklad as zisk, (prodej/nullif(naklad,0))::numeric(15,2) as marze from (${qsum}) a `
-        q= `select * from (${q}) a limit 200 `
+
+        q= `select * from (${q}) a limit 10 ` // seznam_zak
 
 
          //f.Alert2(q)

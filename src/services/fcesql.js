@@ -176,26 +176,29 @@ export default {
   return q;
 }
 ,getPrace(idefix_dod=0,nazevPrace=''){
-  var q=`select distinct c.nazev as prace, a.idefix_prace,array_agg(b.idefix) as dod_seznam from list_firmaprace a
+  var q=`select distinct c.nazev as prace, a.idefix_prace,array_agg(b.idefix) as dod_seznam, count(distinct b.idefix) as pocet_dod from list_firmaprace a
         join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix
         where
         (${idefix_dod}=0 or a.idefix_firma = ${idefix_dod} )
         and
         ( '${nazevPrace}' = '' or ('${nazevPrace}' > '' and to_aascii(c.nazev) ~*  to_aascii('${nazevPrace}')  ))
-
         group by c.nazev,a.idefix_prace order by c.nazev`;
+
   return q;
 }
 ,getPraceAll(idefix_dod=0,nazevPrace=''){
-  var q=`select distinct c.nazev as prace, a.idefix_prace,array_agg(b.idefix) as dod_seznam from list_firmaprace a
-        join list_dodavatel b on a.idefix_firma=b.idefix right join list2_prace c on a.idefix_prace =c.idefix
-        where
+  var q=`select distinct c.nazev as prace, c.idefix as idefix_prace,array_agg(b.idefix) as dod_seznam, count(b.idefix) as pocet_dod
+          from
+          list2_prace c left join list_firmaprace a on a.idefix_prace =c.idefix
+          left join list_dodavatel b on a.idefix_firma=b.idefix
+          group by c.nazev,c.idefix order by pocet_dod desc, c.nazev limit 50`;
+       /*
+       where
         (${idefix_dod}=0 or a.idefix_firma = ${idefix_dod} )
         and
         ( '${nazevPrace}' = '' or ('${nazevPrace}' > '' and to_aascii(c.nazev) ~*  to_aascii('${nazevPrace}')  ))
-
-        group by c.nazev,a.idefix_prace order by c.nazev`;
-         q=`select *,idefix as idefix_prace,nazev as prace from list2_prace `
+       */
+       //q=`select a.nazev *,idefix as idefix_prace,nazev as prace from list2_prace `
   return q;
 }
 ,getDod(idefix_prace=0){
@@ -203,6 +206,20 @@ export default {
           where ${idefix_prace} = 0  or a.idefix_prace = ${idefix_prace}
           group by b.nazev , a.idefix_firma
   order by b.nazev`;
+  return q;
+}
+,getDodAll(idefix_prace=0){
+  var q=''
+
+
+    q=`select  b.nazev as firma, b.idefix as idefix_firma , array_agg(a.idefix_prace) as prace_seznam, count(a.idefix_prace) as pocet_praci from   list_dodavatel b     left join list_firmaprace a on b.idefix = a.idefix_firma
+               left join  list2_prace c on a.idefix_prace =c.idefix
+          where true or to_aascii(b.nazev) ~*  to_aascii('${idefix_prace}')
+          group by b.nazev , b.idefix
+  order by pocet_praci desc, b.nazev  limit 11120 `;
+  console.log('pismena!!!')
+
+
   return q;
 }
 
