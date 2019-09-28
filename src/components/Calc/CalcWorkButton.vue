@@ -55,7 +55,11 @@
         <!-- cale {{cTable}} -->
       </td>
       <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em;height:28px" class="honza_color" >
-        <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%" >
+
+        <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%"
+        v-if="IDEFIX==IDEFIXACTIVE"
+        >
+
          <button class="kolecko2" @click="send('template')" title="Ulozit" :id="'send_'+ID2"
          :IDEFIX="'send'+IDEFIX"
 

@@ -544,8 +544,9 @@ button:focus {
 
 .hoVer2:hover {
       font-weight: 900;
-      background-color: green;
-      opacity: 0.9;
+      /* border-left: solid 2px black; */
+      /* background-color: green; */
+      /* opacity: 0.9; */
 
 }
 

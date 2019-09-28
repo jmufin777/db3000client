@@ -191,7 +191,7 @@ export default {
           from
           list2_prace c left join list_firmaprace a on a.idefix_prace =c.idefix
           left join list_dodavatel b on a.idefix_firma=b.idefix
-          group by c.nazev,c.idefix order by pocet_dod desc, c.nazev limit 50`;
+          group by c.nazev,c.idefix order by pocet_dod desc, c.nazev limit 1150`;
        /*
        where
         (${idefix_dod}=0 or a.idefix_firma = ${idefix_dod} )
