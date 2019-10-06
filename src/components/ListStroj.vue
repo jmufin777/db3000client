@@ -228,6 +228,7 @@ import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval } from 'timers'
 import ListStroj from '@/services/ListStrojService'
 import ListStrojEdit from './ListStrojEdit'
+//import List2StrojSkup from './List2StrojSkup'  //Divny nevim 20191006
 import f from '@/services/fce'
 // import List2StrojSkupVue from './List2MatSubSkup.vue';
 
@@ -277,18 +278,18 @@ export default {
         { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         { id: "nazev_text", title: "Nazev text", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
 
-     { id: "sirka_mat_max_mm", title: "Sirka\nMat", cssClasses: "mtd" ,span: 1, isEdit: true, type: "number"  ,props:{visible: 'yes'}},
-     { id: "delka_mat_max_mm", title: "Delka\nMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "sirka_tisk_max_mm", title: "Sirka\nTisk", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "delka_tisk_max_mm", title: "Sirka\nTisk", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_strana_mm", title: "To\nStr", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_start_mm", title: "To\nStart", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_spacecopy_mm", title: "Space\nCopy", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
-     { id: "tech_okraj_spacejobs_mm", title: "Space\nJob", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-     { id: "tech_okraj_end_mm", title: "ToEnd", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-     { id: "bez_okraj", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-     { id: "spadavka_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-     { id: "space_znacky_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "sirka_mat_max_mm", title: "Sirka\nMat", cssClasses: "mtd" ,span: 1, isEdit: true, type: "number"  ,props:{visible: 'yes'}},
+        { id: "delka_mat_max_mm", title: "Delka\nMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+        { id: "sirka_tisk_max_mm", title: "Sirka\nTisk", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+        { id: "delka_tisk_max_mm", title: "Sirka\nTisk", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+        { id: "tech_okraj_strana_mm", title: "To\nStr", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+        { id: "tech_okraj_start_mm", title: "To\nStart", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+        { id: "tech_okraj_spacecopy_mm", title: "Space\nCopy", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'yes'}},
+        { id: "tech_okraj_spacejobs_mm", title: "Space\nJob", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "tech_okraj_end_mm", title: "ToEnd", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "bez_okraj", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "spadavka_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
+        { id: "space_znacky_mm", title: "SirkaMat", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
 
         //{ id: "time_insert", title: "CasVkladu", cssClasses: "mtd", span: 5, isEdit: false, type:"datetime-local" ,props:{visible: 'no'}},
         //{ id: "user_insert", title: "KdoVkladu", cssClasses: "mtd", span: 4, isEdit: false, type: "text" ,props:{visible: 'no'}},
@@ -339,7 +340,7 @@ export default {
       }
           this.aInfo['id']=-1
 //          this.list.unshift(this.aInfo)
-
+     try {
       this.idefix_strojskup_values = (await List2StrojSkup.all(this.user,'nic')).data
       this.cols.forEach((el,i)=>{
         if (el.id =='idefix_strojskup') {
@@ -348,6 +349,11 @@ export default {
           })
         }
       })
+
+     } catch(e) {
+       console.log('List2StrojSkup neni ', 'nevim presne o co jde')
+     }
+
       //console.log( this.cols)
 
     }

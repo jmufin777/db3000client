@@ -607,19 +607,42 @@ export default {
   },
   created () {
     setTimeout(function() {
+
     if (document.getElementById("m003")) {
+      try {
         document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+      } catch(e){
+      console.log('Neni prdek m003, 31, 32')
+     }
         document.getElementById("m0031").style.height=Math.round(window.innerHeight - 150)  + "px"
+      try {
         document.getElementById("m0032").style.height=Math.round(window.innerHeight - 150)  + "px"
+        } catch(e){
+      console.log('Neni prdek m003, 31, 32')
+       }
 
         window.addEventListener('resize', (function() {
+        try {
         document.getElementById("m003").style.height=Math.round(window.innerHeight - 110)  + "px"
+        } catch(e){
+      console.log('Neni prdek m003, 31, 32')
+       }
+        try {
         document.getElementById("m0031").style.height=Math.round(window.innerHeight - 150)  + "px"
+        } catch(e){
+      console.log('Neni prdek m003, 31, 32')
+       }
+        try {
         document.getElementById("m0032").style.height=Math.round(window.innerHeight - 150)  + "px"
+        } catch(e){
+          console.log('Neni prdek m003, 31, 32')
+       }
 
         })
         )
     }
+
+
 
     },100)
 

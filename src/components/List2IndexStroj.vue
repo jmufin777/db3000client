@@ -53,12 +53,12 @@ export default {
         [
 
           // ['list-mat','Materialy',100],
-
+          ['list2-prace', "Prace - hlavne stroje",66],
           ['list2-strojskup', "Skupina Stroje",33],
           ['list2-strojlaminace', "Stroje - Laminace",33],
           ['list2-strojtiskmod', "Stroje - Tisk Mod",33],
           ['list2-jednotka', "Jednotky kalkulaci",33],
-          ['list2-prace', "Prace - hlavne stroje",33],
+
           ['list-stroj','Stroje',100],
 
 

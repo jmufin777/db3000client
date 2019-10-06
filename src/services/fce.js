@@ -216,31 +216,61 @@ cislo(ncislo=0) {
 
 
 if (document.getElementById(_obj1)){
+  try {
     document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
+  }  catch(e) {
+    console.log('Neni obj1', _obj1 )
+  }
   } else {
     console.log(_obj1 + ' Neni')
   }
 
     if (document.getElementById(_obj2)){
+      try {
       document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
+    }  catch(e) {
+      console.log('Neni obj1', _obj1 )
+    }
     } else {
       console.log(_obj2 + ' Neni')
     }
-
+    try {
     document.getElementById(_obj3).style.height=Math.round(_h - s3)  + "px"
+  }  catch(e) {
+    console.log('Neni obj1', _obj1 )
+  }
+    try {
     document.getElementById(_obj3).addEventListener('keydown', (function(e) {
              self.obsluha(e, e.target)
       }))
-
+    }  catch(e) {
+      console.log('Neni obj1', _obj1 )
+    }
+      try {
     document.getElementById(_obj3).addEventListener('click', (function(e) {
 
              self.obsluha(e, e.target)
       }))
+    }  catch(e) {
+      console.log('Neni obj1', _obj1 )
+    }
 
     window.addEventListener('resize', (function() {
-    document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
+    try {
+      document.getElementById(_obj1).style.height=Math.round(_h - s1)  + "px"
+    }  catch(e) {
+      console.log('Neni obj1', _obj1 )
+    }
+    try {
     document.getElementById(_obj2).style.height=Math.round(_h - s2)  + "px"
+  }  catch(e) {
+    console.log('Neni obj1', _obj1 )
+  }
+  try {
     document.getElementById(_obj3).style.height=Math.round(_h - s3)  + "px"
+  }  catch(e) {
+    console.log('Neni obj1', _obj1 )
+  }
     // document.getElementById("m221").style.height=Math.round(window.innerHeight - 150)  + "px"
   })
   )

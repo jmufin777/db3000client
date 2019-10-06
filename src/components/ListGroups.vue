@@ -253,10 +253,20 @@ export default {
 
     })
    setTimeout(function() {
-    document.getElementById("m002").style.height=Math.round(window.innerHeight - 110)  + "px"
+    try {
+      document.getElementById("m002").style.height=Math.round(window.innerHeight - 110)  + "px"
+    } catch (e){
+      console.log('neni prdek m002')
+    }
+
   },100)
   window.addEventListener('resize', (function() {
-   document.getElementById("m002").style.height=Math.round(window.innerHeight - 110)  + "px"
+   try{
+     document.getElementById("m002").style.height=Math.round(window.innerHeight - 110)  + "px"
+   } catch(e) {
+     console.log('neni prdek m002')
+   }
+
   })
   )
   },

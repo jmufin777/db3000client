@@ -114,7 +114,7 @@
         :id="'trz_'+polozka.idefix"
         class="hoVer2"
       >
-        <td :class="{'blue lighten-5 elevation-1': polozka.cislozakazky==$refs.w1.form.cislo}"  :style="f.pof(Sirka, 5)" >
+        <td :class="{'blue lighten-5 elevation-2': polozka.cislozakazky==$refs.w1.form.cislo}"  :style="f.pof(Sirka, 5)" >
         <button @click="delzak(polozka)">
           <i class="el-icon-delete black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </button>
@@ -198,14 +198,13 @@
     <tbody>
       <tr  v-for="(polozka2,idx2) in polozky_zak" :key="idx2"
       class="hoVer2"
-      @click="polozka2.vzor>-999?aktivni_polozka_zak=polozka2.idefix:false"
-      :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==aktivni_polozka_zak && polozka2.vzor >-999} "
-      :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:dotted 0px;':''"
+      @click="aktivni_polozka_zak=polozka2.idefix"
+      style="cursor:pointer; height:30px; border-bottom:dotted 0px;"
       >
        <td :key="'zak'+klikyzak+''+idx2" class="pl-1" style="border-bottom:none"
-       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+       :class="{'blue lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_zak}"
        >
-        <div v-if="polozka2.vzor==-999" ></div>
+        <div v-if="polozka2.vzor==-999">&nbsp;</div>
         <div  v-else style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-1">
 
         <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="polozka2.vzor==0?to3Z(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
@@ -220,25 +219,25 @@
         </button>
         <!-- <span  class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="ZmenPolozku('zak',polozka2)">S</span> -->
         </div>
+
       </td>
       <td class="rborder leva pl-2 pr-2" style="border-bottom:none"
-      :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'blue lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_zak}"
       >
-      <div v-if="polozka2.vzor==-999"></div>
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
 
         <input v-else type="text" v-model="polozka2.nazev"
         @change="false?ZmenPolozku('zak',polozka2):true"
-         style="height:100%; border-bottom:dotted 0px;"
+         style="height:90%; border-bottom:dotted 1px;"
         :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
-        class="elevation-0"
         >
       </td>
 
 
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none"
-      :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'blue lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_zak}"
       >
-        <div v-if="polozka2.vzor==-999"></div>
+        <div v-if="polozka2.vzor==-999">&nbsp;</div>
 
 
 
@@ -255,7 +254,6 @@
                 :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
                 popper-class="silver lighten-5"
                 placeholder="Prace"
-                @change="f.Alert(ppp)"
 
               >
               <!-- x.filter(cis_prace, function(o){ return true || filterPrace(polozka2,o) }) -->
@@ -287,9 +285,9 @@
             </div>
       </td>
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none"
-      :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'blue lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_zak}"
       >
-      <div v-if="polozka2.vzor==-999"></div>
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
 
       <div v-else>
         <!-- {{polozka2.idefix_dod}} -->
@@ -345,13 +343,13 @@
          </div>
 
          <div v-if="polozka2.vzor==-999"></div>
-         <div v-else-if="polozka2.idefix_dod!=idefix_vlastnik" class="pt-1 pb-1" style="height:39px;width:100%; border-bottom: solid silver 0px;">
+         <div v-else-if="polozka2.idefix_dod!=idefix_vlastnik" class="pt-1 pb-1" style="height:39px;width:100%; border-bottom: solid silver 1px;">
           <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Faktura:</div>
           <div style="float:right;width:70%;" class="elevation-0 pt-1">
            <input type="text" v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('zak',polozka2):false" style="height:22px; border:dotted 1px silver;" class="stred">
           </div>
          </div>
-         <div v-else class="pt-1 pb-1 pl-0" style="height:39px;width:100%; border-bottom: solid silver 0px;">
+         <div v-else class="pt-1 pb-1 pl-0" style="height:39px;width:100%; border-bottom: solid silver 1px;">
           <div style="float:left;width:100%;height:39px;" class="pt-2 pl-2 ma-0 leva grey--text lighten-5">
            &nbsp; Co sem dame pro PP?
           </div>
@@ -359,40 +357,40 @@
 
         </td>
       <td class="rborder pr-2 pl-1"
-      :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'blue lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_zak}"
       >
-      <div v-if="polozka2.vzor==-999"></div>
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
         <!-- {{polozka2.kcks}} -->
        <input v-else type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;" class="prava"
        @focus="polozka2.vse=0">
         </td>
       <td class="rborder pr-2"
-      :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'blue lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_zak}"
       >
-      <div v-if="polozka2.vzor==-999"></div>
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
         <input v-else type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
         <!-- {{polozka2.ks}} -->
 
       </td>
       <td class="rborder pr-2 pl-1"
-      :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'blue lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_zak}"
       >
-      <div v-if="polozka2.vzor==-999"></div>
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
       <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
         </td>
-      <td class="rborder pr-2 " style="border-bottom: solid 1px silver"
-      :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+      <td class="rborder pr-2"
+      :class="{'blue lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_zak}"
 
       >
-      <div v-if="polozka2.vzor==-999"></div>
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
       <span v-else>
       {{polozka2.prodej - polozka2.naklad}}
       </span>
       </td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
-       <td class="rborder pr-2 pl-1 pb-0"
-       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+       <td class="rborder pr-2 pl-1"
+       :class="{'blue lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_zak}"
        >
-       <div v-if="polozka2.vzor==-999"></div>
+       <div v-if="polozka2.vzor==-999">&nbsp;</div>
         <input v-else type="number" v-model="polozka2.prodej" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
        </td>
 
@@ -557,20 +555,17 @@
     <tbody>
       <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"   style="cursor:pointer; height:30px; border-bottom:dotted 0px;"
           class="hoVer2"
-
-      @click="polozka2.vzor>-999?aktivni_polozka_nab=polozka2.idefix:false"
-    :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==aktivni_polozka_zak && polozka2.vzor >-999}"
-    :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:dotted 0px;':'height:3px'"
+          @click="aktivni_polozka_nab=polozka2.idefix"
       >
         <!-- :class="{
          'blue lighten-5 ': (polozka2.vzor==2 ) || ( polozka2.vzor==0 && !f.isEmpty(polozka2.obsah) ),
          'green lighten-5 ': (polozka2.vzor==1 && polozka2.idefix_dod==idefix_vlastnik ) || (polozka2.vzor==0 && polozka2.idefix_dod==idefix_vlastnik && f.isEmpty(polozka2.obsah) )
        }" -->
        <td :key="'nab'+klikynab+''+idx2" class="pl-1" style="border-bottom:none"
-       :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+       :class="{'green lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_nab}"
 
        >
-       <div v-if="polozka2.vzor==-999"></div>
+       <div v-if="polozka2.vzor==-999">&nbsp;</div>
         <div v-else  style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1">
 
         <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;"
@@ -587,18 +582,18 @@
 
       </td>
       <td class="rborder leva pl-2 pr-2" style="border-bottom:none"
-      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'green lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_nab}"
       >
-      <div v-if="polozka2.vzor==-999"></div>
-        <input v-else type="text" v-model="polozka2.nazev" @change="ZmenPolozku('nab',polozka2)" style="height:100%; border-bottom:dotted 0px;"
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
+        <input v-else type="text" v-model="polozka2.nazev" @change="ZmenPolozku('nab',polozka2)" style="height:100%; border-bottom:dotted 1px;"
          :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
         >
       </td>
 
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none"
-      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'green lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_nab}"
       >
-      <div v-if="polozka2.vzor==-999"></div>
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
            <div  v-else-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah)"   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-0">
             <span style="float: left;width:90%">
              <el-select v-model="polozka2.idefix_prace"
@@ -642,9 +637,9 @@
         </td>
 
       <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none"
-      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'green lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_nab}"
       >
-      <div v-if="polozka2.vzor==-999"></div>
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
            <div v-else>
              <el-select v-model="polozka2.idefix_dod"
               v-if="cis_dod.length>=0 && f.isEmpty(polozka2.obsah)"
@@ -699,13 +694,13 @@
             </div>
           </div>
           <div v-if="polozka2.vzor==-999"></div>
-         <div v-else-if="polozka2.idefix_dod!=idefix_vlastnik" class="pt-1 pb-1" style="height:39px;width:100%; border-bottom: solid silver 0px;">
+         <div v-else-if="polozka2.idefix_dod!=idefix_vlastnik" class="pt-1 pb-1" style="height:39px;width:100%; border-bottom: solid silver 1px;">
           <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Faktura:</div>
           <div style="float:right;width:70%;" class="elevation-0 pt-1">
            <input type="text" v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('zak',polozka2):false" style="height:22px; border:dotted 1px silver;" class="stred">
           </div>
          </div>
-         <div v-else class="pt-1 pb-1 pl-0" style="height:39px;width:100%; border-bottom: solid silver 0px;">
+         <div v-else class="pt-1 pb-1 pl-0" style="height:39px;width:100%; border-bottom: solid silver 1px;">
           <div style="float:left;width:100%;height:39px;" class="pt-2 pl-2 ma-0 leva grey--text lighten-5">
            &nbsp; Co sem dame pro PP?
           </div>
@@ -713,40 +708,40 @@
 
         </td>
       <td class="rborder pr-2"
-      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'green lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_nab}"
       >
-        <div v-if="polozka2.vzor==-999"></div>
+        <div v-if="polozka2.vzor==-999">&nbsp;</div>
         <input v-else type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;" class="prava"
         @focus="polozka2.vse=0"
         >
         </td>
       <td class="rborder pr-2"
-      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'green lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_nab}"
        >
-       <div v-if="polozka2.vzor==-999"></div>
+       <div v-if="polozka2.vzor==-999">&nbsp;</div>
         <input v-else type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;" class="prava">
         <!-- {{polozka2.ks}} -->
 
       </td>
       <td class="rborder pr-2"
-      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'green lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_nab}"
       >
-        <div v-if="polozka2.vzor==-999"></div>
+        <div v-if="polozka2.vzor==-999">&nbsp;</div>
 
         <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('nab',polozka2,0)">
         </td>
        <td class="rborder pr-2"
-      :class="{'green lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'green lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_nab}"
       >
-      <div v-if="polozka2.vzor==-999"></div>
+      <div v-if="polozka2.vzor==-999">&nbsp;</div>
       <span v-else>
       {{polozka2.prodej - polozka2.naklad}}
       </span>
       </td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
        <td class="rborder pr-2"
-       :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+       :class="{'green lighten-5 elevation-0': polozka2.idefix==aktivni_polozka_nab}"
        >
-       <div v-if="polozka2.vzor==-999"></div>
+       <div v-if="polozka2.vzor==-999">&nbsp;</div>
         <input v-else type="number" v-model="polozka2.prodej" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('nab',polozka2,0)">
        </td>
 
@@ -1360,77 +1355,12 @@ deactivated: function () {
       eventBus.$off('SAVEZAZNAM')
       eventBus.$off('DELETETEMPLATE')
       eventBus.$off('AnswerID2')
-      eventBus.$off('seekzaknab')
       //alert('Tvorim')
      eventBus.$on('kalkulaceDelete',(serverDel) => {
      eventBus.$off('MatCol')
      eventBus.$off('Rend')
      console.log(serverDel)
      })
-
-     eventBus.$on('seekzaknab',(server) => {
-       //f.Alert('seekzaknab', f.Jstr(server))
-       if (server.key=='zak'){
-         self.search_zak_cislo=server.value
-         self.search_zak_rok=''
-         self.$nextTick(function () {
-           self.desc_zak='desc'
-           self.Seznam('zak', '','cislozakazky desc')
-           .then(()=>{
-            if (self.seznam_zak.length>0) {
-              self.$refs.w1.form.cislo = self.seznam_zak[0].cislozakazky
-              self.$refs.w1.pocet_nal_zak = self.seznam_zak.length
-              self.FillFormWait(self.seznam_zak[0])
-              var ifx=self.seznam_zak[0].idefix
-              self.aktivni_zak=ifx
-              self.polozky_zak=[]
-              Q.all(self.idefix,`select *,0 as vse from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
-              .then((res)=>{
-                 //f.Alert2(f.Jstr(res.data.data))
-                 self.polozky_zak=res.data.data
-                 self.addPol('zak',ifx)
-                 self.polozky_soucet('zak')
-              })
-            } else {
-                self.$refs.w1.pocet_nal_zak=0
-            }
-           })
-         } )
-       } else
-
-       if (server.key=='nab'){
-         self.search_nab_cislo=server.value
-         self.search_nab_rok=''
-         self.$nextTick(function () {
-           self.desc_nab='desc'
-           self.Seznam('nab', '','cislonabidky desc')
-           .then(()=>{
-            if (self.seznam_nab.length>0) {
-              self.$refs.w1.form.cislo = self.seznam_nab[0].cislonabidky
-              self.$refs.w1.pocet_nal_nab = self.seznam_nab.length
-              self.FillFormWait(self.seznam_nab[0])
-              var ifx=self.seznam_nab[0].idefix
-              self.aktivni_nab=ifx
-              self.polozky_nab=[]
-
-              Q.all(self.idefix,`select *,0 as vse from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
-              .then((res)=>{
-                 //f.Alert2(f.Jstr(res.data.data))
-                 self.polozky_nab=res.data.data
-                 self.addPol('nab',ifx)
-                 self.polozky_soucet('nab')
-              })
-            } else {
-                self.$refs.w1.pocet_nal_nab=0
-            }
-           })
-         } )
-
-       }
-
-
-     })
-
 
 
 
@@ -2256,7 +2186,7 @@ if (self.MAINMENULAST== 'zakazky'){
        }
 
 
-       self.$refs.w1.form.idefix               = polozka.idefix
+
        self.$refs.w1.form.nazev                = polozka.nazev
        self.$refs.w1.form.idefix_firma         = polozka.idefix_firma
        self.$refs.w1.form.idefix_firmaosoba    = polozka.idefix_firmaosoba
@@ -2293,37 +2223,35 @@ if (self.MAINMENULAST== 'zakazky'){
        var addPol=[]
        var addEmpty={}
 
-
        addPol=  (await Q.all(self.idefix,`select *,0 as vse from ${ceho}_t_items where vzor>=1 order by idefix_dod desc limit 2`)).data.data
 //Pridatprazdnou radku
 
        addPol.forEach(el=>{
          if (ceho=='zak'){
            el.idefix_zak=idefix_zaknab
-           if (_.findIndex(self.polozky_zak, function(o) { return o.vzor==-999 })  ==-1) {
+           if (_.findIndex(self.polozky_zak, function(o) { return o.idefix_zak=-999 })  ==-1) {
              addEmpty=f.Jparse(el)
-             addEmpty.nazev="XXXXX"
+             addEmpty.nazev=""
              addEmpty.idefix*=-1
              addEmpty.obsah=[]
              //addEmpty.idefix_zak=-999
              addEmpty.idefix_dod=-999
              addEmpty.idefix_prace=-999
-             addEmpty.vzor=-999
              self.polozky_zak.push(addEmpty)
-
+             addEmpty.vzor=-999
              //f.Alert(f.Jstr(self.polozky_zak))
              //f.Alert(f.Jstr(el))
            }
            if (_.findIndex(self.polozky_zak, function(o) { return o.nazev == el.nazev && o.idefix_dod==el.idefix_dod })  ==-1) {
-              self.polozky_zak.push(el)
+             self.polozky_zak.push(el)
            }
 
          }else
          if (ceho=='nab'){
            el.idefix_nab=idefix_zaknab
-           if (_.findIndex(self.polozky_nab, function(o) { return o.vzor==-999 })  ==-1) {
+           if (_.findIndex(self.polozky_nab, function(o) { return o.idefix_nab=-999 })  ==-1) {
              addEmpty=f.Jparse(el)
-             addEmpty.nazev="AAAAAA"
+             addEmpty.nazev=""
              addEmpty.idefix*=-1
              addEmpty.obsah=[]
              //addEmpty.idefix_zak=-999
@@ -2331,7 +2259,6 @@ if (self.MAINMENULAST== 'zakazky'){
              addEmpty.idefix_prace=-999
              addEmpty.vzor=-999
              self.polozky_nab.push(addEmpty)
-             // f.Alert(f.Jstr(addEmpty))
              //f.Alert(f.Jstr(self.polozky_zak))
              //f.Alert(f.Jstr(el))
            }
@@ -2341,7 +2268,7 @@ if (self.MAINMENULAST== 'zakazky'){
          }
 
        })
-
+       f.Alert(f.Jstr(addPol))
 
    },
    async to1Z(){
@@ -3096,24 +3023,8 @@ if (self.MAINMENULAST== 'zakazky'){
   },
   async ZmenPolozku(ceho = 'zak', polozka, ev=1){
     const self=this
-    var lRet=false
-  if (self.timeout)  {
-    clearTimeout(self.timeout)
-    //this.$notify( { title: self.MAINMENULAST,  message: `Cancel timout ${self.timeout}` , type: 'error', offset: 100, duration: 500 })
-    self.timeout=false
-
-  }
-
-
-  self.timeout = setTimeout(function(){
-      self.ZmenPolozku0(ceho,polozka,ev)
-    },100)
- },
-  async ZmenPolozku0(ceho = 'zak', polozka, ev=1){
-    const self=this
     var q=''
     var idefix_ceho=(ceho=='zak')?polozka.idefix_zak:polozka.idefix_nab
-
 
     if (polozka.vzor==0) {
         q=`update  ${ceho}_t_items a set
@@ -3125,14 +3036,16 @@ if (self.MAINMENULAST== 'zakazky'){
           ks        =   ${polozka.ks},
           naklad    =   ${polozka.naklad},
           prodej    =   ${polozka.prodej}
+
           where idefix = ${polozka.idefix}`
+
     }
 
 
 // marze              | 0.00
 
 
-    if (polozka.vzor>=1 && !polozka.nazev.match(/^Pr.zdn.*$/)){
+    if (polozka.vzor>=1 && !polozka.nazev.match(/^Pr.zdn.$/)){
       //
       if (!f.isEmpty(polozka.obsah)) {
         polozka.obsah=f.Jstr(polozka.obsah)
@@ -3202,13 +3115,12 @@ if (self.MAINMENULAST== 'zakazky'){
       qVals=qVals.replace(/'null'/g,'null')
 
       var q=`insert into ${ceho}_t_items ${qCols} values ${qVals}`
-      ev = 1
 
 
 
 
     } else
-    if (polozka.vzor>=1 && polozka.nazev.match(/^Pr.zdn.*$/)){
+    if (polozka.vzor>=1 && polozka.nazev.match(/^Pr.zdn.$/)){
 
       f.Alert('Nedelam nic')
       return
@@ -3226,7 +3138,6 @@ if (self.MAINMENULAST== 'zakazky'){
     try {
 
       var b = (await Q.post(self.idefix,q))
-      //ev =1
       //self.mAlert(q,10000)
       this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena ${polozka.vzor} ${polozka.idefix}` , type: 'success', offset: 100, duration: 1000 })
       polozka.vzor=0
@@ -3235,25 +3146,20 @@ if (self.MAINMENULAST== 'zakazky'){
 
       f.Alert2('ERROR polozky ', q, f.Jstr(polozka ))
     }
-    // await self.DocasneReseni()
+    await self.DocasneReseni()
     if (ceho=='zak') {
-        if (ev==1){
           self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix_zak} order by idefix`)).data.data
-        }
-
 
           self.polozky_soucet('zak')
 
-          //f.Alert(ev)
+
           if (ev==1){
             self.addPol('zak',polozka.idefix_zak)
           }
 
     } else
     if (ceho=='nab') {
-      if (ev==1){
           self.polozky_nab=  (await Q.all(self.idefix,`select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`)).data.data
-      }
           await self.polozky_soucet('nab')
 
 
@@ -4756,16 +4662,6 @@ input {
 
 .rborder {
   border-left: solid 1px silver
-}
-.black1 {
-  background: black;
-  font-size:1px;
-  height:1px;
-  border-top: solid black 1px;
-}
-.ramspodni {
-  border-top:    dotted 1px #7c7c7c ;
-  border-bottom: dotted 1px #7c7c7c ;
 }
 
 </style>

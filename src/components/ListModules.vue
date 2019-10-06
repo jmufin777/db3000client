@@ -156,7 +156,7 @@
 </el-col>
 <el-col :span="7" :offset="1">
  <v-select
-          :items="form.win_tems"
+          :options="form.win_tems"
           label="Kde ?"
           hint="Kde se modul spusti?"
           class="caption"
@@ -170,7 +170,7 @@
 </el-col>
 <el-col :span="7" :offset="1">
  <v-select
-          :items="form.type_items"
+          :options="form.type_items"
           label="Typ"
           hint="Typ=Skupina, polozka ?"
           class="caption"
@@ -186,8 +186,10 @@
 
   <el-form-item>
    <el-col :span="7" :offset="0">
+
+
  <v-select
-          :items="form.poz_tems"
+          :options="form.poz_tems"
           label="Pozice"
           hint="Ikona pozice"
           class="caption"
@@ -260,7 +262,6 @@ export default {
         IkonaPozice: 'right',
         Typ: 'Item',
 
-
         type_items: ['Item', 'Group'],
         win_tems: ['plocha', 'window'],
         poz_tems: ['left', 'right'],
@@ -269,6 +270,7 @@ export default {
         Pole: [],
         items: ['Barevnost', 'format_color_fill', 'menu_switch', 'list2-barevnost', 'true','','','','','Item',[]]
       },
+      poz_tems: ['left', 'right'],
 
       compList: [
         'menu-nav'
@@ -354,10 +356,19 @@ created () {
   })
 
   setTimeout(function(){
-    document.getElementById("m001").style.height=Math.round(window.innerHeight - 110)  + "px"
+    try {
+      document.getElementById("m001").style.height=Math.round(window.innerHeight - 110)  + "px"
+    } catch (e) {
+      console.log('Neni prdek m001')
+    }
+
   },100)
   window.addEventListener('resize', (function() {
+    try {
    document.getElementById("m001").style.height=Math.round(window.innerHeight - 110)  + "px"
+    } catch (e) {
+      console.log('Neni prdek m001')
+    }
   })
   )
 

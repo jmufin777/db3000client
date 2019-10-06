@@ -82,6 +82,7 @@
       v-bind:class="{  JsemVidet: groupFind(item) || item.id < 0, NejsemVidet:  item.id > 0 && !groupFind(item)   }"
       :id="'d'+objId2 + '_r_'+irow"
         style="backgroud: white"
+        class="white"
   >
 
 
@@ -89,7 +90,7 @@
 
 
     <div class='dcell'  style="width::100% ; background:white"
-    v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+    v-bind:class="{bila: irow % 2 ==0 , bila:  irow % 2 >0}"
     >
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="copyLine(irow)" ><i class="el-icon-document" size="mini"></i></button>
        <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="editLine(irow)" ><i class="el-icon-edit" size="mini"></i></button>
@@ -160,7 +161,7 @@
     	</el-col>
      <el-col :span="2" >
       <div class='dcell'  style="width::100% ; background:white"
-      v-bind:class="{seda: irow % 2 ==0 , bila:  irow % 2 >0}"
+      v-bind:class="{bila: irow % 2 ==0 , bila:  irow % 2 >0}"
       >
          <button type="button" style="width:30%;height:8px" class="white  px-0 cell" @click="deleteLine(irow)" ><i class="el-icon-delete" size="mini"></i></button>
       </div>
@@ -271,9 +272,10 @@ export default {
       minId: 0, //Pro vklad zaporna ID
   		cols: [
 				{ id: "id", title: "ID", cssClasses: "mtd" ,span: 1, isEdit: false, type: "text"  ,props:{visible: 'no'}},
-				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:4, isEdit: true, type: "number",props:{visible: 'yes'}},
+				{ id: "kod", title: "Kod", cssClasses: "mtd" ,span:2, isEdit: true, type: "number",props:{visible: 'yes'}},
         { id: "nazev", title: "Nazev", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
-        { id: "zkratka", title: "Zkratka ", cssClasses: "mtd", span: 4, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "text_na_fakturu", title: "Faktura", cssClasses: "mtd", span: 5, isEdit: true, type: "text" ,props:{visible: 'yes'}},
+        { id: "zkratka", title: "Zkratka ", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         { id: "kalk_sloupec_v", title: "Por. Velkoploch ", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         { id: "kalk_sloupec_arch", title: "Arch ", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
         { id: "kalk_sloupec_bt", title: "Bez tisku ", cssClasses: "mtd", span: 2, isEdit: true, type: "text" ,props:{visible: 'yes'}},
@@ -456,11 +458,11 @@ copyLine(nRow) {
          }
         aTmp.push({id: el.id,kod: el.kod, nazev: el.nazev, zkratka: el.zkratka,
         kalk_sloupec_v: el.kalk_sloupec_v,
+        text_na_fakturu: el.text_na_fakturu,
         kalk_sloupec_arch: el.kalk_sloupec_arch,
         kalk_sloupec_bt: el.kalk_sloupec_bt
 
         })
-
         Posli.push(aTmp)
        }
      })
@@ -614,7 +616,7 @@ copyLine(nRow) {
 
       var xId = this.list[nRow].id
       var tmpI = -1000000
-     this.$confirm('Vymazat zaznam' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev, '',{
+     this.$confirm('Vymazat zaznamik ' + this.list[nRow].id+"/"+this.list[nRow].kod+"/"+this.list[nRow].nazev, '',{
        distinguishCancelAndClose: true,
        confirmButtonText: 'Ano?',
        cancelButtonText: 'Ne'

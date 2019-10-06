@@ -58,8 +58,9 @@
         <div style="width:24%;float:left;background:#ffffff;border-right: solid 1px #cacade" class="pl-1 mt-1 pt-1">
           <table style="width:100%;height:100%">
            <tr>
-              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava">Číslo zakázky:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4 tdn" >
+              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava"  :title="form.idefix" >Číslo {{setmenu=='zakazky'?'zakázky:':'nabidky:'}}</td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4 tdn">
+
               <input type="hidden" size="mini"   class="tdl tdn"
               :id="'cislo' + ID "
               v-model="form.cislo" >
@@ -71,24 +72,35 @@
 
                <input v-if="setmenu=='zakazky'"
                type="text" size="mini"  style="width:15em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
-               :id="'cislo' + ID "
+               :id="'cislo2' + ID "
 
-              :value="status_zak==1?'Nova Zakazka':(
+                :value="status_zak==1?'Nova Zakazka':(
                 form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'
-                )
-              "
-              readonly
+                ) "
+
+
                >
                <input v-else-if="setmenu=='kalkulace'"
                type="text" size="mini"  style="width:15em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
-               :id="'cislo' + ID "
+               :id="'cislo2' + ID "
 
                :value="status_nab==1?'Nova Nabidka':(
                 form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'
-                )
-              "
-              readonly
+                ) "
+
                >
+
+               <v-btn @click="seekzaknab(setmenu=='kalkulace'?'nab':'zak' )"
+               :class="{'green lighten-5':setmenu=='kalkulace','blue lighten-5':setmenu=='zakazky'} "
+               class="pl-0 pr-0"
+               small
+               style="zoom:65%"
+
+               > ?
+               {{setmenu=='kalkulace'?pocet_nal_nab:pocet_nal_zak}}
+               </v-btn>
+
+
 
               </td>
             </tr>
@@ -752,6 +764,8 @@ export default {
          splatnost         : 0,
          hotovost          : 0,
          stav              : 'Nova',
+         idefix            : 0,
+
 
        },
        aFirma: [],
@@ -760,6 +774,8 @@ export default {
        aProdukce: [],
        status_zak:0,
        status_nab:0,
+       pocet_nal_zak     :0,
+       pocet_nal_nab     :0,
        //MAINMENULAST:'',
 
       fields: {
@@ -974,6 +990,19 @@ deactivated: function () {
     //alert('aRend')
      eventBus.$emit("Rend")
   },
+  seekzaknab(ceho='zak') {
+    const self=this;
+    var obj, val
+    obj=document.getElementById('cislo2' + self.ID )
+    val = obj.value*1
+    //f.Alert(obj.value)
+
+    eventBus.$emit('seekzaknab',{key:ceho, value: val})
+
+  //form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'
+    //f.Alert(parseInt(self.form.cislo.substr(5,5)))
+  },
+
   // retData(){
   //   //alert('ja 1')
   //   return this.form
