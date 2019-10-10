@@ -69,7 +69,6 @@
               :value="form.cislo >'0'?form.cislo.substr(0,5):'00000'"
               readonly
                >&nbsp;
-
                <input v-if="setmenu=='zakazky'"
                type="text" size="mini"  style="width:15em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
                :id="'cislo2' + ID "
@@ -79,8 +78,7 @@
                 ) "
 
 
-               >
-               <input v-else-if="setmenu=='kalkulace'"
+               ><input v-else-if="setmenu=='kalkulace'"
                type="text" size="mini"  style="width:15em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
                :id="'cislo2' + ID "
 

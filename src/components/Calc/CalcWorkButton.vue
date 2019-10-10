@@ -4,13 +4,25 @@
       :class="'buttons'+ID2"
 >
     <table style="float:left;max-width:100%" >
-      <tr style="height:28px" class="honza_color" >
+      <tr style="height:28px" class="honza_color"
+
+      >
       <td class="leva white pt-1 prava pr-1 honza_color" style="width:1em;;height:28px" >
         <v-icon size="medium" @click.native="f1.Alert2('Uzmaceno')">fa-lock</v-icon>
       </td>
-      <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:8.5em;height:28px" class="honza_color" >
-       <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:17.2em;width:100%" >
-       <table  class="honza_color" border="0"><tr><td  class="honza_color pa-0" style="text-align:left">
+      <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:8.5em;height:28px" class="honza_color"
+
+      >
+       <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:17.2em;width:100%"
+
+        >
+       <table  class="honza_color" border="0"
+       ><tr
+       :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+       :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
+       ><td  class="honza_color pa-0" style="text-align:left"
+
+       >
         <button class="kolecko2" @click="copyVL()">
           <div class="kolecko" >
             <!-- <i class="el-icon-plus" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
@@ -42,7 +54,10 @@
        </div>
       </td>
       <!-- ;seznamPoz('seek'+ID2) //-->
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 0px white;width:40em;height:28px" class="honza_color" >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 0px white;width:40em;height:28px" class="honza_color"
+      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+      >
        <input type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '" class="honza_text"
         :id="'seek'+ID2"
         :IDEFIX="'seek'+IDEFIX"
@@ -51,90 +66,174 @@
         @click="showTemplates=ZobrazMenu"
         @keydown="showTemplates=ZobrazMenu;ZobrazMenu ? seznam('seek'+ID2+'_list_'+0,1,$event) : false"
         :title="(form.nazev>'')?'Text na fakture':''"
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
         >
         <!-- cale {{cTable}} -->
       </td>
-      <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em;height:28px" class="honza_color" >
-
-        <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%"
+      <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em;height:28px"
+      class="honza_color"
+      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+       >
+       <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%;zoom:120%"
         v-if="IDEFIX==IDEFIXACTIVE"
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
         >
-
          <button class="kolecko2" @click="send('template')" title="Ulozit" :id="'send_'+ID2"
          :IDEFIX="'send'+IDEFIX"
-
+         :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
          >
-           <div class="kolecko" >
-           <i class="el-icon-upload" style="color:#93908e;position:absolute;top:-0px;left:0px"
-           ></i>
-           </div>
+         <div class="kolecko"
+         :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+         >
+         <i class="el-icon-upload" style="color:#93908e;position:absolute;top:-0px;left:0px"
+         ></i>
+         </div>
          </button>
         </div>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;height:28px;width:15em" class="honza_color" >
-        <table><tr><td style="width:75%" class="honza_color">
-        <input type="number" v-model="form.kcks" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="Kc/ks" class="honza_text honza_color pr-1 " title="Kc/ks"
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;height:28px;width:15em" class="honza_color"
+      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE}"
+       >
+        <table ><tr><td style="width:75%" class="honza_color"
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
+        >
+        <input
+
+        type="number" v-model="form.kcks"
+        style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="Kc/ks"
+        class="honza_text honza_color pr-1 " title="Kc/ks"
         :id="'kcks'+ID2"
         :IDEFIX="'kcks'+IDEFIX"
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
         readonly
         >
-        </td><td style="width:25%;" class="honza_color pt-1">
-        <span style="font-size:14px">Kč/ks</span>
+        </td><td style="width:25%;" class="honza_color pt-1"
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
+        >
+        <span
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
+        style="font-size:14px">Kč/ks</span>
         </td></tr></table>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;height:28px;width:15em" class="honza_color" >
-        <table><tr><td style="width:80%" class="honza_color">
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;height:28px;width:15em" class="honza_color"
+      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+      >
+        <table><tr><td style="width:80%" class="honza_color"
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+        >
         <input type="number" v-model="form.ks"
         style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1 zmeny" title="Pocet kusu"
         :id="'ks'+ID2"
         :IDEFIX="'ks'+IDEFIX"
+       :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
 
         >
-        </td><td style="width:20%;" class="honza_color pt-1">
-        <span style="font-size:14px">ks</span>
+        </td><td style="width:20%;" class="honza_color pt-1"
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        >
+        <span style="font-size:14px"
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        >ks</span>
         </td></tr></table>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:24em;height:28px" class="honza_color" >
-          <table><tr><td style="width:20%" class="honza_color">
-            <span style="font-size:20px">&#931;</span><span>N</span>
-            </td><td stylee="width:80%"  class="honza_color">
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:24em;height:28px" class="honza_color"
+      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+      >
+          <table><tr
+          :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+          ><td style="width:20%" class="honza_color"
+          :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+          >
+            <span style="font-size:20px"
+            :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+            >&#931;</span><span>N</span>
+            </td><td stylee="width:80%"  class="honza_color"
+            :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+            >
             <input type="number" v-model="form.naklad"  style="width:100%;text-align:right;height:26px;border:none;color:#ffffff !important"
                    :placeholder="'NAKLADY CELKEM' "
                    class="honza_text honza_color pr-1" title="Naklady celkem"
                    :id="'naklad'+ID2"
                    :IDEFIX="'naklad'+IDEFIX"
                    readonly
+                   :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+                   :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
             >
         </td></tr></table>
         <!-- <input type="text" :value="f1.getCislo(form.naklad)" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" class="honza_text honza_color pr-1"> -->
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em;height:28px" class="honza_color" >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em;height:28px" class="honza_color"
+      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+      >
         <input type="number" v-model="form.marze" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE" class="honza_text honza_color pr-1" title="Marze"
         :id="'marze'+ID2"
         :IDEFIX="'marze'+IDEFIX"
+        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
         >
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:8em;height:28px;visibility:wisible" class="honza_color"  >
-          <table border="0"><tr>
-          <td style="width:80%" class="honza_color">
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:8em;height:28px;visibility:wisible" class="honza_color"
+      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+       >
+          <table border="0"><tr
+          :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+          >
+          <td style="width:80%" class="honza_color"
+          :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+          >
           <input type="text" v-model="form.marze_pomer" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="" class="honza_text honza_color pr-1" title="Marze Pomer"
             :id="'marze_pomer'+ID2"
             :IDEFIX="'marze_pomer'+IDEFIX"
             readonly
+            :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+            :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
           >
           </td>
-          <td style="width:20%" class="honza_color">
-            <span style="font-size:20px">%</span><span></span>
+          <td style="width:20%" class="honza_color"
+          :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+          >
+            <span style="font-size:20px"
+            :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+            >%</span><span></span>
           </td>
           </tr></table>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:24em;height:28px" class="honza_color" >
-           <table border="0"><tr><td style="width:15%" class="honza_color">
-            <span style="font-size:20px">&#931;</span><span>P</span>
-            </td><td stylee="width:80%"  class="honza_color">
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:24em;height:28px" class="honza_color"
+      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+      >
+           <table border="0"><tr
+           :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+            ><td style="width:15%" class="honza_color"
+            :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+            :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
+            >
+            <span style="font-size:20px"
+            :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+            >&#931;</span><span>P</span>
+            </td><td stylee="width:80%"  class="honza_color"
+            :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+            >
          <input type="number" v-model="form.prodej" style="width:100%;text-align:right;height:26px;border:none;color:#ffffff !important" placeholder="PRODEJ CELKEM" class="honza_text honza_color pr-1 " title="Prodej"
              :id="'prodej'+ID2"
              :IDEFIX="'prodej'+IDEFIX"
+             :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+             :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
          >
         </td></tr></table>
       </td>
@@ -330,6 +429,11 @@ export default {
       default:"0",
       required: false
     },
+    MAINMENULAST:{
+      default:"zakazky",
+      required: false
+    },
+
     ZobrazMenu: {  // k dispozici jsou rozbalovaci nabidky
       type: Boolean,
       required: false,

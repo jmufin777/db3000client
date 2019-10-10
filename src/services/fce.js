@@ -78,6 +78,10 @@ export default {
     return moment(String(value)).format('DD.MM.YYYY hh:mm:ss')
     //return moment(String(value)).format('MM.DD.YYYY')
   },
+  datum200(value) {
+    return moment(String(value)).format('YYYYMMDD hh:mm:ss')
+    //return moment(String(value)).format('MM.DD.YYYY')
+  },
   datum3(value) {
     return moment(String(value)).format('DD.MM.YYYY')
   },

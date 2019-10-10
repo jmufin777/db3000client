@@ -187,11 +187,11 @@ export default {
   return q;
 }
 ,getPraceAll(idefix_dod=0,nazevPrace=''){
-  var q=`select distinct c.nazev as prace, c.idefix as idefix_prace,array_agg(b.idefix) as dod_seznam, count(b.idefix) as pocet_dod
+  var q=`select distinct c.nazev as prace, c.idefix as idefix_prace,array_agg(b.idefix) as dod_seznam, count(b.idefix) as pocet_dod, c.text_na_fakturu
           from
           list2_prace c left join list_firmaprace a on a.idefix_prace =c.idefix
           left join list_dodavatel b on a.idefix_firma=b.idefix
-          group by c.nazev,c.idefix order by pocet_dod desc, c.nazev limit 1150`;
+          group by c.nazev,c.idefix, c.text_na_fakturu order by pocet_dod desc, c.nazev limit 1150`;
        /*
        where
         (${idefix_dod}=0 or a.idefix_firma = ${idefix_dod} )

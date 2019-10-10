@@ -169,20 +169,6 @@
   <table style="width:90%;border: solid 1px silver;border-bottom:none">
     <thead>
       <tr>
-      <th style="width:3em;border:none" class="nb">&nbsp;</th>
-      <th style="width:20em;border:none" class="nb">&nbsp;</th>
-      <th style="width:20em;border:none" class="nb">&nbsp;</th>
-      <th style="width:20em;border:none" class="nb">&nbsp;</th>
-      <th style="width:;border:none" class="nb">&nbsp;</th>
-      <th style="width:;border:none" class="nb">&nbsp;</th>
-      <th style="width:">{{f.getCislo(zak_naklady)}} Kč</th>
-      <th style="width:">{{f.getCislo(zak_marze)}} Kč</th>
-      <th style="width:">{{f.getCislo(zak_prodej)}} Kč</th>
-      <!-- <th style="width:">Sloupec</th> -->
-      </tr>
-
-
-      <tr>
       <th style="width:3em">Ikony</th>
       <th style="width:20em">Text na faktuře</th>
       <th style="width:20em">Práce</th>
@@ -194,19 +180,37 @@
       <th style="width:">Prodej</th>
       <!-- <th style="width:">Sloupec</th> -->
       </tr>
+      <tr>
+      <th style="width:3em;border:none" class="nb">&nbsp;</th>
+      <th style="width:20em;border:none" class="nb">&nbsp;</th>
+      <!-- <th style="width:20em;border:none" class="nb">&nbsp;</th>
+      <th style="width:20em;border:none" class="nb">&nbsp;</th> -->
+      <th style="width:20em;border:none" class="nb">&nbsp;</th>
+      <th style="width:20em;border:none" class="nb">&nbsp;</th>
+
+      <th style="width:;border:none" class="nb">&nbsp;</th>
+      <th style="width:;border:none" class="nb">Celkem</th>
+      <th style="width:">{{f.getCislo(zak_naklady)}} Kč</th>
+      <th style="width:">{{f.getCislo(zak_marze)}} Kč</th>
+      <th style="width:">{{f.getCislo(zak_prodej)}} Kč</th>
+      <!-- <th style="width:">Sloupec</th> -->
+      </tr>
+
+
+
     </thead>
     <tbody>
       <tr  v-for="(polozka2,idx2) in polozky_zak" :key="idx2"
       class="hoVer2"
       @click="polozka2.vzor>-999?aktivni_polozka_zak=polozka2.idefix:false"
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==aktivni_polozka_zak && polozka2.vzor >-999} "
-      :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:dotted 0px;':''"
+      :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:solid 1px #cccccc;':''"
       >
        <td :key="'zak'+klikyzak+''+idx2" class="pl-1" style="border-bottom:none"
        :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
        >
         <div v-if="polozka2.vzor==-999" ></div>
-        <div  v-else style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-1">
+        <div  v-else style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-4">
 
         <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="polozka2.vzor==0?to3Z(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
         <span v-else class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -225,9 +229,9 @@
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
       >
       <div v-if="polozka2.vzor==-999"></div>
-
         <input v-else type="text" v-model="polozka2.nazev"
         @change="false?ZmenPolozku('zak',polozka2):true"
+        @focus="aktivni_polozka_zak=polozka2.idefix"
          style="height:100%; border-bottom:dotted 0px;"
         :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
         class="elevation-0"
@@ -255,7 +259,11 @@
                 :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
                 popper-class="silver lighten-5"
                 placeholder="Prace"
-                @change="f.Alert(ppp)"
+                @change="(polozka2.idefix_prace>0 && (polozka2.nazev=='' ||polozka2.nazev.match(/^Pr.zdn.*$/) ) )?polozka2.nazev=(cis_prace.filter(el => {
+                  return el.idefix_prace==polozka2.idefix_prace
+
+                }))[0].text_na_fakturu:''"
+
 
               >
               <!-- x.filter(cis_prace, function(o){ return true || filterPrace(polozka2,o) }) -->
@@ -314,7 +322,7 @@
                 :loading="loading"
               -->
                <!-- x.filter(cis_dod, function(o){ return filterDod(polozka2, o) }) -->
-                <el-option
+             <el-option
                 v-if="polozka2.vse==0"
                 v-for="item02 in x.filter(cis_dod, function(o){ return filterDod(polozka2, o) })"
                  :key="item02.idefix_firma"
@@ -348,8 +356,8 @@
          <div v-else-if="polozka2.idefix_dod!=idefix_vlastnik" class="pt-1 pb-1" style="height:39px;width:100%; border-bottom: solid silver 0px;">
           <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Faktura:</div>
           <div style="float:right;width:70%;" class="elevation-0 pt-1">
-           <input type="text" v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('zak',polozka2):false" style="height:22px; border:dotted 1px silver;" class="stred">
-          </div>
+            <input type="text" disabled v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('zak',polozka2):false" style="height:22px; border:dotted 1px silver;" class="stred">
+           </div>
          </div>
          <div v-else class="pt-1 pb-1 pl-0" style="height:39px;width:100%; border-bottom: solid silver 0px;">
           <div style="float:left;width:100%;height:39px;" class="pt-2 pl-2 ma-0 leva grey--text lighten-5">
@@ -363,14 +371,14 @@
       >
       <div v-if="polozka2.vzor==-999"></div>
         <!-- {{polozka2.kcks}} -->
-       <input v-else type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;" class="prava"
-       @focus="polozka2.vse=0">
+       <input v-else type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
+       @focus="polozka2.vse=0;aktivni_polozka_zak=polozka2.idefix">
         </td>
       <td class="rborder pr-2"
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
       >
       <div v-if="polozka2.vzor==-999"></div>
-        <input v-else type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
+        <input v-else type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
         <!-- {{polozka2.ks}} -->
 
       </td>
@@ -378,7 +386,7 @@
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
       >
       <div v-if="polozka2.vzor==-999"></div>
-      <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
+      <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
         </td>
       <td class="rborder pr-2 " style="border-bottom: solid 1px silver"
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
@@ -386,14 +394,17 @@
       >
       <div v-if="polozka2.vzor==-999"></div>
       <span v-else>
-      {{polozka2.prodej - polozka2.naklad}}
+       <input  readonly type="number" :value="(polozka2.prodej - polozka2.naklad)" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
+      <!-- {{polozka2.prodej - polozka2.naklad}} -->
       </span>
       </td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
        <td class="rborder pr-2 pl-1 pb-0"
        :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
        >
        <div v-if="polozka2.vzor==-999"></div>
-        <input v-else type="number" v-model="polozka2.prodej" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('zak',polozka2,0)">
+        <input v-else type="number" v-model="polozka2.prodej" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" @change="ZmenPolozku('zak',polozka2,0)"
+          @focus="aktivni_polozka_zak=polozka2.idefix"
+        >
        </td>
 
 
@@ -527,18 +538,7 @@
   :style="f.pof(Sirka,98)"
   >
     <thead>
-     <tr>
-      <th style="width:3em;border:none" class="nb">&nbsp;</th>
-      <th style="width:20em;border:none" class="nb">&nbsp;</th>
-      <th style="width:20em;border:none" class="nb">&nbsp;</th>
-      <th style="width:20em;border:none" class="nb">&nbsp;</th>
-      <th style="width:;border:none" class="nb">&nbsp;</th>
-      <th style="width:;border:none" class="nb">&nbsp;</th>
-      <th style="width:">{{nab_naklady}}</th>
-      <th style="width:">{{nab_marze}}</th>
-      <th style="width:">{{nab_prodej}}</th>
-      <!-- <th style="width:">Sloupec</th> -->
-      </tr>
+
 
 
       <tr>
@@ -553,14 +553,26 @@
       <th style="width:">Prodej</th>
       <!-- <th style="width:">Sloupec</th> -->
       </tr>
+      <tr>
+      <th style="width:3em;border:none" class="nb">&nbsp;</th>
+      <th style="width:20em;border:none" class="nb">&nbsp;</th>
+      <th style="width:20em;border:none" class="nb">&nbsp;</th>
+      <th style="width:20em;border:none" class="nb">&nbsp;</th>
+      <th style="width:;border:none" class="nb">&nbsp;</th>
+      <th style="width:;border:none" class="nb">&nbsp;</th>
+      <th style="width:">{{nab_naklady}}</th>
+      <th style="width:">{{nab_marze}}</th>
+      <th style="width:">{{nab_prodej}}</th>
+      <!-- <th style="width:">Sloupec</th> -->
+      </tr>
     </thead>
     <tbody>
       <tr v-for="(polozka2,idx2) in polozky_nab" :key="idx2"   style="cursor:pointer; height:30px; border-bottom:dotted 0px;"
           class="hoVer2"
 
       @click="polozka2.vzor>-999?aktivni_polozka_nab=polozka2.idefix:false"
-    :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==aktivni_polozka_zak && polozka2.vzor >-999}"
-    :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:dotted 0px;':'height:3px'"
+      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==aktivni_polozka_zak && polozka2.vzor >-999}"
+      :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:solid 1px #cccccc;':'height:3px'"
       >
         <!-- :class="{
          'blue lighten-5 ': (polozka2.vzor==2 ) || ( polozka2.vzor==0 && !f.isEmpty(polozka2.obsah) ),
@@ -571,8 +583,7 @@
 
        >
        <div v-if="polozka2.vzor==-999"></div>
-        <div v-else  style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1">
-
+        <div v-else  style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-4">
         <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;"
         @click="polozka2.vzor==0?to3N(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
         <span v-else class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -584,7 +595,6 @@
         <i class="el-icon-plus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </button>
         </div>
-
       </td>
       <td class="rborder leva pl-2 pr-2" style="border-bottom:none"
       :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
@@ -592,14 +602,15 @@
       <div v-if="polozka2.vzor==-999"></div>
         <input v-else type="text" v-model="polozka2.nazev" @change="ZmenPolozku('nab',polozka2)" style="height:100%; border-bottom:dotted 0px;"
          :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
-        >
-      </td>
-
-      <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none"
+         @focus="aktivni_polozka_nab=polozka2.idefix"
+      >
+     </td>
+     <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none"
       :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
       >
       <div v-if="polozka2.vzor==-999"></div>
            <div  v-else-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah)"   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-0">
+
             <span style="float: left;width:90%">
              <el-select v-model="polozka2.idefix_prace"
               v-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah) "
@@ -612,7 +623,10 @@
               :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
               popper-class="silver lighten-5"
               placeholder="Prace"
+              @change="(polozka2.idefix_prace>0 && (polozka2.nazev=='' ||polozka2.nazev.match(/^Pr.zdn.*$/) ) )?polozka2.nazev=(cis_prace.filter(el => {
+                  return el.idefix_prace==polozka2.idefix_prace
 
+              }))[0].text_na_fakturu:''"
               >
               <el-option
                 v-for="item01 in x.filter(cis_prace, function(o){ return true || filterPrace(polozka2,o) })"
@@ -702,7 +716,7 @@
          <div v-else-if="polozka2.idefix_dod!=idefix_vlastnik" class="pt-1 pb-1" style="height:39px;width:100%; border-bottom: solid silver 0px;">
           <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Faktura:</div>
           <div style="float:right;width:70%;" class="elevation-0 pt-1">
-           <input type="text" v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('zak',polozka2):false" style="height:22px; border:dotted 1px silver;" class="stred">
+           <input type="text" disabled v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('zak',polozka2):false" style="height:22px; border:dotted 1px silver;" class="stred">
           </div>
          </div>
          <div v-else class="pt-1 pb-1 pl-0" style="height:39px;width:100%; border-bottom: solid silver 0px;">
@@ -716,7 +730,7 @@
       :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
       >
         <div v-if="polozka2.vzor==-999"></div>
-        <input v-else type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;" class="prava"
+        <input v-else type="number" readonly v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
         @focus="polozka2.vse=0"
         >
         </td>
@@ -724,7 +738,7 @@
       :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
        >
        <div v-if="polozka2.vzor==-999"></div>
-        <input v-else type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;" class="prava">
+        <input v-else type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;;font-size:120%" class="prava">
         <!-- {{polozka2.ks}} -->
 
       </td>
@@ -733,21 +747,24 @@
       >
         <div v-if="polozka2.vzor==-999"></div>
 
-        <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('nab',polozka2,0)">
+        <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" @change="ZmenPolozku('nab',polozka2,0)">
         </td>
        <td class="rborder pr-2"
       :class="{'green lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
       >
       <div v-if="polozka2.vzor==-999"></div>
       <span v-else>
-      {{polozka2.prodej - polozka2.naklad}}
+      <!-- {{polozka2.prodej - polozka2.naklad}} -->
+      <input  type="number" :value="(polozka2.prodej - polozka2.naklad)" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" >
       </span>
       </td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
        <td class="rborder pr-2"
        :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
        >
        <div v-if="polozka2.vzor==-999"></div>
-        <input v-else type="number" v-model="polozka2.prodej" style="height:100%; border-bottom:dotted 1px;" class="prava" @change="ZmenPolozku('nab',polozka2,0)">
+        <input v-else type="number" v-model="polozka2.prodej" style="height:100%; border-bottom:dotted 1px;;font-size:120%" class="prava" @change="ZmenPolozku('nab',polozka2,0)"
+          @focus="aktivni_polozka_nab=polozka2.idefix"
+        >
        </td>
 
 
@@ -801,6 +818,7 @@
       :dataDB="aBefore"
       :ID2="ID+iBefore"
       :IDEFIX="+aBefore.idefix"
+      :MAINMENULAST="MAINMENULAST"
 
       :key="'AWB_'+iBefore+''+idRend"
       style="position:relative;left:4px"
@@ -820,6 +838,7 @@
             :key="'AWC_'+iK+''+idRend"
             :IDEFIXACTIVE="IDEFIXACTIVE"
             :cTable="cTable"
+            :MAINMENULAST="MAINMENULAST"
             >
           </work-but>
 
@@ -829,6 +848,7 @@
            :ID2="ID+999666"
            :IDEFIX="+aBefore1.idefix"
            :IDEFIXACTIVE="IDEFIXACTIVE"
+           :MAINMENULAST="MAINMENULAST"
            :dataDB="aBefore1"
            :ZobrazMenu="true"
            :isOpen="true"
@@ -901,6 +921,7 @@
       :IDEFIXACTIVE="IDEFIXACTIVE"
       :key="'AWE_'+iBefore2+''+idRend"
       :cTable="cTable"
+      :MAINMENULAST="MAINMENULAST"
        ></work-but>
        <!-- POD {{IDEFIXACTIVE}} / {{aBefore2.idefix }} -->
    </div>
@@ -4755,13 +4776,14 @@ input {
 }
 
 .rborder {
-  border-left: solid 1px silver
+  border-left: solid 1px #cccccc
 }
 .black1 {
-  background: black;
+  background: white;
   font-size:1px;
   height:1px;
-  border-top: solid black 1px;
+  border-top: solid #cccccc 1px;
+  border-bottom: solid #cccccc 1px;
 }
 .ramspodni {
   border-top:    dotted 1px #7c7c7c ;
