@@ -88,6 +88,9 @@ export default {
   datum4(value) {
     return moment(String(value)).format('YYYYMMDD')
   },
+  obdobi(value) {
+    return moment(String(value)).format('YYYYMM')
+  },
   cas3(value) {
     return value.substring(0,5)
   },
@@ -1093,6 +1096,12 @@ getLeftApp(id,addPoz=10,idVztah="app") {
 getCislo(cislo=0) {
   var numberFormat1 = new Intl.NumberFormat('ru-RU');
   return numberFormat1.format(cislo)
+
+},
+
+getCisloInt(cislo=0) {
+  var numberFormat1 = new Intl.NumberFormat('ru-RU');
+  return numberFormat1.format(parseInt(cislo))
 
 },
 getWidth(id,addPoz=10) {

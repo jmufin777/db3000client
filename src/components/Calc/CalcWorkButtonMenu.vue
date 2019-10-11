@@ -58,7 +58,17 @@
         <div style="width:24%;float:left;background:#ffffff;border-right: solid 1px #cacade" class="pl-1 mt-1 pt-1">
           <table style="width:100%;height:100%">
            <tr>
-              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava"  :title="form.idefix" >Číslo {{setmenu=='zakazky'?'zakázky:':'nabidky:'}}</td>
+              <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava"  :title="form.idefix" >
+               <v-btn @click="seekzaknab(setmenu=='kalkulace'?'nab':'zak' )"
+               :class="{'green lighten-5':setmenu=='kalkulace','blue lighten-5':setmenu=='zakazky'} "
+               class="pl-2 pr-1  ma-0"
+               small
+               style="zoom:80%"
+
+               >
+                Číslo {{setmenu=='zakazky'?'zakázky ':'nabidky '}}
+                </v-btn>:
+                </td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4 tdn">
 
               <input type="hidden" size="mini"   class="tdl tdn"
@@ -70,16 +80,16 @@
               readonly
                >&nbsp;
                <input v-if="setmenu=='zakazky'"
-               type="text" size="mini"  style="width:15em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
+               type="text" size="mini"  style="width:6em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
                :id="'cislo2' + ID "
 
-                :value="status_zak==1?'Nova Zakazka':(
-                form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'
+               :value="status_zak==1?'Nova Zakazka':(
+               form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'
                 ) "
 
 
                ><input v-else-if="setmenu=='kalkulace'"
-               type="text" size="mini"  style="width:15em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
+               type="text" size="mini"  style="width:6em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
                :id="'cislo2' + ID "
 
                :value="status_nab==1?'Nova Nabidka':(
@@ -87,7 +97,7 @@
                 ) "
 
                >
-
+               <!-- &nbsp;
                <v-btn @click="seekzaknab(setmenu=='kalkulace'?'nab':'zak' )"
                :class="{'green lighten-5':setmenu=='kalkulace','blue lighten-5':setmenu=='zakazky'} "
                class="pl-0 pr-0"
@@ -96,7 +106,7 @@
 
                > ?
                {{setmenu=='kalkulace'?pocet_nal_nab:pocet_nal_zak}}
-               </v-btn>
+               </v-btn> -->
 
 
 
