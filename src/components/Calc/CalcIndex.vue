@@ -105,28 +105,110 @@
            </span>
     </span>
    </div>
-
-
 </div>
 
   <ta-ble3  v-cloak :h="'530px;'+f.pof( Sirka,98.1)+';top:1px'"  :Sirka="1000" :Leva="'0%'" :Prava="'0%'" :Stred="'100%'" :TopA="'top:28px'" :TopB="'height:28px'" :id="'tab_'+ID">
   <table slot="head"  :style="f.pof(Sirka,98.1)"  >
     <thead class="c-1 tdline">
       <tr>
-      <th :style="f.pof(Sirka,  5)">Ikony</th>
-      <th :style="f.pof(Sirka,  5)" @click="Seznam('zak','','cislozakazky')">Č.zakazky</th>
-      <th :style="f.pof(Sirka, 15)" @click="Seznam('zak','','firma')">Klient</th>
-      <th :style="f.pof(Sirka, 15)" @click="Seznam('zak','','nazev')">Název</th>
-      <th :style="f.pof(Sirka,  8)" @click="Seznam('zak','','datumzadani')">Vytvoření</th>
-      <th :style="f.pof(Sirka,  8)" @click="Seznam('zak','','time_update')">Změna</th>
-      <th :style="f.pof(Sirka,  8)" @click="Seznam('zak','','nakladsum')">Nákladová cena</th>
-      <th :style="f.pof(Sirka,  8)" @click="Seznam('zak','','prodejsum')">Prodej</th>
-      <th :style="f.pof(Sirka,  5)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Zisk</th>
-      <th :style="f.pof(Sirka, 15)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Obchodnik</th>
-      <th :style="f.pof(Sirka,  5)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Stav</th>
+      <th :style="f.pof(Sirka,  4.9)">Ikony</th>
+      <th :style="f.pof(Sirka,  4.82)" >
+        <button  type="button" @click="Seznam('zak','','cislozakazky')"  style="color:#818185" >
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='cislozakazky' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"  v-if="order_zak=='cislozakazky' && desc_zak>''"></i>
+        Č.zakazky
+        </button>
+        </th>
+      <th :style="f.pof(Sirka, 14.8)" >
+        <table border="0" style="width:100%;border:none;background:#f7f8fb" bgcolor="#f7f8fb"><tr style="border:none;">
+          <td style="width:80%;border:none;background:#f7f8fb">
+        <button  type="button" @click="Seznam('zak','','firma')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='firma' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_zak=='firma' && desc_zak>''"></i>
+        Klient
+        </button>
+        </td><td style="width:20%;border:none;text-align:center;background:#f7f8fb">
+        <input type="checkbox" v-model="seek_zak_firma" @change="Seznam('zak')">
+        </td>
+        </tr></table>
+        </th>
+      <th :style="f.pof(Sirka, 14.9)" >
+        <table border="0" style="width:100%;border:none"><tr style="border:none;">
+          <td style="width:80%;border:none;background:#f7f8fb">
+        <button  type="button" @click="Seznam('zak','','nazev')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='nazev' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_zak=='nazev' && desc_zak>''"></i>
+        Název
+        </button>
+        </td><td style="width:20%;border:none;text-align:center;background:#f7f8fb">
+        <input type="checkbox" v-model="seek_zak_nazev" @change="Seznam('zak')">
+        </td>
+        </tr></table>
+        </th>
+      <th :style="f.pof(Sirka,  8)">
+        <button  type="button"  @click="Seznam('zak','','datumzadani')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='datumzadani' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_zak=='datumzadani' && desc_zak>''"></i>
+        Vytvoření
+        </button>
+
+        </th>
+      <th :style="f.pof(Sirka,  7.5)" >
+        <button  type="button"  @click="Seznam('zak','','time_update')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='time_update' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_zak=='time_update' && desc_zak>''"></i>
+        Změna
+        </button>
+
+        </th>
+      <th :style="f.pof(Sirka,  7.5)" >
+          <button  type="button"  @click="Seznam('zak','','nakladsum')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='nakladsum' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_zak=='nakladsum' && desc_zak>''"></i>
+          Nákladová cena
+        </button>
+        </th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('zak','','prodejsum')">
+          <button  type="button"  @click="Seznam('zak','','prodejsum')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='prodejsum' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_zak=='prodejsum' && desc_zak>''"></i>
+          Prodej
+        </button>
+        </th>
+      <th :style="f.pof(Sirka,  5.5)">
+        <button  type="button"  @click="Seznam('zak','','(prodejsum-nakladsum)')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='(prodejsum-nakladsum)' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_zak=='(prodejsum-nakladsum)' && desc_zak>''"></i>
+          Zisk
+        </button>
+        </th>
+      <th :style="f.pof(Sirka, 14.8)" >
+        <table border="0" style="width:100%;border:none"><tr style="border:none;">
+          <td style="width:80%;border:none;background:#f7f8fb">
+        <button  type="button" @click="Seznam('zak','','obchodnik')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='obchodnik' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_zak=='obchodnik' && desc_zak>''"></i>
+        Obchodnik
+        </button>
+        </td><td style="width:20%;border:none;text-align:center;background:#f7f8fb">
+        <input type="checkbox" v-model="seek_zak_obchodnik" @change="Seznam('zak')">
+        </td>
+        </tr></table>
+        </th>
+      <th :style="f.pof(Sirka,  5)" >
+        <table border="0" style="width:100%;border:none"><tr style="border:none;">
+          <td style="width:80%;border:none;background:#f7f8fb">
+        <button  type="button" @click="Seznam('zak','','stav')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_zak=='stav' && desc_zak==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_zak=='stav' && desc_zak>''"></i>
+        Stav
+        </button>
+        </td><td style="width:20%;border:none;text-align:center;background:#f7f8fb">
+        <input type="checkbox" v-model="seek_zak_stav" @change="Seznam('zak')">
+        </td>
+        </tr></table>
+      </th>
       </tr>
-
-
     </thead>
   </table>
   <table v-cloak slot="body"  :style="f.pof(Sirka,98.1)"  >
@@ -139,8 +221,8 @@
         <button  v-if="polozka.zamek" @click="f.Alert2('Uzmaceno')" style="zoom:70%" >
         <v-icon size="medium"   class="red--text">fa-lock</v-icon>
         </button>
-        <button  v-else @click="f.Alert2('Odencena')" style="zoom:70%" >
-        <v-icon size="medium"   class="green--text">fa-unlock</v-icon>
+        <button  v-else @click="false" style="zoom:70%;opacity:0.1" >
+        <v-icon size="medium"   class="white--text">fa-unlock</v-icon>
         </button>
         &nbsp;
         <button @click="delzak(polozka)">
@@ -161,11 +243,8 @@
         <td :class="{'blue lighten-5 elevation-1': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"  :style="f.pof(Sirka, 5)" class="prava pr-4" >{{polozka.prodejsum - polozka.nakladsum }}</td>
         <td :class="{'blue lighten-5 elevation-1': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"  :style="f.pof(Sirka,15)" class="leva pl-2" >{{polozka.obchodnik }}</td>
         <td :class="{'blue lighten-5 elevation-1': polozka.cislozakazky==$refs.w1.form.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"  :style="f.pof(Sirka, 5)" class="leva pl-2" >{{polozka.stav }}</td>
-
-
       </tr>
     </tbody>
-
   </table>
   </ta-ble3>
 </div>
@@ -339,7 +418,7 @@
               class="elevation-0"
               :readonly="polozka_zak.zamek"
               >
-              
+
                 </div>
               </div>
             </span>
@@ -453,7 +532,7 @@
       >
       <div v-if="polozka2.vzor==-999"></div>
         <!-- {{polozka2.kcks}} -->
-       <input v-else type="number" 
+       <input v-else type="number"
        :readonly="polozka_zak.zamek ||!f.isEmpty(polozka2.obsah) "
        v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
        @focus="polozka2.vse=0;aktivni_polozka_zak=polozka2.idefix">
@@ -462,9 +541,9 @@
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
       >
       <div v-if="polozka2.vzor==-999"></div>
-        <input v-else type="number" 
+        <input v-else type="number"
         :readonly="polozka_zak.zamek ||!f.isEmpty(polozka2.obsah) "
-        v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" 
+        v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
         @change="ZmenPolozku('zak',polozka2,0)">
         <span style="visibily:hidden">
         {{polozka_zak.zamek }} {{ !f.isEmpty(polozka2.obsah) }}
@@ -476,7 +555,7 @@
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
       >
       <div v-if="polozka2.vzor==-999"></div>
-      <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" 
+      <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
       @change="ZmenPolozku('zak',polozka2,0)"
       v-bind:readonly="polozka_zak.zamek ||!f.isEmpty(polozka2.obsah) "
       >
@@ -487,10 +566,10 @@
       >
       <div v-if="polozka2.vzor==-999"></div>
       <span v-else>
-       <input  readonly type="number" :value="(polozka2.prodej - polozka2.naklad)" style="height:100%; border-bottom:dotted 1px;font-size:120%" 
+       <input  readonly type="number" :value="(polozka2.prodej - polozka2.naklad)" style="height:100%; border-bottom:dotted 1px;font-size:120%"
        class="prava" @change="ZmenPolozku('zak',polozka2,0)"
        v-bind:readonly="polozka_zak.zamek"
-       
+
        >
       <!-- {{polozka2.prodej - polozka2.naklad}} -->
       </span>
@@ -583,18 +662,105 @@
   <table slot="head"  :style="f.pof(Sirka,98.1)"  >
     <thead class="c-1 tdline">
 
-      <th :style="f.pof(Sirka,  5)">Ikony</th>
-      <th :style="f.pof(Sirka,  5)" @click="Seznam('nab','','cislonabidky')">Č.zakazky</th>
-      <th :style="f.pof(Sirka, 15)" @click="Seznam('nab','','firma')">Klient</th>
-      <th :style="f.pof(Sirka, 15)" @click="Seznam('nab','','nazev')">Název</th>
-      <th :style="f.pof(Sirka,  8)" @click="Seznam('nab','','datumzadani')">Vytvoření</th>
-      <th :style="f.pof(Sirka,  8)" @click="Seznam('nab','','time_update')">Změna</th>
-      <th :style="f.pof(Sirka,  8)" @click="Seznam('nab','','nakladsum')">Nákladová cena</th>
-      <th :style="f.pof(Sirka,  8)" @click="Seznam('nab','','prodejsum')">Prodej</th>
-      <th :style="f.pof(Sirka,  5)" @click="Seznam('nab','','(prodejsum-nakladsum)')">Zisk</th>
-      <th :style="f.pof(Sirka, 15)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Obchodnik</th>
-      <th :style="f.pof(Sirka,  5)" @click="Seznam('zak','','(prodejsum-nakladsum)')">Stav</th>
+            <tr>
+      <th :style="f.pof(Sirka,  4.9)">Ikony</th>
+      <th :style="f.pof(Sirka,  4.82)" >
+        <button  type="button" @click="Seznam('nab','','cislonabidky')"  style="color:#818185" >
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='cislonabidky' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"  v-if="order_nab=='cislonabidky' && desc_nab>''"></i>
+        Č.nabazky
+        </button>
+        </th>
+      <th :style="f.pof(Sirka, 14.8)" >
+        <table border="0" style="width:100%;border:none;background:#f7f8fb" bgcolor="#f7f8fb"><tr style="border:none;">
+          <td style="width:80%;border:none;background:#f7f8fb">
+        <button  type="button" @click="Seznam('nab','','firma')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='firma' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_nab=='firma' && desc_nab>''"></i>
+        Klient
+        </button>
+        </td><td style="width:20%;border:none;text-align:center;background:#f7f8fb">
+        <input type="checkbox" v-model="seek_nab_firma" @change="Seznam('nab')">
+        </td>
+        </tr></table>
+        </th>
+      <th :style="f.pof(Sirka, 14.9)" >
+        <table border="0" style="width:100%;border:none"><tr style="border:none;">
+          <td style="width:80%;border:none;background:#f7f8fb">
+        <button  type="button" @click="Seznam('nab','','nazev')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='nazev' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_nab=='nazev' && desc_nab>''"></i>
+        Název
+        </button>
+        </td><td style="width:20%;border:none;text-align:center;background:#f7f8fb">
+        <input type="checkbox" v-model="seek_nab_nazev" @change="Seznam('nab')">
+        </td>
+        </tr></table>
+        </th>
+      <th :style="f.pof(Sirka,  8)">
+        <button  type="button"  @click="Seznam('nab','','datumzadani')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='datumzadani' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_nab=='datumzadani' && desc_nab>''"></i>
+        Vytvoření
+        </button>
 
+        </th>
+      <th :style="f.pof(Sirka,  7.5)" >
+        <button  type="button"  @click="Seznam('nab','','time_update')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='time_update' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_nab=='time_update' && desc_nab>''"></i>
+        Změna
+        </button>
+
+        </th>
+      <th :style="f.pof(Sirka,  7.5)" >
+          <button  type="button"  @click="Seznam('nab','','nakladsum')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='nakladsum' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_nab=='nakladsum' && desc_nab>''"></i>
+          Nákladová cena
+        </button>
+        </th>
+      <th :style="f.pof(Sirka,  8)" @click="Seznam('nab','','prodejsum')">
+          <button  type="button"  @click="Seznam('nab','','prodejsum')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='prodejsum' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_nab=='prodejsum' && desc_nab>''"></i>
+          Prodej
+        </button>
+        </th>
+      <th :style="f.pof(Sirka,  5.5)">
+        <button  type="button"  @click="Seznam('nab','','(prodejsum-nakladsum)')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='(prodejsum-nakladsum)' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_nab=='(prodejsum-nakladsum)' && desc_nab>''"></i>
+          Zisk
+        </button>
+        </th>
+      <th :style="f.pof(Sirka, 14.8)" >
+        <table border="0" style="width:100%;border:none"><tr style="border:none;">
+          <td style="width:80%;border:none;background:#f7f8fb">
+        <button  type="button" @click="Seznam('nab','','obchodnik')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='obchodnik' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_nab=='obchodnik' && desc_nab>''"></i>
+        Obchodnik
+        </button>
+        </td><td style="width:20%;border:none;text-align:center;background:#f7f8fb">
+        <input type="checkbox" v-model="seek_nab_obchodnik" @change="Seznam('nab')">
+        </td>
+        </tr></table>
+        </th>
+      <th :style="f.pof(Sirka,  5)" >
+        <table border="0" style="width:100%;border:none"><tr style="border:none;">
+          <td style="width:80%;border:none;background:#f7f8fb">
+        <button  type="button" @click="Seznam('nab','','stav')" style="color:#818185">
+          <i  class="el-icon-upload2  green--text"    v-if="order_nab=='stav' && desc_nab==''"></i>
+          <i  class="el-icon-download orange--text"   v-if="order_nab=='stav' && desc_nab>''"></i>
+        Stav
+        </button>
+        </td><td style="width:20%;border:none;text-align:center;background:#f7f8fb">
+        <input type="checkbox" v-model="seek_nab_stav" @change="Seznam('nab')">
+        </td>
+        </tr></table>
+      </th>
+      </tr>
     </thead>
   </table>
   <table slot="body"  :style="f.pof(Sirka,98.1)"  >
@@ -823,7 +989,7 @@
           placeholder="Text na fakturu"
          :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
           class="elevation-0"
-          
+
         >
          </div>
          </div>
@@ -958,7 +1124,7 @@
         Kniha 1N
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer" v-if="MAINMENULAST=='zakazky'"
-        @click="obrazovka_zak=1"
+        @click="to1Z()"
         >
         Kniha 1Z
     </button>
@@ -1506,6 +1672,26 @@ export default {
      order_nab:"",
      desc_zak:"",
      desc_nab:"",
+
+     seek_zak_firma: false,
+     seek_zak_nazev: false,
+     seek_zak_obchodnik: false,
+     seek_zak_stav: false,
+
+     seek_nab_firma: false,
+     seek_nab_nazev: false,
+     seek_nab_obchodnik: false,
+     seek_nab_stav: false,
+
+
+
+     order_zak_default: "cislozakazky",
+     order_nab_default: "cislonabidky",
+     desc_zak_default: " desc ",
+     desc_nab_default: " desc ",
+     query_zak_last: "",
+     query_nab_last:"",
+
 
      cis_prace:[],
      cis_dod:  [],
@@ -2198,7 +2384,7 @@ if (self.MAINMENULAST== 'zakazky'){
 //     return
 
 
-     f.Alert(ifx+' ', randTab)
+     f.Alert(ifx+' 2387 ', randTab)
    },
    async Sparuj(polo){
      const self = this
@@ -2547,6 +2733,35 @@ if (self.MAINMENULAST== 'zakazky'){
    },
    async to1Z(){
         const self = this
+        //f.Alert(self.status_zak)
+      if ( self.$refs.w1.form.cislo>0 && self.obrazovka_zak==3 && self.status_zak==2)  {
+          await self.Ulozit()
+          .then(()=>{
+       //     alert('bobry')
+          })
+          .catch(e=>{
+            f.Alert2('Chyba', e )
+            self.obrazovka_zak=1
+          })
+//         await self.to2N(self.polozka_nab)
+  //       await f.sleep(3000)
+       }
+        if (self.order_zak!= self.order_zak_default && self.query_zak_last>''){
+          self.query_zak_last= `select * from (${self.query_zak_last}) a order by kategorie, ${self.order_zak_default} ${self.desc_zak_default}`
+          var q= `select * from (${self.query_zak_last}) a order by kategorie, ${self.order_zak_default} ${self.desc_zak_default}`
+
+
+          // f.Alert("1",self.order_zak,self.query_zak_last)
+          self.order_zak= self.order_zak_default
+          self.desc_zak= self.desc_zak_default
+
+
+            self.seznam_zak = (await Q.all(self.idefix,q)).data.data
+            // f.Alert2("2",self.order_zak)
+            //self.seznam_zak_sum = (await Q.all(self.idefix, `${qsum}` )).data.data
+        }
+
+
        if (self.MAINMENULAST=='zakazky' && self.status_zak==1){
           this.$confirm('Zrusit zakladni nove zakazky ? ' , '', {
           distinguishCancelAndClose: true,
@@ -2590,6 +2805,20 @@ if (self.MAINMENULAST== 'zakazky'){
       async to1N(){
         const self = this
 
+       if ( self.$refs.w1.form.cislo>0 && self.obrazovka_nab==3 && self.status_nab==2)  {
+
+          await self.Ulozit()
+          .then(()=>{
+       //     alert('bobry')
+          })
+          .catch(e=>{
+            f.Alert2('hyba', e )
+            self.obrazovka_nab=1
+          })
+//         await self.to2N(self.polozka_nab)
+  //       await f.sleep(3000)
+       }
+
        if (self.MAINMENULAST=='kalkulace' && self.status_nab==1){
           this.$confirm('Zrusit zakladni nove kalkulace ? ' , '', {
           distinguishCancelAndClose: true,
@@ -2627,6 +2856,10 @@ if (self.MAINMENULAST== 'zakazky'){
    },
    async to2Z(polozka) {
      const self = this
+     if (self.obrazovka_zak==3)  {
+       await self.Ulozit()
+       await f.sleep(100)
+     }
 
 
       self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
@@ -2784,7 +3017,13 @@ if (self.MAINMENULAST== 'zakazky'){
 
   async to2N(polozka) {
   const self = this
+     if (self.obrazovka_nab==3)  {
+       await self.Ulozit()
+       await f.sleep(100)
+     }
+
       self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
+      //alert(self.obrazovka_zak)
 
      if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
        self.status_nab=2
@@ -3648,8 +3887,63 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
            // f.Alert2(q)
         }
         if (cWhereRow>''){
+
+           if (ceho=='zak')  {
+             var cWhereCol=[]
+             if (!self.seek_zak_firma && !self.seek_zak_nazev && !self.seek_zak_obchodnik && !self.seek_zak_stav) {
+               q= `select * from (${q}) a  where to_aascii(row(a.*)::text)  ilike '%${cWhereRow}%'`
+             } else {
+               if (self.seek_zak_firma){
+                 cWhereCol.push(`to_aascii(a.firma::text)  ilike '%${cWhereRow}%'`)
+               }
+               if (self.seek_zak_nazev){
+                 cWhereCol.push(`to_aascii(a.nazev::text)  ilike '%${cWhereRow}%'`)
+               }
+               if (self.seek_zak_obchodnik){
+//                 select idefix from list_users where to_aascii(idefix2fullname(idefix)) ilike '%${cWhereRow}%'
+                 //cWhereCol.push(`to_aascii(a.obchodnik::text)  ilike '%${cWhereRow}%'`)
+                 cWhereCol.push(`a.idefix_obchodnik   in (
+                   select idefix_obchodnik from list_users where to_aascii(idefix2fullname(idefix_obchodnik)) ilike '%${cWhereRow}%'
+                  )`)
+               }
+               if (self.seek_zak_stav){
+                 cWhereCol.push(`to_aascii(a.stav::text)  ilike '%${cWhereRow}%'`)
+               }
+               var cPomoc=cWhereCol.join(" or ")
+               q= `select * from (${q}) a  where ${cPomoc}`
+
+               //f.Alert(cPomoc)
+             }
+           }
+           if (ceho=='nab')  {
+             var cWhereCol=[]
+             if (!self.seek_nab_firma && !self.seek_nab_nazev && !self.seek_nab_obchodnik && !self.seek_nab_stav) {
+               q= `select * from (${q}) a  where to_aascii(row(a.*)::text)  ilike '%${cWhereRow}%'`
+             } else {
+               if (self.seek_nab_firma){
+                 cWhereCol.push(`to_aascii(a.firma::text)  ilike '%${cWhereRow}%'`)
+               }
+               if (self.seek_nab_nazev){
+                 cWhereCol.push(`to_aascii(a.nazev::text)  ilike '%${cWhereRow}%'`)
+               }
+               if (self.seek_nab_obchodnik){
+//                 select idefix from list_users where to_aascii(idefix2fullname(idefix)) ilike '%${cWhereRow}%'
+                 //cWhereCol.push(`to_aascii(a.obchodnik::text)  ilike '%${cWhereRow}%'`)
+                 cWhereCol.push(`a.idefix_obchodnik   in (
+                   select idefix_obchodnik from list_users where to_aascii(idefix2fullname(idefix_obchodnik)) ilike '%${cWhereRow}%'
+                  )`)
+               }
+               if (self.seek_nab_stav){
+                 cWhereCol.push(`to_aascii(a.stav::text)  ilike '%${cWhereRow}%'`)
+               }
+               var cPomoc=cWhereCol.join(" or ")
+               q= `select * from (${q}) a  where ${cPomoc}`
+               //f.Alert(cPomoc)
+             }
+           }
            /// cWhereRow= `where to_aascii(row(a.*)::text)  ilike '%ruzi%'`
-           q= `select * from (${q}) a  where to_aascii(row(a.*)::text)  ilike '%${cWhereRow}%'`
+
+
            //f.Alert2(q)
         }
 
@@ -3685,6 +3979,11 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
          // f.Alert2(q)
         if (ceho == 'zak'){
           try{
+            self.query_zak_last= q;
+            // if (self.seek_zak_obchodnik){
+            //   f.Alert2(q)
+            // }
+
             self.seznam_zak = (await Q.all(self.idefix,q)).data.data
             self.seznam_zak_sum = (await Q.all(self.idefix, `${qsum}` )).data.data
           } catch(e){
@@ -3695,6 +3994,7 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
         }
         if (ceho == 'nab'){
           try{
+            self.query_nab_last= q;
             self.seznam_nab = (await Q.all(self.idefix,q)).data.data
             self.seznam_nab_sum = (await Q.all(self.idefix, `${qsum}` )).data.data
             } catch(e){

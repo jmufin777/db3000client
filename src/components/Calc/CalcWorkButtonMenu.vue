@@ -60,13 +60,16 @@
            <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava"  :title="form.idefix" >
                <v-btn @click="seekzaknab(setmenu=='kalkulace'?'nab':'zak' )"
-               :class="{'green lighten-5':setmenu=='kalkulace','blue lighten-5':setmenu=='zakazky'} "
-               class="pl-2 pr-1  ma-0"
+               :class="{'white lighten-5':setmenu=='kalkulace','white lighten-5':setmenu=='zakazky'} "
+               class="pl-2 pr-1  ma-0 elevation-0 white blue--text"
                small
                style="zoom:80%"
 
+
                >
+               <b>
                 Číslo {{setmenu=='zakazky'?'zakázky ':'nabidky '}}
+               </b>
                 </v-btn>:
                 </td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4 tdn">
@@ -86,16 +89,12 @@
                :value="status_zak==1?'Nova Zakazka':(
                form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'
                 ) "
-
-
                ><input v-else-if="setmenu=='kalkulace'"
                type="text" size="mini"  style="width:6em;font-weight:bold;font-size:110%" class="tdl tdn pl-0"
                :id="'cislo2' + ID "
-
                :value="status_nab==1?'Nova Nabidka':(
                 form.cislo >'0'?parseInt(form.cislo.substr(5,5)):'00000'
                 ) "
-
                >
                <!-- &nbsp;
                <v-btn @click="seekzaknab(setmenu=='kalkulace'?'nab':'zak' )"
@@ -107,9 +106,6 @@
                > ?
                {{setmenu=='kalkulace'?pocet_nal_nab:pocet_nal_zak}}
                </v-btn> -->
-
-
-
               </td>
             </tr>
            <tr>

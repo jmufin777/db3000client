@@ -107,7 +107,7 @@ select distinct on (idefix_firma) idefix_firma,idefix_obchodnik,_od,9,9,now(),no
 
 
 
-       for (i=2010 ; i > 2007 ; i -- ) {
+       for (i=2009 ; i > 2005 ; i -- ) {
          var qD0 = `delete from zak_t_list where  year(datumexpedice) = ${i} and datumexpedice is not null`
          var aD0=  (await Q.post(self.idefix,qD0))
 
