@@ -1,6 +1,7 @@
 import moment from 'moment'
 
 export default {
+
   getBottom(id,addPoz=10) {
     var neco=-1000
     var oNeco

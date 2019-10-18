@@ -88,6 +88,24 @@
            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
            <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
            </span>
+           <button style="border-radius::0px 10px 10px 0px;" @click="seek_zak_moje=!seek_zak_moje;Seznam('zak')"  title="Moje zakazky">
+            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+            <i class="el-icon-user-solid d3 "
+            :class="{'green--text': seek_zak_moje , 'orange--text': !seek_zak_moje }"
+            style="font-weight:bold;height:15px;color:#89a4b3"></i>
+            </span>
+           </button>
+           <button style="border-radius::0px 10px 10px 0px;" @click="search_zak_cislo='';search_zak_cislo2='';search_zak=''
+              seek_zak_obchodnik=false;
+              seek_zak_firma=false;
+              seek_zak_stav=false;
+              ;Seznam('zak')" v-if="search_zak_cislo>'' || search_zak>''|| search_zak_cislo2>''"
+            >
+            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+            <i class="el-icon-close d3 red--text" style="font-weight:bold;height:15px;color:#89a4b3"></i>
+            </span>
+           </button>
+
       </span>
 
       <span >
@@ -627,6 +645,24 @@
            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
            <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
            </span>
+
+           <button style="border-radius::0px 10px 10px 0px;" @click="seek_nab_moje=!seek_nab_moje;Seznam('nab')"  title="Moje nabazky">
+            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+            <i class="el-icon-user-solid d3 "
+            :class="{'green--text': seek_nab_moje , 'orange--text': !seek_nab_moje }"
+            style="font-weight:bold;height:15px;color:#89a4b3"></i>
+            </span>
+           </button>
+           <button style="border-radius::0px 10px 10px 0px;" @click="search_nab_cislo='';search_nab_cislo2='';search_nab=''
+              seek_nab_obchodnik=false;
+              seek_nab_firma=false;
+              seek_nab_stav=false;
+              ;Seznam('nab')" v-if="search_nab_cislo>'' || search_nab>''|| search_nab_cislo2>''"
+            >
+            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+            <i class="el-icon-close d3 red--text" style="font-weight:bold;height:15px;color:#89a4b3"></i>
+            </span>
+           </button>
       </span>
 
       <span >
@@ -1624,12 +1660,13 @@ export default {
      NAZEVACTIVE:'',
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
      MAINMENULAST:'kalkulace',
+
      obrazovka_nab:3,
      obrazovka_zak:1,
+
      status:0,  //status pro ulozeni 1 = nova
      status_zak:0,  //status pro ulozeni 1 = nova
      status_nab:0,  //status pro ulozeni 1 = nova
-
 
      seznam_zak: [],
      seznam_nab:[],
@@ -1677,11 +1714,14 @@ export default {
      seek_zak_nazev: false,
      seek_zak_obchodnik: false,
      seek_zak_stav: false,
+     seek_zak_moje: false,
+
 
      seek_nab_firma: false,
      seek_nab_nazev: false,
      seek_nab_obchodnik: false,
      seek_nab_stav: false,
+     seek_nab_moje: false,
 
 
 
@@ -1704,6 +1744,12 @@ export default {
      timeout: false,
      klikyzak: 0,
      klikynab: 0,
+
+     //Rizeni - lidi
+     _Skupiny:'',
+     _IsObchod:false,
+     _IsVedeni:false,
+
 
    }
  },
@@ -2158,6 +2204,12 @@ deactivated: function () {
   this.ID = Math.round(Math.random() * 19834581377)
   this.aKalkulace = this.$store.state.Kalkulace
 
+  await self.Skupiny()
+
+
+
+
+
 
 if (self.MAINMENULAST== 'zakazky'){
       self.cTable = 'calc_my_' + self.idefix+"_zak"
@@ -2343,6 +2395,13 @@ if (self.MAINMENULAST== 'zakazky'){
  //  this.$destroy()
  },
  methods: {
+   async Skupiny(){
+     const self=this
+     self._Skupiny=await(SQL.isObchod())
+     self._IsObchod = self._Skupiny.match(/obchod/i)?true:false;
+     self._IsVedeni = self._Skupiny.match(/vedeni/i)?true:false;
+
+   },
    async copyRadek(ifx) {
      const self=this
 
@@ -2588,6 +2647,8 @@ if (self.MAINMENULAST== 'zakazky'){
   },
    async FillFormWait(polozka, nova = false) {
       const self = this
+      self.$store.dispatch('cleanKalk')
+      self.aKalkulace=[]
       await self.cleanItems(polozka)
       await self.FillForm(polozka);
 
@@ -2762,8 +2823,8 @@ if (self.MAINMENULAST== 'zakazky'){
         }
 
 
-       if (self.MAINMENULAST=='zakazky' && self.status_zak==1){
-          this.$confirm('Zrusit zakladni nove zakazky ? ' , '', {
+       if (self.MAINMENULAST=='zakazky' && self.status_zak==1) {
+          this.$confirm('Zrusit zakladni nove zakazky ?' , '', {
           distinguishCancelAndClose: true,
           confirmButtonText: 'Ano?',
           cancelButtonText: 'Ne'
@@ -2856,10 +2917,52 @@ if (self.MAINMENULAST== 'zakazky'){
    },
    async to2Z(polozka) {
      const self = this
+      if (self.MAINMENULAST=='zakazky' && self.status_zak==1) {
+          this.$confirm('Zrusit zakladni nove zakazky ? ??' , '', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: 'Ano?',
+          cancelButtonText: 'Ne'
+         })
+        .then(()=>{
+          self.obrazovka_zak=1
+
+            eventBus.$emit('SavedZN', {
+                  id: self.MAINMENULAST,
+                  // cislo: c.cislo,
+                  // exp: c.exp,
+                  // prod: self.idefix,
+                  // prod_txt : c.produkce,
+                  // zadani:c.zadani,
+                  status_zak: 0,
+                  status_nab: self.status_nab,
+
+                })
+
+          if (self.aktivni_zak>0){
+            //document.getElementById('trn_'+self.aktivni_zak)
+            setTimeout(function(){
+              if ( document.getElementById('trz_'+self.aktivni_zak) ){
+                  document.getElementById('trz_'+self.aktivni_zak).click()
+
+                 //f.Alert('trn_'+self.aktivni_zak, document.getElementById('trz_'+self.aktivni_zak)  )
+              }
+
+            },1000)
+
+          }
+
+        })
+
+        return
+     } else {
+         self.obrazovka_zak=1
+    }
+
      if (self.obrazovka_zak==3)  {
        await self.Ulozit()
        await f.sleep(100)
      }
+
 
 
       self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
@@ -3748,7 +3851,7 @@ if (self.MAINMENULAST== 'zakazky'){
     var b = (await Q.post(self.idefix,qqTemp))
 
   },
-async Seznam(ceho = 'zak', where ='', orderby='', add=false){
+async Seznam(ceho = 'zak', where ='', orderby='', add=false ){
     const self=this
     var desc=""
 
@@ -3867,26 +3970,28 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
         } else
         if (add && self.search_nab_cislo2 >0 && ceho=='nab') {
             cislo='cislonabidky'
-
             qadd= `select  *
                     , idefix2fullname(idefix_obchodnik) as obchodnik
                     , idefix2fullname(idefix_produkce)  as produkce
              from (${q}) a    where datumexpedice>=now()::date +'-365 days'::interval and right(${cislo},5)::bigint = right(${self.search_zak_cislo2},5)::bigint`
         }
-
-
+        if (ceho=='zak' && self.seek_zak_moje && !self.search_nab_cislo2 >0 ) {
+             q= `select * from (${q}) a  where a.idefix_obchodnik  = ${self.idefix}`
+         }
+        if (ceho=='nab' && self.seek_nab_moje  && !self.search_nab_cislo2 >0 ) {
+             q= `select * from (${q}) a  where a.idefix_obchodnik  = ${self.idefix}`
+         }
         if (cWhereRok>''){
            /// cWhereRow= `where to_aascii(row(a.*)::text)  ilike '%ruzi%'`
            q= `select * from (${q}) a  where left(${cislo},2) = right(${cWhereRok},2)`
            //f.Alert2(q)
         }
-
         if (cWhereCislo>''){
            /// cWhereRow= `where to_aascii(row(a.*)::text)  ilike '%ruzi%'`
            q= `select * from (${q}) a  where right(${cislo},5)::bigint = right(${cWhereCislo},5)::bigint`
            // f.Alert2(q)
         }
-        if (cWhereRow>''){
+        if (cWhereRow>''  ){
 
            if (ceho=='zak')  {
              var cWhereCol=[]
@@ -3899,6 +4004,7 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
                if (self.seek_zak_nazev){
                  cWhereCol.push(`to_aascii(a.nazev::text)  ilike '%${cWhereRow}%'`)
                }
+
                if (self.seek_zak_obchodnik){
 //                 select idefix from list_users where to_aascii(idefix2fullname(idefix)) ilike '%${cWhereRow}%'
                  //cWhereCol.push(`to_aascii(a.obchodnik::text)  ilike '%${cWhereRow}%'`)
@@ -3946,9 +4052,25 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
 
            //f.Alert2(q)
         }
+        var qsubSum=q;
+        self.Skupiny();
+        if (self._IsObchod) {
+           qsubSum= `select * from (${q}) a where idefix_obchodnik=${self.idefix}`
+          // f.Alert2(qsubSum)
+        } else
+        if (!self._IsObchod && self._IsVedeni) {
+           qsubSum= `select * from (${q}) a `
+          // f.Alert2(qsubSum)
+        } else {
+           qsubSum= `select * from (${q}) a limit 1 `
 
-        var qsum=`select count(*) as pocet, min(datumexpedice::date)::text as _od, max(datumexpedice::date)::text as _do ,sum(prodejsum) as prodej,sum(nakladsum) as naklad  from ( ${q} ) a`
+        }
+        //f.Alert( self._IsObchod , self._IsVedeni, self._Skupiny )
+
+        var qsum=`select count(*) as pocet, min(datumexpedice::date)::text as _od, max(datumexpedice::date)::text as _do ,sum(prodejsum) as prodej,sum(nakladsum) as naklad  from ( ${qsubSum} ) a`
+
             qsum= `select *, prodej - naklad as zisk, (prodej/nullif(naklad,0))::numeric(15,2) as marze from (${qsum}) a `
+
 
         q= `select *
             , idefix2fullname(idefix_obchodnik) as obchodnik
@@ -3978,10 +4100,10 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
 
          // f.Alert2(q)
         if (ceho == 'zak'){
-          try{
+          try {
             self.query_zak_last= q;
             // if (self.seek_zak_obchodnik){
-            //   f.Alert2(q)
+              // f.Alert2(q)
             // }
 
             self.seznam_zak = (await Q.all(self.idefix,q)).data.data
@@ -4010,7 +4132,16 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
    async Nova(upravou=false){
      const self = this
      var c= 0
-      self.aKalkulace =[]
+     if (self.MAINMENULAST=='zakazky' && self.aktivni_zak < 1)  {
+        f.Alert('Pro kopii musi být zakazka vybrána')
+        return
+     }
+     if (self.MAINMENULAST=='kalkulace' && self.aktivni_nab < 1)  {
+        f.Alert('Pro kopii musi být nabidka vybrána')
+        return
+     }
+
+       self.aKalkulace =[]
        self.$store.dispatch('cleanKalk')
        //await queryKalk.setActive(0,self.cTable,0)  //tj.vypne vse, nezalezina idefixu
        //self.setIdefixDeActive()
@@ -4023,9 +4154,10 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
         //self.cleanItems
 
     if (self.MAINMENULAST=='zakazky')  {
-
-      self.status_zak=1
-      self.obrazovka_zak=2
+      if (upravou==false){
+        self.status_zak=1
+        self.obrazovka_zak=2
+      }
         var cisti=(await Q.post(self.idefix,`delete from zak_t_items where user_insert_idefix = ${self.idefix} and idefix_zak=-100`))
 
         var c = (await Q.all(self.idefix,`select newzak(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce`)).data.data[0]
@@ -4039,8 +4171,10 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
         // `select newzak(9) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(9) as produkce`
     }
     if (self.MAINMENULAST=='kalkulace')  {
-      self.status_nab=1
-      self.obrazovka_nab=3
+      if (upravou==false){
+        self.status_nab=1
+        self.obrazovka_nab=3
+      }
       var cisti=(await Q.post(self.idefix,`delete from nab_t_items where user_insert_idefix = ${self.idefix} and idefix_nab=-100`))
 
       if (upravou==false) {
@@ -4078,19 +4212,173 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
      })
      } else
      if (upravou==true) {
-       eventBus.$emit('NovaZNU', {
-         id: self.MAINMENULAST,
-         cislo: c.cislo,
-         exp: c.exp,
-         prod: self.idefix,
-         prod_txt : c.produkce,
-         zadani:c.zadani,
-         status_zak: self.status_zak,
-         status_nab: self.status_nab,
+
+       this.$confirm(self.MAINMENULAST=='kalkulace'?'Nabidka':'Zakazka'+' bude zalozena ?'  , {
+          distinguishCancelAndClose: true,
+          confirmButtonText: 'Ano?',
+          cancelButtonText: 'Ne'
+         })
+         .then(()=>{
+           eventBus.$emit('NovaZNU', {
+            id: self.MAINMENULAST,
+            cislo: c.cislo,
+            exp: c.exp,
+            prod: self.idefix,
+            prod_txt : c.produkce,
+            zadani:c.zadani,
+            status_zak: self.status_zak,
+            status_nab: self.status_nab,
+
+          })
+       if (self.MAINMENULAST=='kalkulace')  {
+          self.status_nab=1
+          self.obrazovka_nab=2
+       } else
+       if (self.MAINMENULAST=='zakazky')  {
+          self.status_zak=1
+          self.obrazovka_zak=2
+       }
+       var cT1= self.cTable+'_1'
+       var cT2= self.cTable+'_2'
+       var qU1=''
+       var qCopy1=`create `
+//          f.Alert('Zalozim zakazku nobou', c.cislo, self.aktivni_zak, self.cTable)
+if (self.MAINMENULAST=='zakazky') {
+              qCopy1 = `create table ${cT1} without oids as select * from zak_t_list where idefix = ${self.aktivni_zak};
+                  create table ${cT2} without oids as select * from zak_t_items where idefix_zak = ${self.aktivni_zak} order by idefix`
+
+            Q.post(self.idefix, `drop table if exists ${cT1}; drop table if exists ${cT2};`)
+             .then(()=>{
+
+               Q.post(self.idefix,`${qCopy1}`
+               )
+               .then(()=>{
+                  qU1=`begin ;
+                  update ${cT1} set idefix = nextval('list2_seq'::regclass ),id=nextval('zak_t_list_id_seq'::regclass) , idefix_last = ${self.aktivni_zak}
+                  , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+                  , datumzadani=now()
+                  , cislozakazky = ${c.cislo}
+                  ,idefix_produkce=${self.idefix}, datumexpedice='${c.exp}'`
+                  qU1+=`;update ${cT2} set idefix = nextval('list2_seq'::regclass ),id=nextval('zak_t_items_id_seq'::regclass)
+                  , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+                  ,idefix_zak=(select max(idefix) from ${cT1})`
 
 
+                  qU1+=`;insert into zak_t_list (select * from ${cT1} );`
+                  qU1+=`;insert into zak_t_items (select * from ${cT2});`
+                  qU1+=`;update zak_t_list set datumsplatnosti = splatnost(idefix) where idefix  =(select max(idefix) from ${cT1} )`
+                  qU1+=`;commit`;
 
-     })
+                  //f.Alert2(c.cislo, f.Jstr(c) , " > ",qU1)
+                  Q.post(self.idefix, `${qU1} `)
+
+
+                  .then(()=>{
+
+                    self.order_zak=='cislozakazky'
+                    self.desc_zak= " desc "
+                    //self.Seznam('zak', '','cislozakazky')
+                    self.Seznam('zak')
+
+                    .then(()=>{
+                      var ifx=0
+                        Q.all(self.idefix,`select max(idefix) from ${cT1} `)
+                        .then((resx)=>{
+                          self.aktivni_zak=resx.data.data[0].max
+                          //f.Alert(f.Jstr(resx.data.data))
+                              Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak =${self.aktivni_zak} order by idefix `)
+                              .then((res)=>{
+                                //f.Alert(self.aktivni_zak)
+                                //f.Alert2(f.Jstr(res.data.data))
+                                self.polozky_zak=[]
+                                self.polozky_zak=res.data.data
+                                self.addPol('zak',self.aktivni_zak)
+                                self.polozky_soucet('zak')
+                                self.status_zak=2
+
+
+                              })
+                        })
+                    })
+
+                  //f.Alert(f.Jstr('part 1 ok'))
+                  })
+
+               })
+
+             })
+
+          }
+//////////////////
+
+if (self.MAINMENULAST=='kalkulace') {
+              qCopy1 = `create table ${cT1} without oids as select * from nab_t_list where idefix = ${self.aktivni_nab};
+                  create table ${cT2} without oids as select * from nab_t_items where idefix_nab = ${self.aktivni_nab} order by idefix`
+
+            Q.post(self.idefix, `drop table if exists ${cT1}; drop table if exists ${cT2};`)
+             .then(()=>{
+               Q.post(self.idefix,`${qCopy1}`
+               )
+               .then(()=>{
+                  qU1=`begin ;
+                  update ${cT1} set idefix = nextval('list2_seq'::regclass ),id=nextval('nab_t_list_id_seq'::regclass) , idefix_last = ${self.aktivni_nab}
+                  , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+                  , datumzadani=now()
+                  , cislonabidky = ${c.cislo}
+                  ,idefix_produkce=${self.idefix}, datumexpedice='${c.exp}'`
+                  qU1+=`;update ${cT2} set idefix = nextval('list2_seq'::regclass ),id=nextval('nab_t_items_id_seq'::regclass)
+                  , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+                  ,idefix_nab=(select max(idefix) from ${cT1})`
+
+
+                  qU1+=`;insert into nab_t_list (select * from ${cT1} );`
+                  qU1+=`;insert into nab_t_items (select * from ${cT2});`
+                  qU1+=`;update nab_t_list set datumsplatnosti = splatnost(idefix) where idefix  =(select max(idefix) from ${cT1} )`
+                  qU1+=`;commit`;
+
+                  //f.Alert2(c.cislo, f.Jstr(c) , " > ",qU1)
+                  Q.post(self.idefix, `${qU1} `)
+
+
+                  .then(()=>{
+
+                    self.order_nab=='cislonabidky'
+                    self.desc_nab= " desc "
+                    //self.Seznam('nab', '','cislonabidky')
+                    self.Seznam('nab')
+
+                    .then(()=>{
+                      var ifx=0
+                        Q.all(self.idefix,`select max(idefix) from ${cT1} `)
+                        .then((resx)=>{
+                          self.aktivni_nab=resx.data.data[0].max
+                          //f.Alert(f.Jstr(resx.data.data))
+                              Q.all(self.idefix,`select *,0 as vse from nab_t_items where idefix_nab =${self.aktivni_nab} order by idefix `)
+                              .then((res)=>{
+                                //f.Alert(self.aktivni_nab)
+                                //f.Alert2(f.Jstr(res.data.data))
+                                self.polozky_nab=[]
+                                self.polozky_nab=res.data.data
+                                self.addPol('nab',self.aktivni_nab)
+                                self.polozky_soucet('nab')
+                                self.status_nab=2
+
+
+                              })
+                        })
+                    })
+
+                  //f.Alert(f.Jstr('part 1 ok'))
+                  })
+
+               })
+
+             })
+
+          }
+////////nabidky///nab////////
+         })
+
      }
 
 
@@ -4121,6 +4409,10 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false){
     })
    },
    IsZmena() {
+     if (!document.getElementById("Zmenad")){
+       return
+     }
+
      $("input[type=text]").off('change');
       $("input[type=text]").change( function(){
         //$(this).css("{background:white}")

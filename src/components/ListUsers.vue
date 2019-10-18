@@ -8,7 +8,7 @@
        </el-input>
       </el-col>
       <el-col :span="6" >
-        <el-checkbox border  clearable size="mini" v-model="search_is" @change="setUsersCheck()">
+        <el-checkbox border  clearable size="mini" v-model="search_is" @change="setUsersCheck()"   >
           Neplatni
        </el-checkbox>
       </el-col>
@@ -257,7 +257,7 @@ export default {
 
   async updateAll(id)  {
       var i=0
-
+      //alert('1')
       try {
         ListMenuSchemaService.all(this.user, 'Col')
         .then (res =>{
@@ -297,6 +297,7 @@ export default {
 
             if (res.data.info == 0 ) {
               this.info='data uzivatelu nejsou '+ JSON.stringify( res.data.info )
+                 console.log('data 1 Jsou '+ JSON.stringify( res.data.info ))
             } else {
               console.log('data Jsou '+ JSON.stringify( res.data.info ))
               this.tableData = res.data.data
@@ -304,26 +305,20 @@ export default {
           this.tableData.forEach(element => {
               element.Menus1  =  ""
               element.Groups1 = []
-
-                this.tableGroups[element.idefix] =[]
-                this.tableMenus[element.idefix] =''
-
+              this.tableGroups[element.idefix] =[]
+              this.tableMenus[element.idefix] =''
             });
               res.data.dataMenu.forEach((el) =>{
                 this.tableMenus[el.idefix_user] = el.idefix_menu*1
               })
-
-
               //this.tableGroups=[]
               res.data.dataGroups.forEach((el) =>{
-
                 try {
                  if (this.tableGroups.hasOwnProperty(el.idefix_user) ){
                   //console.log("Ma " , element.idefix)
                   if (el.idefix_group > 0) {
                     this.tableGroups[el.idefix_user].push(el.idefix_group)
                   }
-
                 }
                 } catch(e2) {
                     console.log('GR2 T Zruseny uzivatel ' ,  el.idefix_user )

@@ -3,7 +3,10 @@ import Q from './query'
 import f from './fce'
 import store from '@/store/store'
 
+
 export default {
+
+
 
   getMatList(strojmod=0,sirka=0,vyska=0) {
    var  cq=""
@@ -304,10 +307,57 @@ export default {
 
 
   return defer.promise();
-}
+},
+
+async Skupiny(){
+  var idefix=store.state.idefix
+  var q=`select idefix,login,email,telefon, plati, zobraz ,level,idefix2fullname(idefix) as fullname, coalesce(b.skupiny,'N') as skupiny from list_users u
+  left join (
+  select a.idefix_user,array_to_string(array_agg(b.nazev order by nazev ),',') as skupiny  from list_groups_users a join list_groups b on a.idefix_group = b.idefix group by idefix_user
+  ) b on u.idefix = b.idefix_user
+  where u.plati= 1 and u.idefix=${idefix}
+  `
+
+  var defer = $.Deferred();
+  var atmp=[]
+  try {
+    // f.Alert('kve 1')
+    atmp= (await Q.all(idefix,q)).data.data
+
+    if (atmp.length==0) {
+      defer.resolve(false)
+    } else  {
+    await atmp.forEach(el=>{
+      defer.resolve(atmp[0].skupiny)
+      // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
+    })
+    }
+  }  catch(e) {
+    defer.resolve(atmp)
+    f.Alert2('Chyba  getFirmaOsoba', e , q )
+  }
+
+  return defer.promise();
+
+},
+isObchod(){
+  var cret=''
+  var defer = $.Deferred();
+
+  this.Skupiny()
+  .then(cr=>{
+    defer.resolve(cr)
+  //  alert(cr)
+  })
+  .catch((e) => {
+    defer.resolve(false)
+
+  })
+  return defer.promise()
 
 
-,async getOsoba(idefix_osoba=0, skupina=''){
+},
+async getOsoba(idefix_osoba=0, skupina=''){
   var idefix=store.state.idefix
   var q=`select idefix,login,email,telefon, plati, zobraz ,level,idefix2fullname(idefix) as fullname, coalesce(b.skupiny,'N') as skupiny from list_users u
   left join (
@@ -344,10 +394,8 @@ export default {
     f.Alert2('Chyba  getFirmaOsoba', e , q )
   }
 
-
   return defer.promise();
 }
-
 
 
 }
