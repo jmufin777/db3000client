@@ -2064,7 +2064,7 @@ renderFunc(h, option) {
         }
 
         this.list.data.firma[0].dic        = this.firmaAres.data.dic
-        this.list.data.firma[0].nazev      = this.firmaAres.data.nazev
+        this.list.data.firma[0].nazev      = this.firmaAres.data.nazev.replace('&amp;','&')
         this.list.data.firma[0].ulice      = this.firmaAres.data.ulicecela
         this.list.data.firma[0].obec       = this.firmaAres.data.obec
         this.list.data.firma[0].psc        = this.firmaAres.data.psc
