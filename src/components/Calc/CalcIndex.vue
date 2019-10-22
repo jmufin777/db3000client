@@ -17,7 +17,7 @@
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
               @click="Ulozit()"
           >
-          Ulozit
+          UlozitABC
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="Nova(true)"
@@ -82,7 +82,7 @@
 
            Rok:<input   v-model="search_zak_rok"   type="number" class="white px-0 "  style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black;font-size:110%"  @keyup="Seznam('zak')">
            Cislo:<input v-model="search_zak_cislo" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%" @keyup="Seznam('zak')">
-            : <input v-model="search_zak_cislo2" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%" >
+            <input v-model="search_zak_cislo2" type="hidden" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%" >
            Neco:<input  v-model="search_zak"       type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black;font-size:110%" @keyup="Seznam('zak')" >
 
            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
@@ -340,12 +340,17 @@
         <div v-if="polozka2.vzor==-999" ></div>
         <div  v-else style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-4">
 
-        <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="polozka2.vzor==0?to3Z(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
+        <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;"
+        @click="polozka2.vzor==0?to3Z(polozka2,2):
+        ZalozitZobrazit(polozka2)
+
+        ">K</span>
         <span v-else class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
 
         <i v-if="polozka2.vzor==0" class="el-icon-delete black--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('zak',polozka2)"></i>
         <i v-else  class="el-icon-minus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         &nbsp;&nbsp;&nbsp;
+
 
         <button @click="copyRadek(polozka2.idefix)">
         <i class="el-icon-plus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
@@ -393,8 +398,10 @@
                 placeholder="Prace"
                 @change="(polozka2.idefix_prace>0 && (polozka2.nazev=='' ||polozka2.nazev.match(/^Pr.zdn.*$/) ) )?polozka2.nazev=(cis_prace.filter(el => {
                   return el.idefix_prace==polozka2.idefix_prace
+                }))[0].text_na_fakturu:''
+                ;ZmenPolozku('zak',polozka2)
+                "
 
-                }))[0].text_na_fakturu:''"
                 :disabled="polozka_zak.zamek"
 
               >
@@ -427,7 +434,7 @@
               <div style="float:right;width:100%;" class="elevation-0 pt-1">
 
               <input  type="text" v-model="polozka2.nazev"
-              @change="false?ZmenPolozku('zak',polozka2):true"
+              @change="ZmenPolozku('zak',polozka2)"
               @focus="aktivni_polozka_zak=polozka2.idefix"
 
               style="height:25px; border:dotted 1px silver;font-size:13px"
@@ -452,9 +459,10 @@
         <div  v-else class="pt-1 pb-1" style="height:39px;width:100%; border-bottom: solid silver 0px;">
         <!-- <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Text:</div> -->
         <div style="float:right;width:100%;" class="elevation-0 pt-1">
-
+         <!-- @change="false?ZmenPolozku('zak',polozka2):true"    -->
         <input  type="text" v-model="polozka2.nazev"
-        @change="false?ZmenPolozku('zak',polozka2):true"
+        @change="ZmenPolozku('zak',polozka2)"
+
         @focus="aktivni_polozka_zak=polozka2.idefix"
 
          style="height:25px; border:dotted 1px silver;font-size:13px"
@@ -490,7 +498,9 @@
                 popper-class="silver lighten-5"
                 placeholder="Prace"
                 @focus="zak_item_active=polozka2;"
-                @change="polozka2.vse==1&& polozka2.idefix_dod>0?Sparuj(polozka2):false; polozka2.vse=0"
+                @change="polozka2.vse==1&& polozka2.idefix_dod>0?Sparuj(polozka2):false; polozka2.vse=0
+                ;ZmenPolozku('zak',polozka2)
+                "
                 :disabled="polozka_zak.zamek"
 
               >
@@ -550,21 +560,29 @@
       >
       <div v-if="polozka2.vzor==-999"></div>
         <!-- {{polozka2.kcks}} -->
+        <!-- ||!f.isEmpty(polozka2.obsah) -->
        <input v-else type="number"
-       :readonly="polozka_zak.zamek ||!f.isEmpty(polozka2.obsah) "
+       :readonly="polozka_zak.zamek  "
        v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
-       @focus="polozka2.vse=0;aktivni_polozka_zak=polozka2.idefix">
+       @focus="polozka2.vse=0;aktivni_polozka_zak=polozka2.idefix"
+       @change="polozka2.naklad=polozka2.kcks * polozka2.ks"
+       >
+
         </td>
       <td class="rborder pr-2"
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
       >
       <div v-if="polozka2.vzor==-999"></div>
+      <!-- ||!f.isEmpty(polozka2.obsah)  -->
         <input v-else type="number"
-        :readonly="polozka_zak.zamek ||!f.isEmpty(polozka2.obsah) "
+        :readonly="polozka_zak.zamek "
         v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
-        @change="ZmenPolozku('zak',polozka2,0)">
-        <span style="visibily:hidden">
-        {{polozka_zak.zamek }} {{ !f.isEmpty(polozka2.obsah) }}
+        @change="
+        polozka2.naklad=polozka2.kcks * polozka2.ks;
+        ZmenPolozku('zak',polozka2,0)
+        ">
+        <span style="visibility:hidden">
+         {{polozka_zak.zamek }} {{ !f.isEmpty(polozka2.obsah) }}
         </span>
         <!-- {{polozka2.ks}} -->
 
@@ -573,11 +591,14 @@
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
       >
       <div v-if="polozka2.vzor==-999"></div>
+      <!--||!f.isEmpty(polozka2.obsah) //-->
       <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
-      @change="ZmenPolozku('zak',polozka2,0)"
-      v-bind:readonly="polozka_zak.zamek ||!f.isEmpty(polozka2.obsah) "
+      v-bind:readonly="polozka_zak.zamek  "
+      @change="
+      polozka2.kcks=(polozka2.ks>0?polozka2.naklad / polozka2.ks:polozka2.kcks).toFixed(2);
+      ZmenPolozku('zak',polozka2,0)"
       >
-        </td>
+      </td>
       <td class="rborder pr-2 " style="border-bottom: solid 1px silver"
       :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
 
@@ -639,7 +660,7 @@
 
            Rok:<input   v-model="search_nab_rok"   type="number" class="white px-0 "  style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black;font-size:110%"  @keyup="Seznam('nab')">
            Cislo:<input v-model="search_nab_cislo" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%" @keyup="Seznam('nab')">
-            : <input v-model="search_nab_cislo2" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%" >
+             <input v-model="search_nab_cislo2" type="hidden" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%" >
            Neco:<input  v-model="search_nab"       type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black;font-size:110%" @keyup="Seznam('nab')" >
 
            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
@@ -814,6 +835,7 @@
         </button>
         &nbsp;&nbsp;&nbsp;
 
+
         <button @click="FillFormWait(polozka,true)">
           <i class="el-icon-plus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
         </button>
@@ -915,7 +937,7 @@
        <div v-if="polozka2.vzor==-999"></div>
         <div v-else  style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-4">
         <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;"
-        @click="polozka2.vzor==0?to3N(polozka2,2):mAlert('Polozka musi by pred pristupen do kalkulace ulozena')">K</span>
+        @click="polozka2.vzor==0?to3N(polozka2,2):ZalozitZobrazit(polozka2)">K</span>
         <span v-else class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
 
         <i v-if="polozka2.vzor==0" class="el-icon-delete black--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('nab',polozka2)"></i>
@@ -961,7 +983,8 @@
                 @change="(polozka2.idefix_prace>0 && (polozka2.nazev=='' ||polozka2.nazev.match(/^Pr.zdn.*$/) ) )?polozka2.nazev=(cis_prace.filter(el => {
                   return el.idefix_prace==polozka2.idefix_prace
 
-                }))[0].text_na_fakturu:''"
+                }))[0].text_na_fakturu:''
+                ;;ZmenPolozku('zak',polozka2)"
                 :disabled="polozka_nab.zamek"
 
               >
@@ -992,9 +1015,9 @@
               <div  v-else class="pt-1 pb-1" style="height:39px;width:100%; border-bottom: solid silver 0px;">
               <!-- <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Text:</div> -->
               <div style="float:right;width:100%;" class="elevation-0 pt-1">
-
+              <!-- @change="false?ZmenPolozku('nab',polozka2):true" -->
               <input  type="text" v-model="polozka2.nazev"
-              @change="false?ZmenPolozku('nab',polozka2):true"
+              @change="ZmenPolozku('nab',polozka2)"
               @focus="aktivni_polozka_nab=polozka2.idefix"
 
               style="height:25px; border:dotted 1px silver;font-size:13px"
@@ -1052,7 +1075,8 @@
               placeholder="Dodavatel"
 
               @focus="nab_item_active=polozka2"
-              @change="polozka2.vse==1&& polozka2.idefix_dod>0?Sparuj(polozka2):false; polozka2.vse=0"
+              @change="polozka2.vse==1&& polozka2.idefix_dod>0?Sparuj(polozka2):false; polozka2.vse=0
+              ;ZmenPolozku('zak',polozka2)"
               :disabled="polozka_zak.zamek"
 
               >
@@ -1109,7 +1133,10 @@
       :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
       >
         <div v-if="polozka2.vzor==-999"></div>
-        <input v-else type="number" v-bind:readonly="!f.isEmpty(polozka2.obsah)"  v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
+        <input v-else type="number" v-bind:readonly="false && !f.isEmpty(polozka2.obsah)"
+        v-model="polozka2.kcks"
+        @change="polozka2.naklad=polozka2.kcks * polozka2.ks"
+        style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
         @focus="polozka2.vse=0"
         >
         </td>
@@ -1117,7 +1144,10 @@
       :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
        >
        <div v-if="polozka2.vzor==-999"></div>
-        <input v-else type="number" v-model="polozka2.ks" style="height:100%; border-bottom:dotted 1px;;font-size:120%" class="prava">
+        <input v-else type="number" v-model="polozka2.ks"
+        @change="polozka2.naklad=polozka2.kcks * polozka2.ks"
+
+        style="height:100%; border-bottom:dotted 1px;;font-size:120%" class="prava">
         <!-- {{polozka2.ks}} -->
 
       </td>
@@ -1126,7 +1156,15 @@
       >
         <div v-if="polozka2.vzor==-999"></div>
 
-        <input v-else type="number" v-model="polozka2.naklad" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" @change="ZmenPolozku('nab',polozka2,0)">
+        <input v-else
+          type="number"
+          v-model="polozka2.naklad"
+          :readonly="false"
+          style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
+          @change="
+          polozka2.kcks=(polozka2.ks>0?polozka2.naklad / polozka2.ks:polozka2.kcks).toFixed(2);
+          ZmenPolozku('nab',polozka2,0)"
+        >
         </td>
        <td class="rborder pr-2"
       :class="{'green lighten-5 elevation-2': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
@@ -1134,7 +1172,9 @@
       <div v-if="polozka2.vzor==-999"></div>
       <span v-else>
       <!-- {{polozka2.prodej - polozka2.naklad}} -->
-      <input  type="number" :value="(polozka2.prodej - polozka2.naklad)" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" >
+      <input  type="number"
+      :readonly="true"
+       :value="(polozka2.prodej - polozka2.naklad)" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava" >
       </span>
       </td>  <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
        <td class="rborder pr-2"
@@ -1593,6 +1633,7 @@ import f from '@/services/fce'
 // import query from '../../services/query'
 import Q from '../../services/query'
 import queryKalk from '../../services/fcesqlKalkulace'
+import prepocty from '../../services/fceKalkulacePrepocty'
 import SQL from '../../services/fcesql'
 
 //10411
@@ -2395,6 +2436,18 @@ if (self.MAINMENULAST== 'zakazky'){
  //  this.$destroy()
  },
  methods: {
+   async ZalozitZobrazit(polozka2){
+     const self=this
+     //to3N(polozka2,2)
+     //ZmenPolozku('zak',polozka2)
+     if (polozka2.nazev.match(/^Pr.zdn.*$/)) {
+        polozka2.nazev="Nova"
+        self.ZmenPolozku(self.MAINMENULAST=='zakazky'?'zak':'nab',polozka2)
+
+
+     }
+     self.mAlert('Polozka musi byt pred pristupen do kalkulace ulozena')
+   },
    async Skupiny(){
      const self=this
      self._Skupiny=await(SQL.isObchod())
@@ -2917,6 +2970,27 @@ if (self.MAINMENULAST== 'zakazky'){
    },
    async to2Z(polozka) {
      const self = this
+     if (self.obrazovka_zak==3)  {
+       await self.Ulozit()
+       await f.sleep(200)
+       .then(()=>{
+           Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)
+           .then((res)=>{
+            self.polozky_zak = res.data.data
+            self.polozky_soucet('zak')
+            })
+              .then(()=>{
+                self.addPol('zak',polozka.idefix)
+              })
+                .then(()=>{
+                  self.obrazovka_zak=2
+
+                })
+       })
+
+       return
+
+     }
       if (self.MAINMENULAST=='zakazky' && self.status_zak==1) {
           this.$confirm('Zrusit zakladni nove zakazky ? ??' , '', {
           distinguishCancelAndClose: true,
@@ -2959,8 +3033,9 @@ if (self.MAINMENULAST== 'zakazky'){
     }
 
      if (self.obrazovka_zak==3)  {
+       alert('Jonea neeee?')
        await self.Ulozit()
-       await f.sleep(100)
+       await f.sleep(1000)
      }
 
 
@@ -2978,7 +3053,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
 
-      self.updateDefault()
+       self.updateDefault()  //oprava dodavatele
        self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)).data.data
        self.polozky_soucet('zak')
        self.addPol('zak',polozka.idefix)
@@ -3014,11 +3089,19 @@ if (self.MAINMENULAST== 'zakazky'){
 
       if (odkud == 2) {
         //f.Alert2('2 --  ',f.Jstr(polozka.idefix_dod), '::',  self.idefix_vlastnik)
-        if (polozka.idefix_dod== self.idefix_vlastnik) {
+
+        if (polozka.idefix_dod== self.idefix_vlastnik ) {
           presun = true
 
-        } else {
+        } else
+        if (polozka.idefix_dod!= self.idefix_vlastnik && polozka.obsah.length>0)
+        {
+          polozka.idefix_dod= self.idefix_vlastnik
+          presun = true
+        }
+        else {
           presun = false
+          f.Alert( polozka.idefix_dod ,  self.idefix_vlastnik, polozka.obsah.length)
           this.$notify( { title: self.MAINMENULAST,  message: `Pro cizi dodavatele nejsou  kalkulacek dispozici` , type: 'error', offset: 100, duration: 5000 })
           return
 
@@ -3122,9 +3205,25 @@ if (self.MAINMENULAST== 'zakazky'){
   const self = this
      if (self.obrazovka_nab==3)  {
        await self.Ulozit()
-       await f.sleep(100)
-     }
+       await f.sleep(200)
+       .then(()=>{
+           Q.all(self.idefix,`select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix} order by idefix`)
+           .then((res)=>{
+            self.polozky_nab = res.data.data
+            self.polozky_soucet('nab')
+            })
+              .then(()=>{
+                self.addPol('nab',polozka.idefix)
+              })
+                .then(()=>{
+                  self.obrazovka_nab=2
+                  //f.Alert(self.aktivni_polozka_nab)
+                })
+       })
 
+       return
+
+     }
       self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
       //alert(self.obrazovka_zak)
 
@@ -3220,7 +3319,9 @@ if (self.MAINMENULAST== 'zakazky'){
            `
            qitems=qitems.replace("idefix_zak","idefix_nab")
            //f.Alert2(qitems)
+
            var e = (await Q.post(self.idefix,qitems))
+           var pomocIdefix=(await Q.post(self.idefix,`update nab_t_items set idefix = idefix_src where idefix_src>0 and idefix_nab = ${c.idefix}`))
 
            this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislonabidky}` , type: 'success', offset: 100, duration: 5000 })
 
@@ -3250,12 +3351,16 @@ if (self.MAINMENULAST== 'zakazky'){
           var uporadi = (await Q.post(self.idefix,dporadi))
           var iset=(await self.InsertSet(c.idefix))
           var del = (await Q.post(self.idefix,`delete from zak_t_items where obsah::text > '' and idefix_zak = ${c.idefix}`))
+
           var qitems = `insert into zak_t_items
             ${iset}
             from ${self.cTable} where obsah::text >''
           `
           //f.Alert2(qitems)
+          //var pomocIdefix=(await Q.post(self.idefix,`update ${self.cTable} set idefix = idefix_src where idefix_src>0`))
+
           var e = (await Q.post(self.idefix,qitems))
+          var pomocIdefix=(await Q.post(self.idefix,`update zak_t_items set idefix = idefix_src where idefix_src>0 and idefix_zak = ${c.idefix}`))
           this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislozakazky}` , type: 'success', offset: 100, duration: 5000 })
           self.Seznam('zak')
           self.status_zak=2;
@@ -3806,7 +3911,7 @@ if (self.MAINMENULAST== 'zakazky'){
     }
 
   },
-    mAlert(txt, dur=5000){
+   mAlert(txt, dur=5000){
     this.$notify( { title: self.MAINMENULAST,  message: `${txt}` , type: 'error', offset: 100, duration: 5000 })
 
   },
@@ -4295,8 +4400,38 @@ if (self.MAINMENULAST=='zakazky') {
                                 self.addPol('zak',self.aktivni_zak)
                                 self.polozky_soucet('zak')
                                 self.status_zak=2
+                                if (self.polozky_zak.length > 0) {
+                                  self.status_zak=2
+                                  var naklad=0
+                                  ///
+                                  self.polozky_zak.forEach(el=>{
+                                   naklad=0
+                                    queryKalk.setKorekce(el.obsah )
 
+                                    .then(()=>{
+                                         prepocty.getNaklad(el.obsah)
+                                          .then((n)=>{
+                                             naklad=n
+                                             //f.Alert(naklad)
+                                            //f.Alert2(f.Jstr(el.obsah))
+                                            //polozka.obsah=f.Jstr(polozka.obsah)
+                                            var obsah=f.Jstr(el.obsah)
+                                            if (obsah.length>100){
+                                              var _qsetitem=`update zak_t_items set obsah = '${obsah}'::jsonb, naklad=${naklad} where idefix = ${el.idefix}`
+                                              //f.Alert(_qsetitem)
+                                              Q.post(self.idefix,_qsetitem)
+                                              .then(()=>{
+                                                el.naklad=naklad
+                                              })
 
+                                            }
+                                         })
+                                    })
+                                  })
+                                  ///
+
+                                  //self.to3N(self.polozky_zak[0],2)
+                                }
                               })
                         })
                     })
@@ -4362,12 +4497,36 @@ if (self.MAINMENULAST=='kalkulace') {
                                 self.addPol('nab',self.aktivni_nab)
                                 self.polozky_soucet('nab')
                                 self.status_nab=2
-
-
+                                if (self.polozky_nab.length > 0) {
+                                  self.status_nab=2
+                                  var naklad=0
+                                  self.polozky_nab.forEach(el=>{
+                                   naklad=0
+                                    queryKalk.setKorekce(el.obsah )
+                                    .then(()=>{
+                                         prepocty.getNaklad(el.obsah)
+                                          .then((n)=>{
+                                             naklad=n
+                                             //f.Alert(naklad)
+                                            //f.Alert2(f.Jstr(el.obsah))
+                                            //polozka.obsah=f.Jstr(polozka.obsah)
+                                            var obsah=f.Jstr(el.obsah)
+                                            if (obsah.length>100){
+                                              var _qsetitem=`update nab_t_items set obsah = '${obsah}'::jsonb, naklad=${naklad} where idefix = ${el.idefix}`
+                                              //f.Alert(_qsetitem)
+                                              Q.post(self.idefix,_qsetitem)
+                                              .then(()=>{
+                                                el.naklad=naklad
+                                              })
+                                            }
+                                         })
+                                    })
+                                  })
+                                  //self.to3N(self.polozky_nab[0],2)
+                                }
                               })
                         })
                     })
-
                   //f.Alert(f.Jstr('part 1 ok'))
                   })
 
@@ -4393,6 +4552,17 @@ if (self.MAINMENULAST=='kalkulace') {
       if (el.active==true){
         self.IDEFIXACTIVE =el.idefix
         self.NAZEVACTIVE=el.nazev
+        if (self.MAINMENULAST=='zakazky'){
+          if (el.idefix_src > 0) {
+            self.aktivni_polozka_zak= el.idefix_src
+          }
+        }
+        if (self.MAINMENULAST=='kalkulace'){
+          if (el.idefix_src > 0) {
+            self.aktivni_polozka_nab= el.idefix_src
+          }
+        }
+
         return
       }
     })
@@ -4798,7 +4968,9 @@ if (self.Pocet == - 1) {
         self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))   //Vsechny kalkulace - seznam
          //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
+
          self.setIdefixActive()
+
 
          self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
            setTimeout(function(){

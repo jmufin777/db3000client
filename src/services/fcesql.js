@@ -369,7 +369,7 @@ async getOsoba(idefix_osoba=0, skupina=''){
 
   ( ${idefix_osoba} = 0 or idefix = ${idefix_osoba}   )
   and
-  ( '${skupina}' = '' or  skupiny ilike '%${skupina}%'   )
+  ( '${skupina}' = '' or  skupiny ilike '%${skupina}%'  or  skupiny ilike '%veden%'  )
 
   order by fullname
   `

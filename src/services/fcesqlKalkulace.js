@@ -302,9 +302,9 @@ async Vklad(data, kalkulace2 ){
     await this.VlastnikPrace()
   // })
 
-    f.Alert('hoooohohoho 00', idefix_vlastnikPrace)
+    //f.Alert('hoooohohoho 00', idefix_vlastnikPrace)
   }
-   f.Alert('hoooohohoho 1', idefix_vlastnikPrace)
+   // f.Alert('hoooohohoho 1', idefix_vlastnikPrace)
    if (!f.Jstr(kalkulace2).match(/a-z/)) {
      f.Alert('kalkulace je prazdna?')
    }
@@ -693,6 +693,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
           a.user_update_idefix,
           a.poradi,
           a.active,
+          a.idefix_src,
           b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix `;
 
   q= `${q} where  true and obsah is not null `
@@ -801,7 +802,42 @@ async deleteTemplate(_idefix) {
 
 },
 
+async setKorekce(data ) {
+  var defer = $.Deferred();
+  var nsum = 0
+  var ntmp = 0
+  const self=this
+  //alert(this.getNakladSloupce())
 
+  await data.forEach(async (element,idx )=> {
+          ntmp=0 // Zde bude naklad leve strany, pokud bude k dispozici
+    if (!f.isEmpty(element.sloupecid) ) {
+          element.sloupecid.forEach(el =>{ //Prochod vsema sloupcema a pricteni ceny
+            self.setKorekceCol(element.data, el)
+          })
+    }
+    //nsum = nsum + ntmp // potom co se sjedou vsechny sloupce, pripocitam vysledek
+
+
+  });
+
+  defer.resolve(nsum)
+  return defer.promise()
+},
+
+setKorekceCol(data, sloupec){ // data jsou leva strana kalkulace
+  var nSum = 0
+  //Zpracovat levou stranu
+      // alert(JSON.stringify(data))
+    if (!f.isEmpty(sloupec.data.nakladkorekce)){ // korekce ma prednost
+      //f.Alert2(sloupec.data.nakladkorekce)
+      sloupec.data.nakladkorekce=0
+      //f.Alert2(sloupec.data.nakladkorekce)
+    }
+    // else propocet nakladu
+
+  //return nSum
+},
 
 
 //Stroj

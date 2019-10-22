@@ -58,6 +58,8 @@ getNakladSloupce(data, sloupec){ // data jsou leva strana kalkulace
 
   return nSum
 },
+
+
 async KalkulacePrepocetKusy(k, ks=1){
   //f.Alert2("K " , f.Jparse(k))
   //k=f.Jparse(k)
@@ -90,46 +92,50 @@ async KalkulacePrepocetKusyNa1(k, ks=1){
   //f.Alert("K" , k.length)
   //return
 
-
   var defer = $.Deferred();
 //  defer.resolve(k);
   //return defer.promise();
-
   // f.Alert2
   // var k2=f.Jparse(k2)
   // f.Alert2("Propocet na 1", k )
   var k2 = f.Jstr(k)
   var ksOld=0
   var ksNew=0
+  var minKs=1000000
   k2= f.Jparse(k)
+  k2.forEach(element => {
+    if ( element.data.FormatNakladKs > 0){
+       if (minKs*1 > element.data.FormatNakladKs *1)  {
+           minKs = element.data.FormatNakladKs *1
+       }
+       //minKs = (minKs > element.data.FormatNakladKs) ? element.data.FormatNakladKs : minKs
+       //alert(element.data.FormatNakladKs+ ": "+ minKs)
+    }
+  })
+  //setTimeout(function(){
+    //f.Alert(minKs)
+  //},1000)
   try {
   k2.forEach(element => {
-
       //f.Alert("E :: " , f.isEmpty(element.data.FormatNakladKs ), f.isEmpty(10))
       if (f.isEmpty(element.data.FormatNakladKs)) {
         //element.data.FormatNakladKs = ks
         element.data.FormatNakladKs = 1
       } else {
-        //element.data.FormatNakladKs = element.data.FormatNakladKs * ks
         ksOld =  element.data.FormatNakladKs;
-        if (ks==1){
-          element.data.FormatNakladKs
-        }
-        if (ks > 1) {
-          //bylo : 10
-          //chci 1
-          //mam: 20
-          //ksPomer= ksOld / ks
-          ksNew = parseInt(ksOld / ks)
+          ksNew = parseInt((ksOld /minKs) *ks)
+
+          if (element.data.FormatNakladKs % minKs  > 0){
+            f.Alert('Kusy :' ,element.data.FormatNakladKs , 'nelze delit poctem ', ksNew , ' beze zbytku ' , minKs)
+          } else {
+
+          ksNew = element.data.FormatNakladKs / minKs
           // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'ResultM2' , value: ((self.form.sirka/1000) * (self.form.vyska/1000) )*self.form.nakladks })
           // f.Alert(ksNew, ksOld)
           element.data.ResultM2= ((element.data.FormatSirka/1000) * (element.data.FormatVyska/1000) ) * ksNew
 
-
           element.data.FormatNakladKs = ksNew
-
         }
-
 
       }
   });
