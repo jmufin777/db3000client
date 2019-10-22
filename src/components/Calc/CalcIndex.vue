@@ -662,7 +662,6 @@
            Cislo:<input v-model="search_nab_cislo" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%" @keyup="Seznam('nab')">
              <input v-model="search_nab_cislo2" type="hidden" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%" >
            Neco:<input  v-model="search_nab"       type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black;font-size:110%" @keyup="Seznam('nab')" >
-
            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
            <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
            </span>
