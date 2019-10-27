@@ -8,7 +8,8 @@
 
       >
       <td class="leva white pt-1 prava pr-1 honza_color" style="width:1em;;height:28px" >
-        <v-icon size="medium" @click.native="f1.Alert2('Uzmaceno')">fa-lock</v-icon>
+        <v-icon v-if="form.status>0" size="medium" @click.native="f1.Alert2('Uzmaceno 1 ', f1.Jstr(dataDB))">fa-lock</v-icon>
+        <v-icon v-else size="medium" @click.native="f1.Alert2('Uzmaceno 2 ', f1.Jstr(dataDB))">{{form.status}}fa-lock</v-icon>
       </td>
       <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:8.5em;height:28px" class="honza_color"
 
@@ -290,7 +291,8 @@
            </button>
 
            <button style="background:#c3c3bf;border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1"
-           @click="f1.Alert2('Odeslani do vyroby','pripravuje se', IDEFIX )"
+           @click="sendVL(IDEFIX)"
+
            title="Odeslat do vyroby"
            >
            <v-icon size="medium" class="honza_color2" style="cursor:pointer" >rotate_right</v-icon>
@@ -399,6 +401,10 @@ import WorkCol from './CalcWorkCol.vue' // Prehledova dole
 import Q from '@/services/query'
 import queryKalk from '../../services/fcesqlKalkulace'
 import prepocty from '../../services/fceKalkulacePrepocty'
+import fceVL from '../../services/fceVL'
+
+//VL
+import VL from './VLIndex.vue'
 
 import { locales } from 'moment'
 //import Q from '../../services/query'
@@ -409,6 +415,7 @@ export default {
    components: {
     'work-left': WorkLeft,
     'work-col': WorkCol,
+    'vl': VL
 
  },
   props: {
@@ -467,12 +474,14 @@ export default {
 
      f1: f,
      $: $,
+     fceVL: fceVL,
      showTemplates: true,
      timeout: 0 , //tOpusteni:0,
      lastFocus:'',
      dataTemplates: [],
      ksLast: -100,
      pocetVolani:0,
+     lastTable:'',
 
 
      form: {
@@ -490,6 +499,7 @@ export default {
        nazevOrig:'',
        vlozit: 0,
        idefixuser:0,
+       status: 0,
        ID: 0,
      },
      timelist: ['00:00','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00' ],
@@ -511,6 +521,7 @@ deactivated: function () {
   //     //self.addCol(server.key)
 
   //   })
+
   const self = this
 //    eventBus.$off('DATATEMPLATES')  //Nacitani rolovaciho menu - seznam templatu
     eventBus.$on('DATATEMPLATES',(server)=>{
@@ -522,7 +533,7 @@ deactivated: function () {
           self.showTemplates = true
           //f.Info(f.Jstr(self.dataTemplates))
 
-        //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
+        //f.Alert("SERVER: 22 ", JSON.stringify(self.dataTemplates))
 
 
 
@@ -541,8 +552,9 @@ deactivated: function () {
   //  eventBus.$off('DATATEMPLATE')  //Nacitenijedne jedina kompletni kalkulace z databaze
     eventBus.$on('DATATEMPLATE',(server)=>{
 
+
        self.form.obsah=server.data[0].obsah
-//       f.Alert('SET', JSON.stringify(self.form.obsah))
+       // f.Alert('SET 11', JSON.stringify(self.form.obsah))
        eventBus.$emit('MenuHlavni',
         {
           Kalkulace: server.data[0].obsah,
@@ -740,12 +752,7 @@ deactivated: function () {
       'Kalkulace',
       'KalkulaceThis',
       'user'
-
-
-
     ]),
-
-
   },
 
 
@@ -753,6 +760,76 @@ deactivated: function () {
    TestRend() {
     //alert('aRend')
      eventBus.$emit("Rend")
+  },
+  async sendVL(ifx) {
+    const self=this
+    let dataTemp={}
+    let dataItem={}
+    var q=''
+
+    if (self.MAINMENULAST == 'kalkulace') {
+      self.mAlert('V rezimu nabidek nelze zadavat praci na vyrobu, je nutne vytvorit zakazku')
+      return
+    }
+    this.$confirm('Sestavit VL a odeslat do vyroby ?', 'Neco',{
+       distinguishCancelAndClose: true,
+       confirmButtonText: 'Ano?',
+       cancelButtonText: 'Ne'
+     })
+     .then(()=>{
+
+       //f.Alert('Odeslilam do vyroby','Uz to jede ....' )
+       //f.Alert('Jeste uplnene, ale bude to v poho co nejryhleji to pujde', self.idefix)
+       var q=`select * from ${self.cTable} where idefix = ${self.form.idefix}`
+       Q.all(self.idefix,q)
+       .then((res)=>{
+         if (!f.isEmpty(res.data.data)){
+           dataTemp = res.data.data[0]
+           if (dataTemp.idefix_src>=0 && dataTemp.idefix_zak>0){
+             let q2=`update zak_t_items set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak} ;
+                     update ${self.cTable} set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak}
+                   `
+              console.log(q2)
+             Q.post(self.idefix,q2)
+             .then((res)=>{
+               fceVL.Vklad(dataTemp.idefix_src)
+               self.form.status=1;
+               //Vykutit VL
+
+             })
+             .catch((e)=>{
+               f.Alert('Aktualizace  ERR', q)
+             })
+
+             //VL bude zpracovan a vlozen
+             //self.form.status=1;
+           }
+           f.Alert(dataTemp.idefix_src)
+
+         } else {
+           f.Alert('Nemohu najit zaznam pro zpracovani VL', 'Je nutne zkontrolovat, pripadne kontakovat  podporu')
+         }
+
+
+         //f.Alert2(f.Jstr(res), q)
+       })
+       .catch(e =>{
+         f.Alert('chybka')
+       })
+
+       //if (sef.form)
+
+       //$q1=`update zak`
+
+
+       //f.Alert()
+     })
+
+  },
+
+   mAlert(txt, dur=5000){
+    this.$notify( { title: self.MAINMENULAST,  message: `${txt}` , type: 'error', offset: 100, duration: 5000 })
+
   },
  async prepocetVL(){
        const self=this
@@ -881,7 +958,7 @@ deactivated: function () {
 
 //       alert(neco)
 
-       //f.Alert(cItem.idefix)
+       // f.Alert(cItem.idefix)
        //f.Info('seek'+self.ID2)
 
        //return

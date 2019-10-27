@@ -694,6 +694,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
           a.poradi,
           a.active,
           a.idefix_src,
+          a.status,
           b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix `;
 
   q= `${q} where  true and obsah is not null `

@@ -17,7 +17,7 @@
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
               @click="Ulozit()"
           >
-          UlozitABC
+          Ulozit
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="Nova(true)"
@@ -54,7 +54,7 @@
     </div> -->
 <div  v-if="obrazovka_zak==1 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%;max-height:600px" id="obalKalkulace"  class="stred">
 
-  <div style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999">
+  <div v-if="false" style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999">
       <span style="color:red; font-size:10em">1Z</span>
   </div>
   <div class="leva blue lighten-5" :style="f.pof( Sirka,98)" style="position:relative;" >
@@ -269,7 +269,7 @@
 
 <div  v-if="obrazovka_zak==2 && MAINMENULAST=='zakazky'" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
 <!-- {{polozky_zak}} -->
-<div style="position:fixed; top:30em;right:30%;opacity:0.5">
+<div v-if="false" style="position:fixed; top:30em;right:30%;opacity:0.5">
       <span style="color:red; font-size:10em">2Z</span>
 </div>
 <div class="leva pt-0 pb-0">
@@ -379,7 +379,7 @@
         <div v-if="polozka2.vzor==-999"></div>
 
 
-
+<!--zakazka!-->
             <div  v-else-if="cis_prace.length>=0 && f.isEmpty(polozka2.obsah)"   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'" class="leva pl-0">
             <span style="float: left;width:100%">
               <table border="0" style="border: solid 0px black;width:100%"><tr><td
@@ -516,6 +516,8 @@
                  :key="item02.idefix_firma"
                  :label="item02.firma"
                  :value="item02.idefix_firma"
+
+
                  style="font-size:13px"
 
               >
@@ -565,7 +567,7 @@
        :readonly="polozka_zak.zamek  "
        v-model="polozka2.kcks" style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
        @focus="polozka2.vse=0;aktivni_polozka_zak=polozka2.idefix"
-       @change="polozka2.naklad=polozka2.kcks * polozka2.ks"
+       @change="polozka2.naklad=polozka2.kcks * polozka2.ks;ZmenPolozku('zak',polozka2,0)"
        >
 
         </td>
@@ -634,7 +636,7 @@
 <div  v-if="obrazovka_nab==1 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%" id="obalKalkulace">
   <!-- Seznam N {{MAINMENULAST}}
   Seznam Z {{MAINMENULAST}} -->
-  <div style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999">
+  <div v-if="false" style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999;">
       <span style="color:red; font-size:10em;">1N</span>
   </div>
 
@@ -861,7 +863,7 @@
 </div>
 <div  v-if="obrazovka_nab==2 && MAINMENULAST=='kalkulace'" slot="kalkulace" style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%" id="obalKalkulace"  class="stred">
 <!-- {{polozky_zak}} -->
-<div style="position:fixed; top:30em;right:30%;opacity:0.3">
+<div v-if="false" style="position:fixed; top:30em;right:30%;opacity:0.3">
       <span style="color:red; font-size:10em">2N</span>
 </div>
 <div class="leva pt-0 pb-0">
@@ -919,7 +921,7 @@
           class="hoVer2"
 
       @click="polozka2.vzor>-999?aktivni_polozka_nab=polozka2.idefix:false"
-      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==aktivni_polozka_zak && polozka2.vzor >-999
+      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==aktivni_polozka_nab && polozka2.vzor >-999
       ,'nerusit': polozka2.nazev.match(/^Pr.zdn.*$/) && aktivni_polozka_nab!==polozka2.idefix
       }"
       :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:solid 1px #cccccc;':'height:3px'"
@@ -957,7 +959,7 @@
       >
      </td>
     <td class="rborder pr-0 pt-1 pl-2 pr-1" style="border-bottom:none"
-      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+      :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
       >
         <div v-if="polozka2.vzor==-999"></div>
 
@@ -983,7 +985,7 @@
                   return el.idefix_prace==polozka2.idefix_prace
 
                 }))[0].text_na_fakturu:''
-                ;;ZmenPolozku('zak',polozka2)"
+                ;;ZmenPolozku('nab',polozka2)"
                 :disabled="polozka_nab.zamek"
 
               >
@@ -1075,8 +1077,8 @@
 
               @focus="nab_item_active=polozka2"
               @change="polozka2.vse==1&& polozka2.idefix_dod>0?Sparuj(polozka2):false; polozka2.vse=0
-              ;ZmenPolozku('zak',polozka2)"
-              :disabled="polozka_zak.zamek"
+              ;ZmenPolozku('nab',polozka2)"
+              :disabled="polozka_nab.zamek"
 
               >
               <!--
@@ -1118,7 +1120,7 @@
          <div v-else-if="polozka2.idefix_dod!=idefix_vlastnik" class="pt-1 pb-1" style="height:39px;width:100%; border-bottom: solid silver 0px;">
           <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Faktura:</div>
           <div style="float:right;width:70%;" class="elevation-0 pt-1">
-           <input type="text" :disabled="polozka2.nazev.match(/^Pr.zdn.*$/)" v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('zak',polozka2):false" style="height:22px; border:dotted 1px silver;" class="stred">
+           <input type="text" :disabled="polozka2.nazev.match(/^Pr.zdn.*$/)" v-model="polozka2.faktura" @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('nab',polozka2):false" style="height:22px; border:dotted 1px silver;" class="stred">
           </div>
          </div>
          <div v-else class="pt-1 pb-1 pl-0" style="height:39px;width:100%; border-bottom: solid silver 0px;">
@@ -1134,7 +1136,7 @@
         <div v-if="polozka2.vzor==-999"></div>
         <input v-else type="number" v-bind:readonly="false && !f.isEmpty(polozka2.obsah)"
         v-model="polozka2.kcks"
-        @change="polozka2.naklad=polozka2.kcks * polozka2.ks"
+        @change="polozka2.naklad=polozka2.kcks * polozka2.ks;ZmenPolozku('nab',polozka2,0)"
         style="height:100%; border-bottom:dotted 1px;font-size:120%" class="prava"
         @focus="polozka2.vse=0"
         >
@@ -1221,7 +1223,7 @@
 </div>
 
 
-<div style="position:fixed; top:30em;right:30%;opacity:0.5">
+<div v-if="false" style="position:fixed; top:30em;right:30%;opacity:0.5">
       <span v-if="MAINMENULAST=='zakazky'   && obrazovka_zak == 3" style="color:red; font-size:10em">3Z</span>
       <span v-if="MAINMENULAST=='kalkulace' && obrazovka_nab == 3" style="color:red; font-size:10em">3N</span>
 </div>
@@ -1230,18 +1232,19 @@
      slot="kalkulace"
      style="position:relative;width:100%;top:0em;overflow:scroll"
      id="obalKalkulace2b"
-   >
+     >
       <work-but
       :ID="'A_'+aBefore.idefix"
       :dataDB="aBefore"
       :ID2="ID+iBefore"
       :IDEFIX="+aBefore.idefix"
       :MAINMENULAST="MAINMENULAST"
-
       :key="'AWB_'+iBefore+''+idRend"
       style="position:relative;left:4px"
       :cTable="cTable"
+
        ></work-but>
+
         <!-- / {{aBefore.idefix }} -->
    </div>
 
@@ -1285,8 +1288,6 @@
             :ID2="ID+999666"
             :IDEFIX="IDEFIXACTIVE"
             :IDEFIXACTIVE="IDEFIXACTIVE"
-
-
 
             >
           </work-but-plus>
@@ -1364,7 +1365,7 @@
 
 </div>
 
-   <div v-if="obrazovka_nab==3 || obrazovka_zak==3" style="right:1%;;top:16px;z-index:99999;" class="plovouci  grey lighten-1 pt-2 pb-2"  slot="Plovouci2" id="plovoucimapa11">
+   <div v-if="(obrazovka_nab==3 && MAINMENULAST=='kalkulace')|| (MAINMENULAST=='zakazky' && obrazovka_zak==3)" style="right:10%;;top:-56px;z-index:99999;border-radius:20px !important" class="plovouci  grey lighten-1 pt-2 pb-2"  slot="Plovouci2" id="plovoucimapa11">
      <!--2 = prepinac -->
        <v-btn @click="panel(2,$event)" small class="yellow">MAPA</v-btn><br>
        <v-btn @click="panelPrehled(2,$event)" small class="yellow">Kalkulace</v-btn><br>
@@ -1605,6 +1606,83 @@
       <div :ref="'neco11'"></div>
      </div>
     </my-layout>
+    <!-- VL //-->
+
+  <v-row justify="center">
+    <v-dialog v-model="dialogVL" persistent max-width="600px">
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" dark v-on="on">Test VL - Docasne</v-btn>
+      </template>
+      <v-card>
+
+      <v-card-text>
+        <vl></vl>
+      </v-card-text>
+      <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialogVL = false">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="dialogVL = false">Save</v-btn>
+        </v-card-actions>
+
+      </v-card>
+
+
+      <v-card v-if="false">
+        <v-card-title>
+          <span class="headline">User Profile</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field label="Legal first name*" required></v-text-field>
+
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  label="Legal last name*"
+                  hint="example of persistent helper text"
+                  persistent-hint
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="Email*" required></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="Password*" type="password" required></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-select
+                  :items="['0-17', '18-29', '30-54', '54+']"
+                  label="Age*"
+                  required
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
+                  label="Interests"
+                  multiple
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+          </v-container>
+          <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialogVL = false">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="dialogVL = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
+
+    <!-- VL //-->
 
 
   </div>
@@ -1634,6 +1712,8 @@ import Q from '../../services/query'
 import queryKalk from '../../services/fcesqlKalkulace'
 import prepocty from '../../services/fceKalkulacePrepocty'
 import SQL from '../../services/fcesql'
+// VL
+import VL from './VLIndex.vue'
 
 //10411
 
@@ -1657,12 +1737,15 @@ export default {
     'work-but': WorkBut,
     'work-but-plus': WorkButPlus,
     'work-but-menu': WorkButMenu,
+    'vl': VL
     // 'menu-hlavni': MenuHlavni,
 
  },
  data () {
 
    return {
+     dialogVL: false,
+
      zobrazit:true,
      zobrazitPanel:false,
      zobrazitPrehled:false,
@@ -1790,10 +1873,87 @@ export default {
      _IsObchod:false,
      _IsVedeni:false,
 
+     IDEFIXACTIVE_ZAK:0,
+     IDEFIXACTIVE_NAB:0,
+     Zacatek:0,
+
 
    }
  },
  watch: {
+   cTable: function(){
+     const self=this
+      self.aKalkBefore=[]
+
+
+
+      //f.Alert(self.IDEFIXACTIVE)
+      //self.setIdefixActive()
+      queryKalk.getTemplatesUser(self.cTable)
+      .then((res)=>{
+         self.aKalkBefore =res
+         self.$store.dispatch('cleanKalk')
+         //self.$store.dispatch('saveKalkCela', {data: res })
+         self.aKalkulace = []
+         // self.KalkulaceThis = -1
+         this.$store.dispatch('setKalk',-1)
+
+
+                  self.$store.dispatch('cleanKalk')
+                  self.aKalkulace=[]
+                  self.setZabalit()
+
+         self.KalkulaceLast = -1
+
+         if (self.Zacatek >0 ){
+            if (self.IDEFIXACTIVE> 0){
+            if (self.MAINMENULAST == 'zakazky'){
+              self.IDEFIXACTIVE_NAB=self.IDEFIXACTIVE ;
+              //f.Alert('Pamatuju KAL')
+                //self.IDEFIXACTIVE_ZAK =
+              //self.IDEFIXACTIVE
+            }
+            if (self.MAINMENULAST == 'kalkulace'){
+              self.IDEFIXACTIVE_ZAK=self.IDEFIXACTIVE ;
+              //f.Alert('Pamatuju ZAK')
+                //self.IDEFIXACTIVE_ZAK =
+              //self.IDEFIXACTIVE
+            }
+        }
+          if (self.MAINMENULAST == 'kalkulace' && self.IDEFIXACTIVE_NAB>0 ){
+              self.IDEFIXACTIVE=  self.IDEFIXACTIVE_NAB
+              self.setRozbalit(self.IDEFIXACTIVE)
+               .then(()=> {
+                 f.sleep(1500)
+                 .then(()=>{
+                   self.setIdefixActive()
+                   //f.Alert('Rozbalim Za')
+                 })
+               })
+          }
+          if (self.MAINMENULAST == 'zakazky' && self.IDEFIXACTIVE_ZAK>0 ){
+              self.IDEFIXACTIVE=  self.IDEFIXACTIVE_ZAK
+               self.setRozbalit(self.IDEFIXACTIVE)
+               .then(()=> {
+                 f.sleep(1500)
+                 .then(()=>{
+                   self.setIdefixActive()
+                   //f.Alert('Rozbalim Za')
+                 })
+               })
+          }
+
+      } else {
+        self.Zacatek++
+
+      }
+         //f.Alert('Zmena',self.cTable, f.Jstr(self.aKalkBefore) )
+
+
+      })
+
+
+   },
   aKalkulace :function(a) {
     console.log("Sleduji kalkulace", a)
     try {
@@ -2487,15 +2647,9 @@ if (self.MAINMENULAST== 'zakazky'){
        self.polozky_soucet('nab')
      }
 
-
-
-
   //   f.Alert2(qC)
-
 //     return
-
-
-     f.Alert(ifx+' 2387 ', randTab)
+     //f.Alert(ifx+' 2387 ', randTab)
    },
    async Sparuj(polo){
      const self = this
@@ -2969,8 +3123,43 @@ if (self.MAINMENULAST== 'zakazky'){
    },
    async to2Z(polozka) {
      const self = this
+     var ceho=''
+     var b=''
+     var b2=''
+     var qoprava=''
+     var qoprava2=''
+       if (self.MAINMENULAST=='kalkulace') {
+       ceho='nab'
+     } else
+     if (self.MAINMENULAST=='zakazky') {
+       ceho='zak'
+     }
+
+
+
+
+
+    var qoprava=`update ${self.cTable} set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${self.cTable} ) a where rn >1 and radek > 1 order by id
+    )
+    ;`
+    var b = (await Q.post(self.idefix,qoprava))
+    var qoprava2=`update ${ceho}_t_items set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${ceho}_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`
+
+
+
      if (self.obrazovka_zak==3)  {
+
+
        await self.Ulozit()
+       var b2 = (await Q.post(self.idefix,qoprava2))
        await f.sleep(200)
        .then(()=>{
            Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)
@@ -3202,9 +3391,44 @@ if (self.MAINMENULAST== 'zakazky'){
 
   async to2N(polozka) {
   const self = this
+  var ceho=''
+     var b=''
+     var b2=''
+     var qoprava=''
+     var qoprava2=''
+       if (self.MAINMENULAST=='kalkulace') {
+       ceho='nab'
+     } else
+     if (self.MAINMENULAST=='zakazky') {
+       ceho='zak'
+     }
+
+
+
+
+
+    var qoprava=`update ${self.cTable} set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${self.cTable} ) a where rn >1 and radek > 1 order by id
+    )
+    ;`
+    var b = (await Q.post(self.idefix,qoprava))
+    var qoprava2=`update ${ceho}_t_items set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${ceho}_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`
+
+
+
      if (self.obrazovka_nab==3)  {
        await self.Ulozit()
+       var b2 = (await Q.post(self.idefix,qoprava2))
        await f.sleep(200)
+
+
        .then(()=>{
            Q.all(self.idefix,`select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix} order by idefix`)
            .then((res)=>{
@@ -3250,7 +3474,39 @@ if (self.MAINMENULAST== 'zakazky'){
    },
    async Ulozit(kod=''){
      const self = this
+     var ceho=''
+     var qoprava=''
+     var qoprava2=''
      //f.Alert(self.IDEFIXACTIVE, self.aKalkulace.length)
+     if (self.MAINMENULAST=='kalkulace') {
+       ceho='nab'
+     } else
+     if (self.MAINMENULAST=='zakazky') {
+       ceho='zak'
+     }
+
+     qoprava=`update ${self.cTable} set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${self.cTable})  a where rn >1 and radek > 1 order by id
+    )
+    ;`
+    b = (await Q.post(self.idefix,qoprava))
+
+    //f.Alert2(qoprava)
+
+    qoprava2=`update ${ceho}_t_items set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${ceho}_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`
+    b = (await Q.post(self.idefix,qoprava2))
+    //f.Alert2(qoprava)
+
+
+
+    var b = (await Q.post(self.idefix,qoprava))
     if (self.obrazovka_nab==3  && self.MAINMENULAST=='kalkulace'){
       await self.setVL(self.IDEFIXACTIVE,1)
     }
@@ -3322,7 +3578,7 @@ if (self.MAINMENULAST== 'zakazky'){
            var e = (await Q.post(self.idefix,qitems))
            var pomocIdefix=(await Q.post(self.idefix,`update nab_t_items set idefix = idefix_src where idefix_src>0 and idefix_nab = ${c.idefix}`))
 
-           this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislonabidky}` , type: 'success', offset: 100, duration: 5000 })
+           this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno 1  ${ c.cislonabidky}` , type: 'success', offset: 100, duration: 5000 })
 
            self.Seznam('nab')
 
@@ -3360,7 +3616,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
           var e = (await Q.post(self.idefix,qitems))
           var pomocIdefix=(await Q.post(self.idefix,`update zak_t_items set idefix = idefix_src where idefix_src>0 and idefix_zak = ${c.idefix}`))
-          this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno   ${ c.cislozakazky}` , type: 'success', offset: 100, duration: 5000 })
+          this.$notify( { title: self.MAINMENULAST,  message: `Zmeneno 1   ${ c.cislozakazky}` , type: 'success', offset: 100, duration: 5000 })
           self.Seznam('zak')
           self.status_zak=2;
 
@@ -3564,7 +3820,8 @@ if (self.MAINMENULAST== 'zakazky'){
             user_insert_idefix,
             user_update_idefix,
             idefix_dod,
-            idefix_prace
+            idefix_prace,
+            status
 
         )
 
@@ -3591,7 +3848,8 @@ if (self.MAINMENULAST== 'zakazky'){
             ${self.idefix},
             ${self.idefix},
             idefix_dod,
-            idefix_prace
+            idefix_prace,
+            status
             `
    },
    async UpdateSet(data2 ) {
@@ -3760,6 +4018,7 @@ if (self.MAINMENULAST== 'zakazky'){
     const self=this
     var q=''
     var idefix_ceho=(ceho=='zak')?polozka.idefix_zak:polozka.idefix_nab
+    var isInsert=false
 
 
     if (polozka.vzor==0) {
@@ -3770,6 +4029,7 @@ if (self.MAINMENULAST== 'zakazky'){
           time_update = now(),
           nazev      =   trim('${polozka.nazev}'),
           ks        =   ${polozka.ks},
+          kcks        =   ${polozka.kcks},
           naklad    =   ${polozka.naklad},
           prodej    =   ${polozka.prodej}
           where idefix = ${polozka.idefix}`
@@ -3778,6 +4038,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
 // marze              | 0.00
 
+//nextval('list2_seq'::regclass)
 
     if (polozka.vzor>=1 && !polozka.nazev.match(/^Pr.zdn.*$/)){
       //
@@ -3850,6 +4111,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
       var q=`insert into ${ceho}_t_items ${qCols} values ${qVals}`
       ev = 1
+      isInsert=true;
 
 
 
@@ -3869,23 +4131,55 @@ if (self.MAINMENULAST== 'zakazky'){
 
     // f.Alert2("VKLAD", q)
 
+  var qoprava=`update ${ceho}_t_items set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${ceho}_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`
+
 
     try {
+      /*
+      var qoprava=`update zak_t_item set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from zak_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`
+*/
 
       var b = (await Q.post(self.idefix,q))
+
       //ev =1
       //self.mAlert(q,10000)
-      this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena ${polozka.vzor} ${polozka.idefix}` , type: 'success', offset: 100, duration: 1000 })
+      this.$notify( { title: self.MAINMENULAST,  message: `Polozka ulozena  ${polozka.vzor}  ${polozka.idefix}` , type: 'success', offset: 100, duration: 1000 })
       polozka.vzor=0
     } catch (e){
       this.$notify( { title: self.MAINMENULAST,  message: `Doslo k chybe pri ulozeni ` , type: 'error', offset: 100, duration: 5000 })
 
       f.Alert2('ERROR polozky ', q, f.Jstr(polozka ))
     }
+    try {
+      var boprava= (await Q.post(self.idefix,qoprava))
+
+    } catch (e){
+      this.$notify( { title: self.MAINMENULAST,  message: `Doslo k chybe 2 pri ulozeni ` , type: 'error', offset: 100, duration: 5000 })
+
+      f.Alert2('ERROR polozky ', qoprava, f.Jstr(polozka ))
+
+    }
+
+
     // await self.DocasneReseni()
     if (ceho=='zak') {
         if (ev==1){
           self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix_zak} order by idefix`)).data.data
+          if (self.polozky_zak.length > 0) {
+            self.aktivni_polozka_zak=self.polozky_zak[self.polozky_zak.length-1].idefix
+          }
+
+          //f.Alert("Insert")
         }
 
 
@@ -3900,6 +4194,9 @@ if (self.MAINMENULAST== 'zakazky'){
     if (ceho=='nab') {
       if (ev==1){
           self.polozky_nab=  (await Q.all(self.idefix,`select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`)).data.data
+          if (self.polozky_nab.length > 0) {
+            self.aktivni_polozka_nab=self.polozky_nab[self.polozky_nab.length-1].idefix
+          }
       }
           await self.polozky_soucet('nab')
 

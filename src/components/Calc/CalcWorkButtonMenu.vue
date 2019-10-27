@@ -27,7 +27,32 @@
           class="px-1  pt-2 hoVer"
           @click="send(item2.id)"
           :class="{'blue--text':item2.set==1}"
+         >
+         <table style="background:#e4eff8"><tr><td style="background:#e4eff8;width:20px;
+         ">
+          <i class="el-icon-plus white--text d3" style="font-weight:bold;height:25px;zoom:120%;"></i>
+         </td><td style="background:#e4eff8;"
+                :class="{'blue--text': item2.id==LastMain}"
+         >
+            <b class="hoVer"
+            >{{item2.txt}}</b>
+        </td></tr></table>
+       </button>
+        </td>
 
+        </tr></table>
+
+         <table v-if="(setmenu=='kalkulacexx' && obrazovka_nab==2) || (setmenu=='zakazky' && obrazovka_zak==2)" class="ml-4"><tr>
+          <td v-for="(item2,i2) in aSub2Z" :key="i2"   style="max-width: 18em;background:#e4eff8;font-size:14px;" class="pt-3 pl-0">
+          <button  class="px-4 ma-0  elevation-1 hoVer " style="background:#dddcdc"
+          @click="sendZ2(item2.id)"
+          >
+          {{ item2.txt}}
+          </button>
+          <button v-if="false"
+          class="px-1  pt-2 hoVer"
+          @click="sendZ2(item2.id)"
+          :class="{'blue--text':item2.set==1}"
          >
          <table style="background:#e4eff8"><tr><td style="background:#e4eff8;width:20px;
          ">
@@ -64,8 +89,6 @@
                class="pl-2 pr-1  ma-0 elevation-0 white blue--text"
                small
                style="zoom:80%"
-
-
                >
                <b>
                 Číslo {{setmenu=='zakazky'?'zakázky ':'nabidky '}}
@@ -73,7 +96,6 @@
                 </v-btn>:
                 </td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4 tdn">
-
               <input type="hidden" size="mini"   class="tdl tdn"
               :id="'cislo' + ID "
               v-model="form.cislo" >
@@ -123,7 +145,6 @@
               :remote-method="remoteMethod"
               :loading="loading"
               @change="setKontakt()"
-
               >
               <el-option
                 v-for="item9 in aFirma"
@@ -723,13 +744,20 @@ export default {
         {id: "Prevod", txt:  "Prevod"},
        ],
        aSubKalkulace:[
-        {id:9, txt: "Nová sada",set: 0},
-        {id:1, txt: "Velkoplošná",set: 0},
-        {id:2, txt: "Archová" ,set: 0},
-        {id:3, txt: "Jiná",set: 0},
-        {id:4, txt: "Externí",set: 0},
+        {id:9,   txt: "Nová sada",set: 0},
+        {id:1,   txt: "Velkoplošná",set: 0},
+        {id:2,   txt: "Archová" ,set: 0},
+        {id:3,   txt: "Jiná",set: 0},
+        {id:4,   txt: "Externí",set: 0},
         {id:777, txt: "Ulozit",set: 0},
         {id:666, txt: "Vycistit",set: 0},
+       ],
+       aSub2Z:[
+         {id: "faktury",  txt: "Faktury"},
+         {id: "zalohy",   txt: "Zálohy"},
+         {id: "hotovost", txt: "Hotovost"},
+         {id: "kosiky",   txt: "Košíky"},
+         {id: "prehledy", txt: "Přehledy"},
        ],
        form:{
          cislo             : 0,   //zakazky . nabidky - vyresit pri ulozeni

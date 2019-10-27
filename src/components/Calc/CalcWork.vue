@@ -1,6 +1,8 @@
 <template>
   <!-- <div style="max-height:100px; overflow:auto" class="teal lighten-4 pt-1 "> -->
- <div  style="max-height:80%; overflow:auto;font-size:100%;" class="white lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
+ <!-- <div  style="max-height:80%; overflow:auto;font-size:100%;" class="white lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" > -->
+  <div  style="max-height:80%; overflow:none;font-size:100%;" class="white lighten-5 pa-0 pt-0 pb-0" id="test_1"  @scroll="TestRend" >
+
  <slot name="sloupce" class="pl-0">
 
 <slot name="tlacitka" class="white"></slot>
