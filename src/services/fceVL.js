@@ -10,6 +10,7 @@ const { forEach } = require('p-iteration');
 
 
 export default {
+
   computed: {
     ...mapState([
       'isUserLoggedIn',
@@ -79,20 +80,30 @@ export default {
               Q.all(idefix,qTmp)
               .then((resTmp)=>{
                 //f.Alert(f.Jstr(resTmp.data.data.length))
-                if(resTmp.data.data.length==0 || true  ) {
-                  f.Alert('1',f.Jstr(resTmp.data.data.length))
+                if(resTmp.data.data.length==0  ) {
+                  //f.Alert('1',f.Jstr(resTmp.data.data.length))
                   //Dekoduji polozky pro VL
-                  f.Alert('Obsah ',f.Jstr(form_item.obsah))
-                  self.VLdecode(form_item.obsah)
+                  //f.Alert('Obsah ',f.Jstr(form_item.obsah))
 
-                  qI=`insert into zak_t_vl_v (idefix_zak, idefix_item, cislozakazky,idefix_obchodnik,idefix_firma, nazev, polozka)
-                    values (${form_zak.idefix}, ${form_item.idefix}, ${form_zak.cislozakazky},${form_zak.idefix_obchodnik},${form_zak.idefix_firma},'${form_zak.nazev}','${form_item.nazev}')
+                  
+
+
+                  qI=`insert into zak_t_vl_v (idefix_zak, idefix_item, cislozakazky,idefix_obchodnik,idefix_firma, nazev, polozka,expedice_datum,expedice_cas)
+                    values (${form_zak.idefix}, ${form_item.idefix}, ${form_zak.cislozakazky},${form_zak.idefix_obchodnik},${form_zak.idefix_firma},'${form_zak.nazev}','${form_item.nazev}'
+                    ,'${form_item.expedice_datum}', '${form_item.expedice_cas}'
+                    )
               `
+
                    Q.post(idefix,qI)
                    .then(()=>{
                      self.UpdateVL(form_zak,form_item)
+                     .then(()=>{
+                      self.getLastID(form_item) //Docasne - jeste rozmyslim, ted je aby to poslalo event na zobrazeni s daty
+                     })
                    })
                 } else {
+                    self.getLastID(form_item) //Docasne - jeste rozmyslim, ted je aby to poslalo event na zobrazeni s daty
+
                   if (confirm("VL jiz jsou  zalozeny a  odeslany, chcete jej aktualizovat ?"))  {
                     self.UpdateVL(form_zak,form_item)
                   }
@@ -145,15 +156,69 @@ export default {
     */
 
   },
+  async getLastID(form_item){
+    const self=this
+
+    var q=`select * from zak_t_vl_v where idefix_item=${form_item.idefix} order by id desc limit 1`
+    //f.Alert(q, f.Jstr(form_item))
+    Q.all(self.idefix,q)
+    .then((res)=>{
+      if (!f.isEmpty(res.data.data) && res.data.data.length > 0 ){
+//        f.Alert2("IDEFIX_VL ", res.idefix, "Q :", q , f.Jstr(res))
+        eventBus.$emit('IDEFIX_VL',{IDEFIX_VL: res.data.data[0].idefix })
+      }
+
+
+    })
+  },
+
   async UpdateVL(form_zak, form_item) { //Kompletni polozky VL
+    const self=this
+    var qU=''
+    
+    self.VLdecode(form_item.obsah)
+    .then((res)=>{
+      //f.Alert(f.Jstr(res))
+      qU = `update zak_t_vl_v set `
+      qU +=  ` nazev='${form_zak.nazev}' `
+      qU +=  `,polozka='${form_item.nazev}' `
+      qU +=  `,celkem_ks='${form_item.ks}' `
+      qU +=  `,mat_txt='${res.mat.mat}' `
+      qU +=  `,idefix_mat='${res.mat.idefix_mat}' `
+      qU +=  `,mat_sirka='${res.mat.mat_sirka}' `
+      qU +=  `,mat_poznamka='${res.mat.mat_poznamka}' `
+
+      qU +=  `,stroj='${res.stroj.nazev}' `
+      qU +=  `,strojmod='${res.stroj.mod}' `
+
+      qU +=  `,celkem_m2='${res.metry.m2}' `
+
+
+      qU += ` where idefix_item = ${form_item.idefix}`
+      f.Alert2('funkce UpdateVL',qU)
+
+      Q.post(self.idefix,qU)
+
+    })
+
+    
     //Doplnit polozky pro finalni zalozeni
-    f.Alert('funkce UpdateVL')
+    
   },
 
   async VLdecode(data) {
     var defer = $.Deferred();
     var nsum = 0
     var ntmp = 0
+    var res={
+      mat:{},
+      stroj:{},
+      metry:{},
+
+
+    }
+    res['mat']['mat_poznamka']=''
+    res['metry']['m2']= 0
     //alert(this.getNakladSloupce())
 
     await data.forEach(async (element,idx )=> {
@@ -161,12 +226,31 @@ export default {
             //,element.data,
             console.log('Dekode stroje', idx , ' : '
             ,element.data.txtFormat
+
             )
+            res['stroj']['nazev'] = element.data.stroj[0].nazev
+            res['stroj']['mod'] = element.data.strojmod[0].nazev
+
+            res['metry']['m2'] += element.data.ResultM2*1
+            //res['stroj']['all'] = element.data.stroj[0]
+
       if (!f.isEmpty(element.sloupecid) ) {
             element.sloupecid.forEach(el =>{ //Prochod vsema sloupcema a pricteni ceny
               //console.log('Dekode Sloupce', el)
               if (el.type=='Mat1'){
+                res['mat']['mat']=el.data.mat.nazev
+                res['mat']['idefix_mat']=el.data.mat.idefix_mat
+                res['mat']['idefix_mat']=el.data.mat.idefix_mat
+                res['mat']['mat_sirka']=el.data.mat.sirka_mm/10
+                if (el.data.poznamka >'') {
+                  if (res['mat']['mat_poznamka']>'') res['mat']['mat_poznamka']+="; "
+                  res['mat']['mat_poznamka']+=el.data.poznamka
+                }
+                
+                
                 console.log('Dekode Mat Sloupce', el.data.mat.nazev, el.data )
+                console.log('Dekode RES Sloupce', res )
+
 
               }
 
@@ -177,7 +261,7 @@ export default {
 
     });
 
-    defer.resolve(nsum)
+    defer.resolve(res)
     return defer.promise()
   },
 

@@ -1,5 +1,5 @@
 <template>
-  <div style="height:400px" class="obal" >
+  <div style="height:400px" class="obal">
     <!-- Link:
   <router-link :to="{name: 'col', params: {ktery: 1 }}">Moduly</router-link> -->
     <my-layout>
@@ -67,12 +67,14 @@
         >
         Polozky 2Z
     </button>
+    
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
         @click="to3Z(polozka_zak,1)"
         v-if="!f.isEmpty(polozka_zak)"
         >
         3Z A
     </button>
+
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden"
      >
         NICKA
@@ -1215,6 +1217,12 @@
             >
         2Z
     </button>
+    <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+        @click="beforeArray()"
+        >
+        <!-- 1.JARDA //-->
+        Krize
+    </button>
 
   <button  class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden"
      >
@@ -1293,10 +1301,11 @@
           </work-but-plus>
           </span>
           <span slot="leva" :key="'L'+ TestRend" style="position:relative;left:30px" >
-          <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid">
+          <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid" >
                 <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
                 :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
                 @click="removeKalk(iKalk.kalkulaceid)"
+
                   >
                   <a :name="iKalk.kalkulaceid"></a>
                     <i class="el-icon-delete white" size="mini"
@@ -1609,14 +1618,14 @@
     <!-- VL //-->
 
   <v-row justify="center">
-    <v-dialog v-model="dialogVL" persistent max-width="600px">
+    <v-dialog v-model="dialogVL" persistent max-width="220mm" class="pa-0 ma-0">
       <template v-slot:activator="{ on }">
         <v-btn color="primary" dark v-on="on">Test VL - Docasne</v-btn>
       </template>
       <v-card>
 
       <v-card-text>
-        <vl></vl>
+        <vl v-if="IDEFIX_VL>0" :IDEFIX_ITEM="IDEFIX_VL"></vl>
       </v-card-text>
       <v-card-actions>
           <v-spacer></v-spacer>
@@ -1745,6 +1754,9 @@ export default {
 
    return {
      dialogVL: false,
+     IDEFIX_VL:0,
+     VL_LIST:[],
+
 
      zobrazit:true,
      zobrazitPanel:false,
@@ -1877,6 +1889,8 @@ export default {
      IDEFIXACTIVE_NAB:0,
      Zacatek:0,
 
+     StopStav: false,
+
 
    }
  },
@@ -1902,6 +1916,7 @@ export default {
                   self.$store.dispatch('cleanKalk')
                   self.aKalkulace=[]
                   self.setZabalit()
+                  
 
          self.KalkulaceLast = -1
 
@@ -1997,9 +2012,20 @@ deactivated: function () {
      eventBus.$on('kalkulaceDelete',(serverDel) => {
      eventBus.$off('MatCol')
      eventBus.$off('Rend')
+     eventBus.$off('IDEFIX_VL')
+
      console.log(serverDel)
      })
+    eventBus.$on('IDEFIX_VL',(server) => {
+      self.IDEFIX_VL= server.IDEFIX_VL
+      //self.dialogVL=true
+      let route = this.$router.resolve({ name: 'vl' , params: { id: self.IDEFIX_VL } })
+          // let route = this.$router.resolve('/link/to/page'); // This also works.
+      window.open(route.href, 'vl2808901',  'width=1000,height=500')
+      //self.Q(self.idefix,"")
+      //self.VL_LIST =
 
+    })
      eventBus.$on('seekzaknab',(server) => {
        //f.Alert('seekzaknab', f.Jstr(server))
        if (server.key=='zak'){
@@ -2614,6 +2640,11 @@ if (self.MAINMENULAST== 'zakazky'){
      self._IsVedeni = self._Skupiny.match(/vedeni/i)?true:false;
 
    },
+   async beforeArray(){
+     const self=this
+     self.aKalkBefore=[]
+     self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+   },
    async copyRadek(ifx) {
      const self=this
 
@@ -3007,7 +3038,7 @@ if (self.MAINMENULAST== 'zakazky'){
        //     alert('bobry')
           })
           .catch(e=>{
-            f.Alert2('Chyba', e )
+            f.Alert2('Chyba 1', e )
             self.obrazovka_zak=1
           })
 //         await self.to2N(self.polozka_nab)
@@ -3128,6 +3159,7 @@ if (self.MAINMENULAST== 'zakazky'){
      var b2=''
      var qoprava=''
      var qoprava2=''
+     self.StopStav=false
        if (self.MAINMENULAST=='kalkulace') {
        ceho='nab'
      } else
@@ -3318,6 +3350,7 @@ if (self.MAINMENULAST== 'zakazky'){
       var idfx = 0
       var idfxKalkulace=0
       var presun= true
+      self.StopStav=false
 
 
       if (odkud == 2) { //Polozky
@@ -3374,7 +3407,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
        var b = (await Q.post(self.idefix,qb))
        //f.Alert2( qb);
-
+       self.aKalkBefore=[]  // 1.JARDA 
        self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
 
        //f.Alert(f.Jstr(self.aKalkBefore))
@@ -3477,6 +3510,11 @@ if (self.MAINMENULAST== 'zakazky'){
      var ceho=''
      var qoprava=''
      var qoprava2=''
+     var b=''
+     //return
+
+      
+
      //f.Alert(self.IDEFIXACTIVE, self.aKalkulace.length)
      if (self.MAINMENULAST=='kalkulace') {
        ceho='nab'
@@ -4997,7 +5035,7 @@ if (self.MAINMENULAST=='kalkulace') {
 
       await queryKalk.CopyUser(idefix ,self.cTable )
 
-
+      self.aKalkBefore=[]  // 1.JARDA 
       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
       await self.setZabalit()
 
@@ -5119,6 +5157,7 @@ alert(' addVL() 10')
      var objFiluta
 
      if (idefixActive>0){
+       self.aKalkBefore=[]  // 1.JARDA 
         await  self.setRozbalit(idefixActive)
         await  self.setZabalit()
         await  self.addKalk(1)
@@ -5153,6 +5192,7 @@ alert(' addVL() 10')
               .then(()=>{
                 self.setRender()
                 .then(()=>{
+                  self.aKalkBefore=[]  // 1.JARDA 
                   self.setZabalit()
                 })
                  .then(()=>{
@@ -5236,6 +5276,7 @@ if (self.Pocet == - 1) {
       try {
         await  self.saveZaznam({idefix: idefixActive, data: dataRadka   },3)
         await  self.setRender()
+        self.aKalkBefore=[]  // 1.JARDA 
         await  self.setZabalit()
         // f.Alert('Vkladam prvni')
         self.Pocet++
@@ -5260,12 +5301,13 @@ if (self.Pocet == - 1) {
         self.IDEFIXACTIVE=idefix
         var nK= await(queryKalk.getTemplateUser(idefix,self.cTable))   //Aktualni kalulkulace
         //f.Alert2(f.Jstr(nK))
+        await self.beforeArray() //2.JARDA 
         self.aKalkulace =  f.Jparse(nK[0].obsah)
         self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))   //Vsechny kalkulace - seznam
          //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
-
-         self.setIdefixActive()
+         await self.setIdefixActive()
+         
 
 
          self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
@@ -5280,13 +5322,35 @@ if (self.Pocet == - 1) {
        self.$store.dispatch('cleanKalk')
        await queryKalk.setActive(0,self.cTable,0)  //tj.vypne vse, nezalezina idefixu
        await self.setIdefixDeActive()
+       await self.beforeArray() //2.JARDA
   },
   async setVL(idefix, jenUloz=0) {
      const self = this
       var idefixActive=self.IDEFIXACTIVE
       var neco=$("#Zmenad").get(0).value
+          document.getElementById("obalKalkulace").style.opacity=0.5
+           //$(document.getElementById("obalKalkulace")).toggle( "slide", { direction: "down"  });
+          //$(document.getElementById("obalKalkulace")).fadeTo( "slow", 0.1 );
+          //$(document.getElementById("obalKalkulace")).fadeOut( 700 );
+
+          //var c = document.getElementById('obalKalkulace');
+          //var t = c.getContext('2d');
+          //window.open('', document.getElementById('obalKalkulace').toDataURL());
+
+      if (self.StopStav){
+        self.mAlert("Cekam",2000)
+        
+         setTimeout(function(){
+           //self.StopStav=false
+         },2000)
+         return
+        
+      }
+      self.StopStav=true
+      
+
       if (idefixActive==0 && self.aKalkulace.length>0 && idefix>0) {
-            //alert('Je  treba ulozit neulozenou')
+            alert('0. Je  treba ulozit neulozenou')
           var dataRadka=  f.dataRadka(0)
           try {
             await  self.saveZaznam({idefix: 0, data: dataRadka   },3)
@@ -5304,30 +5368,57 @@ if (self.Pocet == - 1) {
             necoSave = await self.SaveAll(idefix)
             if (jenUloz==1) {
               await  self.setZabalit()
+              self.StopStav=false
+           //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+           //$(document.getElementById("obalKalkulace")).toggle( "slide" );
+            document.getElementById("obalKalkulace").style.opacity=1
               // alert('Jen jsem to ulozil')
               return
             }
        //alert("Save Result " + necoSave)
        if (necoSave < 0 ) {
+         self.StopStav=false;
+         //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+         //$(document.getElementById("obalKalkulace")).toggle( "slide" );
+         document.getElementById("obalKalkulace").style.opacity=1
+
          return
        }
 
 
       if (idefixActive==0  && idefix>0){
-    //      alert(idefixActive +" " + idefix +' Rozbalit ')
+         //alert(idefixActive +" " + idefix +' Rozbalit ')
+        //alert('A Rozbaliti')
          await self.setRozbalit(idefix)
+         self.StopStav=false
+         //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+         //$(document.getElementById("obalKalkulace")).toggle( "slide" );
+         document.getElementById("obalKalkulace").style.opacity=1
+         return
       }
 //      f.Alert(idefixActive, " / ", idefix)
       if (idefixActive>0  && idefix == idefixActive ){
     //      alert(idefixActive +" " + idefix +' Rozbalit ')
-            // alert('Zabaliti')
+          //  alert('B Zabaliti')
           await self.setRozbalit(idefix)
           await self.setZabalit(idefix)
+          self.StopStav=false
+          //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+          //$(document.getElementById("obalKalkulace")).toggle( "slide" );
+          document.getElementById("obalKalkulace").style.opacity=1
+          return
           //await self.setRozbalit(idefix)
       }
       if (idefixActive>0  && idefix != idefixActive && idefix > 0 ){
+          //alert('C Prebalit')
           await self.setZabalit()
           await self.setRozbalit(idefix)
+          self.StopStav=false
+          //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+          //$(document.getElementById("obalKalkulace")).toggle( "slide" );
+          document.getElementById("obalKalkulace").style.opacity=1
+          
+          return
 
       }
 

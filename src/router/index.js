@@ -29,6 +29,7 @@ import MenuAdminIndex from '../components/MenuAdminIndex.vue'
 import Calc from '../components/Calc/CalcIndex.vue'
 import CalcCol from '../components/Calc/CalcWorkCol.vue'
 import ListFirma from '@/components/ListFirmaView.vue'
+import vl from '../components/Calc/VLIndex.vue'
 
 Vue.use(Router)
 
@@ -54,6 +55,11 @@ export default new Router({
       path: '/desktop/:ktery',
       name: 'desktop',
       component: Desktop
+    },
+    {
+      path: '/vl/:id',
+      name: 'vl',
+      component: vl
     },
     {
       path: '/col/:id',

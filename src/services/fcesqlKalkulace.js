@@ -705,7 +705,11 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
   if (poradiTo > 0) {
     q= `${q} and poradi<= ${poradiTo} `
   }
-  q= `${q} order by  idefix,case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev `
+  q= `${q} order by a.idefix `
+  // q= `${q} order by
+  //case when idefix_src>0 then idefix_src else null end,
+  //idefix,case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev `
+  //f.Alert2(q)
   //return;
   var atmp=[]
     try {
@@ -724,7 +728,8 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
       }
     }  catch(e) {
       defer.resolve(atmp)
-      f.Alert2('Chyba  getTemplatesUser', e,q )
+      //f.Alert2('Chyba  getTemplatesUser', e,q )
+      console.log('Chyba  getTemplatesUser', e,q )
     }
 
     //f.Info('Get User 1',JSON.stringify(atmp))

@@ -8,8 +8,28 @@
 
       >
       <td class="leva white pt-1 prava pr-1 honza_color" style="width:1em;;height:28px" >
-        <v-icon v-if="form.status>0" size="medium" @click.native="f1.Alert2('Uzmaceno 1 ', f1.Jstr(dataDB))">fa-lock</v-icon>
-        <v-icon v-else size="medium" @click.native="f1.Alert2('Uzmaceno 2 ', f1.Jstr(dataDB))">{{form.status}}fa-lock</v-icon>
+        <button v-if="form.status==1" style="border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1"
+        @click="returnVL(IDEFIX)"
+        title="Vratit z  vyroby"
+        >
+        <v-icon  size="medium" >fa-lock</v-icon>
+        </button>
+
+        <button v-else-if="form.status==2" style=";border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1"
+           @click="sendVL(IDEFIX)"
+
+           title="Odeslat znovu do vyroby"
+           >
+           <v-icon size="medium" class="honza_color2 red--text" style="cursor:pointer" >rotate_right</v-icon>
+           </button>
+           <button v-else style="background:#c3c3bf;border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1n"
+           @click="sendVL(IDEFIX)"
+
+           title="Odeslat do vyroby"
+           >
+           <v-icon size="medium" class="honza_color2" style="cursor:pointer" >rotate_right</v-icon>
+           </button>
+
       </td>
       <td style="border-top:none;border-bottom:none;border-right: solid 2px white;max-width:8.5em;height:28px" class="honza_color"
 
@@ -38,7 +58,7 @@
             </div>
         </button>
         </td><td  class="honza_color pa-0" style="text-align:left">
-         <button class="kolecko2"  @click="setVL()" title="Ulozit">
+         <button class="kolecko2"  @click="setVL()" title="Zabalit - ulozit">
            <div class="kolecko" v-if="IDEFIX==IDEFIXACTIVE">
            <i class="el-icon-arrow-down" style="color:#93908e;position:absolute;top:-0px;left:0px"
            ></i>
@@ -59,7 +79,7 @@
       :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
 
       >
-       <input type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '" class="honza_text"
+       <input :disabled="form.status==1"  type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '" class="honza_text"
         :id="'seek'+ID2"
         :IDEFIX="'seek'+IDEFIX"
         @focus="fokus('seek'+ID2);showTemplates=true"
@@ -129,7 +149,7 @@
         :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
 
         >
-        <input type="number" v-model="form.ks"
+        <input :disabled="form.status==1"  type="number" v-model="form.ks"
         style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="ks" class="honza_text honza_color pr-1 zmeny" title="Pocet kusu"
         :id="'ks'+ID2"
         :IDEFIX="'ks'+IDEFIX"
@@ -164,7 +184,7 @@
             :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
 
             >
-            <input type="number" v-model="form.naklad"  style="width:100%;text-align:right;height:26px;border:none;color:#ffffff !important"
+            <input :disabled="form.status==1"  type="number" v-model="form.naklad"  style="width:100%;text-align:right;height:26px;border:none;color:#ffffff !important"
                    :placeholder="'NAKLADY CELKEM' "
                    class="honza_text honza_color pr-1" title="Naklady celkem"
                    :id="'naklad'+ID2"
@@ -174,12 +194,12 @@
                    :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
             >
         </td></tr></table>
-        <!-- <input type="text" :value="f1.getCislo(form.naklad)" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" class="honza_text honza_color pr-1"> -->
+        <!-- <input :disabled="form.status==1"  type="text" :value="f1.getCislo(form.naklad)" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" class="honza_text honza_color pr-1"> -->
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em;height:28px" class="honza_color"
       :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
       >
-        <input type="number" v-model="form.marze" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE" class="honza_text honza_color pr-1" title="Marze"
+        <input :disabled="form.status==1"  type="number" v-model="form.marze" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="MARZE" class="honza_text honza_color pr-1" title="Marze"
         :id="'marze'+ID2"
         :IDEFIX="'marze'+IDEFIX"
         :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
@@ -195,7 +215,7 @@
           <td style="width:80%" class="honza_color"
           :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
           >
-          <input type="text" v-model="form.marze_pomer" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="" class="honza_text honza_color pr-1" title="Marze Pomer"
+          <input :disabled="form.status==1"  type="text" v-model="form.marze_pomer" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" placeholder="" class="honza_text honza_color pr-1" title="Marze Pomer"
             :id="'marze_pomer'+ID2"
             :IDEFIX="'marze_pomer'+IDEFIX"
             readonly
@@ -230,7 +250,7 @@
             :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
 
             >
-         <input type="number" v-model="form.prodej" style="width:100%;text-align:right;height:26px;border:none;color:#ffffff !important" placeholder="PRODEJ CELKEM" class="honza_text honza_color pr-1 " title="Prodej"
+         <input :disabled="form.status==1"  type="number" v-model="form.prodej" style="width:100%;text-align:right;height:26px;border:none;color:#ffffff !important" placeholder="PRODEJ CELKEM" class="honza_text honza_color pr-1 " title="Prodej"
              :id="'prodej'+ID2"
              :IDEFIX="'prodej'+IDEFIX"
              :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
@@ -239,18 +259,22 @@
         </td></tr></table>
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:29em;height:28px" class="honza_color2" >
-         <input type="text" v-model="form.expedice_datum"
+         <input :disabled="form.status==1"  type="text" v-model="form.expedice_datum"
             :id="'expedice_datum'+ID2"
         :IDEFIX="'expedice_datum'+IDEFIX"
         style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="DATUM" class="datum_expedice honza_text2 honza_color2 pr-1 " title="DATUM EXPEDICE">
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:15em;height:28px" class="honza_color2" >
-        <!-- <input type="text" v-model="form.expedice_cas" style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE" class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"> -->
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:15em;height:28px" class="honza_color2" 
+      
+      >
+        <!-- <input :disabled="form.status==1"  type="text" v-model="form.expedice_cas" style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE" class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"> -->
       <select v-model="form.expedice_cas"
       style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE"
       class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"
       :id="'expedice_cas'+ID2"
       :IDEFIX="'expedice_cas'+IDEFIX"
+      :disabled="form.status==1"
+      
       >
         <option v-for="(tItem,i) in timelist"
         :key="i"
@@ -264,7 +288,7 @@
         &nbsp;
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;height:26px;height:28px" class="honza_color2" >
-        VL seznam:
+        VL seznam: 
       </td>
 
       </tr>
@@ -464,6 +488,7 @@ export default {
       default:"xTable",
       required: true,
     }
+    
 
 
   },
@@ -535,9 +560,6 @@ deactivated: function () {
 
         //f.Alert("SERVER: 22 ", JSON.stringify(self.dataTemplates))
 
-
-
-
       //f.Alert("SERVER: ", JSON.stringify(self.dataTemplates))
     })
     //f.Alert('Tvorim')
@@ -554,7 +576,7 @@ deactivated: function () {
 
 
        self.form.obsah=server.data[0].obsah
-       // f.Alert('SET 11', JSON.stringify(self.form.obsah))
+        f.Alert('SET 11', JSON.stringify(self.form.obsah))
        eventBus.$emit('MenuHlavni',
         {
           Kalkulace: server.data[0].obsah,
@@ -761,6 +783,59 @@ deactivated: function () {
     //alert('aRend')
      eventBus.$emit("Rend")
   },
+  async returnVL(ifx){
+    const self=this
+    var q
+    var q2
+    let dataTemp={}
+    let dataItem={}
+    if (self.MAINMENULAST == 'kalkulace') {
+      self.mAlert('V rezimu nabidek nelze vracet z vyrby VL')
+      return
+    }
+    this.$confirm('Vratit VL z vyroby  ?', 'Neco',{
+       distinguishCancelAndClose: true,
+       confirmButtonText: 'Ano?',
+       cancelButtonText: 'Ne'
+     })
+     .then(()=>{
+
+       //f.Alert('Odeslilam do vyroby','Uz to jede ....' )
+       //f.Alert('Jeste uplnene, ale bude to v poho co nejryhleji to pujde', self.idefix)
+       var q=`select * from ${self.cTable} where idefix = ${self.form.idefix}`
+       console.log('Q zpet1 ', q)
+       Q.all(self.idefix,q)
+     
+
+     .then((res)=>{
+          console.log("RES", res)
+
+           dataTemp = res.data.data[0]
+           if (dataTemp.idefix_src>=0 && dataTemp.idefix_zak>0){
+            q2=`update ${self.cTable} set status = 2 where idefix=${ifx} ;
+                update zak_t_items set status = 2 where idefix=${ifx} ;
+                update zak_t_vl_v set datumvraceni=now(),idefix_vratil=${self.idefix} where  idefix_item=${dataTemp.idefix_src} `
+                Q.post(self.idefix,q2)
+                .then(()=> {
+                  self.form.status=2;
+                })
+                .catch((e) => {
+                  console.log("Chyba update VL" , q2 )
+                })
+           }  
+
+
+       f.Alert(ifx)
+
+
+     })
+     .catch((e) => {
+       console.log(e, q)
+     })
+     })  
+
+
+  },
   async sendVL(ifx) {
     const self=this
     let dataTemp={}
@@ -786,8 +861,10 @@ deactivated: function () {
          if (!f.isEmpty(res.data.data)){
            dataTemp = res.data.data[0]
            if (dataTemp.idefix_src>=0 && dataTemp.idefix_zak>0){
+             //Tohle prohodit - napred uspesne vlozit a pak teprv oznacit status = 1 jako ze  existuje VL
              let q2=`update zak_t_items set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak} ;
-                     update ${self.cTable} set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak}
+                     update ${self.cTable} set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak};
+                     update zak_t_vl_v set datumodeslani=now(),idefix_odeslal=${self.idefix},user_update_idefix=${self.idefix} where idefix_item=${dataTemp.idefix_src} ;
                    `
               console.log(q2)
              Q.post(self.idefix,q2)
@@ -795,16 +872,14 @@ deactivated: function () {
                fceVL.Vklad(dataTemp.idefix_src)
                self.form.status=1;
                //Vykutit VL
-
              })
              .catch((e)=>{
                f.Alert('Aktualizace  ERR', q)
              })
-
              //VL bude zpracovan a vlozen
              //self.form.status=1;
            }
-           f.Alert(dataTemp.idefix_src)
+           //f.Alert(dataTemp.idefix_src)
 
          } else {
            f.Alert('Nemohu najit zaznam pro zpracovani VL', 'Je nutne zkontrolovat, pripadne kontakovat  podporu')
