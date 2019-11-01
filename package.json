@@ -26,7 +26,7 @@
     "dragscroll": "0.0.8",
     "element-ui": "^2.10.0",
     "i": "^0.3.6",
-    "jquery": "^1.12.4",
+    "jquery": "^3.4.0",
     "jquery-ui": "^1.12.1",
     "jsbarcode": "^3.11.0",
     "lodash": "^4.17.11",
