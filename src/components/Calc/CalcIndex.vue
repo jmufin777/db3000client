@@ -12,7 +12,9 @@
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="Nova()"
           >
+
           Nova {{status_zak}}
+            {{ aktivni_zak}}
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
               @click="Ulozit()"
@@ -67,7 +69,7 @@
         >
         Polozky 2Z
     </button>
-    
+
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
         @click="to3Z(polozka_zak,1)"
         v-if="!f.isEmpty(polozka_zak)"
@@ -1916,7 +1918,7 @@ export default {
                   self.$store.dispatch('cleanKalk')
                   self.aKalkulace=[]
                   self.setZabalit()
-                  
+
 
          self.KalkulaceLast = -1
 
@@ -2499,6 +2501,13 @@ if (self.MAINMENULAST== 'zakazky'){
   await self.CisPraceDod();
   await self.CisDod(0)
   await self.CisDodAll(0)
+  if (self.seznam_zak.length>0){
+    self.aktivni_zak=self.seznam_zak[0].idefix
+    self.FillFormWait(self.seznam_zak[0])
+  }
+  //f.Alert2(f.Jstr(self.aktivni_zak))
+
+  //self.aktivni_zak=polozka.idefix
 
 
 
@@ -3407,7 +3416,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
        var b = (await Q.post(self.idefix,qb))
        //f.Alert2( qb);
-       self.aKalkBefore=[]  // 1.JARDA 
+       self.aKalkBefore=[]  // 1.JARDA
        self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
 
        //f.Alert(f.Jstr(self.aKalkBefore))
@@ -3513,7 +3522,7 @@ if (self.MAINMENULAST== 'zakazky'){
      var b=''
      //return
 
-      
+
 
      //f.Alert(self.IDEFIXACTIVE, self.aKalkulace.length)
      if (self.MAINMENULAST=='kalkulace') {
@@ -4572,7 +4581,7 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false ){
      const self = this
      var c= 0
      if (self.MAINMENULAST=='zakazky' && self.aktivni_zak < 1)  {
-        f.Alert('Pro kopii musi být zakazka vybrána')
+        f.Alert('Pro kopii musi být zakazka vybrána', self.aktivni_zak)
         return
      }
      if (self.MAINMENULAST=='kalkulace' && self.aktivni_nab < 1)  {
@@ -4697,7 +4706,13 @@ if (self.MAINMENULAST=='zakazky') {
                   , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
                   , datumzadani=now()
                   , cislozakazky = ${c.cislo}
-                  ,idefix_produkce=${self.idefix}, datumexpedice='${c.exp}'`
+                  ,idefix_produkce=${self.idefix}, datumexpedice='${c.exp}'
+                  ,zamek=false
+                  ,zamknuto=null
+                  ,idefix_user_lock=0
+                  ,odemknuto=null
+                  ,idefix_user_unlock =0
+                  `
                   qU1+=`;update ${cT2} set idefix = nextval('list2_seq'::regclass ),id=nextval('zak_t_items_id_seq'::regclass)
                   , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
                   ,idefix_zak=(select max(idefix) from ${cT1})`
@@ -5035,7 +5050,7 @@ if (self.MAINMENULAST=='kalkulace') {
 
       await queryKalk.CopyUser(idefix ,self.cTable )
 
-      self.aKalkBefore=[]  // 1.JARDA 
+      self.aKalkBefore=[]  // 1.JARDA
       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
       await self.setZabalit()
 
@@ -5157,7 +5172,7 @@ alert(' addVL() 10')
      var objFiluta
 
      if (idefixActive>0){
-       self.aKalkBefore=[]  // 1.JARDA 
+       self.aKalkBefore=[]  // 1.JARDA
         await  self.setRozbalit(idefixActive)
         await  self.setZabalit()
         await  self.addKalk(1)
@@ -5192,7 +5207,7 @@ alert(' addVL() 10')
               .then(()=>{
                 self.setRender()
                 .then(()=>{
-                  self.aKalkBefore=[]  // 1.JARDA 
+                  self.aKalkBefore=[]  // 1.JARDA
                   self.setZabalit()
                 })
                  .then(()=>{
@@ -5276,7 +5291,7 @@ if (self.Pocet == - 1) {
       try {
         await  self.saveZaznam({idefix: idefixActive, data: dataRadka   },3)
         await  self.setRender()
-        self.aKalkBefore=[]  // 1.JARDA 
+        self.aKalkBefore=[]  // 1.JARDA
         await  self.setZabalit()
         // f.Alert('Vkladam prvni')
         self.Pocet++
@@ -5301,13 +5316,13 @@ if (self.Pocet == - 1) {
         self.IDEFIXACTIVE=idefix
         var nK= await(queryKalk.getTemplateUser(idefix,self.cTable))   //Aktualni kalulkulace
         //f.Alert2(f.Jstr(nK))
-        await self.beforeArray() //2.JARDA 
+        await self.beforeArray() //2.JARDA
         self.aKalkulace =  f.Jparse(nK[0].obsah)
         self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))   //Vsechny kalkulace - seznam
          //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
          await self.setIdefixActive()
-         
+
 
 
          self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
@@ -5339,15 +5354,15 @@ if (self.Pocet == - 1) {
 
       if (self.StopStav){
         self.mAlert("Cekam",2000)
-        
+
          setTimeout(function(){
            //self.StopStav=false
          },2000)
          return
-        
+
       }
       self.StopStav=true
-      
+
 
       if (idefixActive==0 && self.aKalkulace.length>0 && idefix>0) {
             alert('0. Je  treba ulozit neulozenou')
@@ -5369,7 +5384,7 @@ if (self.Pocet == - 1) {
             if (jenUloz==1) {
               await  self.setZabalit()
               self.StopStav=false
-           //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+           //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
            //$(document.getElementById("obalKalkulace")).toggle( "slide" );
             document.getElementById("obalKalkulace").style.opacity=1
               // alert('Jen jsem to ulozil')
@@ -5378,7 +5393,7 @@ if (self.Pocet == - 1) {
        //alert("Save Result " + necoSave)
        if (necoSave < 0 ) {
          self.StopStav=false;
-         //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+         //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
          //$(document.getElementById("obalKalkulace")).toggle( "slide" );
          document.getElementById("obalKalkulace").style.opacity=1
 
@@ -5391,7 +5406,7 @@ if (self.Pocet == - 1) {
         //alert('A Rozbaliti')
          await self.setRozbalit(idefix)
          self.StopStav=false
-         //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+         //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
          //$(document.getElementById("obalKalkulace")).toggle( "slide" );
          document.getElementById("obalKalkulace").style.opacity=1
          return
@@ -5403,7 +5418,7 @@ if (self.Pocet == - 1) {
           await self.setRozbalit(idefix)
           await self.setZabalit(idefix)
           self.StopStav=false
-          //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+          //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
           //$(document.getElementById("obalKalkulace")).toggle( "slide" );
           document.getElementById("obalKalkulace").style.opacity=1
           return
@@ -5414,10 +5429,10 @@ if (self.Pocet == - 1) {
           await self.setZabalit()
           await self.setRozbalit(idefix)
           self.StopStav=false
-          //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );   
+          //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
           //$(document.getElementById("obalKalkulace")).toggle( "slide" );
           document.getElementById("obalKalkulace").style.opacity=1
-          
+
           return
 
       }
