@@ -98,7 +98,9 @@
               <td style="position:relative;top:0px;color:#000000;width:70%" class="leva pl-4 tdn">
               <input type="hidden" size="mini"   class="tdl tdn"
               :id="'cislo' + ID "
-              v-model="form.cislo" >
+              v-model="form.cislo"
+
+              >
               <input type="text" size="mini"  style="width:3.1em;border:none;text-align:right" class="tdl tdn pl-1"
               :id="'cislo' + ID "
               :value="form.cislo >'0'?form.cislo.substr(0,5):'00000'"
@@ -145,12 +147,14 @@
               :remote-method="remoteMethod"
               :loading="loading"
               @change="setKontakt()"
+
               >
               <el-option
                 v-for="item9 in aFirma"
                 :key="item9.idefix"
                 :label="item9.nazev"
                 :value="item9.idefix"
+                @keydown.enter="Uloz()"
               >
               <span style="float: left">{{item9.nazev}}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{item9.ico}}</span>
@@ -164,6 +168,7 @@
               @focus="fokus('osoba');fields['osoba'].ZobrazMenu=true"
               @blur="Opust('osoba');"
               @click="getOsoba()"
+
 
               :id="fields['osoba']['nazev']"
               v-model="form.nazevfirmy"
@@ -188,6 +193,7 @@
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input
               v-model="form.nazev"
               :id="'nazev'+ID"
+              @keydown.enter="Uloz()"
               type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
             <tr>
@@ -197,6 +203,7 @@
                   v-model="form.datumexpedice"
                   :id="'datumexpedice'+ID"
                   type="text" size="mini"  style="width:90%" class="tdl tdn datum"
+                  @keydown.enter="Uloz()"
                 >
               </td>
             </tr>
@@ -271,13 +278,14 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Doprava:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  @keydown.enter="Uloz()" style="width:90%" class="tdl tdn"></td>
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Datum zadani:</td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  style="width:90%" class="tdl tdn datum2"
               :id="'datumzadani_'+ID"
               v-model="form.datumzadani"
+
               readonly
               ></td>
             </tr>
@@ -291,7 +299,9 @@
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Faktury:</td>
               <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input
               v-model="form.cislofaktury"
+              @keydown.enter="Uloz()"
               type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+
             </tr>
            <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Splatnost:</td>
@@ -391,7 +401,7 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Cislo obj:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input v-model="form.cisloobjednavky" type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input v-model="form.cisloobjednavky" @keydown.enter="Uloz()" type="text" size="mini"  style="width:90%" class="tdl tdn"></td>
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">??:</td>
@@ -1039,7 +1049,11 @@ deactivated: function () {
   //   //alert('ja 1')
   //   return this.form
   // },
+async Uloz() {
+  eventBus.$emit('ULOZ')
+  //f.Alert('Uloz')
 
+},
 async remoteMethod(query) {
   const self=this
   self.loading = true;

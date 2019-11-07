@@ -11,10 +11,12 @@
         <span  slot="tlacitkazakazky" >
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="Nova()"
+          :style="aktivni_zak>0?'color:green':''"
+          :title="status_zak +'/'+ aktivni_zak"
           >
 
-          Nova {{status_zak}}
-            {{ aktivni_zak}}
+          Nova
+
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
               @click="Ulozit()"
@@ -23,6 +25,9 @@
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="Nova(true)"
+          :disabled="(MAINMENULAST=='zakazky' && status_zak==1) || (MAINMENULAST=='kalkulace' && status_nab==1)"
+          :class="{'white elevation-0': (MAINMENULAST=='zakazky' && status_zak==1) || (MAINMENULAST=='kalkulace' && status_nab==1)}"
+
           >
           Nova upravou
           </button>
@@ -1732,6 +1737,7 @@ import Prehled from './CalcPrehled.vue' // Prehledova dole
 import { stringify } from 'querystring';
 
 import _ from 'lodash'
+import { forEach } from 'p-iteration'
 
 // import JQuery from 'jquery'
 // let $ = JQuery
@@ -2010,6 +2016,7 @@ deactivated: function () {
       eventBus.$off('DELETETEMPLATE')
       eventBus.$off('AnswerID2')
       eventBus.$off('seekzaknab')
+      eventBus.$off('ULOZ')
       //alert('Tvorim')
      eventBus.$on('kalkulaceDelete',(serverDel) => {
      eventBus.$off('MatCol')
@@ -2018,6 +2025,10 @@ deactivated: function () {
 
      console.log(serverDel)
      })
+    eventBus.$on('ULOZ',(server) => {
+      //f.Alert('Prisel se ul')
+      self.Ulozit()
+    })
     eventBus.$on('IDEFIX_VL',(server) => {
       self.IDEFIX_VL= server.IDEFIX_VL
       //self.dialogVL=true
@@ -2508,11 +2519,6 @@ if (self.MAINMENULAST== 'zakazky'){
   //f.Alert2(f.Jstr(self.aktivni_zak))
 
   //self.aktivni_zak=polozka.idefix
-
-
-
-
-
 
 
   /*
@@ -3313,6 +3319,18 @@ if (self.MAINMENULAST== 'zakazky'){
       var idfxKalkulace=0
       var presun= true
       console.log("3N  ", f.Jstr(polozka))
+      if (odkud==1 && self.aktivni_polozka_nab>0){ //Polozka vybarna, pristup pres tlacitko nahore
+        self.polozky_nab.forEach(el=>{
+          if (el.idefix==self.aktivni_polozka_nab){
+            if (el.obsah >''){
+              //f.Alert2(f.Jstr(el) ) ;
+              polozka= el
+              odkud=2
+              return
+            }
+          }
+        })
+      }
 
 
 
@@ -3360,6 +3378,20 @@ if (self.MAINMENULAST== 'zakazky'){
       var idfxKalkulace=0
       var presun= true
       self.StopStav=false
+
+
+      if (odkud==1 && self.aktivni_polozka_zak>0){ //Polozka vybarna, pristup pres tlacitko nahore
+        self.polozky_zak.forEach(el=>{
+          if (el.idefix==self.aktivni_polozka_zak){
+            if (el.obsah >''){
+              //f.Alert2(f.Jstr(el) ) ;
+              polozka= el
+              odkud=2
+              return
+            }
+          }
+        })
+      }
 
 
       if (odkud == 2) { //Polozky
@@ -3837,7 +3869,9 @@ if (self.MAINMENULAST== 'zakazky'){
           data2.vyrobapopis_print=''
         }
         if (zpravatxt>"" ) {
-            this.$notify( { title: 'Upozorneni',  message: `Tyto povinne polozky nejsou vyplneny : ${zpravatxt}`, type: 'error', offset: 100, duration: 5000 })
+            //this.$notify( { title: 'Upozorneni',  message: `Tyto povinne polozky nejsou vyplneny : ${zpravatxt}`, type: 'error', offset: 100, duration: 5000 })
+            f.Alert2(`Tyto povinne polozky nejsou vyplneny : `,`${zpravatxt}`)
+
             return false
         }
         return true
@@ -4661,6 +4695,10 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false ){
      } else
      if (upravou==true) {
 
+       if (self.MAINMENULAST=='zakazky' && self.status_zak==1) {
+         f.Alert("Nelze zakladat novou upravou , pokud todlencto")
+         return
+       }
        this.$confirm(self.MAINMENULAST=='kalkulace'?'Nabidka':'Zakazka'+' bude zalozena ?'  , {
           distinguishCancelAndClose: true,
           confirmButtonText: 'Ano?',
