@@ -1124,9 +1124,23 @@ getWidth(id,addPoz=10) {
 
   return neco;
 },
-setFocus(id) {
-  if (document.getElementById(id)) {
-    document.getElementById(id).focus()
+setFocus(id, zajakdloouho=0) {
+  //alert('pokus 1 ' + id)
+    if (zajakdloouho>0){
+      //alert('pokus 2')
+      setTimeout(function(){
+        if (document.getElementById(id)) {
+          //alert('pokus 3')
+          document.getElementById(id).focus()
+          //alert('pokus 4')
+        }
+      },zajakdloouho)
+
+
+    } else {
+      if (document.getElementById(id)) {
+      document.getElementById(id).focus()
+      }
   }
 },
 sleep(ms) {

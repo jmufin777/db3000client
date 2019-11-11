@@ -592,6 +592,7 @@ export default {
        {val:1,txt:'Balit Po'},
        {val:2,txt:'Pocet Baliku'},
        {val:3,txt:'Je to jedno'},
+       {val:4,txt:'Dle rozdelovniku'},
 
      ],
 
@@ -764,7 +765,7 @@ self.Interval= setInterval(function()  {
 
     }
     if (self.getType() == "Baleni"){
-       self.form.naklad = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
+       //self.form.naklad = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
     }
 
   },1500 )

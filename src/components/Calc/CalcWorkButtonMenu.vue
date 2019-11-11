@@ -146,7 +146,14 @@
               remote
               :remote-method="remoteMethod"
               :loading="loading"
-              @change="setKontakt()"
+              @change="setKontakt();
+              f.setFocus('nazev'+ID,100);
+
+              "
+
+
+
+
 
               >
               <el-option
@@ -237,7 +244,7 @@
               :style="'width:92%; '"
               popper-class="silver lighten-5"
               placeholder="Osoba"
-
+              @change="f.setFocus('doprava'+ID,100);"
 
               >
                 <el-option
@@ -278,7 +285,12 @@
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Doprava:</td>
-              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4"><input type="text" size="mini"  @keydown.enter="Uloz()" style="width:90%" class="tdl tdn"></td>
+              <td style="position:relative;top:0px;color:#000000;width:70%" class="prava pr-4" >
+                <input
+                type="text"
+                :id="'doprava'+ID"
+                size="mini"  @keydown.enter="Uloz()" style="width:90%" class="tdl tdn"
+              ></td>
             </tr>
             <tr>
               <td style="position:relative;top:0px;color:#258bce;width:30%" class="prava pr-2">Datum zadani:</td>
@@ -759,6 +771,7 @@ export default {
         {id:2,   txt: "Archová" ,set: 0},
         {id:3,   txt: "Jiná",set: 0},
         {id:4,   txt: "Externí",set: 0},
+        {id:5,   txt: "Baleni",set: 0},
         {id:777, txt: "Ulozit",set: 0},
         {id:666, txt: "Vycistit",set: 0},
        ],
@@ -1562,10 +1575,8 @@ await f.asyncForEach(self.aFirma,async (el)=> {
             },100)
             //f.stopka(e)
         break;
-
         case 13:
             //f.stopka(e)
-
             //$("#"+e.target.id).hide(1000)
             e.target.click
             setTimeout(function(){
@@ -1573,13 +1584,12 @@ await f.asyncForEach(self.aFirma,async (el)=> {
               //e.target.click
               document.getElementById(PrvekTxt).focus()
             },250)
-
             break;
      }
      }
 
    },
-  async  send(key) {
+  async send(key) {
      const self = this
       self.disabled = true
       self.setsub=key
@@ -1588,12 +1598,9 @@ await f.asyncForEach(self.aFirma,async (el)=> {
             element.set=1
         } else {
           element.set=0
-
         }
 
       })
-
-
 
      if (key > 0  ) {
        self.LastMain = key

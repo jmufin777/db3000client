@@ -151,6 +151,7 @@ export default new Vuex.Store({
       if (state.Kalkulace == null) {
         state.Kalkulace = []
       }
+      // f.Alert('addKalkTYPE: ', ' ', '  ',f.Jstr(kalkulace) );
       if (state.Kalkulace.length>0) {
         var tmpId = kalkulace.kalkulaceid
         tmpIdNew = kalkulace.kalkulaceid

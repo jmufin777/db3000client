@@ -701,7 +701,6 @@ self.$store.dispatch('setFormat')
    },
 
 qStroje(cType="V") {
-
   if (cType=="A" || cType=="V"){
     return `select a.idefix ,b.idefix as idefix_mod,a.nazev as stroj,b.nazev,b.nazev_text, b.mod_priorita from list_stroj a join list_strojmod b on a.idefix=b.idefix_stroj
        where a.idefix in (select a.idefix  from list_stroj a join list2_strojskup b on a.idefix_strojskup = b.idefix  where b.typ_kalkulace ~ '${cType}' and tisk )
@@ -720,6 +719,7 @@ async MenuStroj() {
   // self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach(el => {
 //    f.Alert('Nactu - stvorim')
 // self.idefixVidet == 0 ||
+  //f.Alert('Vkladam sloupec')
   if (self.StrojeMenu.length==0 ) {
   if (self.Kalkulace[self.k_id()].type == 1){
     //self.$store.dispatch('setStrojeV')
@@ -745,6 +745,13 @@ async MenuStroj() {
     //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeJine))
   } else
   if (self.Kalkulace[self.k_id()].type == 4){
+    //self.$store.dispatch('setStrojeExterni')
+    //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10411)).data.enum_strojmod_full
+     q=self.qStroje('V')
+     self.StrojeMenu=(await Q.all(self.idefix,q)).data.data
+    //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeExterni))
+  } else
+  if (self.Kalkulace[self.k_id()].type == 5){
     //self.$store.dispatch('setStrojeExterni')
     //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10411)).data.enum_strojmod_full
      q=self.qStroje('V')

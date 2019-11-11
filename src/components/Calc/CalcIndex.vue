@@ -45,7 +45,11 @@
           >
           Ulozit jako nabidku
           </button>
+          <button>
+             Aktivni zak {{aktivni_zak}}
+          </button>
         </span>
+
       </work-but-menu>
        <!-- JARDA : {{IDEFIXACTIVE}} / Delka kalkulace {{aKalkulace.length}} -->
      </div>
@@ -1868,8 +1872,11 @@ export default {
 
 
 
-     order_zak_default: "cislozakazky",
-     order_nab_default: "cislonabidky",
+     //order_zak_default: "right(cislozakazky,5)",
+     //order_nab_default: "right(cislonabidky,5)",
+     order_zak_default: "idefix",
+     order_nab_default: "idefix",
+
      desc_zak_default: " desc ",
      desc_nab_default: " desc ",
      query_zak_last: "",
@@ -2040,71 +2047,9 @@ deactivated: function () {
 
     })
      eventBus.$on('seekzaknab',(server) => {
+       self.seekzaknab(server.key, server.value)
        //f.Alert('seekzaknab', f.Jstr(server))
-       if (server.key=='zak'){
-         self.search_zak_cislo2=server.value
-         // self.search_zak_rok=''
-         self.$nextTick(function () {
-           self.desc_zak='desc'
-           self.Seznam('zak', '','cislozakazky desc', true)
-           .then(()=>{
-            if (self.seznam_zak.length>0) {
-              self.$refs.w1.form.cislo = self.seznam_zak[0].cislozakazky
-              self.$refs.w1.pocet_nal_zak = self.seznam_zak.length
-              self.FillFormWait(self.seznam_zak[0])
-              var ifx=self.seznam_zak[0].idefix
-              self.aktivni_zak=ifx
-              self.polozky_zak=[]
-              Q.all(self.idefix,`select *,0 as vse from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
-              .then((res)=>{
-                 //f.Alert2(f.Jstr(res.data.data))
-                 self.polozky_zak=res.data.data
-                 self.addPol('zak',ifx)
-                 self.polozky_soucet('zak')
-              })
-            } else {
-                self.$refs.w1.pocet_nal_zak=0
-            }
-           })
-         } )
-       } else
-
-       if (server.key=='nab'){
-         self.search_nab_cislo2=server.value
-         //self.search_nab_rok=''
-         self.$nextTick(function () {
-           self.desc_nab='desc'
-           self.Seznam('nab', '','cislonabidky desc', true)
-           .then(()=>{
-            if (self.seznam_nab.length>0) {
-              self.$refs.w1.form.cislo = self.seznam_nab[0].cislonabidky
-              self.$refs.w1.pocet_nal_nab = self.seznam_nab.length
-              self.FillFormWait(self.seznam_nab[0])
-              var ifx=self.seznam_nab[0].idefix
-              self.aktivni_nab=ifx
-              self.polozky_nab=[]
-
-              Q.all(self.idefix,`select *,0 as vse from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
-              .then((res)=>{
-                 //f.Alert2(f.Jstr(res.data.data))
-                 self.polozky_nab=res.data.data
-                 self.addPol('nab',ifx)
-                 self.polozky_soucet('nab')
-              })
-            } else {
-                self.$refs.w1.pocet_nal_nab=0
-            }
-           })
-         } )
-
-       }
-
-
      })
-
-
-
-
 
      //eventBus.$off()
     eventBus.$on('AnswerID2',(server)=>{
@@ -2380,7 +2325,7 @@ deactivated: function () {
         },1000)
       }
 
-      if (server.key < 11) {
+      if (server.key < 11 ) {
         var beforeK = self.KalkulaceLast
         if (server.key == 9) {
           if (f.isZmena()){
@@ -2397,6 +2342,11 @@ deactivated: function () {
         if (server.key == 3) {
           setTimeout(function(){
            self.addKalkCol("DTP")
+          },500)
+        }
+        if (server.key == 5) {
+          setTimeout(function(){
+           self.addKalkCol("Baleni")
           },500)
         }
         if (server.key == 4) {
@@ -2647,6 +2597,67 @@ if (self.MAINMENULAST== 'zakazky'){
 
      }
      self.mAlert('Polozka musi byt pred pristupen do kalkulace ulozena')
+   },
+   async seekzaknab(key,value){
+     const self=this
+     const server={'key': key, 'value': value}
+     if (server.key=='zak'){
+         self.search_zak_cislo2=server.value
+         // self.search_zak_rok=''
+         self.$nextTick(function () {
+           self.desc_zak='desc'
+           self.Seznam('zak', '','cislozakazky desc', true)
+           .then(()=>{
+            if (self.seznam_zak.length>0) {
+              self.$refs.w1.form.cislo = self.seznam_zak[0].cislozakazky
+              self.$refs.w1.pocet_nal_zak = self.seznam_zak.length
+              self.FillFormWait(self.seznam_zak[0])
+              var ifx=self.seznam_zak[0].idefix
+              self.aktivni_zak=ifx
+              self.polozky_zak=[]
+              Q.all(self.idefix,`select *,0 as vse from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
+              .then((res)=>{
+                 //f.Alert2(f.Jstr(res.data.data))
+                 self.polozky_zak=res.data.data
+                 self.addPol('zak',ifx)
+                 self.polozky_soucet('zak')
+              })
+            } else {
+                self.$refs.w1.pocet_nal_zak=0
+            }
+           })
+         } )
+       } else
+
+       if (server.key=='nab'){
+         self.search_nab_cislo2=server.value
+         //self.search_nab_rok=''
+         self.$nextTick(function () {
+           self.desc_nab='desc'
+           self.Seznam('nab', '','cislonabidky desc', true)
+           .then(()=>{
+            if (self.seznam_nab.length>0) {
+              self.$refs.w1.form.cislo = self.seznam_nab[0].cislonabidky
+              self.$refs.w1.pocet_nal_nab = self.seznam_nab.length
+              self.FillFormWait(self.seznam_nab[0])
+              var ifx=self.seznam_nab[0].idefix
+              self.aktivni_nab=ifx
+              self.polozky_nab=[]
+
+              Q.all(self.idefix,`select *,0 as vse from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
+              .then((res)=>{
+                 //f.Alert2(f.Jstr(res.data.data))
+                 self.polozky_nab=res.data.data
+                 self.addPol('nab',ifx)
+                 self.polozky_soucet('nab')
+              })
+            } else {
+                self.$refs.w1.pocet_nal_nab=0
+            }
+           })
+         } )
+
+       }
    },
    async Skupiny(){
      const self=this
@@ -3059,24 +3070,32 @@ if (self.MAINMENULAST== 'zakazky'){
 //         await self.to2N(self.polozka_nab)
   //       await f.sleep(3000)
        }
-        if (self.order_zak!= self.order_zak_default && self.query_zak_last>''){
+      if (self.order_zak!= self.order_zak_default && self.query_zak_last>''){
           self.query_zak_last= `select * from (${self.query_zak_last}) a order by kategorie, ${self.order_zak_default} ${self.desc_zak_default}`
           var q= `select * from (${self.query_zak_last}) a order by kategorie, ${self.order_zak_default} ${self.desc_zak_default}`
 
+          //self.query_zak_last,
+           //f.Alert2("1",self.order_zak,q)
+            self.order_zak= self.order_zak_default
+            self.desc_zak= self.desc_zak_default
+            q=q.replace('  ','')
+            q=q.replace('  ','')
+            q=q.replace('  ','')
+            q=q.replace('cislozakazky desc', 'right(cislozakazky,5) desc')
 
-          // f.Alert("1",self.order_zak,self.query_zak_last)
-          self.order_zak= self.order_zak_default
-          self.desc_zak= self.desc_zak_default
 
+           self.seznam_zak = (await Q.all(self.idefix,q)).data.data
 
-            self.seznam_zak = (await Q.all(self.idefix,q)).data.data
+          //f.Alert("huhu 1", self.aktivni_zak, q)
+              //self.seekzaknab('zak', self.aktivni_zak);
+
             // f.Alert2("2",self.order_zak)
             //self.seznam_zak_sum = (await Q.all(self.idefix, `${qsum}` )).data.data
         }
 
 
        if (self.MAINMENULAST=='zakazky' && self.status_zak==1) {
-          this.$confirm('Zrusit zakladni nove zakazky ?' , '', {
+          this.$confirm('Zrusit zakladni nove zakazky ? '+ self.aktivni_zak , '', {
           distinguishCancelAndClose: true,
           confirmButtonText: 'Ano?',
           cancelButtonText: 'Ne'
@@ -3099,14 +3118,43 @@ if (self.MAINMENULAST== 'zakazky'){
 
           if (self.aktivni_zak>0){
             //document.getElementById('trn_'+self.aktivni_zak)
+            var bck_aktivni = self.aktivni_zak
+            self.query_zak_last= `select * from (${self.query_zak_last}) a order by kategorie, ${self.order_zak_default} ${self.desc_zak_default}`
+          var q= `select * from (${self.query_zak_last}) a order by kategorie, ${self.order_zak_default} ${self.desc_zak_default}`
+
+          //self.query_zak_last,
+           //f.Alert2("1",self.order_zak,q)
+            self.order_zak= self.order_zak_default
+            self.desc_zak= self.desc_zak_default
+            q=q.replace('  ','')
+            q=q.replace('  ','')
+            q=q.replace('  ','')
+            q=q.replace('cislozakazky desc', 'right(cislozakazky,5) desc')
+           //self.seznam_zak = (await Q.all(self.idefix,q)).data.data
+            Q.all(self.idefix,q)
+            .then((res)=>{
+              if (!f.isEmpty(res.data.data)){
+                self.seznam_zak=res.data.data
+                self.aktivni_zak=self.seznam_zak[0].idefix
+                self.FillFormWait(self.seznam_zak[0])
+              }
+            })
+
+          /*
             setTimeout(function(){
+              f.Alert("huhu 2",self.aktivni_zak )
+              self.seekzaknab('zak', self.aktivni_zak);
+
+              return
               if ( document.getElementById('trz_'+self.aktivni_zak) ){
                   document.getElementById('trz_'+self.aktivni_zak).click()
+
 
                  //f.Alert('trn_'+self.aktivni_zak, document.getElementById('trz_'+self.aktivni_zak)  )
               }
 
             },1000)
+          */
 
           }
         })
@@ -3180,6 +3228,7 @@ if (self.MAINMENULAST== 'zakazky'){
      } else
      if (self.MAINMENULAST=='zakazky') {
        ceho='zak'
+
      }
 
 
@@ -3219,6 +3268,7 @@ if (self.MAINMENULAST== 'zakazky'){
               })
                 .then(()=>{
                   self.obrazovka_zak=2
+
 
                 })
        })
@@ -4562,6 +4612,7 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false ){
         if (orderby >'') {
           if (orderby=="cislozakazky" || orderby=="cislonabidky"){
             orderbyfull =  ` right(${orderby},5) ${desc} `
+            f.Alert2(orderbyfull , q) //JARDA
             q= `select * from (${q}) a order by right(${orderby},5) ${desc} limit 105`
           } else {
             orderbyfull = `${orderby} ${desc}  `
@@ -4569,7 +4620,7 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false ){
           }
         } else {
             orderbyfull = ` a.idefix desc   `
-            //f.Alert2(q)
+            // f.Alert2(q)
         }
         if (add && qadd > ''){
              q=`select 1 as kategorie, * from (${qadd}) a  union select * from (select 2 as kategorie, * from (${q} ) a order by ${orderbyfull} limit 105) a  `
@@ -4580,9 +4631,20 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false ){
           q= `select * from (${q}) a  order by kategorie , ${orderbyfull}`
 
 
+
          // f.Alert2(q)
         if (ceho == 'zak'){
           try {
+            q=q.replace('cislozakazky desc', 'right(cislozakazky,5) desc')
+            q=q.replace('  ','')
+            q=q.replace('  ','')
+            q=q.replace('  ','')
+            q=q.replace('cislozakazky desc', 'right(cislozakazky,5) desc')
+            //q=q.replace('cislozakazky  desc', 'right(cislozakazky,5) desc')
+            //q=q.replace('cislozakazky', 'right(cislozakazky,5)')
+            // q=''
+            //f.Alert2(q)
+
             self.query_zak_last= q;
             // if (self.seek_zak_obchodnik){
               // f.Alert2(q)
@@ -4594,10 +4656,14 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false ){
             console.log('EROROR : ', q)
           }
 
-
         }
         if (ceho == 'nab'){
           try{
+            q=q.replace('cislonabidky desc', 'right(cislonabidky,5) desc')
+            q=q.replace('  ','')
+            q=q.replace('  ','')
+            q=q.replace('  ','')
+            q=q.replace('cislonabidky desc', 'right(cislonabidky,5) desc')
             self.query_nab_last= q;
             self.seznam_nab = (await Q.all(self.idefix,q)).data.data
             self.seznam_nab_sum = (await Q.all(self.idefix, `${qsum}` )).data.data
@@ -5724,10 +5790,12 @@ if (self.Pocet == - 1) {
      var found = true
      var id_query = -0
 //     return
+     //f.Alert2(type) ;
      if ( type == 1 )   { id_query=10411 } //Velkoploch
      if ( type == 2 )   { id_query=10410 } //Archovy
      if ( type == 3 )   { id_query=10412 } //Nova Jina
      if ( type == 4 )   { id_query=10411 } //Nova Externi - zatim jako V , nemam zadani
+     if ( type == 5 )   { id_query=10411 } //Nova Externi - zatim jako V , nemam zadani
      if ( type == 500 ) { id_query=500   } // Seznam formatu
      if ( type == 501 ) { id_query=501   } // Seznam formatu
 
@@ -5793,9 +5861,12 @@ if (self.Pocet == - 1) {
           }
        })
      }
+     //return ;
 
      try{
        tmpData = (await (self.strojmod(KalkType)))   //MOdy pro V nebo A
+
+
        oData.Menu2 =  tmpData
        oData.Menu1 = []
        oData.Menu1Value=''
@@ -5850,11 +5921,13 @@ if (self.Pocet == - 1) {
        //tmpData = (await (self.strojmod(501)))   //MOdy pro V nebo A
 
        //oData.Mat      =  tmpData
+       //f.Alert('addKalkTYPE: ', KalkType, '  ',f.Jstr(tmpData) );
        oData.Mat      =  []
        oData.MatMenu1 =  []
        oData.MatValue =  ''
 
        self.$store.dispatch('addKalk', {kalkulaceid: newId,data: oData,type: KalkType, sloupecid:[]})
+       //f.Alert(f.Jstr(oData));
 
        self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
 
