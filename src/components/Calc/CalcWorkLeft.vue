@@ -390,7 +390,7 @@ export default {
 
    console.log("MenuStroj TOP")
    self.MenuStroj()
-   //console.log("MenuStroj EOF")
+   console.log("MenuStroj EOF")
    self.readVuexData()
    setInterval(function(){
         self.hideAll()
@@ -719,7 +719,8 @@ async MenuStroj() {
   // self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach(el => {
 //    f.Alert('Nactu - stvorim')
 // self.idefixVidet == 0 ||
-  //f.Alert('Vkladam sloupec')
+
+
   if (self.StrojeMenu.length==0 ) {
   if (self.Kalkulace[self.k_id()].type == 1){
     //self.$store.dispatch('setStrojeV')

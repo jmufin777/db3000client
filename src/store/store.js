@@ -148,11 +148,19 @@ export default new Vuex.Store({
     addKalk (state, kalkulace) { //Vlozi celou definic
       var tmpIdNew = 1
       //console.log('A :', JSON.stringify(kalkulace))
+      //alert('A :' + JSON.stringify(kalkulace) + ' // ' + state.Kalkulace.length)
+
+
       if (state.Kalkulace == null) {
         state.Kalkulace = []
       }
       // f.Alert('addKalkTYPE: ', ' ', '  ',f.Jstr(kalkulace) );
       if (state.Kalkulace.length>0) {
+        //f.Alert2('A :' + JSON.stringify(state.Kalkulace[0].data) + ' // ' + state.Kalkulace.length)
+
+        kalkulace.data=state.Kalkulace[0].data
+        kalkulace.type=state.Kalkulace[0].type
+
         var tmpId = kalkulace.kalkulaceid
         tmpIdNew = kalkulace.kalkulaceid
         for (var i = 0; i <= 3; i++) {
