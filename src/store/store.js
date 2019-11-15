@@ -157,7 +157,7 @@ export default new Vuex.Store({
       // f.Alert('addKalkTYPE: ', ' ', '  ',f.Jstr(kalkulace) );
       if (state.Kalkulace.length>0) {
         //f.Alert2('A :' + JSON.stringify(state.Kalkulace[0].data) + ' // ' + state.Kalkulace.length)
-
+        //JARDA 20191114
         kalkulace.data=state.Kalkulace[0].data
         kalkulace.type=state.Kalkulace[0].type
 

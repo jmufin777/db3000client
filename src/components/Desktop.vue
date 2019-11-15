@@ -323,7 +323,10 @@ import vuedraggableresizable from 'vue-draggable-resizable'
 import DbStatus from  '@/components/globals//DbStatus'
 
 import Calc from '../components/Calc/CalcIndex.vue'
+
 import f from '../services/fce'
+
+import testfile from '../components/Calc/testfile.vue'
 
 
 // import {ServerTable, ClientTable, Event} from 'vue-tables-2'
@@ -390,7 +393,9 @@ export default {
     'vue-draggable-resizable': vuedraggableresizable,
 
 
-    'calc': Calc
+    'calc': Calc,
+    'testfile': testfile
+
   },
 
   computed: {

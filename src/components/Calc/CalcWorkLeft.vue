@@ -161,11 +161,21 @@
              </tr>
              <tr>
 
-              <td v-for="idx in 4" :key="idx" class="pb-1 pl-1 ">
+              <td v-for="idx in 1" :key="idx" class="pb-1 pl-1 ">
+                <!-- <label :for="'file_' + idx" style="cursor:pointer"><span></span>P{{idx}}&nbsp;</label> -->
+                 <!-- <input type="file" :id="'file_' + idx" @change="odesli()" multiple/> -->
+                  <!-- <input type="file" :id="'file_' + idx" ref="file" v-on:change="odesli()"/> -->
 
-                <label :for="'file_' + idx" style="cursor:pointer"><span></span>P{{idx}}&nbsp;</label>
-                <input type="file" :id="'file_' + idx" />
 
+
+                <div class="container">
+                <div class="large-12 medium-12 small-12 cell">
+                  <label>FileLos
+                    <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+                  </label>
+                    <button v-on:click="submitFile()">Submit</button>
+                </div>
+              </div>
               </td>
 
           </tr>
@@ -293,7 +303,7 @@ export default {
   },
  data () {
    return {
-     //soubory:
+     //files:
         active: false ,
         dialogImageUrl: '',
         dialogVisible: false,
@@ -307,7 +317,7 @@ export default {
         lastFocus:'',
 
 
-     //soubory
+     //files
       MenuLeft: [
 
      ],
@@ -372,6 +382,8 @@ export default {
     StrojeMenu: [], // Nacte menu stroju v zavislosti na typu z vuexu
     initVar: 0,
 
+    file:'A'
+
    }
  },
 
@@ -412,6 +424,37 @@ self.$store.dispatch('setFormat')
 
  },
  methods: {
+    handleFileUpload(){
+        this.file = this.$refs.file.files[0];
+      },
+    submitFile(){
+        /*
+                Initialize the form data
+            */
+            let formData = new FormData();
+
+            /*
+                Add the form data we need to submit
+            */
+            formData.append('file', this.file);
+
+        /*
+          Make the request to the POST /single-file URL
+        */
+            axios.post( '/file1',
+                formData,
+                {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+              }
+            ).then(function(){
+          console.log('SUCCESS!!');
+        })
+        .catch(function(){
+          console.log('FAILURE!!');
+        });
+      },
    readVuexData(){
      const self=this
      self.form.nakladks = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
