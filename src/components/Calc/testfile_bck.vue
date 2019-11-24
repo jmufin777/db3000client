@@ -12,8 +12,8 @@
     </div>
     <div>
     <!-- <img v-if="false && obrazek1>''" :src="`${obrazek1}`"> -->
-<v-progress-circular :value="uploadPercentage"></v-progress-circular>
-        ifx:    {{ idefix }} / {{ uploadPercentage }}
+
+        ifx:    {{ idefix }}
         FAJLIK: {{ output }}
       <div id="tajne" style="width:100%;height:100%" class="green">
         <iframe style="width:100%;height:100%" id='skrytaframe' name='skrytaframe'>
@@ -52,8 +52,7 @@ encoding: '7bit',
         output: [],
         obrazek1:'',
         url:'http://78.102.17.162:3003/',
-        cesta:'',
-        uploadPercentage: 0
+        cesta:''
       }
     },
     mounted() {
@@ -71,6 +70,56 @@ encoding: '7bit',
       /*
         Submits the file to the server
       */
+      submitFile(){
+        /*
+                Initialize the form data
+            */
+            let formData = new FormData();
+
+
+            //return
+            //formData.append('file', this.file);
+
+            formData.append('file', file);
+            f.Alert2(f.Jstr(formData))
+
+        /*
+          Make the request to the POST /single-file URL
+          axios.post( 'http://78.102.17.162:3003/file1',
+        */
+
+         axios.post( 'http://78.102.17.162:3003/upload',
+                 //formData,
+                 {'file': file},
+                 {
+                 headers: {
+                     'Content-Type': 'multipart/form-data'
+                 }
+               }
+             ).then(function(){
+           console.log('SUCCESS!! 11');
+         })
+         .catch(function(){
+           console.log('FAILURE!! 11');
+         });
+  //      Api().post('query', { params: {  user: user,query: query}} )
+        /*
+        Api.post( 'file1',
+                formData,
+                {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+              }
+            ).then(function(){
+          console.log('SUCCESS!!');
+        })
+        .catch(function(){
+          console.log('FAILURE!!');
+        });
+        */
+      },
+
 
 
       /*
@@ -87,13 +136,76 @@ encoding: '7bit',
 
 
     },
+     async posli(evt) {
+       const self=this
+        var oformname='off'
+        var ovar=''
+        var framename='skrytaframe'
+        if (document.getElementById(framename)){
+        }
+        if (!document.getElementById(framename)){
+            var ifra= document.createElement("iframe")
+            ifra.name=framename
+            ifra.id=framename
+            alert('vkladam')
+          //  document.body.appendChild(ifra);
+            document.getElementById("tajne").appendChild(ifra);
+          }
+        if (!document.getElementById(oformname)){
+          ovar = document.createElement("FORM")
+          ovar.id='off'
+        }
+         else {
+         ovar = document.getElementById(oformname)
+         while (ovar.firstChild) {
+           ovar.removeChild(ovar.firstChild);
+        }
+        }
+        var o=evt.target.cloneNode(true)
+        o.name='file'
+        var ofx=document.createElement("input")
+        ofx.type="text"
+        ofx.name="idefix"
+        ofx.value=self.idefix
+        //alert(ofx.value)
+        ovar.appendChild(o)
+        ovar.appendChild(ofx)
+
+
+        //ovar.enctype = "application/x-www-form-urlencoded,multipart/form-data,text/plain"
+        ovar.enctype = "multipart/form-data"
+        ovar.action=self.url+'upload'
+        ovar.method="post"
+        //ovar.target=framename+"zatim"
+        ovar.target=framename
+        document.body.appendChild(ovar);
+        setTimeout(function(){
+          // alert(ovar)
+          document.getElementById("off").submit();
+
+
+          ovar.submit()
+
+            setTimeout(function(){
+                       self.obrazek1=''
+                       self.obrazek1='http://78.102.17.162:3003/obrazek'
+                       //self.obrazek()
+
+
+
+          //    self.posli(evt)
+            },1000)
+          f.Alert('submitned' + ovar.action)
+        },800)
+
+
+     },
 
  handleFileUpload(evt){
    const  self=this
    self.file = evt.target.files[0]; // FileList object
-   //self.fileInfo(evt.target.files)
+   f.Alert('1111')
    self.poslatnew()
-
  },
  poslatnew() {
       const self=this
@@ -101,17 +213,13 @@ encoding: '7bit',
       formData.append('file', self.file);
       formData.append('idefix', self.idefix);
       console.log('>> formData >> ', formData);
-      this.uploadPercentage=0;
 
       // You should have a server side REST API
       axios.post('http://78.102.17.162:3003/upload',
           formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
-            },
-             onUploadProgress: function( progressEvent ) {
-              this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
-            }.bind(this)
+            }
           }
         ).then(function () {
           console.log('SUCCESS!!');
@@ -120,20 +228,7 @@ encoding: '7bit',
           console.log('FAILURE!!',err);
         });
     },
-    fileInfo(files) {
-      const self= this
-       // self.file=evt.target.files;
-        //self.output=[]
 
-        for (var i = 0, fi; fi = files[i]; i++) {
-              self.output.push('<li><strong>', escape(fi.name), '</strong> (', fi.type || 'n/a', ') - ',
-                  fi.size, ' bytes, last modified: ',
-                  fi.lastModifiedDate ? fi.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');
-       }
-       console.log('OutPut',self.output)
-
-    },
 
       handleFileUpload2(evt){
         const  self=this
