@@ -3,22 +3,51 @@
     <div class="large-12 medium-12 small-12 cell">
       <!-- <form method="post" enctype="multipart/form-data"> -->
     <form  method="post" enctype="multipart/form-data" id="ovar11">
-      <label>File
-        <input type="file" id="filexx" ref="filexx" name="file2xx" v-on:change="handleFileUpload($event)"  />
-      </label>
+      <!-- <label>File -->
+      <input  type="file" id="filexx" ref="filexx" name="file2xx" v-on:change="handleFileUpload($event)" />
+      <!-- webkitdirectory directory multiple -->
+      <!-- </label> -->
     </form>
-      <button v-on:click="submitFile()">Submit</button>
+      <button v-on:click="submitFile()" @mouseenter="nahled=true" @mouseleave="nahled=false">Submit</button>
       <!-- </form> -->
     </div>
+
+
+        <dia-log2 v-if="nahled && odkaz>''" :show="nahled"  @mouseleave="nahled=false" :odkaz="odkaz" title="">
+         <div slot="nahled">
+        </div>
+        </dia-log2>
+       <div style="width:900px">
+      <table width="500px">
+        <tr v-for="(obr,i) in obrazky" :key="i">
+          <td @mouseenter="odkaz=url.url()+'obrazek/'+obr.idefix;nahled=true">
+          {{obr.idefix}}
+          </td>
+          <td @mouseenter="nahled=false">
+            <a :href="url.url()+'obrazek_orig/'+obr.idefix" target="new">
+            <img :src="url.url()+'obrazek_small/'+obr.idefix" height="100px"/>
+            </a>
+          </td>
+
+
+        </tr>
+      </table>
+    </div>
     <div>
+
+
+
     <!-- <img v-if="false && obrazek1>''" :src="`${obrazek1}`"> -->
 <v-progress-circular :value="uploadPercentage"></v-progress-circular>
-        ifx:    {{ idefix }} / {{ uploadPercentage }}
+        ifx:   {{ odkaz }} {{ idefix }} / {{ uploadPercentage }}
         FAJLIK: {{ output }}
-      <div id="tajne" style="width:100%;height:100%" class="green">
-        <iframe style="width:100%;height:100%" id='skrytaframe' name='skrytaframe'>
-        </iframe>
-      </div>
+        nbahled {{nahled}}
+
+
+
+
+
+
     </div>
   </div>
 </template>
@@ -26,7 +55,10 @@
 <script>
 import axios from 'axios'
 import f from '@/services/fce'
-import obrazek from '@/services/ObrazekService'
+import upload0 from '@/services/upload0'
+import Q from '@/services/query'
+import url from '@/services/url'
+import obrazek from '../../services/ObrazekService'
 import {mapState} from 'vuex'
 import {getters} from 'vuex'
 import { eventBus } from '@/main.js'
@@ -51,13 +83,52 @@ encoding: '7bit',
         file: '',
         output: [],
         obrazek1:'',
-        url:'http://78.102.17.162:3003/',
+        odkaz:'',
+        url:url,
+
+
         cesta:'',
-        uploadPercentage: 0
+        uploadPercentage: 0,
+
+        nahled:false,
+        dialog:false,
+        mousedownHandler:false,
+
+        obrazky:[],
       }
     },
-    mounted() {
+  watch: {
+    dialog(val) {
+      if (val) {
+        document.addEventListener('mousedown', this.mousedownHandler)
+      } else {
+        document.removeEventListener('mousedown', this.mousedownHandler)
+      }
+    }
+  },
 
+
+
+
+
+    async mounted() {
+      const self=this
+
+      this.obrazky= (await Q.all(self.idefix,'select * from prilohy_prijem order by idefix desc')).data.data
+      setInterval(function(){
+        Q.all(self.idefix,'select * from prilohy_prijem order by idefix desc')
+          .then((res)=>{
+            self.obrazky=res.data.data
+          })
+          .catch((e)=>{
+            self.obrazky=[]
+
+          }
+          )
+
+      },3000)
+
+      //f.Alert(this.odkaz)
       if (window.File && window.FileReader && window.FileList && window.Blob) {
       // Great success! All the File APIs are supported.
       //alert(' Great success! All the File APIs are supported');
@@ -68,6 +139,9 @@ encoding: '7bit',
     this.obrazek()
     } ,
     methods: {
+       mousedownHandler(e) {
+      if (e.target.classList.contains('v-overlay__scrim')) this.nahled = false
+    },
       /*
         Submits the file to the server
       */
@@ -78,33 +152,55 @@ encoding: '7bit',
       */
     obrazek(){
       const self=this
-      return
+
        obrazek.all(self.idefix)
        .then((obr)=>{
          self.obrazek1=obr
+         console.log(self.obrazek1)
        })
-
-
 
     },
 
- handleFileUpload(evt){
+ async handleFileUpload(evt){
    const  self=this
    self.file = evt.target.files[0]; // FileList object
-   //self.fileInfo(evt.target.files)
-   self.poslatnew()
+   var nazev=self.file.name
+   var idefix_obr=0
+
+   self.fileInfo(evt.target.files)
+   //self.obrazky= (await Q.all(self.idefix,'select * from prilohy_prijem order by idefix desc')).data.data
+
+
+//alert(nazev)
+
+   var res1=await upload0.all( self.idefix , nazev )
+   self.nahled=false
+    if (res1.data.a>0) {
+      //f.Alert3('1 nalezeno na serveru',res1.data.a, res1.data.files)
+    } else {
+      idefix_obr = await self.poslatnew()
+    }
+
+    self.odkaz=url.url()+'obrazek/'+idefix_obr
+    this.obrazky= (await Q.all(self.idefix,'select * from prilohy_prijem order by idefix desc')).data.data
+   //f.Alert3(res1.data.a)
+
+
+//   f.Alert($('#filexx').val())
 
  },
- poslatnew() {
+ async poslatnew() {
       const self=this
       let formData = new FormData();
       formData.append('file', self.file);
       formData.append('idefix', self.idefix);
       console.log('>> formData >> ', formData);
       this.uploadPercentage=0;
+      var res=0;
 
       // You should have a server side REST API
-      axios.post('http://78.102.17.162:3003/upload',
+      //axios.post('http://78.102.17.162:3003/upload',
+      axios.post(`${url.url()}upload`,
           formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
@@ -115,23 +211,29 @@ encoding: '7bit',
           }
         ).then(function () {
           console.log('SUCCESS!!');
+
+
         })
         .catch(function (err) {
           console.log('FAILURE!!',err);
         });
-    },
+   },
     fileInfo(files) {
       const self= this
        // self.file=evt.target.files;
         //self.output=[]
 
+
         for (var i = 0, fi; fi = files[i]; i++) {
+
               self.output.push('<li><strong>', escape(fi.name), '</strong> (', fi.type || 'n/a', ') - ',
                   fi.size, ' bytes, last modified: ',
                   fi.lastModifiedDate ? fi.lastModifiedDate.toLocaleDateString() : 'n/a',
                   '</li>');
        }
-       console.log('OutPut',self.output)
+       //console.log('OutPut',self.output)
+       //console.log('OutPut ',files[0])
+       //f.Alert2(f.Jstr(files))
 
     },
 

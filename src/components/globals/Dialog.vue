@@ -2,7 +2,8 @@
   <div class="text-xs-right">
     <v-dialog
       v-model="dialog"
-      width="500"
+      width="800"
+      height="600"
     >
       <!-- <v-btn
         slot="activator"

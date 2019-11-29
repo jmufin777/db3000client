@@ -43,6 +43,7 @@ Vue.component('vue-draggable-resizable',vuedraggableresizable )
 import Panel from '@/components/globals/Panel'
 import Panel2 from '@/components/globals/Panel2'
 import Dialog from '@/components/globals/Dialog'
+import Dialog2 from '@/components/globals/Dialog2'
 import MyTable from '@/components/globals/MyTable'
 import TaBle from '@/components/globals/TaBle'
 import TaBle2 from '@/components/globals/TaBle_v2'
@@ -103,6 +104,7 @@ Vue.component('panel2', Panel2)
 Vue.component('win-dow', WinDow)
 Vue.component('win-dow-male', WinDowMale)
 Vue.component('dia-log', Dialog)
+Vue.component('dia-log2', Dialog2)
 Vue.component('my-table', MyTable)
 Vue.component('ta-ble', TaBle)
 Vue.component('ta-ble2', TaBle2)

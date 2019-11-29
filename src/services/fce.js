@@ -916,6 +916,12 @@ Alert3(ctxt1="",ctxt2="",ctxt3="",ctxt4="",ctxt5="",ctxt6="") {
   obj.id="myAlert3"
   var defer = $.Deferred();
   document.body.appendChild(obj)
+  ctxt1=JSON.stringify(ctxt1)
+  ctxt2=JSON.stringify(ctxt2)
+  ctxt3=JSON.stringify(ctxt3)
+  ctxt4=JSON.stringify(ctxt4)
+  ctxt5=JSON.stringify(ctxt5)
+  ctxt6=JSON.stringify(ctxt6)
   var $dlg=$('#myAlert3').dialog({
     modal: false,
     title: ctxt1,
