@@ -17,7 +17,7 @@
     <span slot="title" size="mini" class="blue">{{title}}</span>
     <slot name="nahled"></slot>
     <!-- {{ dialog}} {{show}} {{odkaz}} -->
-    <img v-if="odkaz>''" :src='odkaz' style="height:600px; width:800px">
+    <img v-if="odkaz >''" :src='odkaz' style="height:600px; width:800px">
 </div>
 </template>
 
@@ -33,6 +33,11 @@
       required: false
     },
     show: {
+      type: Boolean,
+      default:false,
+      required: false
+    },
+    pre: {
       type: Boolean,
       default:false,
       required: false

@@ -11,37 +11,71 @@
       <button v-on:click="submitFile()" @mouseenter="nahled=true" @mouseleave="nahled=false">Submit</button>
       <!-- </form> -->
     </div>
-
-
         <dia-log2 v-if="nahled && odkaz>''" :show="nahled"  @mouseleave="nahled=false" :odkaz="odkaz" title="">
          <div slot="nahled">
         </div>
         </dia-log2>
-       <div style="width:900px">
-      <table width="500px">
+       <div style="width:80%">
+      <table width="100%">
+       <thead>
+         <!-- <th>
+
+        ifx:   {{ odkaz }} {{ idefix }} / {{ uploadPercentage }}
+        FAJLIK: {{ output }}
+        nbahled {{nahled}}
+         </th> -->
+         <th colspan="4">
+
+          <v-progress-circular v-if="progres" :value="uploadPercentage"></v-progress-circular>
+
+           Prevod na MM bude pts * 0.352778 ?
+           Nase  nejmensi jednotka v DB je mm a nemam desetiny , co s tim ?
+
+
+         </th>
+
+       </thead>
+
         <tr v-for="(obr,i) in obrazky" :key="i">
-          <td @mouseenter="odkaz=url.url()+'obrazek/'+obr.idefix;nahled=true">
+          <td @mouseenter="odkaz=url.url()+'obrazek/'+obr.idefix;nahled=true" @mouseleave="nahled=true"
+          style="width:15%"
+          >
           {{obr.idefix}}
           </td>
-          <td @mouseenter="nahled=false">
+          <td @mouseenter="nahled=false"
+          style="width:20%"
+          >
             <a :href="url.url()+'obrazek_orig/'+obr.idefix" target="new">
             <img :src="url.url()+'obrazek_small/'+obr.idefix" height="100px"/>
             </a>
           </td>
-
-
+          <td @mouseenter="nahled=false"
+          style="width:15%"
+          >
+            <button @click="smaz(obr.idefix)">SMAZ</button>
+            <a :href="url.url()+'obrazek_del/'+obr.idefix+'/'+idefix" target="new">
+            <i aria-hidden="true" class="el-icon-delete" style="cursor:pointer"
+            ></i>
+            </a>
+          </td>
+          <td @mouseenter="nahled=false"
+          style="width:55%;text-align:left;padding:10px"
+          >
+            <b>{{obr.nazev.split("/").reverse()[0]}}</b>
+            <pre class="green lighten-4">
+              {{obr.pdfinfo}}
+            </pre>
+          </td>
         </tr>
       </table>
     </div>
+
     <div>
 
 
 
-    <!-- <img v-if="false && obrazek1>''" :src="`${obrazek1}`"> -->
-<v-progress-circular :value="uploadPercentage"></v-progress-circular>
-        ifx:   {{ odkaz }} {{ idefix }} / {{ uploadPercentage }}
-        FAJLIK: {{ output }}
-        nbahled {{nahled}}
+
+
 
 
 
@@ -83,10 +117,10 @@ encoding: '7bit',
         file: '',
         output: [],
         obrazek1:'',
+        obrazekapi: obrazek,
         odkaz:'',
         url:url,
-
-
+        progres:false,
         cesta:'',
         uploadPercentage: 0,
 
@@ -106,10 +140,6 @@ encoding: '7bit',
       }
     }
   },
-
-
-
-
 
     async mounted() {
       const self=this
@@ -139,7 +169,14 @@ encoding: '7bit',
     this.obrazek()
     } ,
     methods: {
-       mousedownHandler(e) {
+    smaz(obrazek_id) {
+      const self=this
+      //Q.all(self.idefix,`delete from prilohy_prijem where idefix=${obrazek_id}`)
+      //return;
+
+      obrazek.del(self.idefix,obrazek_id)
+    },
+    mousedownHandler(e) {
       if (e.target.classList.contains('v-overlay__scrim')) this.nahled = false
     },
       /*
@@ -197,6 +234,7 @@ encoding: '7bit',
       console.log('>> formData >> ', formData);
       this.uploadPercentage=0;
       var res=0;
+      self.progres=true;
 
       // You should have a server side REST API
       //axios.post('http://78.102.17.162:3003/upload',
@@ -210,6 +248,7 @@ encoding: '7bit',
             }.bind(this)
           }
         ).then(function () {
+          self.progres=false;
           console.log('SUCCESS!!');
 
 

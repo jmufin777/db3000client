@@ -1,7 +1,7 @@
 export default  {
  url() {
    //var ip=''
-     console.log( window.location.protocol + "//" + window.location.host +"//"+ window.location.hostname)
+     //console.log( window.location.protocol + "//" + window.location.host +"//"+ window.location.hostname)
     //  $.getJSON(window.location.host,function (json) {
     //   ip=json.ip
     //  //_this.json = json;
