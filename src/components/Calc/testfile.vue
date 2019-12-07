@@ -72,16 +72,6 @@
 
     <div>
 
-
-
-
-
-
-
-
-
-
-
     </div>
   </div>
 </template>
@@ -276,45 +266,7 @@ encoding: '7bit',
 
     },
 
-      handleFileUpload2(evt){
-        const  self=this
-        var files = evt.target.files; // FileList object
-        //setInterval(function(){
-          //self.posli(evt)
-           self.posli(evt)
-           .then(()=>{
-             console.log("Doeslano")
-             self.obrazek1=self.url+'obrazek/1'
 
-           })
-        //}, 5000)
-
-
-
-        //ovar.action='http://www.another_page.com/index.htm';
-
-
-        return
-        self.file=evt.target.files;
-        self.output=[]
-
-        for (var i = 0, fi; fi = files[i]; i++) {
-              self.output.push('<li><strong>', escape(fi.name), '</strong> (', fi.type || 'n/a', ') - ',
-                  fi.size, ' bytes, last modified: ',
-                  fi.lastModifiedDate ? fi.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');
-       }
-       //self.submitFile2(files)
-     //setInterval(function() {
-         self.submitFile2(files)
-      //},1000)
-
-
-        //alert(JSON.stringify(files))
-        //self.file = this.$refs.file.files[0];
-
-        //alert(JSON.stringify(this.$refs.file.files))
-      },
 
 
 

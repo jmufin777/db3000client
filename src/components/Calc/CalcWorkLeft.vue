@@ -20,7 +20,7 @@
           </slot>
           </v-card-text>
           <v-card-text style="font-size:200%;font-weight:800">
-            {{ k_id() + 1 }}
+            {{ k_id() + 1 }} {{ $store.state.Kalkulace.length}} {{IDEFIX}}
           </v-card-text>
           <v-card-text>
           <slot name="akce">
@@ -161,7 +161,8 @@
              </tr>
              <tr>
 
-              <td v-for="idx in 1" :key="idx" class="pb-1 pl-1 ">
+
+              <td v-for="idx in 5" :key="idx" class="pb-1 pl-1 ">
                 <!-- <label :for="'file_' + idx" style="cursor:pointer"><span></span>P{{idx}}&nbsp;</label> -->
                  <!-- <input type="file" :id="'file_' + idx" @change="odesli()" multiple/> -->
                   <!-- <input type="file" :id="'file_' + idx" ref="file" v-on:change="odesli()"/> -->
@@ -170,11 +171,13 @@
 
                 <div class="container">
                 <div class="large-12 medium-12 small-12 cell">
+
                   <label>FileLos
                     <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
                   </label>
                     <button v-on:click="submitFile()">Submit</button>
                 </div>
+
               </div>
               </td>
 
@@ -186,6 +189,11 @@
      </v-card>
      </v-card>
 </td></tr></table>
+<dia-log2 v-if="nahled && odkaz>''" :show="nahled"  @mouseleave="nahled=false" :odkaz="odkaz" title="">
+   <div slot="nahled">
+    </div>
+</dia-log2>
+
 
 <!---nabidka stroj mod //-->
 <!-- :style="'left:'+clickX+'px'" -->
@@ -285,12 +293,10 @@ import ListStroj from '../../services/ListStrojService'
 
 export default {
   props: {
-
     kalkulaceid: {
       type : Number,
       required: true
     } ,
-
     typid: {
       type : Number,
       required: true
@@ -298,12 +304,23 @@ export default {
    ID2: {
       type : Number,
       required: true
+    },
+    IDEFIX: {
+      type : String,
+      required: false,
+      default:'0'
     }
+
 
   },
  data () {
    return {
+
+
      //files:
+        nahled:false,
+        dialog:false,
+     //files
         active: false ,
         dialogImageUrl: '',
         dialogVisible: false,
@@ -365,7 +382,18 @@ export default {
 
        stroj:[],
        strojmod:[],
-       strojceny:[]
+       strojceny:[],
+
+       Priloha1Idefix:0,
+       Priloha1Txt:'',
+       Priloha2Idefix:0,
+       Priloha2Txt:'',
+       Priloha3Idefix:0,
+       Priloha3Txt:'',
+       Priloha4Idefix:0,
+       Priloha4Txt:'',
+       Priloha5Idefix:0,
+       Priloha5Txt:'',
 
      },
      last: {
@@ -474,6 +502,17 @@ self.$store.dispatch('setFormat')
      self.form.stroj      = self.$store.state.Kalkulace[self.k_id()].data.stroj
      self.form.strojmod   = self.$store.state.Kalkulace[self.k_id()].data.strojmod
      self.form.strojceny  = self.$store.state.Kalkulace[self.k_id()].data.strojceny
+
+     self.form.Priloha1Idefix= self.$store.state.Kalkulace[self.k_id()].data.Priloha1Idefix
+     self.form.Priloha1Txt=self.$store.state.Kalkulace[self.k_id()].data.Priloha1Txt
+     self.form.Priloha2Idefix= self.$store.state.Kalkulace[self.k_id()].data.Priloha2Idefix
+     self.form.Priloha2Txt=self.$store.state.Kalkulace[self.k_id()].data.Priloha2Txt
+     self.form.Priloha3Idefix= self.$store.state.Kalkulace[self.k_id()].data.Priloha3Idefix
+     self.form.Priloha3Txt=self.$store.state.Kalkulace[self.k_id()].data.Priloha3Txt
+     self.form.Priloha4Idefix= self.$store.state.Kalkulace[self.k_id()].data.Priloha4Idefix
+     self.form.Priloha4Txt=self.$store.state.Kalkulace[self.k_id()].data.Priloha4Txt
+     self.form.Priloha5Idefix= self.$store.state.Kalkulace[self.k_id()].data.Priloha5Idefix
+     self.form.Priloha5Txt=self.$store.state.Kalkulace[self.k_id()].data.Priloha5Txt
 
      if (self.form.Format == undefined) self.form.Format = ''
 

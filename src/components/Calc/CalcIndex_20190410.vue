@@ -4280,11 +4280,16 @@ if (self.Pocet == - 1) {
         oData.FormatPanelovat =  0
         oData.FormatSirkaPanel =  0
         oData.FormatNakladKs =  0
-        oData.stroj =  [],
-        oData.strojmod =  [],
-        oData.strojceny =  [],
+        oData.stroj =  []
+        oData.strojmod =  []
+        oData.strojceny =  []
         oData.ResultM2 =  0.0
         oData.ResultHod =  ''
+        oData.Priloha1=''
+        oData.Priloha2=''
+        oData.Priloha3=''
+        oData.Priloha4=''
+        oData.Priloha5=''
 
         self.KalkulaceLast = self.$store.getters.getKalkLast
         setTimeout(function(){

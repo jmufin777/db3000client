@@ -1312,7 +1312,9 @@
           </work-but-plus>
           </span>
           <span slot="leva" :key="'L'+ TestRend" style="position:relative;left:30px" >
-          <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid" >
+          <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid"
+          :IDEFIX="IDEFIXACTIVE"
+          >
                 <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
                 :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
                 @click="removeKalk(iKalk.kalkulaceid)"
@@ -5900,6 +5902,16 @@ if (self.Pocet == - 1) {
         oData.strojceny =  [],
         oData.ResultM2 =  0.0
         oData.ResultHod =  ''
+        oData.Priloha1Idefix=0
+        oData.Priloha2Idefix=0
+        oData.Priloha3Idefix=0
+        oData.Priloha4Idefix=0
+        oData.Priloha5Idefix=0
+        oData.Priloha1Txt=''
+        oData.Priloha2Txt=''
+        oData.Priloha3Txt=''
+        oData.Priloha4Txt=''
+        oData.Priloha5Txt=''
 
         self.KalkulaceLast = self.$store.getters.getKalkLast
         setTimeout(function(){
