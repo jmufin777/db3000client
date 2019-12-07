@@ -162,7 +162,7 @@
              <tr>
 
 
-              <td v-for="idx in 5" :key="idx" class="pb-1 pl-1 ">
+              <td v-for="idx in 2" :key="idx" class="pb-1 pl-1 ">
                 <!-- <label :for="'file_' + idx" style="cursor:pointer"><span></span>P{{idx}}&nbsp;</label> -->
                  <!-- <input type="file" :id="'file_' + idx" @change="odesli()" multiple/> -->
                   <!-- <input type="file" :id="'file_' + idx" ref="file" v-on:change="odesli()"/> -->
@@ -172,10 +172,10 @@
                 <div class="container">
                 <div class="large-12 medium-12 small-12 cell">
 
-                  <label>FileLos
-                    <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+                  <label>File{{idx}} {{form.Priloha1Txt}}
+                    <input type="file"   :id="'file'" ref="file" v-on:change="handleFileUpload($event);setPriloha($event, idx)"/>
                   </label>
-                    <button v-on:click="submitFile()">Submit</button>
+                    <button v-on:click="submitFile();form.Priloha1Txt='nazdarek'">Submit</button>
                 </div>
 
               </div>
@@ -452,37 +452,31 @@ self.$store.dispatch('setFormat')
 
  },
  methods: {
-    handleFileUpload(){
-        this.file = this.$refs.file.files[0];
+    handleFileUpload(evt){
+       self.file = evt.target.files[0]; // FileList object
+        //this.file = this.$refs.file.files[0];
       },
     submitFile(){
-        /*
-                Initialize the form data
-            */
-            let formData = new FormData();
+      return;
 
-            /*
-                Add the form data we need to submit
-            */
-            formData.append('file', this.file);
 
-        /*
-          Make the request to the POST /single-file URL
-        */
-            axios.post( '/file1',
-                formData,
-                {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-              }
-            ).then(function(){
-          console.log('SUCCESS!!');
-        })
-        .catch(function(){
-          console.log('FAILURE!!');
-        });
       },
+      setPriloha(evt,poradi=-1) {
+      const self = this
+      var idK = self.k_id()
+      var file  = evt.target.files[0]; // FileList object
+      //var nazev=file.name
+      self.form.Priloha1Txt=file.name
+      switch(poradi){
+        case 1:
+          f.Alert(poradi)
+          self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Txt' , value: self.form.Priloha1Txt })
+          self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Idefix' , value: self.form.Priloha1Idefix })
+
+      }
+
+    //self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
+      } ,
    readVuexData(){
      const self=this
      self.form.nakladks = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
@@ -1100,6 +1094,7 @@ SetFormat(a,b) {
        }
      })
    },
+
 
 getFormatName() {
      const self = this
