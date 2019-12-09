@@ -20,7 +20,17 @@
           </slot>
           </v-card-text>
           <v-card-text style="font-size:200%;font-weight:800">
-            {{ k_id() + 1 }} {{ $store.state.Kalkulace.length}} {{IDEFIX}}
+            {{ k_id() + 1 }}
+
+          </v-card-text>
+          <v-card-text style="font-size:80%;font-weight:800">
+            {{ $store.state.Kalkulace.length}}
+            Slozka:<br>{{ ROK}}/{{ CISLO }}
+            <!-- {{IDEFIX}}
+            {{MENU}}
+            Z{{IDEFIX_ZAK}}
+            N{{IDEFIX_NAB}} -->
+
           </v-card-text>
           <v-card-text>
           <slot name="akce">
@@ -29,8 +39,6 @@
             </slot>
 
         </v-card-text>
-
-
       </v-card>
       </td>
      <td style="width:80;height:100%">
@@ -58,7 +66,6 @@
             <tr >
             <td style="width:90%;cursor:pointer;" @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )">
                 {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
-
             </td>
             <!-- @mouseenter="idefixClick=itemStroj.idefix;MenuShow1(MenuShow, $event ); -->
             <td style="width:10%;cursor:pointer" @click="idefixClick=itemStroj.idefix; MenuShow1(MenuShow, $event );" >
@@ -174,6 +181,7 @@
 
                   <label>File{{idx}} {{form.Priloha1Txt}}
                     <input type="file"   :id="'file'" ref="file" v-on:change="handleFileUpload($event);setPriloha($event, idx)"/>
+
                   </label>
                     <button v-on:click="submitFile();form.Priloha1Txt='nazdarek'">Submit</button>
                 </div>
@@ -290,6 +298,11 @@ import f from '@/services/fce'
 import Q from '@/services/query'
 import ListStroj from '../../services/ListStrojService'
 
+import axios from 'axios'
+import upload0 from '@/services/upload0'
+import url from '@/services/url'
+import obrazek from '../../services/ObrazekService'
+
 
 export default {
   props: {
@@ -309,7 +322,32 @@ export default {
       type : String,
       required: false,
       default:'0'
-    }
+    },
+   IDEFIX_ZAK: {
+      //type : String,
+      required: false,
+      default:0
+    },
+    IDEFIX_NAB: {
+      //type : String,
+      required: false,
+      default:0
+    },
+    MENU:{
+      type: String,
+      required: false,
+      default:''
+    },
+    CISLO:{
+      type: String,
+      required: false,
+      default:''
+    },
+    ROK:{
+      type: String,
+      required: false,
+      default:''
+    },
 
 
   },
@@ -395,6 +433,7 @@ export default {
        Priloha5Idefix:0,
        Priloha5Txt:'',
 
+
      },
      last: {
        sirka: 0,
@@ -410,7 +449,8 @@ export default {
     StrojeMenu: [], // Nacte menu stroju v zavislosti na typu z vuexu
     initVar: 0,
 
-    file:'A'
+    file:'A',
+    infoLocal:''
 
    }
  },
@@ -445,11 +485,20 @@ export default {
    },500)
 
 self.$store.dispatch('setFormat')
-
    return
+ },
+ watch :{
+   IDEFIX: async function(){
+     const self=this
+     self.infoLocal=this.MENU+" "+ self.IDEFIX_ZAK
+
+     console.log(this.MENU)
 
 
+     //var cislo = await Q.query()
 
+     //f.Alert('Zmena', this.IDEFIX)
+   }
  },
  methods: {
     handleFileUpload(evt){
@@ -458,10 +507,8 @@ self.$store.dispatch('setFormat')
       },
     submitFile(){
       return;
-
-
       },
-      setPriloha(evt,poradi=-1) {
+    async  setPriloha(evt,poradi=-1) {
       const self = this
       var idK = self.k_id()
       var file  = evt.target.files[0]; // FileList object
@@ -475,8 +522,25 @@ self.$store.dispatch('setFormat')
 
       }
 
+      var res1=await upload0.all( self.idefix , nazev )
+      self.nahled=false
+      if (res1.data.a>0) {
+      //f.Alert3('1 nalezeno na serveru',res1.data.a, res1.data.files)
+      } else {
+        idefix_obr = await self.poslatnew()
+     }
+
+      self.odkaz=url.url()+'obrazek/'+idefix_obr
+
     //self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
       } ,
+    smazObrazek(obrazek_id) {
+      const self=this
+      //Q.all(self.idefix,`delete from prilohy_prijem where idefix=${obrazek_id}`)
+      //return;
+      obrazek.del(self.idefix,obrazek_id)
+    },
+
    readVuexData(){
      const self=this
      self.form.nakladks = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs

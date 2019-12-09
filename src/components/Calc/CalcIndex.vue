@@ -46,7 +46,7 @@
           Ulozit jako nabidku
           </button>
           <button>
-             Aktivni zak {{aktivni_zak}}
+             Aktivni zak {{aktivni_zak}} {{aktivni_zak_short}}
           </button>
         </span>
 
@@ -1314,6 +1314,11 @@
           <span slot="leva" :key="'L'+ TestRend" style="position:relative;left:30px" >
           <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid"
           :IDEFIX="IDEFIXACTIVE"
+          :MENU="MAINMENULAST"
+          :IDEFIX_ZAK="aktivni_zak"
+          :IDEFIX_NAB="aktivni_nab"
+          :CISLO="MAINMENULAST=='zakazky'?aktivni_zak_short:aktivni_nab_short"
+          :ROK="MAINMENULAST=='zakazky'?aktivni_zak_rok:aktivni_nab_rok"
           >
                 <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
                 :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
@@ -1838,6 +1843,10 @@ export default {
 
      aktivni_zak:0,
      aktivni_nab:0,
+     aktivni_zak_short:'0',
+     aktivni_zak_rok:'0',
+     aktivni_nab_short:'0',
+     aktivni_nab_rok:'0',
      aktivni_polozka_zak:0,
      aktivni_polozka_nab:0,
 
@@ -3430,6 +3439,26 @@ if (self.MAINMENULAST== 'zakazky'){
       var idfxKalkulace=0
       var presun= true
       self.StopStav=false
+      if (self.MAINMENULAST=='zakazky' && self.aktivni_zak>0){
+
+        var q=`select rok(cislozakazky) as rok,cislo(cislozakazky) as cislo, cislozakazky from zak_t_list  where idefix = ${self.aktivni_zak} `
+        var aneco = (await Q.all(self.idefix,q)).data.data
+        self.aktivni_zak_short =aneco[0].cislo
+        self.aktivni_zak_rok   =aneco[0].rok
+
+          //var b2 = (await Q.post(self.idefix,qoprava2))
+       // f.Alert2('v poho', q, f.Jstr(aneco))
+      }
+
+      if (self.MAINMENULAST=='kalkulace' && self.aktivni_nab > 0){
+
+        var q=`select rok(cislonabidky) as rok,cislo(cislonabidky) as cislo, cislonabidky from nab_t_list  where idefix = ${self.aktivni_nab} `
+        var aneco = (await Q.all(self.idefix,q)).data.data
+        self.aktivni_nab_short =aneco[0].cislo
+        self.aktivni_nab_rok   =aneco[0].rok
+          //var b2 = (await Q.post(self.idefix,qoprava2))
+        //f.Alert2('v poho', q, f.Jstr(aneco))
+      }
 
 
       if (odkud==1 && self.aktivni_polozka_zak>0){ //Polozka vybarna, pristup pres tlacitko nahore
