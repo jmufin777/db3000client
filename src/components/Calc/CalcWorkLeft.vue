@@ -24,6 +24,7 @@
 
           </v-card-text>
           <v-card-text style="font-size:80%;font-weight:800">
+            <v-progress-circular v-if="progres" :value="uploadPercentage"></v-progress-circular>
             {{ $store.state.Kalkulace.length}}
             Slozka:<br>{{ ROK}}/{{ CISLO }}
             <!-- {{IDEFIX}}
@@ -160,33 +161,50 @@
        <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:8.5em" class="pa-0 pt-0 elevation-0">
          <v-card-text  class="pa-0 pt-0  " style="height:100%">
            <table style="width:100%;" >
-             <tr>
+             <!-- <tr>
               <td style="text-align:left;font-size:10%" colspan="4" class="pl-2" >&nbsp;</td>
-             </tr>
-             <tr>
-              <td style="text-align:left;" colspan="4" class="pl-2" > Prilohy</td>
+             </tr> -->
+              <tr>
+              <td style="text-align:left;font-size:50%" colspan="4" class="pl-2" > &nbsp;</td>
              </tr>
              <tr>
 
 
-              <td v-for="idx in 2" :key="idx" class="pb-1 pl-1 ">
+              <td v-for="idx in 4" :key="idx" class="pb-1 pt-0 mt-1 pl-0 silver lighten-4" style="text-align:left;">
                 <!-- <label :for="'file_' + idx" style="cursor:pointer"><span></span>P{{idx}}&nbsp;</label> -->
                  <!-- <input type="file" :id="'file_' + idx" @change="odesli()" multiple/> -->
                   <!-- <input type="file" :id="'file_' + idx" ref="file" v-on:change="odesli()"/> -->
 
 
 
-                <div class="container">
-                <div class="large-12 medium-12 small-12 cell">
+                <!-- <div class="container green" > -->
 
-                  <label>File{{idx}} {{form.Priloha1Txt}}
-                    <input type="file"   :id="'file'" ref="file" v-on:change="handleFileUpload($event);setPriloha($event, idx)"/>
+              <!-- <div class="large-12 medium-12 small-12 cell" > -->
+                <button v-if="form.Priloha1Txt>''" @click="form.Priloha1Txt=''">
+                <i class="el-icon-delete black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:100%;"
+                 ></i>
+                </button>
+                  <img v-if="form.Priloha1Txt>''"
+                    :src="url.url()+'obrazek_small/'+13629503"  height="70px"
+                    @mouseenter="odkaz=url.url()+'obrazek/'+13629503;nahled=true"
+                    @mouseleave="nahled=false"
+                    />
+                  <label
+                    v-if="form.Priloha1Txt==''"
+                  >
+
+                  <i class="el-icon-upload black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:200%;"></i>
+
+                    <input
+
+                    type="file"   :id="'file'"
+                    ref="file" v-on:change="handleFileUpload($event);setPriloha($event, idx)"/>
 
                   </label>
-                    <button v-on:click="submitFile();form.Priloha1Txt='nazdarek'">Submit</button>
-                </div>
+                    <!-- <button v-on:click="submitFile();form.Priloha1Txt='nazdarek'">Submit</button> -->
+                <!-- </div> -->
 
-              </div>
+              <!-- </div> -->
               </td>
 
           </tr>
@@ -197,10 +215,17 @@
      </v-card>
      </v-card>
 </td></tr></table>
-<dia-log2 v-if="nahled && odkaz>''" :show="nahled"  @mouseleave="nahled=false" :odkaz="odkaz" title="">
+
+<dia-log2 v-if="nahled && odkaz>''" :show="nahled"  @mouseleave="nahled=false" :odkaz="odkaz" title="" style="z-index:1000000000;left:550px">
    <div slot="nahled">
+
     </div>
 </dia-log2>
+<!-- <dia-log2 v-if="true" :show="true"  @mouseleave="nahled=false" :odkaz="odkaz" title="">
+   <div slot="nahled">
+
+    </div>
+</dia-log2> -->
 
 
 <!---nabidka stroj mod //-->
@@ -299,7 +324,7 @@ import Q from '@/services/query'
 import ListStroj from '../../services/ListStrojService'
 
 import axios from 'axios'
-import upload0 from '@/services/upload0'
+import upload0 from '../../services/upload0'
 import url from '@/services/url'
 import obrazek from '../../services/ObrazekService'
 
@@ -356,8 +381,12 @@ export default {
 
 
      //files:
-        nahled:false,
+        nahled:true,
         dialog:false,
+        uploadPercentage:0,
+        progres:false,
+        odkaz:'',
+        url:url,
      //files
         active: false ,
         dialogImageUrl: '',
@@ -512,28 +541,65 @@ self.$store.dispatch('setFormat')
       const self = this
       var idK = self.k_id()
       var file  = evt.target.files[0]; // FileList object
+      var nazev='';
       //var nazev=file.name
       self.form.Priloha1Txt=file.name
+      self.progres=true;
       switch(poradi){
         case 1:
-          f.Alert(poradi)
+          //f.Alert(poradi)
           self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Txt' , value: self.form.Priloha1Txt })
           self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Idefix' , value: self.form.Priloha1Idefix })
+          nazev = self.form.Priloha1Txt
 
       }
 
-      var res1=await upload0.all( self.idefix , nazev )
+      var res1=await upload0.all( self.idefix , nazev, {size: file.size , zmena: file.lastModifiedDate} )
       self.nahled=false
       if (res1.data.a>0) {
-      //f.Alert3('1 nalezeno na serveru',res1.data.a, res1.data.files)
+       f.Alert3('1 nalezeno na serveru',res1.data.a, res1.data.files)
       } else {
-        idefix_obr = await self.poslatnew()
+        var idefix_obr = await self.poslatnew(file)
      }
-
+      return
       self.odkaz=url.url()+'obrazek/'+idefix_obr
 
     //self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: self.form.sirka })
       } ,
+      async poslatnew(soubor) {
+      const self=this
+      let formData = new FormData();
+      formData.append('file', soubor);
+      formData.append('idefix', self.idefix);
+      formData.append('cislo', self.CISLO);
+      formData.append('rok', self.ROK);
+      console.log('>> formData >> ', formData);
+      this.uploadPercentage=0;
+      var res=0;
+      self.progres=true;
+      self.odkaz=url.url()+'obrazek/'+13629494
+
+      // You should have a server side REST API
+      //axios.post('http://78.102.17.162:3003/upload',
+      axios.post(`${url.url()}upload`,
+          formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+             onUploadProgress: function( progressEvent ) {
+              this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
+            }.bind(this)
+          }
+        ).then(function () {
+          self.progres=false;
+          console.log('SUCCESS!!');
+
+
+        })
+        .catch(function (err) {
+          console.log('FAILURE!!',err);
+        });
+   },
     smazObrazek(obrazek_id) {
       const self=this
       //Q.all(self.idefix,`delete from prilohy_prijem where idefix=${obrazek_id}`)
