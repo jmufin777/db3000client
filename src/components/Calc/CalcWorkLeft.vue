@@ -58,7 +58,6 @@
        <v-card v-for="(itemStroj, iStroj) in aStroj" :key="iStroj" v-if="idefixVidet == 0 || idefixVidet == itemStroj.idefix "
         style="position:relative;text-align:left;z-index:10"
         class="elevation-0"
-
        >
         <v-card-text class="pa-0 ma-0 pl-0 pr-1" style="position:relative;z-index:1;height:2.6em">
          <v-card style="position:relative;z-index:1" class="elevation-0">
@@ -180,30 +179,29 @@
                 <!-- <div class="container green" > -->
 
               <!-- <div class="large-12 medium-12 small-12 cell" > -->
-                <button v-if="form.Priloha1Txt>''" @click="form.Priloha1Txt=''">
+                <button v-if="form.Priloha1Txt>'' && idx==1" @click="delPriloha(1)">
                 <i class="el-icon-delete black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:100%;"
                  ></i>
+                 {{form.Priloha1Txt}}
                 </button>
-                  <img v-if="form.Priloha1Txt>''"
-                    :src="url.url()+'obrazek_small/'+13629503"  height="70px"
-                    @mouseenter="odkaz=url.url()+'obrazek/'+13629503;nahled=true"
+                  <img v-if="form.Priloha1Txt>'' &&form.Priloha1Idefix>0  && idx==1"
+                    :src="url.url()+'obrazek_small/'+form.Priloha1Idefix"  height="70px"
+                    @mouseenter="odkaz=url.url()+'obrazek/'+form.Priloha1Idefix;nahled=true"
                     @mouseleave="nahled=false"
                     />
                   <label
-                    v-if="form.Priloha1Txt==''"
+                    v-if="form.Priloha1Txt=='' && idx==1"
                   >
-
-                  <i class="el-icon-upload black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:200%;"></i>
-
+                  <span style="position:relative;left:30px;top:25px" title="Nahrat soubor do zakazky">
+                  <!-- <i class="el-icon-upload black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:200%;;cursor:pointer"></i> -->
+                    <i class="el-icon-upload silver--text lighten-4 " style="font-weight:bold;height:25px;zoom:250%;;cursor:pointer"></i>
                     <input
-
                     type="file"   :id="'file'"
                     ref="file" v-on:change="handleFileUpload($event);setPriloha($event, idx)"/>
-
+                  </span>
                   </label>
                     <!-- <button v-on:click="submitFile();form.Priloha1Txt='nazdarek'">Submit</button> -->
                 <!-- </div> -->
-
               <!-- </div> -->
               </td>
 
@@ -327,6 +325,7 @@ import axios from 'axios'
 import upload0 from '../../services/upload0'
 import url from '@/services/url'
 import obrazek from '../../services/ObrazekService'
+import { resolve } from 'url'
 
 
 export default {
@@ -344,7 +343,7 @@ export default {
       required: true
     },
     IDEFIX: {
-      type : String,
+      //type : String,
       required: false,
       default:'0'
     },
@@ -364,12 +363,12 @@ export default {
       default:''
     },
     CISLO:{
-      type: String,
+      //type: String,
       required: false,
       default:''
     },
     ROK:{
-      type: String,
+      //type: String,
       required: false,
       default:''
     },
@@ -493,6 +492,19 @@ export default {
    //var neco=JSON.stringify(self.Kalkulace[self.k_id()])
    var neco=JSON.stringify(self.$store.state.Kalkulace[self.k_id()])
    self.Kalk=JSON.parse(neco)
+   //f.Alert(self.$store.state.Kalkulace.length)
+
+   for (var ii=0;ii<self.$store.state.Kalkulace.length ;ii++ ){
+
+     if (f.isEmpty(self.$store.state.Kalkulace[ii].data.Priloha1Txt)) {
+        //console.log('Prazdna aaaa AAAAAAAA', self.$store.state.Kalkulace[ii].data.Priloha1Txt)
+       self.$store.dispatch('editKalk', {kalkulaceid: ii, key: 'Priloha1Txt' , value: '' })
+       self.$store.dispatch('editKalk', {kalkulaceid: ii, key: 'Priloha1Idefix' , value: 13629510 })
+
+     }
+   }
+
+
 
 
    // alert(self.k_id())
@@ -537,30 +549,74 @@ self.$store.dispatch('setFormat')
     submitFile(){
       return;
       },
+    async delPriloha(n)   {
+      const self=this
+      var idK = self.k_id()
+      var z=false
+
+      if (n==1){
+         z =await self.otazka('Vymazat prilohu  ?' , self.form.Priloha1Txt )
+      if (z)  {
+        self.form.Priloha1Txt=''
+        self.form.Priloha1Idefix=0
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Txt' , value: self.form.Priloha1Txt })
+        self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Idefix' , value: self.form.Priloha1Idefix })
+        }
+
+      }
+    },
+    async otazka(txt1='',txt2='') {
+      const self=this
+      return new Promise((resolve,rej)=>{
+        self.$confirm(txt1 , txt2 , {
+        distinguishCancelAndClose: true,
+        confirmButtonText: 'Ano?',
+        cancelButtonText: 'Ne'
+     })
+     .then(()=>{
+
+        resolve(true)
+     })
+     .catch((e)=> {
+        resolve(false)
+     }
+     )
+
+
+      })
+    },
     async  setPriloha(evt,poradi=-1) {
       const self = this
       var idK = self.k_id()
       var file  = evt.target.files[0]; // FileList object
       var nazev='';
       //var nazev=file.name
-      self.form.Priloha1Txt=file.name
+
       self.progres=true;
+      nazev = file.name
+      var res1=await upload0.all( self.idefix , nazev, {size: file.size , zmena: file.lastModifiedDate} )
+      self.nahled=false
+      //f.Alert3(res1)
+      if (res1.data.a>0) {
+       //f.Alert3('1 nalezeno na serveru',res1.data.obrazek, res1.data.files)
+        self.form.Priloha1Idefix = res1.data.obrazek
+
+      } else {
+        var idefix_obr = await self.poslatnew(file)
+         //f.Alert3('2 nahrano  ',idefix_obr.data.obrazek,res1.data, res1.data.files)
+         self.form.Priloha1Idefix =  idefix_obr.data.obrazek
+     }
       switch(poradi){
         case 1:
+          self.form.Priloha1Txt=file.name
           //f.Alert(poradi)
           self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Txt' , value: self.form.Priloha1Txt })
           self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Idefix' , value: self.form.Priloha1Idefix })
-          nazev = self.form.Priloha1Txt
+          self.progres=false;
 
       }
 
-      var res1=await upload0.all( self.idefix , nazev, {size: file.size , zmena: file.lastModifiedDate} )
-      self.nahled=false
-      if (res1.data.a>0) {
-       f.Alert3('1 nalezeno na serveru',res1.data.a, res1.data.files)
-      } else {
-        var idefix_obr = await self.poslatnew(file)
-     }
+
       return
       self.odkaz=url.url()+'obrazek/'+idefix_obr
 
@@ -581,7 +637,7 @@ self.$store.dispatch('setFormat')
 
       // You should have a server side REST API
       //axios.post('http://78.102.17.162:3003/upload',
-      axios.post(`${url.url()}upload`,
+      await axios.post(`${url.url()}upload`,
           formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
@@ -590,15 +646,19 @@ self.$store.dispatch('setFormat')
               this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
             }.bind(this)
           }
-        ).then(function () {
+        ).then(function (neco) {
           self.progres=false;
+          res=neco
           console.log('SUCCESS!!');
+          //f.Alert3("NECO", neco.data)
+
 
 
         })
         .catch(function (err) {
           console.log('FAILURE!!',err);
         });
+        return res
    },
     smazObrazek(obrazek_id) {
       const self=this

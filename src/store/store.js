@@ -391,6 +391,16 @@ export default new Vuex.Store({
         })
         newId++
         neco.kalkulaceid = newId
+        neco.data.Priloha1Txt=''
+        neco.data.Priloha1Idefix=0
+        neco.data.Priloha2Txt=''
+        neco.data.Priloha2Idefix=0
+        neco.data.Priloha3Txt=''
+        neco.data.Priloha3Idefix=0
+        neco.data.Priloha4Txt=''
+        neco.data.Priloha4Idefix=0
+        neco.data.Priloha5Txt=''
+        neco.data.Priloha5Idefix=0
         if (neco.sloupecid.length>0){
             newIdC=Math.ceil(Math.random()*5587515)
             neco.sloupecid.forEach(el=>{

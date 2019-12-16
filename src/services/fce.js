@@ -1,5 +1,6 @@
 import moment from 'moment'
 
+
 export default {
 
   getBottom(id,addPoz=10) {
@@ -90,8 +91,12 @@ export default {
   datum3(value) {
     return moment(String(value)).format('DD.MM.YYYY')
   },
+
   datum4(value) {
     return moment(String(value)).format('YYYYMMDD')
+  },
+  datum5(value) {
+    return moment(String(value)).format('YYYYMMDDhhmm')
   },
   obdobi(value) {
     return moment(String(value)).format('YYYYMM')
@@ -1323,5 +1328,7 @@ sirka(id="",npar=0) {
       return nret
 },
 
+
 }
+
 
