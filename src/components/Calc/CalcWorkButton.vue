@@ -76,9 +76,17 @@
       </td>
       <!-- ;seznamPoz('seek'+ID2) //-->
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 0px white;width:40em;height:28px" class="honza_color"
-      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :class="{'green lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )&& MAINMENULAST=='kalkulace','blue lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )
+          && MAINMENULAST=='zakazky'}"
 
       >
+
        <input :disabled="form.status==1"  type="text" v-model="form.nazev" style="height:26px;border:none;width:100%" :placeholder="'TEXT NA FAKTURE '" class="honza_text"
         :id="'seek'+ID2"
         :IDEFIX="'seek'+IDEFIX"
@@ -87,25 +95,62 @@
         @click="showTemplates=ZobrazMenu"
         @keydown="showTemplates=ZobrazMenu;ZobrazMenu ? seznam('seek'+ID2+'_list_'+0,1,$event) : false"
         :title="(form.nazev>'')?'Text na fakture':''"
-        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :class="{'green lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )&& MAINMENULAST=='kalkulace','blue lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )
+          && MAINMENULAST=='zakazky'}"
 
         >
         <!-- cale {{cTable}} -->
       </td>
       <td  style="text-align:center;border-top:none;border-bottom:none;border-right: solid 2px white;width:3em;height:28px"
       class="honza_color"
-      :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+
+      :class="{'green lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )&& MAINMENULAST=='kalkulace','blue lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )
+          && MAINMENULAST=='zakazky'}"
+
        >
        <div class="honza_color" style="height:26px;padding-top:2px;text-align:left;padding-left:7px;width:1em;width:100%;zoom:120%"
         v-if="IDEFIX==IDEFIXACTIVE"
-        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :class="{'green lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )&& MAINMENULAST=='kalkulace','blue lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )
+          && MAINMENULAST=='zakazky'}"
         >
          <button class="kolecko2" @click="send('template')" title="Ulozit" :id="'send_'+ID2"
          :IDEFIX="'send'+IDEFIX"
-         :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+         :class="{'green lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )&& MAINMENULAST=='kalkulace','blue lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )
+          && MAINMENULAST=='zakazky'}"
          >
          <div class="kolecko"
-         :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+         :class="{'green lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )&& MAINMENULAST=='kalkulace','blue lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )
+          && MAINMENULAST=='zakazky'}"
          >
          <i class="el-icon-upload" style="color:#93908e;position:absolute;top:-0px;left:0px"
          ></i>
@@ -117,7 +162,14 @@
       :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE}"
        >
         <table ><tr><td style="width:75%" class="honza_color"
-        :class="{'green lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='kalkulace','blue lighten-5 black--text': IDEFIX==IDEFIXACTIVE && MAINMENULAST=='zakazky'}"
+        :class="{'green lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )&& MAINMENULAST=='kalkulace','blue lighten-5 black--text':
+         (IDEFIX==IDEFIXACTIVE ||
+         (IDEFIXACTIVELAST>0 && IDEFIXACTIVE==0 && IDEFIX==IDEFIXACTIVELAST )
+         )
+          && MAINMENULAST=='zakazky'}"
         :style="IDEFIX==IDEFIXACTIVE?'text-align:right;width:100%;height:26px;border:none;color:#000000 !important':'text-align:right;width:100%;height:26px;border:none;color:#ffffff !important'"
         >
         <input
@@ -264,8 +316,8 @@
         :IDEFIX="'expedice_datum'+IDEFIX"
         style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="DATUM" class="datum_expedice honza_text2 honza_color2 pr-1 " title="DATUM EXPEDICE">
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:15em;height:28px" class="honza_color2" 
-      
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px #93908e;width:15em;height:28px" class="honza_color2"
+
       >
         <!-- <input :disabled="form.status==1"  type="text" v-model="form.expedice_cas" style="text-align:center;width:100%;height:26px;border:none;color:#1d1d1b !important" placeholder="A HOD. EXPEDICE" class="honza_text2 honza_color2 pr-1 cas_expedice ui-timepicker-input i-timepicker-positioned-top" title="HODINA EXPEDICE"> -->
       <select v-model="form.expedice_cas"
@@ -274,7 +326,7 @@
       :id="'expedice_cas'+ID2"
       :IDEFIX="'expedice_cas'+IDEFIX"
       :disabled="form.status==1"
-      
+
       >
         <option v-for="(tItem,i) in timelist"
         :key="i"
@@ -288,7 +340,7 @@
         &nbsp;
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;height:26px;height:28px" class="honza_color2" >
-        VL seznam: 
+        VL seznam:
       </td>
 
       </tr>
@@ -460,6 +512,11 @@ export default {
       default:"0",
       required: false
     },
+    IDEFIXACTIVELAST: {
+      // type: String,
+      default:0,
+      required: false
+    },
     MAINMENULAST:{
       default:"zakazky",
       required: false
@@ -488,7 +545,7 @@ export default {
       default:"xTable",
       required: true,
     }
-    
+
 
 
   },
@@ -805,7 +862,7 @@ deactivated: function () {
        var q=`select * from ${self.cTable} where idefix = ${self.form.idefix}`
        console.log('Q zpet1 ', q)
        Q.all(self.idefix,q)
-     
+
 
      .then((res)=>{
           console.log("RES", res)
@@ -822,7 +879,7 @@ deactivated: function () {
                 .catch((e) => {
                   console.log("Chyba update VL" , q2 )
                 })
-           }  
+           }
 
 
        f.Alert(ifx)
@@ -832,7 +889,7 @@ deactivated: function () {
      .catch((e) => {
        console.log(e, q)
      })
-     })  
+     })
 
 
   },

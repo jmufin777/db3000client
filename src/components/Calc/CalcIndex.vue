@@ -16,6 +16,7 @@
           >
 
           Nova
+          {{IDEFIXACTIVELAST}}
 
           </button>
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
@@ -1257,6 +1258,7 @@
       :dataDB="aBefore"
       :ID2="ID+iBefore"
       :IDEFIX="+aBefore.idefix"
+      :IDEFIXACTIVELAST="IDEFIXACTIVELAST"
       :MAINMENULAST="MAINMENULAST"
       :key="'AWB_'+iBefore+''+idRend"
       style="position:relative;left:4px"
@@ -1277,6 +1279,7 @@
             :ZobrazMenu="true" :isOpen="true"
             :key="'AWC_'+iK+''+idRend"
             :IDEFIXACTIVE="IDEFIXACTIVE"
+            :IDEFIXACTIVELAST="IDEFIXACTIVELAST"
             :cTable="cTable"
             :MAINMENULAST="MAINMENULAST"
             >
@@ -1288,6 +1291,7 @@
            :ID2="ID+999666"
            :IDEFIX="+aBefore1.idefix"
            :IDEFIXACTIVE="IDEFIXACTIVE"
+           :IDEFIXACTIVELAST="IDEFIXACTIVELAST"
            :MAINMENULAST="MAINMENULAST"
            :dataDB="aBefore1"
            :ZobrazMenu="true"
@@ -1365,6 +1369,7 @@
       :ID2="ID+iBefore2"
       :IDEFIX="+aBefore2.idefix"
       :IDEFIXACTIVE="IDEFIXACTIVE"
+      :IDEFIXACTIVELAST="13629473"
       :key="'AWE_'+iBefore2+''+idRend"
       :cTable="cTable"
       :MAINMENULAST="MAINMENULAST"
@@ -5056,6 +5061,8 @@ if (self.MAINMENULAST=='kalkulace') {
      self.aKalkBefore.forEach(el=>{
       if (el.active==true){
         self.IDEFIXACTIVE =0
+
+
         self.NAZEVACTIVE=''
         el.active=false
         return
@@ -5270,8 +5277,10 @@ if (self.MAINMENULAST=='kalkulace') {
          //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          //await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
 
+         if (self.IDEFIXACTIVE > 0) { //AAAAAAA
+           self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
+         }
 
-         self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
          setTimeout(function(){
             self.idRend++
             self.TestRend++
@@ -5460,7 +5469,9 @@ if (self.Pocet == - 1) {
 
 
 
-         self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
+         if (self.IDEFIXACTIVE > 0) { //AAAAAAA
+           self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
+         }
            setTimeout(function(){
             self.idRend++
             self.TestRend++
@@ -5470,6 +5481,9 @@ if (self.Pocet == - 1) {
     const self=this
        self.aKalkulace =[]
        self.$store.dispatch('cleanKalk')
+        if (self.IDEFIXACTIVE > 0) { //AAAAAAA
+           self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
+        }
        await queryKalk.setActive(0,self.cTable,0)  //tj.vypne vse, nezalezina idefixu
        await self.setIdefixDeActive()
        await self.beforeArray() //2.JARDA
@@ -5670,7 +5684,9 @@ if (self.Pocet == - 1) {
          await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
          self.setIdefixActive()
 
-         self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
+         if (self.IDEFIXACTIVE > 0) { //AAAAAAA
+           self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
+        }
          setTimeout(function(){
             self.idRend++
             self.TestRend++
