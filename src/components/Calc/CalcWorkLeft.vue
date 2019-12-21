@@ -21,7 +21,6 @@
           </v-card-text>
           <v-card-text style="font-size:200%;font-weight:800">
             {{ k_id() + 1 }}
-
           </v-card-text>
           <v-card-text style="font-size:80%;font-weight:800">
             <v-progress-circular v-if="progres" :value="uploadPercentage"></v-progress-circular>
@@ -31,19 +30,16 @@
             {{MENU}}
             Z{{IDEFIX_ZAK}}
             N{{IDEFIX_NAB}} -->
-
           </v-card-text>
           <v-card-text>
           <slot name="akce">
                   <!-- <button type="button" style="width:30%;height:16px" class="white  px-0 " @click="1==1" ><i class="el-icon-delete " style="color:green" size="mini" ></i></button> -->
                   <!-- <button type="button" style="width:30%;height:106px" class="white  px-0 " @click="1==1" >X</button> -->
             </slot>
-
         </v-card-text>
       </v-card>
       </td>
      <td style="width:80;height:100%">
-
      <p style="display:none">{{StrojeMenu.length}} {{ $store.state.Kalkulace[k_id()].type}} {{idefixVidet}} {{$store.state.Kalkulace[k_id()].data.stroj}}</p>
      <p style="display:none">
        {{StrojeMenu}} {{qStroje("V")}} {{initVar}}
@@ -167,40 +163,36 @@
               <td style="text-align:left;font-size:50%" colspan="4" class="pl-2" > &nbsp;</td>
              </tr>
              <tr>
-
-
-              <td v-for="idx in 4" :key="idx" class="pb-1 pt-0 mt-1 pl-0 silver lighten-4" style="text-align:left;">
+              <td v-for="idx in 1" :key="idx" class="pb-1 pt-0 mt-1 pl-0 silver lighten-4" style="text-align:left;">
                 <!-- <label :for="'file_' + idx" style="cursor:pointer"><span></span>P{{idx}}&nbsp;</label> -->
-                 <!-- <input type="file" :id="'file_' + idx" @change="odesli()" multiple/> -->
-                  <!-- <input type="file" :id="'file_' + idx" ref="file" v-on:change="odesli()"/> -->
-
-
-
+                <!-- <input type="file" :id="'file_' + idx" @change="odesli()" multiple/> -->
+                <!-- <input type="file" :id="'file_' + idx" ref="file" v-on:change="odesli()"/> -->
                 <!-- <div class="container green" > -->
-
-              <!-- <div class="large-12 medium-12 small-12 cell" > -->
+                <!-- <div class="large-12 medium-12 small-12 cell" > -->
                 <button v-if="form.Priloha1Txt>'' && idx==1" @click="delPriloha(1)">
                 <i class="el-icon-delete black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:100%;"
                  ></i>
                  {{form.Priloha1Txt}}
                 </button>
+                <br v-if="form.Priloha1Txt>'' &&form.Priloha1Idefix>0"/>
                   <img v-if="form.Priloha1Txt>'' &&form.Priloha1Idefix>0  && idx==1"
                     :src="url.url()+'obrazek_small/'+form.Priloha1Idefix"  height="70px"
                     @mouseenter="odkaz=url.url()+'obrazek/'+form.Priloha1Idefix;nahled=true"
                     @mouseleave="nahled=false"
+                    :title="form.Priloha1Idefix"
                     />
                   <label
                     v-if="form.Priloha1Txt=='' && idx==1"
                   >
                   <span style="position:relative;left:30px;top:25px" title="Nahrat soubor do zakazky">
-                  <!-- <i class="el-icon-upload black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:200%;;cursor:pointer"></i> -->
+                <!-- <i class="el-icon-upload black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:200%;;cursor:pointer"></i> -->
                     <i class="el-icon-upload silver--text lighten-4 " style="font-weight:bold;height:25px;zoom:250%;;cursor:pointer"></i>
                     <input
                     type="file"   :id="'file'"
                     ref="file" v-on:change="handleFileUpload($event);setPriloha($event, idx)"/>
                   </span>
                   </label>
-                    <!-- <button v-on:click="submitFile();form.Priloha1Txt='nazdarek'">Submit</button> -->
+                <!-- <button v-on:click="submitFile();form.Priloha1Txt='nazdarek'">Submit</button> -->
                 <!-- </div> -->
               <!-- </div> -->
               </td>
@@ -553,14 +545,17 @@ self.$store.dispatch('setFormat')
       const self=this
       var idK = self.k_id()
       var z=false
+      var ifx=self.form.Priloha1Idefix
 
       if (n==1){
          z =await self.otazka('Vymazat prilohu  ?' , self.form.Priloha1Txt )
       if (z)  {
         self.form.Priloha1Txt=''
         self.form.Priloha1Idefix=0
+
         self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Txt' , value: self.form.Priloha1Txt })
         self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Idefix' , value: self.form.Priloha1Idefix })
+        self.smazObrazek(ifx)
         }
 
       }
@@ -594,7 +589,7 @@ self.$store.dispatch('setFormat')
 
       self.progres=true;
       nazev = file.name
-      var res1=await upload0.all( self.idefix , nazev, {size: file.size , zmena: file.lastModifiedDate} )
+      var res1=await upload0.all( self.idefix , nazev, {size: file.size , zmena: file.lastModifiedDate, cislo: self.CISLO, rok: self.ROK} )
       self.nahled=false
       //f.Alert3(res1)
       if (res1.data.a>0) {
