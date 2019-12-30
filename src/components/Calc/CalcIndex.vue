@@ -1376,9 +1376,6 @@
        ></work-but>
        <!-- POD {{IDEFIXACTIVE}} / {{aBefore2.idefix }} -->
    </div>
-
-
-
   <div style="z-indeX:999999;background:black">
     <!--
     <hr>

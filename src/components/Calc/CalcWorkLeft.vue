@@ -595,18 +595,28 @@ self.$store.dispatch('setFormat')
       if (res1.data.a>0) {
        //f.Alert3('1 nalezeno na serveru',res1.data.obrazek, res1.data.files)
         self.form.Priloha1Idefix = res1.data.obrazek
+        self.form.Format = res1.data.format
+        self.form.sirka  = res1.data.sirka
+        self.form.vyska  = res1.data.vyska
 
       } else {
         var idefix_obr = await self.poslatnew(file)
          //f.Alert3('2 nahrano  ',idefix_obr.data.obrazek,res1.data, res1.data.files)
          self.form.Priloha1Idefix =  idefix_obr.data.obrazek
+         self.form.Format          = idefix_obr.data.format
+         self.form.sirka          = idefix_obr.data.sirka
+         self.form.vyska          = idefix_obr.data.vyska
      }
+     //f.Alert(self.form.Format)
       switch(poradi){
         case 1:
           self.form.Priloha1Txt=file.name
           //f.Alert(poradi)
-          self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Txt' , value: self.form.Priloha1Txt })
+          self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Txt'    , value: self.form.Priloha1Txt })
           self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Priloha1Idefix' , value: self.form.Priloha1Idefix })
+          self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'txtFormat'      , value: self.form.Format  })
+          self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka'    , value: self.form.sirka })
+          self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatVyska'    , value: self.form.vyska })
           self.progres=false;
 
       }

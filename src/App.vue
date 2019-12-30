@@ -590,6 +590,15 @@ button:focus {
   top:   15px !important;
   left: -15px !important;
 }
+
+.ramecek {
+  border-bottom: solid 1px #cccccc;
+  border-top: solid 1px #cccccc;
+  border-right: solid 1px #cccccc;
+  border-left: solid 1px #cccccc;
+
+
+}
 </style>
 <style lang="stylus">
   $color-pack = false
