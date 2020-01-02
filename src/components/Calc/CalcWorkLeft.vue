@@ -8,6 +8,7 @@
      :class="{'blue lighten-2': $store.state.KalkulaceThis== kalkulaceid }"
      v-on:mouseleave="active=false;MenuShowLeave()"
      @click="setKalk(kalkulaceid);setID()"
+
      >
      <table style="width:100%;height:18em;;border:none"><tr>
       <td style="width:20%;height:100%" class="white pr-1 pt-0" >
@@ -28,8 +29,9 @@
             Slozka:<br>{{ ROK}}/{{ CISLO }}
             <!-- {{IDEFIX}}
             {{MENU}}
-            Z{{IDEFIX_ZAK}}
+
             N{{IDEFIX_NAB}} -->
+
           </v-card-text>
           <v-card-text>
           <slot name="akce">
@@ -60,11 +62,14 @@
           <v-card-text class="pa-0 ma-0 pl-1 pr-1 pb-1 pt-1" style="position:relative;z-index:1;border:none"> <!-- KARTA stroje //-->
           <table style="width:100%;z-index:1;">
             <tr >
-            <td style="width:90%;cursor:pointer;" @click="SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )">
-                {{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
+            <td style="width:90%;cursor:pointer;" @click="k_id()>0 || ITEM1.status==1?false:SelectStroj(itemStroj.idefix,itemStroj.idefix_mod )">
+                {{ITEM1.status}}:{{ itemStroj.stroj }} {{ idefixVidet>0?getStrojMod():'' }}
             </td>
             <!-- @mouseenter="idefixClick=itemStroj.idefix;MenuShow1(MenuShow, $event ); -->
-            <td style="width:10%;cursor:pointer" @click="idefixClick=itemStroj.idefix; MenuShow1(MenuShow, $event );" >
+            <td style="width:10%;cursor:pointer" @click="
+              ITEM1.status==1?false:idefixClick=itemStroj.idefix;
+              ITEM1.status==1?false:MenuShow1(MenuShow, $event );
+            " >
                   <i aria-hidden="true" class="v-icon mdi mdi-menu-down theme--light" style="cursor:pointer"
                   ></i>
             </td>
@@ -81,7 +86,7 @@
        <table style="width:100%" class="pink pa-0">
          <tr><td style="width:40%">
            <!-- @blur="MenuFormatOpust()" -->
-       <v-card @click="MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;position:relative;left:0px;font-size:100%;;height:100%" class="elevation-0"><v-card-text class="pa-0" style="height:100%">
+       <v-card @click="ITEM1.status==1?false:MenuFormatShow1(MenuFormatShow, $event )" style="width:100%;position:relative;left:0px;font-size:100%;;height:100%" class="elevation-0"><v-card-text class="pa-0" style="height:100%">
         <input type="text" v-model="form.Format" size="mini"
                style="width:100%; height:25px;" class="tdl tdn elevation-0 pl-1" :placeholder="'Format'+ ' seek'+ID"
                 @focus="fokus('seek'+ID);setID();MenuFormatShow=true"
@@ -89,6 +94,7 @@
                 @blur="MenuFormatOpust()"
                 @click="MenuFormatShow=true"
                 @keydown="MenuFormatShow=true;seznam('seek'+ID+'_list_'+0,1,$event)"
+                :disabled="ITEM1.status==1"
                 >
                <!-- FORMATY {{ID}} {{f1.getBottom('seek'+ID)}} {{f1.getWidth('seek'+ID)}} {{f1.getLeft('seek'+ID)}} -->
       <!-- </div> -->
@@ -96,8 +102,8 @@
       </td><td style="width:60%" class="pa-0">
       <v-card style="width:100%;position:relative;left:0px;font-size:100%;height:100%" class="pa-0 elevation-0">
         <v-card-text  class="pa-0 pt-0  " style="height:100%">
-         <input type="number"    v-model="form.sirka" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="A"  @focus="fokus('sirka'+ID);$event.target.select()" @change="getFormatName()">
-         x<input type="number"   v-model="form.vyska" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="B" @focus="fokus('vyska');$event.target.select()" @change="getFormatName()">
+         <input type="number"         :disabled="ITEM1.status==1"  v-model="form.sirka" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="A"  @focus="fokus('sirka'+ID);$event.target.select()" @change="getFormatName()">
+         x<input type="number"        :disabled="ITEM1.status==1"  v-model="form.vyska" style="text-align:right;width:40%;height:90%" class="tdl tdn elevation-0 pr-1 pt-1" placeholder="B" @focus="fokus('vyska');$event.target.select()" @change="getFormatName()">
         </v-card-text>
        </v-card>
        </td></tr>
@@ -114,17 +120,18 @@
            <label :for="'panelovat'+ID" style="cursor:pointer"><span></span>Panelovat&nbsp;</label>
            <input type="checkbox" value="0" v-model="form.panelovat" :checked="(form.panelovat==1)"
            :id="'panelovat'+ID"
+           :disabled="ITEM1.status==1"
            class="tdl tdn elevation-0 pr-0" @change="getFormatName()">
            </td>
            <td style="width:10%">Po</td>
            <td style="width:25%">
-             <input type="number"   v-model="form.sirkaPanel" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-0 pr-1"  @focus="$event.target.select()" @change="getFormatName();sirkaP()">
+             <input type="number"   :disabled="ITEM1.status==1" v-model="form.sirkaPanel" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-0 pr-1"  @focus="$event.target.select()" @change="getFormatName();sirkaP()">
            </td>
            <td style="width:15%">
              Naklad&nbsp;ks
            </td>
            <td>
-             <input type="number"   v-model="form.nakladks" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-0 pr-1" @focus="$event.target.select()" @change="ks();getFormatName()">
+             <input type="number"    :disabled="ITEM1.status==1" v-model="form.nakladks" style="text-align:right;width:80%;height:80%" class="tdl tdn elevation-0 pr-1" @focus="$event.target.select()" @change="ks();getFormatName()">
            </td>
          </tr>
          </table>
@@ -169,7 +176,7 @@
                 <!-- <input type="file" :id="'file_' + idx" ref="file" v-on:change="odesli()"/> -->
                 <!-- <div class="container green" > -->
                 <!-- <div class="large-12 medium-12 small-12 cell" > -->
-                <button v-if="form.Priloha1Txt>'' && idx==1" @click="delPriloha(1)">
+                <button v-if="form.Priloha1Txt>'' && idx==1" @click="delPriloha(1)"   :disabled="ITEM1.status==1">
                 <i class="el-icon-delete black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:100%;"
                  ></i>
                  {{form.Priloha1Txt}}
@@ -188,8 +195,10 @@
                 <!-- <i class="el-icon-upload black--text darken-4 d3" style="font-weight:bold;height:25px;zoom:200%;;cursor:pointer"></i> -->
                     <i class="el-icon-upload silver--text lighten-4 " style="font-weight:bold;height:25px;zoom:250%;;cursor:pointer"></i>
                     <input
+                    :disabled="ITEM1.status==1"
                     type="file"   :id="'file'"
                     ref="file" v-on:change="handleFileUpload($event);setPriloha($event, idx)"/>
+
                   </span>
                   </label>
                 <!-- <button v-on:click="submitFile();form.Priloha1Txt='nazdarek'">Submit</button> -->
@@ -364,6 +373,12 @@ export default {
       required: false,
       default:''
     },
+    ITEM1:{
+      //type: Array,
+      required: false,
+      default:{status:0}
+    },
+
 
 
   },
@@ -470,7 +485,8 @@ export default {
     initVar: 0,
 
     file:'A',
-    infoLocal:''
+    infoLocal:'',
+    IDEFIX_LAST:0,
 
    }
  },
@@ -674,6 +690,8 @@ self.$store.dispatch('setFormat')
 
    readVuexData(){
      const self=this
+
+
      self.form.nakladks = self.$store.state.Kalkulace[self.k_id()].data.FormatNakladKs
      self.form.sirka = self.$store.state.Kalkulace[self.k_id()].data.FormatSirka
      self.form.vyska = self.$store.state.Kalkulace[self.k_id()].data.FormatVyska
@@ -702,6 +720,17 @@ self.$store.dispatch('setFormat')
      self.form.Priloha4Txt=self.$store.state.Kalkulace[self.k_id()].data.Priloha4Txt
      self.form.Priloha5Idefix= self.$store.state.Kalkulace[self.k_id()].data.Priloha5Idefix
      self.form.Priloha5Txt=self.$store.state.Kalkulace[self.k_id()].data.Priloha5Txt
+     //if (self.form.Priloha1Txt>''){
+      if (self.IDEFIX_LAST != self.idefix){
+        self.IDEFIX_LAST=self.IDEFIX
+      //  var q=
+        //Q.post(0,q)
+
+
+       //f.Alert('a'+self.form.Priloha1Txt+' '+self.form.Priloha1Idefix, self.IDEFIX_LAST, self.IDEFIX )
+
+     }
+
 
      if (self.form.Format == undefined) self.form.Format = ''
 

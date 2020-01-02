@@ -42,11 +42,13 @@
         " class="elevation-12 yellow"
         :style="'top:'+ getBottom('seek1_'+ID)+'px;width:'+getWidth('seek1_'+ID,8)+'px;left:'+getLeft('seek1_'+ID,1)+'px'" >
           <span style="display:none">FF {{ filtrDat.length}}</span>
+
         <!-- {{ filtrData()}} -->
           <table  width="100%" v-if="form.showtxt &&  (getType()=='Mat1'  || getType()=='Laminace' || getType()=='Kasir'|| getType()=='Jine' )"  >
              <!-- <tr class="mt-1 green" v-for="(item, i) in filtrData()" :key="i" > -->
               <tr class="mt-1 green" v-for="(item, i) in filtrDat" :key="i" >
               <td >
+
               <a :href="'#'" :id="'seek1_'+ID+'_list_'+i"
               @keydown="seznam('seek1_'+ID+'_list_'+i,1,$event)"
               @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)" @focus="lastFocus='seek1_'+ID">
@@ -58,6 +60,7 @@
                 >
                  <!-- {{'list_'+i}} : -->
                   {{ item['nazev']}}
+
                  </v-card-text>
                  </td><td style="width:20%;height:100" class="pa-0 ma-0 grey lighten-5">
                  <v-card-text style="font-size:90%;text-align:center;width:100%;height:100%" @click="form.txt= item['nazev']; form.showtxt=false; setCol(item)"
@@ -223,11 +226,16 @@
           :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
           >
 
-           <el-dropdown split-button size="small" trigger="click" @command="zmenaType"  style="width:100;height:80% !important"
+           <el-dropdown
+           v-if="!(ITEM1.status==1)"
+           split-button size="small" trigger="click" @command="zmenaType"  style="width:100;height:80% !important"
            :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
+
            >
             {{getType()}}
-            <el-dropdown-menu slot="dropdown" class="grey lighten-5" style="position:absolute;left:150px" >
+            <el-dropdown-menu slot="dropdown" class="grey lighten-5" style="position:absolute;left:150px"
+
+            >
               <el-dropdown-item  :command="'Mat1'">Materialy</el-dropdown-item>
               <el-dropdown-item  :command="'Laminace'">Laminace</el-dropdown-item>
               <el-dropdown-item  :command="'Kasir'">Kasir</el-dropdown-item>
@@ -238,11 +246,14 @@
               <el-dropdown-item  :command="'DTP'">DTP</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
+          <span v-else > {{getType()}} </span>
           </td><td width="20%" class="pa-0 ma-0  pr-3" style="border-top-right-radius:30px;text-align:right"
           :class="{'blue lighten-4': $store.state.KalkulaceColThis==getId(),'grey lighten-3': $store.state.KalkulaceColThis!==getId()}"
           >
 
-          <button type="button" style="width:20%;height:26px;text-align:right" class="  px-0 cell" @click="deleteCol()" ><i class="el-icon-delete" size="mini"></i></button>
+          <button type="button"
+          :disabled="ITEM1.status==1"
+          style="width:20%;height:26px;text-align:right" class="  px-0 cell" @click="deleteCol()" ><i class="el-icon-delete" size="mini"></i></button>
           </td></tr></table>
           </div>
 
@@ -256,6 +267,7 @@
         <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
             <textarea-autosize type="text"
                 v-model="form.txtStroj"
+                :disabled="ITEM1.status==1"
                 size="mini"
                 style="width:100%; height:16px;max-height:60px;border:none;font-size:110%;padding-left:5px;"
                 class="nb elevation-0 pb-0 pt-0 p-1"
@@ -275,6 +287,7 @@
             <v-card-text style="width:100%;border:none" class="pa-0 elevation-0" >
               <textarea-autosize type="text"
               v-model="form.txt"
+              :disabled="ITEM1.status==1"
               size="mini"
               style="width:100%; height:16px;max-height:60px;border:none;font-size:110%;"
               class="pl-1"
@@ -293,6 +306,7 @@
           <v-card-text style="width:80%; text-align: left" class="pa-0 pl-1" >
           <select v-if="getType()!=='Mat1'" v-model="form.tisk"  @change="saveVuexData(); classJarda('sel1_'+ID)" :id="'sel1_'+ID"       @keydown="classJarda('sel1opt_'+ID+'_'+form.tisk)"
             style="color:black;font-color:black;border: 1px solid white !important;font-size:110%" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
+            :disabled="ITEM1.status==1"
           >
             <option v-for="(a,b ) in Tisk"
                 :key="a.val"
@@ -313,6 +327,7 @@
         <!-- @change.native="form.txtDod=''" -->
             <textarea-autosize type="text"
                 v-model="form.txtPrace"
+                :disabled="ITEM1.status==1"
                 size="mini"
                 style="width:100%; height:16px;max-height:60px;border:none;font-size:110%;"
                 class="nb elevation-0 pb-0 pl-1"
@@ -331,6 +346,7 @@
         <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
             <textarea-autosize type="text"
                 v-model="form.txtDod"
+                :disabled="ITEM1.status==1"
                 size="mini"
                 style="width:100%; height:16px;max-height:60px;border:none;font-size:110%;"
                 class="nb elevation-0 pb-0 pl-1"
@@ -351,14 +367,18 @@
                     Naklad/ks
                   </td>
                   <td style="width:30%" class="prava">
-                    <input type="number" v-model="form.ext_naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right;border-bottom: dotted 1px black;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
+                    <input type="number"
+                    :disabled="ITEM1.status==1"
+                    v-model="form.ext_naklad_ks" size="mini"  style="width:90%; height:15px; text-align:right;border-bottom: dotted 1px black;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
                     @change="form.ext_celkem=form.ext_naklad_ks*form.ext_pocet_ks ;saveVuexData()">
                   </td>
                   <td class="pl-1" style="width:20%">
                     Pocet
                   </td>
                   <td class="prava" style="width:30%">
-                    <input type="number" v-model="form.ext_pocet_ks" size="mini"  style="width:90%; height:15px; text-align:right;;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
+                    <input type="number"
+                    :disabled="ITEM1.status==1"
+                    v-model="form.ext_pocet_ks" size="mini"  style="width:90%; height:15px; text-align:right;;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData"
                     @change="form.ext_celkem=form.ext_naklad_ks*form.ext_pocet_ks;saveVuexData()">
                   </td>
                 </tr>
@@ -367,14 +387,18 @@
                     Celkem
                   </td>
                   <td class="prava" style="width:30%">
-                    <input type="number" v-model="form.ext_celkem" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
+                    <input type="number"
+                    :disabled="ITEM1.status==1"
+                    v-model="form.ext_celkem" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
                   </td>
                   <td class="pl-1" style="width:20%">
                     <!-- <td class="nic bila prava pr-2 blue--text " style="width:20%"> -->
                     Prodej
                   </td>
                   <td class="prava" style="width:30%">
-                    <input type="number" v-model="form.ext_prodej" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
+                    <input type="number"
+                    :disabled="ITEM1.status==1"
+                    v-model="form.ext_prodej" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" @click="readVuexData" @change="saveVuexData()">
                   </td>
                 </tr>
               </table>
@@ -391,7 +415,9 @@
                 <td style="width:60%">Prodejni cena</td>
                 <td style="width:40%">
                   <input type="hidden" v-model="formx" size="mini"  placeholder="Popis" style="width:100%; height:15px; text-align:left" class="tdl tdn elevation-0 pl-1"  >
-                  <input type="number" v-model="form.prodejDTP" size="mini"  placeholder="Prodej DTP" style="width:100%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pl-1 "
+                  <input type="number"
+                  :disabled="ITEM1.status==1"
+                  v-model="form.prodejDTP" size="mini"  placeholder="Prodej DTP" style="width:100%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pl-1 "
                   @change="formx=formx+1"
                    >
                 </td>
@@ -412,6 +438,7 @@
                 <select v-if="true || getType().match(/Baleni/)" v-model="form.baleni"  @change="saveVuexData(); classJarda('sel2_'+ID)" :id="'sel2_'+ID"
                   @keydown="classJarda('sel2opt_'+ID+'_'+form.Baleni)"
                   style="width:100%;color:black;font-color:black;border: 1px solid white !important;font-size:110%" class="white lighten-2 pl-0 pr-2 pt-0 pb-0"
+                  :disabled="ITEM1.status==1"
                 >
                   <option v-for="(c,d ) in Baleni"
                       :key="c.val"
@@ -429,19 +456,27 @@
                </td>
 
               <td   v-if="form.baleni==0" class="prava">
-                <input type="number" v-model="form.naklad_mody" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+                <input type="number"
+               :disabled="ITEM1.status==1"
+                v-model="form.naklad_mody" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
 
               <td   v-if="form.baleni==1" class="prava">
-                <input type="number" v-model="form.naklad_po" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+                <input type="number"
+                :disabled="ITEM1.status==1"
+                v-model="form.naklad_po" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
 
               <td   v-if="form.baleni==2" class="prava">
-                <input type="number" v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+                <input type="number"
+                :disabled="ITEM1.status==1"
+                v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
 
               <td   v-if="form.baleni==3" class="prava">
-                <input type="number" v-model="form.naklad_cena" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+                <input type="number"
+                :disabled="ITEM1.status==1"
+                v-model="form.naklad_cena" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
               </td>
 
             <!-- <tr >
@@ -466,12 +501,16 @@
           <v-card-text style="text-align:left" class="pa-0">
             <textarea
               type="textarea" v-model="form.poznamka"
+
               style="width:100%; min-height:4em;max-height:160px;border:none;font-size:14px"
 
               class="nb elevation-0 pb-0 grey lighten-3 pl-2"
               placeholder="poznamka"
+              :disabled="ITEM1.status==1"
               @change="saveVuexData()">
+
             </textarea>
+            I:{{ITEM1.status}}
           <!-- {{ entrcount(form.poznamka) }} {{ (form.poznamka.match(/\n/g) || []).length +1 }} / {{ 'height:'+(16*entrcount(form.poznamka))+'px' }} -->
           </v-card-text>
         </v-card>
@@ -480,14 +519,19 @@
           <v-card-text style="text-align:left;width:100%;vertical-align: text-bottom;" class="pa-0">
             <table><tr><td style="width:20%">
             &nbsp;Naklad&nbsp;&nbsp;
+
             </td><td  style="width:30%">
-            <input type="number" v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" readonly @change="saveVuexData()">
+            <input type="number"
+            :disabled="ITEM1.status==1"
+            v-model="form.naklad" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1" readonly @change="saveVuexData()">
             </td><td  style="width:20%">
             <span v-if="level==3" >Korekce&nbsp;&nbsp;</span>
             <span v-else>&nbsp;</span>
             </td><td  style="width:30%">
 
-            <input v-if="level==3" type="number" v-model="form.nakladkorekce" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
+            <input v-if="level==3" type="number"
+            :disabled="ITEM1.status==1"
+            v-model="form.nakladkorekce" size="mini"  style="width:90%; height:15px; text-align:right;font-size:110%" class="tdl tdn elevation-0 pr-1"  @change="saveVuexData()">
             <span v-else>&nbsp;</span>
             </td></tr></table>
           </v-card-text>
@@ -548,6 +592,12 @@ export default {
     neco: {
       type : Number,
       required: false
+    }
+    ,
+    ITEM1:{
+      //type: Array,
+      required: false,
+      default:{status:0}
     }
 
   },

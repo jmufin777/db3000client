@@ -871,10 +871,14 @@ deactivated: function () {
            if (dataTemp.idefix_src>=0 && dataTemp.idefix_zak>0){
             q2=`update ${self.cTable} set status = 2 where idefix=${ifx} ;
                 update zak_t_items set status = 2 where idefix=${ifx} ;
-                update zak_t_vl_v set datumvraceni=now(),idefix_vratil=${self.idefix} where  idefix_item=${dataTemp.idefix_src} `
+                update zak_t_vl_v set datumvraceni=now(),idefix_vratil=${self.idefix} where  idefix_item=${dataTemp.idefix_src} ;
+
+                `
                 Q.post(self.idefix,q2)
                 .then(()=> {
                   self.form.status=2;
+                  eventBus.$emit('STATUS', {key: 2 })
+
                 })
                 .catch((e) => {
                   console.log("Chyba update VL" , q2 )
@@ -922,12 +926,14 @@ deactivated: function () {
              let q2=`update zak_t_items set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak} ;
                      update ${self.cTable} set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak};
                      update zak_t_vl_v set datumodeslani=now(),idefix_odeslal=${self.idefix},user_update_idefix=${self.idefix} where idefix_item=${dataTemp.idefix_src} ;
+
                    `
               console.log(q2)
              Q.post(self.idefix,q2)
              .then((res)=>{
                fceVL.Vklad(dataTemp.idefix_src)
                self.form.status=1;
+               eventBus.$emit('STATUS', {key: 1 })
                //Vykutit VL
              })
              .catch((e)=>{

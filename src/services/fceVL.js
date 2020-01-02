@@ -85,17 +85,16 @@ export default {
                   //Dekoduji polozky pro VL
                   //f.Alert('Obsah ',f.Jstr(form_item.obsah))
 
-                  
-
 
                   qI=`insert into zak_t_vl_v (idefix_zak, idefix_item, cislozakazky,idefix_obchodnik,idefix_firma, nazev, polozka,expedice_datum,expedice_cas)
                     values (${form_zak.idefix}, ${form_item.idefix}, ${form_zak.cislozakazky},${form_zak.idefix_obchodnik},${form_zak.idefix_firma},'${form_zak.nazev}','${form_item.nazev}'
                     ,'${form_item.expedice_datum}', '${form_item.expedice_cas}'
-                    )
-              `
+                    );select vl_set(${form_zak.idefix}, ${form_item.idefix}) `
+                    f.Alert2('1',qI)
 
                    Q.post(idefix,qI)
                    .then(()=>{
+                     console.log(qI) ;
                      self.UpdateVL(form_zak,form_item)
                      .then(()=>{
                       self.getLastID(form_item) //Docasne - jeste rozmyslim, ted je aby to poslalo event na zobrazeni s daty
@@ -175,7 +174,7 @@ export default {
   async UpdateVL(form_zak, form_item) { //Kompletni polozky VL
     const self=this
     var qU=''
-    
+
     self.VLdecode(form_item.obsah)
     .then((res)=>{
       //f.Alert(f.Jstr(res))
@@ -201,9 +200,9 @@ export default {
 
     })
 
-    
+
     //Doplnit polozky pro finalni zalozeni
-    
+
   },
 
   async VLdecode(data) {
@@ -246,8 +245,8 @@ export default {
                   if (res['mat']['mat_poznamka']>'') res['mat']['mat_poznamka']+="; "
                   res['mat']['mat_poznamka']+=el.data.poznamka
                 }
-                
-                
+
+
                 console.log('Dekode Mat Sloupce', el.data.mat.nazev, el.data )
                 console.log('Dekode RES Sloupce', res )
 

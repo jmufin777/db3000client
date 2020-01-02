@@ -1311,23 +1311,25 @@
             :ID2="ID+999666"
             :IDEFIX="IDEFIXACTIVE"
             :IDEFIXACTIVE="IDEFIXACTIVE"
-
             >
           </work-but-plus>
           </span>
           <span slot="leva" :key="'L'+ TestRend" style="position:relative;left:30px" >
-          <work-left :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid"
+          <work-left
+           v-cloak v-for="(aBefore1,iBefore1 ) in aKalkBefore.filter(e=>{return e.active==true  })" :key="'WORKLEFT_'+iBefore1"
+          :typid="1" :ID2="ID" :kalkulaceid="iKalk.kalkulaceid"
           :IDEFIX="IDEFIXACTIVE"
           :MENU="MAINMENULAST"
           :IDEFIX_ZAK="aktivni_zak"
           :IDEFIX_NAB="aktivni_nab"
+          :ITEM1="aBefore1"
           :CISLO="MAINMENULAST=='zakazky'?aktivni_zak_short:aktivni_nab_short"
           :ROK="MAINMENULAST=='zakazky'?aktivni_zak_rok:aktivni_nab_rok"
           >
                 <button slot="akce" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
                 :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
                 @click="removeKalk(iKalk.kalkulaceid)"
-
+                :disabled="aBefore1.status==1"
                   >
                   <a :name="iKalk.kalkulaceid"></a>
                     <i class="el-icon-delete white" size="mini"
@@ -1337,6 +1339,7 @@
                 <button slot="add" type="button" style="height:16px" class="white  px-0 cell pr-1 pl-1"
                   :class="{'blue lighten-4 elevation-0': $store.state.KalkulaceThis == iKalk.kalkulaceid }"
                   @click="copyKalk(iK)"
+                  :disabled="aBefore1.status==1"
                 >
                     <a :name="iKalk.kalkulaceid"></a>
                     <i class="el-icon-plus white" size="mini"
@@ -1345,19 +1348,19 @@
                   </button>
           </work-left>
           </span>
-
           <div  v-cloak v-for="(iSloupec,i) in iKalk.sloupecid" :key="i" :slot="'sloupec'+(i+1)"  :ref="iSloupec" :style="'backgroundcolor:blue;display:block;position:relative;left:30px'"  >
               <!-- {{iKalk.sloupecid}} -->
-              <work-col v-cloak :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend" style="z-index:889977">
-                  <button v-cloak slot="akce" type="button" style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i>
-                  </button>
+              <work-col
+                v-cloak :typid="1" :kalkulaceid="iKalk.kalkulaceid" :sloupecid="iSloupec.id"  v-if="zobrazit==true || true" :key="TestRend"
+                :ITEM1="ITEM1"
+                style="z-index:889977">
+                  <button v-cloak slot="akce" type="button"
+                  style="width:30%;height:16px" class="white  px-0 cell" @click="removeKalkCol(iKalk.kalkulaceid, iSloupec)" ><i class="el-icon-delete" size="mini"></i>
+              </button>
               </work-col>
           </div>
-
         <div slot="mezera" class="red">&nbsp;</div>
-
-
-      </work>
+     </work>
   </div>
 <div  v-for="(aBefore2,iBefore2 ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix>IDEFIXACTIVE && IDEFIXACTIVE>0 )})" :key="iBefore2+15000"
      slot="kalkulace"
@@ -1637,7 +1640,7 @@
     </my-layout>
     <!-- VL //-->
 
-  <v-row justify="center">
+  <el-row justify="center">
     <v-dialog v-model="dialogVL" persistent max-width="220mm" class="pa-0 ma-0">
       <template v-slot:activator="{ on }">
         <v-btn color="primary" dark v-on="on">Test VL - Docasne</v-btn>
@@ -1655,65 +1658,9 @@
 
       </v-card>
 
-
-      <v-card v-if="false">
-        <v-card-title>
-          <span class="headline">User Profile</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal first name*" required></v-text-field>
-
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Legal last name*"
-                  hint="example of persistent helper text"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Email*" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Password*" type="password" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Age*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                  label="Interests"
-                  multiple
-                ></v-autocomplete>
-              </v-col>
-            </v-row>
-          </v-container>
-          <small>*indicates required field</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialogVL = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="dialogVL = false">Save</v-btn>
-        </v-card-actions>
-      </v-card>
     </v-dialog>
-  </v-row>
-
+  </el-row>
     <!-- VL //-->
-
-
   </div>
 </template>
 
@@ -1813,6 +1760,7 @@ export default {
      Znovu: 0,
      IDEFIXACTIVE: "0",
      IDEFIXACTIVELAST:0,
+     ITEM1:[],
      NAZEVACTIVE:'',
      ID2ASK: -1,   //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
      MAINMENULAST:'kalkulace',
@@ -2005,7 +1953,29 @@ export default {
       console.log('jebka')
     }
     //alert('a')
+  },
+  aKalkBefore: function(a){
+
+      const self=this
+      //return
+      if (self.aKalkBefore.length<1) {
+        return
+      }
+
+
+      self.ITEM1=[]
+
+
+      var neco=self.aKalkBefore.filter(e=>{return e.active==true  })
+      if (neco.length>0){
+        self.ITEM1=neco[0]
+      }
+
+
+      //f.Alert2(self.ITEM1)
   }
+
+
  },
 
 beforeDestroy: function () {
@@ -2200,8 +2170,10 @@ deactivated: function () {
          ;alter table ${self.cTable} add poradi serial
          ;alter table ${self.cTable} add active bool default false
          ;alter table ${self.cTable} add idefix_src bigint default 0
+         ;alter table ${self.cTable} add idefix_src bigint default 0
          ;alter table ${self.cTable} alter idefix  set default nextval('list2_seq')
          ;alter table ${self.cTable} alter id set default nextval('${self.cTable}_seq')
+
          `
 
          Q.post(0,q)
@@ -2397,6 +2369,19 @@ deactivated: function () {
 
     })
 
+     eventBus.$on('STATUS', (server) => {
+        queryKalk.getTemplatesUser(self.cTable)
+        .then((res) => {
+          self.aKalkBefore=res
+          self.ITEM1=res.filter(e=>{return e.active==true  })
+        })
+      //self.addCol(server.key)
+
+    })
+
+
+
+
  },
  async mounted () {
  // alert('Tvorim 22')
@@ -2424,6 +2409,7 @@ if (self.MAINMENULAST== 'zakazky'){
  // f.Alert(self.MAINMENULAST, self.cTable)
 
   self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
+
 //   self.aKalkBefore = []
 
 
@@ -3836,9 +3822,7 @@ if (self.MAINMENULAST== 'zakazky'){
        })
         self.Seznam('nab')
 
-
         //Vlozit polozky z kalkulace
-
 
 
        } else
@@ -4852,13 +4836,16 @@ if (self.MAINMENULAST=='zakazky') {
                   `
                   qU1+=`;update ${cT2} set idefix = nextval('list2_seq'::regclass ),id=nextval('zak_t_items_id_seq'::regclass)
                   , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+
                   ,idefix_zak=(select max(idefix) from ${cT1})`
 
+                  qU1+=`;update ${cT2} set idefix_src=idefix,  status=0`
 
                   qU1+=`;insert into zak_t_list (select * from ${cT1} );`
                   qU1+=`;insert into zak_t_items (select * from ${cT2});`
                   qU1+=`;update zak_t_list set datumsplatnosti = splatnost(idefix) where idefix  =(select max(idefix) from ${cT1} )`
                   qU1+=`;commit`;
+                  //Vymazat prilohy
 
                   //f.Alert2(c.cislo, f.Jstr(c) , " > ",qU1)
                   Q.post(self.idefix, `${qU1} `)
