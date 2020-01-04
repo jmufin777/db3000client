@@ -1,4 +1,7 @@
 import moment from 'moment'
+import axios from 'axios'
+import url from '@/services/url'
+
 
 
 export default {
@@ -1327,6 +1330,29 @@ sirka(id="",npar=0) {
 
       return nret
 },
+log(txt1="",txt2="",txt3="",txt4="") {
+  let formData = new FormData();
+  formData.append('txt1', txt1);
+  formData.append('txt2', txt2);
+  formData.append('txt3', txt3);
+  formData.append('txt4', txt4);
+
+  axios.post(`${url.url()}log`,
+          formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+
+          }
+        ).then(function () {
+          console.log('LOG OK!!');
+        })
+        .catch(function (err) {
+          console.log('LOG FAILURE!!',err);
+        });
+
+
+}
 
 
 }

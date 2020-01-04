@@ -856,13 +856,9 @@ deactivated: function () {
        cancelButtonText: 'Ne'
      })
      .then(()=>{
-
-       //f.Alert('Odeslilam do vyroby','Uz to jede ....' )
-       //f.Alert('Jeste uplnene, ale bude to v poho co nejryhleji to pujde', self.idefix)
        var q=`select * from ${self.cTable} where idefix = ${self.form.idefix}`
        console.log('Q zpet1 ', q)
        Q.all(self.idefix,q)
-
 
      .then((res)=>{
           console.log("RES", res)
@@ -872,13 +868,11 @@ deactivated: function () {
             q2=`update ${self.cTable} set status = 2 where idefix=${ifx} ;
                 update zak_t_items set status = 2 where idefix=${ifx} ;
                 update zak_t_vl_v set datumvraceni=now(),idefix_vratil=${self.idefix} where  idefix_item=${dataTemp.idefix_src} ;
-
                 `
                 Q.post(self.idefix,q2)
                 .then(()=> {
                   self.form.status=2;
                   eventBus.$emit('STATUS', {key: 2 })
-
                 })
                 .catch((e) => {
                   console.log("Chyba update VL" , q2 )
@@ -886,9 +880,12 @@ deactivated: function () {
            }
 
 
-       f.Alert(ifx)
+       //f.Alert(ifx)
 
 
+     })
+     .then(()=>{
+       this.$notify( { title: self.MAINMENULAST,  message: `VL Vracen` , type: 'warning', offset: 100, duration: 5000 })
      })
      .catch((e) => {
        console.log(e, q)
@@ -951,6 +948,7 @@ deactivated: function () {
 
          //f.Alert2(f.Jstr(res), q)
        })
+
        .catch(e =>{
          f.Alert('chybka')
        })

@@ -4,7 +4,6 @@
         <button v-for="(item,i) in aMain" :key="i" class="px-4 tlacitkoMenu elevation-2 hoVer"
           @click="setMenu(item.id)"
           :class="{'tlacitkoMenuActive':setmenu==item.id}"
-
           >
          {{item.txt}}
         </button>
@@ -13,6 +12,15 @@
            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
            <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
            </span>
+        </span>
+          <div v-for="(item,i) in whoin" :key="i+'whoin'"
+          class="orange lighten-4 px-1 mt-1 mx-1 "
+          style="float:right;position:relative;right:2%;border-radius:10px !important;border: solid 0px black !important"
+          :title="item._login1"
+          >
+          {{ item._user1==idefix?'JA':item._zkratka1}}
+          </div>
+        <span>
         </span>
         <!-- {{ LastMain }} / {{ID}} -->
       </div>
@@ -712,6 +720,7 @@ import { eventBus } from '@/main.js'
 import { setTimeout, clearInterval, setInterval } from 'timers'
 import f from '@/services/fce'
 import SQL from '../../services/fcesql'
+import Q from '../../services/query'
 import Prevod from './CalcPrevodDat.vue'
 
 
@@ -851,6 +860,9 @@ export default {
           nazev: ''
         }
       },
+      whoin:[{
+        zkratka1:'NI'
+      }]
 
    }
  },
@@ -1007,6 +1019,51 @@ deactivated: function () {
     setTimeout(function() {
       eventBus.$emit('MenuHlavni',{key:1999, item: self.setmenu})
      },100)
+     setInterval(function(){
+       //form.cislo
+
+       if (!f.isEmpty(self.ID) && document.getElementById('cislo'+self.ID)
+       && document.getElementById('cislo'+self.ID).value*1>0
+       ){
+         var qWho=`select * from
+            set_open(
+              ${self.idefix}
+            ,'${self.user}'
+            ,'${self.setmenu}'
+            ,'${self.form.cislo}'
+            )`
+            //console.log(qWho)
+            //return
+          Q.all(self.idefix,qWho
+            )
+            .then((res)=>{
+              self.whoin=[]
+              self.whoin = res.data.data;
+            })
+            .catch((e)=>{
+              console.log('Nelze zjistit , kdo ma otevrenou zakazku ')
+            })
+/*
+       console.log('a',
+        self.idefix,' :: ', self.login
+       ,self.setmenu
+       ,self.form.cislo
+       , ':'
+       ,self.ID
+       ,`select * from
+            set_open(
+              ${self.idefix}
+            ,'${self.user}'
+            ,'${self.setmenu}'
+            ,'${self.form.cislo}'
+            )`
+
+       )
+       */
+       }
+
+  //  console.log('a', self.idefix, self.MAINMENULAST, self.aktivni_zak,self.aktivni_nab,self.$refs.w1.form.cislo)
+    },1000)
     //   $.datepicker.regional['cs'] = {
     //     closeText: 'Zavrit', // set a close button text
     //     currentText: 'Dnes', // set today text
@@ -1038,7 +1095,19 @@ deactivated: function () {
 
     })
 
+ },
+ computed: {
+    ...mapState([
+      'isUserLoggedIn',
+      'xMenuMain',
+      'level',
+      'idefix',
+      'compaStore',
+      'Kalkulace',
+      'KalkulaceThis',
+      'user'
 
+    ]),
   },
  methods: {
    TestRend() {

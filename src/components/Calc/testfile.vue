@@ -170,7 +170,7 @@ encoding: '7bit',
             //self.obrazky=[]
           }
           )
-      },500)
+      },1500)
 
       //f.Alert(this.odkaz)
       if (window.File && window.FileReader && window.FileList && window.Blob) {

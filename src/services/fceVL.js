@@ -6,6 +6,14 @@ import store from '@/store/store'
 import {mapState} from 'vuex'
 
 import { eventBus } from '@/main.js'
+
+// import ElementUI from 'element-ui'
+// import 'element-ui/lib/theme-chalk/index.css'
+// import lang from 'element-ui/lib/locale/lang/cs-CZ'
+// import locale from 'element-ui/lib/locale'
+
+// configure language
+// locale.use(lang)
 const { forEach } = require('p-iteration');
 
 
@@ -49,12 +57,17 @@ export default {
   },
   async Vklad(idefix_item='', cTable='') {
     const self=this
+
     var idefix = store.state.idefix
     var form_item={}
     var form_zak={}
     var q2= ''
     var qI=''
     var qTmp=''
+    //return new Promise((resolve,reject)=>{
+
+
+
     if (cTable=='') cTable= 'zak_t_items'
       //f.Alert('VkladVL 22 ', idefix_item , idefix )
      var q1= `select * from ${cTable} where idefix = ${idefix_item}`
@@ -85,12 +98,11 @@ export default {
                   //Dekoduji polozky pro VL
                   //f.Alert('Obsah ',f.Jstr(form_item.obsah))
 
-
                   qI=`insert into zak_t_vl_v (idefix_zak, idefix_item, cislozakazky,idefix_obchodnik,idefix_firma, nazev, polozka,expedice_datum,expedice_cas)
                     values (${form_zak.idefix}, ${form_item.idefix}, ${form_zak.cislozakazky},${form_zak.idefix_obchodnik},${form_zak.idefix_firma},'${form_zak.nazev}','${form_item.nazev}'
                     ,'${form_item.expedice_datum}', '${form_item.expedice_cas}'
                     );select vl_set(${form_zak.idefix}, ${form_item.idefix}) `
-                    f.Alert2('1',qI)
+                    //f.Alert2('1',qI)
 
                    Q.post(idefix,qI)
                    .then(()=>{
@@ -101,20 +113,32 @@ export default {
                      })
                    })
                 } else {
-                    self.getLastID(form_item) //Docasne - jeste rozmyslim, ted je aby to poslalo event na zobrazeni s daty
+                    self.getLastID(form_item)
+                     //Docasne - jeste rozmyslim, ted je aby to poslalo event na zobrazeni s daty
+                     .then(()=>{
+                      //if (confirm("VL jiz jsou  zalozeny a  odeslany, chcete jej aktualizovat ?"))  {
+                        self.UpdateVL(form_zak,form_item)
+                        .then(()=>{
+                          Q.post(idefix,`select vl_set(${form_zak.idefix}, ${form_item.idefix}) `)
+                        })
+                      //}
 
-                  if (confirm("VL jiz jsou  zalozeny a  odeslany, chcete jej aktualizovat ?"))  {
-                    self.UpdateVL(form_zak,form_item)
-                  }
+                     })
+
+
                 }
               })
+
           })
         }
       } else {
         f.Alert('Polozka neni k dispozici')
       }
-
     })
+    //.then(()=>{ //nejde to notify
+        //this.$notify( { title: self.MAINMENULAST,  message: `VL Odeslan ` , type: 'warning', offset: 100, duration: 5000 })
+    //})
+
 
     /*
         kod int,
@@ -154,8 +178,10 @@ export default {
         poradi serial
     */
 
+//  })
+
   },
-  async getLastID(form_item){
+  async getLastID(form_item){  //Tohle je pozustatek,jeste kdyz melo nbyt VL vic,necemu to nevadi, ale nebude to zrejme potreba
     const self=this
 
     var q=`select * from zak_t_vl_v where idefix_item=${form_item.idefix} order by id desc limit 1`
@@ -166,12 +192,47 @@ export default {
 //        f.Alert2("IDEFIX_VL ", res.idefix, "Q :", q , f.Jstr(res))
         eventBus.$emit('IDEFIX_VL',{IDEFIX_VL: res.data.data[0].idefix })
       }
-
-
     })
   },
 
   async UpdateVL(form_zak, form_item) { //Kompletni polozky VL
+    const self=this
+    var qU=''
+
+    var res=await self.VLdecode(form_item.obsah)
+
+      f.Alert("RESE ",f.Jstr(res))
+      qU = `update zak_t_vl_v set `
+      qU +=  ` nazev='${form_zak.nazev}' `
+      qU +=  `,polozka='${form_item.nazev}' `
+      qU +=  `,celkem_ks='${form_item.ks}' `
+      qU +=  `,mat_txt='${res.mat.mat}' `
+      qU +=  `,idefix_mat='${res.mat.idefix_mat}' `
+      qU +=  `,mat_sirka='${res.mat.mat_sirka}' `
+      qU +=  `,mat_poznamka='${res.mat.mat_poznamka}' `
+
+      qU +=  `,stroj='${res.stroj.nazev}' `
+      qU +=  `,strojmod='${res.stroj.mod}' `
+
+      qU +=  `,celkem_m2='${res.metry.m2}' `
+
+
+      qU += ` where idefix_item = ${form_item.idefix}`
+      qU=qU.replace(/undefined/g,'0')
+
+      f.Alert2('funkce UpdateVL 12 ::',qU)
+
+      await Q.post(self.idefix,qU)
+
+
+
+
+
+
+    //Doplnit polozky pro finalni zalozeni
+
+  },
+  async UpdateVL_old(form_zak, form_item) { //Kompletni polozky VL
     const self=this
     var qU=''
 
@@ -194,9 +255,13 @@ export default {
 
 
       qU += ` where idefix_item = ${form_item.idefix}`
-      f.Alert2('funkce UpdateVL',qU)
+      qU=qU.replace(/undefined/g,'0')
+
+      f.Alert2('funkce UpdateVL 12 ::',qU)
 
       Q.post(self.idefix,qU)
+
+
 
     })
 

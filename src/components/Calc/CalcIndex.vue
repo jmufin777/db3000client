@@ -7,6 +7,7 @@
     <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
      <div >
       <input type="hidden" id="Zmenad" value="0" class="black black--text" style="width:100px">
+
       <work-but-menu :ID="ID" ref="w1" :obrazovka_zak="obrazovka_zak" :obrazovka_nab="obrazovka_nab" >
         <span  slot="tlacitkazakazky" >
           <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
@@ -2064,6 +2065,7 @@ deactivated: function () {
      }),
      await eventBus.$on('SAVEZAZNAM', (server) => {
        //f.Alert2('Co tu delas ?', "DATABAZE!! " )
+       f.log('EMIT 1 ','SAVEZAZNAM')
 
        if (server.data.nazev=='') {
           f.Alert2('Nazev je nutne vyplnit',self.user)
@@ -2078,18 +2080,21 @@ deactivated: function () {
           if (server.idefix != self.IDEFIXACTIVE){
     //        f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace ne"  )
             SaveKalkulkace = false
+            f.log('EMIT 2 ','SAVEZAZNAM')
             self.saveZaznam(server,1)   // prepis radky
             //queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
 
           } else
           if (server.idefix == self.IDEFIXACTIVE && server.idefix > 0 ) {
             //f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace Ano ZDE"  )
+            f.log('EMIT 3 ','SAVEZAZNAM')
             self.saveZaznam(server,2)   //prepis radky a kalkulace
             SaveKalkulkace = true
             //queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", false, server.idefix, SaveKalkulkace )
           } else
           if (server.idefix == 0 && self.IDEFIXACTIVE==0 ) {
             //f.Alert(server.idefix , self.IDEFIXACTIVE , " - kalkulace Ano , VKLAD ANO KOD 3"  )
+            f.log('EMIT 4 ','SAVEZAZNAM')
             self.saveZaznam(server,3) //vklad radky i kalkulace
             SaveKalkulkace = true
             //queryKalk.VkladUser(server.data, self.aKalkulace, self.cTable, "", true, server.idefix, SaveKalkulkace )
@@ -2121,14 +2126,15 @@ deactivated: function () {
           self.MAINMENULAST=server.item
 
           if (self.MAINMENULAST== 'kalkulace'){
-            self.cTable = 'calc_my_' + self.idefix+"_nab"
+            self.cTable = 'calc_my_' + self.idefix+"_nab"+self.ID
+            //alert('a'+self.ID)
             self.Seznam('nab')
             self.FillFormWait(self.polozka_nab)
 
 
           } else
           if (self.MAINMENULAST== 'zakazky'){
-            self.cTable = 'calc_my_' + self.idefix+"_zak"
+            self.cTable = 'calc_my_' + self.idefix+"_zak"+self.ID
             self.Seznam('zak')
             self.FillFormWait(self.polozka_zak)
           }
@@ -2160,8 +2166,6 @@ deactivated: function () {
          self.KalkulaceLast = -1
          self.IDEFIXACTIVE=0
 
-
-
          //f.Alert2(self.idefix)
          var q = `
          drop table if exists ${self.cTable} ;drop sequence if exists ${self.cTable}_seq
@@ -2170,13 +2174,9 @@ deactivated: function () {
          ;alter table ${self.cTable} add poradi serial
          ;alter table ${self.cTable} add active bool default false
          ;alter table ${self.cTable} add idefix_src bigint default 0
-         ;alter table ${self.cTable} add idefix_src bigint default 0
          ;alter table ${self.cTable} alter idefix  set default nextval('list2_seq')
          ;alter table ${self.cTable} alter id set default nextval('${self.cTable}_seq')
-
          `
-
-         Q.post(0,q)
          .then (res => {
            // f.Alert2('Vytvorena nova databaze pro tvorbu VL', JSON.stringify(res))
            f.sleep(20)  //vetez kdyby nahodou neco bylo potreba sem prdnout jeste
@@ -2399,10 +2399,10 @@ deactivated: function () {
 
 
 if (self.MAINMENULAST== 'zakazky'){
-      self.cTable = 'calc_my_' + self.idefix+"_zak"
+      self.cTable = 'calc_my_' + self.idefix+"_zak"+self.ID
   }
   if (self.MAINMENULAST== 'kalkulace'){
-      self.cTable = 'calc_my_' + self.idefix+"_nab"
+      self.cTable = 'calc_my_' + self.idefix+"_nab"+self.ID
   }
 
  // f.Alert('tab  ', self.cTable, self.MAINMENULAST)
@@ -2415,6 +2415,10 @@ if (self.MAINMENULAST== 'zakazky'){
 
  self.Sirka=  Math.ceil((window.innerWidth ) * 0.9)
   await self.setIdefixActive()
+// setInterval(function(){
+
+//     console.log('a', self.idefix, self.MAINMENULAST, self.aktivni_zak,self.aktivni_nab,self.$refs.w1.form.cislo)
+//   },1000)
   //$("*").removeAttr('autocomplete');
   setInterval(function(){
     self.IsZmena()
@@ -2688,16 +2692,38 @@ if (self.MAINMENULAST== 'zakazky'){
      var qC= `create table ${randTab} without oids as select * from ${ceho}_t_items where idefix=${ifx}`;
      await Q.post(self.idefix,qC)
 
-     var qU=`update ${randTab} set idefix_${ceho} = ${ifx_aktivni}, time_insert=now(),time_update=now(),user_insert_idefix=${self.idefix},user_update_idefix=${self.idefix},idefix= nextval('list2_seq'::regclass),id=nextval('zak_t_items_id_seq'::regclass)`
+     var qU=`update ${randTab} set idefix_${ceho} = ${ifx_aktivni}, time_insert=now()
+     ,time_update=now(),user_insert_idefix=${self.idefix}
+     ,user_update_idefix=${self.idefix},idefix= nextval('list2_seq'::regclass),id=nextval('zak_t_items_id_seq'::regclass),status=0`
      await Q.post(self.idefix,qU)
      var qSpoj=`insert into ${ceho}_t_items select * from ${randTab}`
      await Q.post(self.idefix,qSpoj)
+     var qOprav=`update ${ceho}_t_items set idefix_src=idefix where idefix_src is null or idefix_src!=idefix`
+     await Q.post(self.idefix,qOprav)
+     // f.Alert(self.cTable)
+
+
      if (self.MAINMENULAST=='zakazky'){
+
+       await Q.post(self.idefix,`drop table if exists ${self.cTable}`)
+       await Q.post(self.idefix,`create table  ${self.cTable} without oids as select * from ${ceho}_t_items where idefix_zak=${ifx_aktivni}`)
+
+       await Q.post(self.idefix,`alter table  ${self.cTable}  alter column id set default nextval('${self.cTable}_seq'::regclass ) `)
+       await Q.post(self.idefix,`alter table  ${self.cTable}  alter column idefix set default  nextval('list2_seq'::regclass) `)
+       //nextval('calc_my_9_zak_seq'::regclass)
+      // nextval('list2_seq'::regclass)
+
+
       self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${ifx_aktivni} order by idefix`)).data.data
       self.addPol('zak',polozka.idefix)
       self.polozky_soucet('zak')
      } else
      if (self.MAINMENULAST=='kalkulace'){
+       await Q.post(self.idefix,`drop table if exists ${self.cTable}`)
+       await Q.post(self.idefix,`create table  ${self.cTable} without oids as select * from ${ceho}_t_items where idefix_zak=${ifx_aktivni}`)
+       await Q.post(self.idefix,`alter table  ${self.cTable}  alter column id set default nextval('${self.cTable}_seq'::regclass ) `)
+       await Q.post(self.idefix,`alter table  ${self.cTable}  alter column idefix set default  nextval('list2_seq'::regclass) `)
+
        self.polozky_nab=  (await Q.all(self.idefix,`select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${ifx_aktivni} order by idefix`)).data.data
        self.addPol('nab',polozka.idefix)
        self.polozky_soucet('nab')
@@ -3590,7 +3616,7 @@ if (self.MAINMENULAST== 'zakazky'){
        return
 
      }
-      self.$refs.w1.aOsoba=   await SQL.getFirmaOsoba(polozka.idefix_firma)
+      self.$refs.w1.aOsoba =  await SQL.getFirmaOsoba(polozka.idefix_firma)
       //alert(self.obrazovka_zak)
 
      if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
@@ -3607,7 +3633,6 @@ if (self.MAINMENULAST== 'zakazky'){
 
        //self.$refs.w1.form.osoba   = polozka.idefix_firma
        //f.Alert(polozka.idefix, f.Jstr(polozka))
-
 
      } else {
        this.$notify( { title: self.MAINMENULAST,  message: `Chyba pri nacteni polozek` , type: 'error', offset: 100, duration: 5000 })
@@ -4428,15 +4453,7 @@ async Seznam(ceho = 'zak', where ='', orderby='', add=false ){
 
 
 
-
-
         // 2 as kategorie,
-
-
-
-
-
-
 
         if (ceho == 'zak') {
 
@@ -4845,7 +4862,7 @@ if (self.MAINMENULAST=='zakazky') {
                   qU1+=`;insert into zak_t_items (select * from ${cT2});`
                   qU1+=`;update zak_t_list set datumsplatnosti = splatnost(idefix) where idefix  =(select max(idefix) from ${cT1} )`
                   qU1+=`;commit`;
-                  //Vymazat prilohy
+                  //Vymazat
 
                   //f.Alert2(c.cislo, f.Jstr(c) , " > ",qU1)
                   Q.post(self.idefix, `${qU1} `)
@@ -4877,9 +4894,11 @@ if (self.MAINMENULAST=='zakazky') {
                                   self.status_zak=2
                                   var naklad=0
                                   ///
-                                  self.polozky_zak.forEach(el=>{
-                                   naklad=0
-                                    queryKalk.setKorekce(el.obsah )
+                                    self.polozky_zak.forEach(el=>{
+                                    naklad=0
+                                    //f.Alert(f.Jstr(el.obsah)=='null')
+                                    //queryKalk.setKorekce(el.obsah )
+                                    queryKalk.setKorekceAndPrilohy(el.obsah)
 
                                     .then(()=>{
                                          prepocty.getNaklad(el.obsah)
@@ -5201,7 +5220,7 @@ if (self.MAINMENULAST=='kalkulace') {
       const self = this
       var SaveKalkulkace = false
 
-
+      f.log(' SAVE ZAZNAM')
       if (kod == 1 ){
         SaveKalkulkace = false  //Ulozeni radky zavrene kalkulace
         //f.Alert('kod 1 - prepis bez Kalk')
@@ -5282,7 +5301,7 @@ alert(' addVL() 10')
       var dataRadka=f.dataRadka(0)
 //        f.Alert('Answer Index 2B:' ,  ' / Active : ', self.IDEFIXACTIVE, f.Jstr(dataRadka) )
   //      return
-
+      f.log('EMIT 5 ','SAVEZAZNAM')
       self.saveZaznam({idefix: self.IDEFIXACTIVE, data: dataRadka   },3)
       .then(res=>{
         //f.Alert('Vlozeno')
@@ -5331,6 +5350,7 @@ alert(' addVL() 10')
               objFiluta.focus()
               return
             } else {
+              f.log('EMIT 6 ','SAVEZAZNAM')
               self.saveZaznam({idefix: 0, data: resolve   },3)
               .then(()=>{
                 self.setRender()
@@ -5394,13 +5414,15 @@ if (el.idefix > 0 ) {
         }
         else
         if (self.aKalkulace.length>0 && self.IDEFIXACTIVE == el.idefix ) {
-
+            f.log('EMIT 7 ','SAVEZAZNAM')
             await self.saveZaznam({idefix: el.idefix, data: dataRadka   },2)
             .then(res=>{
               self.Pocet++
             })
         } else {
-            await self.saveZaznam({idefix: el.idefix, data: dataRadka   },1)
+          f.log('EMIT 8 ','SAVEZAZNAM')
+            //await self.saveZaznam({idefix: el.idefix, data: dataRadka   },1)
+            await f.sleep(1)
             .then(res=>{
               self.Pocet++
             })
@@ -5417,6 +5439,7 @@ if (self.Pocet == - 1) {
        //alert('1 Vklad by idefix - zabalit Active 0' )
        dataRadka=  f.dataRadka(idefix)
       try {
+        f.log('EMIT 9 ','SAVEZAZNAM')
         await  self.saveZaznam({idefix: idefixActive, data: dataRadka   },3)
         await  self.setRender()
         self.aKalkBefore=[]  // 1.JARDA
@@ -5424,7 +5447,7 @@ if (self.Pocet == - 1) {
         // f.Alert('Vkladam prvni')
         self.Pocet++
       } catch (e) {
-       f.Alert('Vklad selhal')
+       f.Alert('Vklad selhal', e)
       }
      }
      $("#Zmenad").get(0).value=0
@@ -5440,16 +5463,25 @@ if (self.Pocet == - 1) {
   },
   async setRozbalit(idefix) {
      const self = this
+       f.log('1', 'Rozbalit')
+
        await queryKalk.setActive(idefix,self.cTable)
+       f.log('2', 'setActive')
         self.IDEFIXACTIVE=idefix
         var nK= await(queryKalk.getTemplateUser(idefix,self.cTable))   //Aktualni kalulkulace
+        f.log('3', `queryKalk.getTemplatesUser(${self.cTable})`)
         //f.Alert2(f.Jstr(nK))
         await self.beforeArray() //2.JARDA
         self.aKalkulace =  f.Jparse(nK[0].obsah)
+        console.log('Rozbaluji :',`queryKalk.getTemplatesUser(${self.cTable})`)
+         f.log('4', 'Parse obsah',`queryKalk.getTemplatesUser(${self.cTable})`)
         self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))   //Vsechny kalkulace - seznam
+        f.log('5', 'Hotvo',`queryKalk.getTemplatesUser(${self.cTable})`)
          //self.aKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
          await  self.$store.dispatch('saveKalkCela', {data: self.aKalkulace })
+         f.log('5', 'SaveKalk ok')
          await self.setIdefixActive()
+         f.log('6', 'Active OK')
 
 
 
@@ -5463,19 +5495,38 @@ if (self.Pocet == - 1) {
   },
   async setZabalit() {
     const self=this
+       f.log('1', 'Zabalit')
        self.aKalkulace =[]
        self.$store.dispatch('cleanKalk')
         if (self.IDEFIXACTIVE > 0) { //AAAAAAA
            self.IDEFIXACTIVELAST= self.IDEFIXACTIVE
         }
-       await queryKalk.setActive(0,self.cTable,0)  //tj.vypne vse, nezalezina idefixu
+      //return
+      try {
+        await queryKalk.setActive(0,self.cTable,0)  //tj.vypne vse, nezalezina idefixu
+      }
+      catch(e) {
+        console.log("1: ", e)
+      }
+
+      try {
        await self.setIdefixDeActive()
+      }
+       catch(e) {
+        console.log("2: ", e)
+      }
+      try {
        await self.beforeArray() //2.JARDA
+      }
+       catch(e) {
+        console.log("3 ", e)
+      }
   },
   async setVL(idefix, jenUloz=0) {
      const self = this
       var idefixActive=self.IDEFIXACTIVE
       var neco=$("#Zmenad").get(0).value
+      f.log('1',"setVL")
           document.getElementById("obalKalkulace").style.opacity=0.5
            //$(document.getElementById("obalKalkulace")).toggle( "slide", { direction: "down"  });
           //$(document.getElementById("obalKalkulace")).fadeTo( "slow", 0.1 );
@@ -5485,11 +5536,14 @@ if (self.Pocet == - 1) {
           //var t = c.getContext('2d');
           //window.open('', document.getElementById('obalKalkulace').toDataURL());
 
+
       if (self.StopStav){
         self.mAlert("Cekam",2000)
+        f.log('2',"setVL")
 
          setTimeout(function(){
            //self.StopStav=false
+           f.log('3',"setVL")
          },2000)
          return
 
@@ -5499,11 +5553,17 @@ if (self.Pocet == - 1) {
 
       if (idefixActive==0 && self.aKalkulace.length>0 && idefix>0) {
             alert('0. Je  treba ulozit neulozenou')
+            f.log('4',"setVL")
           var dataRadka=  f.dataRadka(0)
           try {
+            f.log('EMIT 10 ','SAVEZAZNAM')
+            f.log('5',"setVL")
             await  self.saveZaznam({idefix: 0, data: dataRadka   },3)
+            f.log('6',"setVL")
             await  self.setRender()
+            f.log('7',"setVL")
             await  self.setZabalit()
+            f.log('8',"setVL")
 
             self.Pocet++
           } catch (e) {
@@ -5513,13 +5573,17 @@ if (self.Pocet == - 1) {
   //      return
       }
         var necoSave=0
+        f.log('9',"setVL")
             necoSave = await self.SaveAll(idefix)
             if (jenUloz==1) {
+              f.log('10',"setVL")
               await  self.setZabalit()
+              f.log('11',"setVL")
               self.StopStav=false
            //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
            //$(document.getElementById("obalKalkulace")).toggle( "slide" );
             document.getElementById("obalKalkulace").style.opacity=1
+            f.log('12',"setVL")
               // alert('Jen jsem to ulozil')
               return
             }
@@ -5528,7 +5592,9 @@ if (self.Pocet == - 1) {
          self.StopStav=false;
          //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
          //$(document.getElementById("obalKalkulace")).toggle( "slide" );
+         f.log('13',"setVL")
          document.getElementById("obalKalkulace").style.opacity=1
+         f.log('14',"setVL")
 
          return
        }
@@ -5537,37 +5603,46 @@ if (self.Pocet == - 1) {
       if (idefixActive==0  && idefix>0){
          //alert(idefixActive +" " + idefix +' Rozbalit ')
         //alert('A Rozbaliti')
+        f.log('15',"setVL")
          await self.setRozbalit(idefix)
+         f.log('16',"setVL")
          self.StopStav=false
          //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
          //$(document.getElementById("obalKalkulace")).toggle( "slide" );
          document.getElementById("obalKalkulace").style.opacity=1
+         f.log('17',"setVL")
          return
       }
 //      f.Alert(idefixActive, " / ", idefix)
       if (idefixActive>0  && idefix == idefixActive ){
     //      alert(idefixActive +" " + idefix +' Rozbalit ')
           //  alert('B Zabaliti')
+          f.log('18',"setVL")
           await self.setRozbalit(idefix)
+          f.log('19',"setVL")
           await self.setZabalit(idefix)
+          f.log('20',"setVL")
           self.StopStav=false
           //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
           //$(document.getElementById("obalKalkulace")).toggle( "slide" );
           document.getElementById("obalKalkulace").style.opacity=1
+          f.log('21',"setVL")
           return
           //await self.setRozbalit(idefix)
       }
       if (idefixActive>0  && idefix != idefixActive && idefix > 0 ){
+        f.log('22',"setVL")
           //alert('C Prebalit')
           await self.setZabalit()
+          f.log('23',"setVL")
           await self.setRozbalit(idefix)
+          f.log('24',"setVL")
           self.StopStav=false
           //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
           //$(document.getElementById("obalKalkulace")).toggle( "slide" );
           document.getElementById("obalKalkulace").style.opacity=1
-
+          f.log('25',"setVL")
           return
-
       }
 
 
@@ -5620,10 +5695,12 @@ if (self.Pocet == - 1) {
 //                 alert('kalkulace otevrena - vlozit novy')
                } else {
   //                alert('kalkulace otevrena - update pro '+ self.IDEFIXACTIVE)
+                  f.log('EMIT 11 ','SAVEZAZNAM')
                   self.saveZaznam({idefix: self.IDEFIXACTIVE, data: dataRadka2   },2)
                   if (idefix==self.IDEFIXACTIVE) {
     //                alert('stejne, druhou nedelam')
                   } else {
+                    f.log('EMIT 12 ','SAVEZAZNAM')
                     self.saveZaznam({idefix: idefix, data: dataRadka1   },1)
                   }
                }

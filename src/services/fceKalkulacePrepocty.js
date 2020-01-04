@@ -24,13 +24,18 @@ const cols = `
   //--obsah,
 
 export default {
-
 async getNaklad(data) {
   var defer = $.Deferred();
   var nsum = 0
   var ntmp = 0
-  //alert(this.getNakladSloupce())
 
+  if (f.isEmpty(data) || f.Jstr(data)=='null' ) {
+    defer.resolve(nsum)
+    return defer.promise()
+  }
+  //defer.resolve(nsum)
+  //return defer.promise()
+  //alert(this.getNakladSloupce())
   await data.forEach(async (element,idx )=> {
           ntmp=0 // Zde bude naklad leve strany, pokud bude k dispozici
     if (!f.isEmpty(element.sloupecid) ) {
@@ -39,10 +44,7 @@ async getNaklad(data) {
           })
     }
     nsum = nsum + ntmp // potom co se sjedou vsechny sloupce, pripocitam vysledek
-
-
   });
-
   defer.resolve(nsum)
   return defer.promise()
 },
@@ -88,6 +90,7 @@ async KalkulacePrepocetKusy(k, ks=1){
   return defer.promise();
 
 },
+
 async KalkulacePrepocetKusyNa1(k, ks=1){
   //f.Alert("K" , k.length)
   //return

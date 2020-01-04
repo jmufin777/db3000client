@@ -422,6 +422,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
   var nret = 0
   var dataBck=f.Jparse(data)
   var aCols = cols.split(",")
+  f.log('1.','VkladUser')
   if (idefix_vlastnikPrace==0){
     await this.Vlastnik()
     await this.VlastnikPrace()
@@ -506,6 +507,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
 
   } else {
     if (SaveKalkulkace==true && SaveData==true) {
+      f.log('2a.','VkladUser')
         var q = `update ${cTable} set
       nazev              = trim('${data.nazev}'),
       kcks               = '${data.kcks}',
@@ -533,6 +535,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
 //  f.Alert('Ulozeni bez data ', q )
 } else
   if (SaveKalkulkace==false) {  //Zabalena radka, kalkulaci neprepisuji
+    f.log('2b.','VkladUser')
     var q = `update ${cTable} set
     nazev              = trim('${data.nazev}'),
     kcks               = '${data.kcks}',
@@ -569,6 +572,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
   return;
 },
 async setActive(idefix=0,cTable, Aktivuj=1){
+  f.log('Set ACTIVE FCE')
   await Q.post(0,`update ${cTable} set active=false where active`)
   if (Aktivuj>0) {
     await Q.post(0,`update ${cTable} set active=true where idefix=${idefix}`)
@@ -705,7 +709,11 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
   if (poradiTo > 0) {
     q= `${q} and poradi<= ${poradiTo} `
   }
-  q= `${q} order by a.idefix `
+  q= `${q} order by
+  case when status =1 then 2 else 1 end,
+
+  a.idefix `
+f.log('ORDER TEMPLATES', q)
   // q= `${q} order by
   //case when idefix_src>0 then idefix_src else null end,
   //idefix,case when a.user_update_idefix = ${idefix} then 1 else 2 end , nazev `
@@ -813,7 +821,16 @@ async setKorekce(data ) {
   var nsum = 0
   var ntmp = 0
   const self=this
+
   //alert(this.getNakladSloupce())
+  if (f.isEmpty(data) || f.Jstr(data)=='null' ) {
+    defer.resolve(nsum)
+    return defer.promise()
+  }
+  //defer.resolve(nsum)
+  //return defer.promise()
+  try{
+
 
   await data.forEach(async (element,idx )=> {
           ntmp=0 // Zde bude naklad leve strany, pokud bude k dispozici
@@ -828,6 +845,11 @@ async setKorekce(data ) {
   });
 
   defer.resolve(nsum)
+} catch (e) {
+  console.log(err1)
+  defer.resolve(nsum)
+
+}
   return defer.promise()
 },
 
@@ -844,6 +866,39 @@ setKorekceCol(data, sloupec){ // data jsou leva strana kalkulace
 
   //return nSum
 },
+async setPrilohy(data ) {
+  var defer = $.Deferred();
+  var nsum = 0
+  var ntmp = 0
+  const self=this
+  if (f.isEmpty(data) || f.Jstr(data)=='null' ) {
+    defer.resolve(nsum)
+    return defer.promise()
+  }
+  //alert(this.getNakladSloupce())
+
+  await data.forEach(async (element,idx )=> {
+          ntmp=0 // Zde bude naklad leve strany, pokud bude k dispozici
+    if (!f.isEmpty(element.data.Priloha1Txt ) ) {
+      element.data.Priloha1Txt=''
+      element.data.Priloha1Idefix=0
+    }
+    //nsum = nsum + ntmp // potom co se sjedou vsechny sloupce, pripocitam vysledek
+
+  });
+  defer.resolve(nsum)
+  return defer.promise()
+},
+
+async setKorekceAndPrilohy(data){
+  if (f.isEmpty(data) || f.Jstr(data)=='null' ) {
+   return
+  }
+  await this.setKorekce(data)
+  await this.setPrilohy(data)
+
+},
+
 
 
 //Stroj
