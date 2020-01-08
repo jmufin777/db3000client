@@ -1331,6 +1331,7 @@ sirka(id="",npar=0) {
       return nret
 },
 log(txt1="",txt2="",txt3="",txt4="") {
+  //return
   let formData = new FormData();
   formData.append('txt1', txt1);
   formData.append('txt2', txt2);

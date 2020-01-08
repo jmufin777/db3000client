@@ -1234,7 +1234,7 @@
         @click="beforeArray()"
         >
         <!-- 1.JARDA //-->
-        Krize
+      Obnovit
     </button>
 
   <button  class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden"
@@ -1876,8 +1876,6 @@ export default {
      const self=this
       self.aKalkBefore=[]
 
-
-
       //f.Alert(self.IDEFIXACTIVE)
       //self.setIdefixActive()
       queryKalk.getTemplatesUser(self.cTable)
@@ -2167,7 +2165,9 @@ deactivated: function () {
          self.IDEFIXACTIVE=0
 
          //f.Alert2(self.idefix)
+         f.log('SMAZANI TMP 1')
          var q = `
+         select drop_tmp(${self.idefix});
          drop table if exists ${self.cTable} ;drop sequence if exists ${self.cTable}_seq
          ;create sequence ${self.cTable}_seq
          ;create table ${self.cTable} without oids as select * from calc_templates limit 0
@@ -2370,11 +2370,17 @@ deactivated: function () {
     })
 
      eventBus.$on('STATUS', (server) => {
+        self.aKalkBefore=[]
         queryKalk.getTemplatesUser(self.cTable)
         .then((res) => {
           self.aKalkBefore=res
           self.ITEM1=res.filter(e=>{return e.active==true  })
+          f.log("STATUS PRIJEM")
+          setTimeout(function() {
+            self.beforeArray();
+          },500)
         })
+
       //self.addCol(server.key)
 
     })
@@ -2704,9 +2710,12 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
      if (self.MAINMENULAST=='zakazky'){
+       f.log('DROP CALC Z', self.idefix)
+       await Q.post(self.idefix,`select drop_tmp(${self.idefix});`)
 
        await Q.post(self.idefix,`drop table if exists ${self.cTable}`)
        await Q.post(self.idefix,`create table  ${self.cTable} without oids as select * from ${ceho}_t_items where idefix_zak=${ifx_aktivni}`)
+       await Q.post(self.idefix,`create sequence ${self.cTable}_seq`)
 
        await Q.post(self.idefix,`alter table  ${self.cTable}  alter column id set default nextval('${self.cTable}_seq'::regclass ) `)
        await Q.post(self.idefix,`alter table  ${self.cTable}  alter column idefix set default  nextval('list2_seq'::regclass) `)

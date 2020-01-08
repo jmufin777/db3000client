@@ -121,6 +121,7 @@ export default {
                         .then(()=>{
                           Q.post(idefix,`select vl_set(${form_zak.idefix}, ${form_item.idefix}) `)
                         })
+
                       //}
 
                      })
@@ -201,7 +202,7 @@ export default {
 
     var res=await self.VLdecode(form_item.obsah)
 
-      f.Alert("RESE ",f.Jstr(res))
+      //f.Alert("RESE ",f.Jstr(res))
       qU = `update zak_t_vl_v set `
       qU +=  ` nazev='${form_zak.nazev}' `
       qU +=  `,polozka='${form_item.nazev}' `
@@ -220,7 +221,7 @@ export default {
       qU += ` where idefix_item = ${form_item.idefix}`
       qU=qU.replace(/undefined/g,'0')
 
-      f.Alert2('funkce UpdateVL 12 ::',qU)
+      //f.Alert2('funkce UpdateVL 12 ::',qU)
 
       await Q.post(self.idefix,qU)
 

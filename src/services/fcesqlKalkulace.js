@@ -682,8 +682,9 @@ async getTemplates() {
 async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
   var defer = $.Deferred();
   var idefix=store.state.idefix
-
-  var q= `select
+  var q=''
+  if ( cTable.match(/zak/g)) {
+   q= `select
           a.idefix,
           a.nazev,
           a.kcks,
@@ -699,7 +700,45 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
           a.active,
           a.idefix_src,
           a.status,
-          b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix `;
+          c.vl_znacka,
+          c.vl_id,
+          c.poradi2,
+
+          c.idefix as idefix_vl,
+          d.pocet as pocet_vl,
+          b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix
+          left join  zak_t_vl_v c on a.idefix_src=c.idefix_item
+          left join  zak_vl_last d on c.idefix_zak=d.idefix_zak
+          `;
+          f.log('ORDER TEMPLATES', 'zak')
+  } else {
+     q= `select
+          a.idefix,
+          a.nazev,
+          a.kcks,
+          a.ks,
+          a.naklad ,
+          a.marze ,
+          a.prodej ,
+          a.marze_pomer,
+          a.expedice_datum,
+          a.expedice_cas,
+          a.user_update_idefix,
+          a.poradi,
+          a.active,
+          a.idefix_src,
+          2 as status,
+          '' as vl_znacka,
+          0 as vl_id,
+          0 as poradi2,
+          0 as idefix_vl,
+          0 as pocet_vl,
+          b.login  from ${cTable} a join list_users b on a.user_update_idefix = b.idefix
+          `;
+          f.log('ORDER TEMPLATES', 'nab')
+
+  }
+
 
   q= `${q} where  true and obsah is not null `
 
@@ -709,10 +748,11 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
   if (poradiTo > 0) {
     q= `${q} and poradi<= ${poradiTo} `
   }
-  q= `${q} order by
-  case when status =1 then 2 else 1 end,
 
-  a.idefix `
+  q= `select * from (${q}) qa  order by
+  case when status =1 then 2 else 1 end,
+  poradi2,  qa.idefix `
+
 f.log('ORDER TEMPLATES', q)
   // q= `${q} order by
   //case when idefix_src>0 then idefix_src else null end,

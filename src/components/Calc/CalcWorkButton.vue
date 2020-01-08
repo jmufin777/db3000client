@@ -338,9 +338,14 @@
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;width:20em;height:28px" class="honza_color2" >
         &nbsp;
+         VL:<button @click="vl_view(dataDB.idefix_vl)"><b> {{dataDB.vl_znacka }} {{dataDB.poradi2 }} /{{dataDB.pocet_vl }} </b></button>
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;height:26px;height:28px" class="honza_color2" >
-        VL seznam:
+          <!-- {{ dataDB }} -->
+           <!-- //VL seznam -->
+         <!-- select idefix,idefix_src,idefix_zak,vl_id,vl_znacka   from zak_t_items where idefix=13966665 ;
+         select vl_set(13634210,13966664) ; -->
+        &nbsp;
       </td>
 
       </tr>
@@ -840,16 +845,22 @@ deactivated: function () {
     //alert('aRend')
      eventBus.$emit("Rend")
   },
+  vl_view(_idefix_vl) {
+    eventBus.$emit('IDEFIX_VL', {IDEFIX_VL: _idefix_vl})
+
+  },
   async returnVL(ifx){
     const self=this
     var q
     var q2
     let dataTemp={}
     let dataItem={}
+    f.log('VL X ')
     if (self.MAINMENULAST == 'kalkulace') {
       self.mAlert('V rezimu nabidek nelze vracet z vyrby VL')
       return
     }
+
     this.$confirm('Vratit VL z vyroby  ?', 'Neco',{
        distinguishCancelAndClose: true,
        confirmButtonText: 'Ano?',
@@ -857,18 +868,21 @@ deactivated: function () {
      })
      .then(()=>{
        var q=`select * from ${self.cTable} where idefix = ${self.form.idefix}`
-       console.log('Q zpet1 ', q)
+       f.log('VL 0 ', q)
        Q.all(self.idefix,q)
+       //f.log("vL 1", q)
 
      .then((res)=>{
-          console.log("RES", res)
+          f.log("VL 2", f.Jstr(res))
 
            dataTemp = res.data.data[0]
            if (dataTemp.idefix_src>=0 && dataTemp.idefix_zak>0){
             q2=`update ${self.cTable} set status = 2 where idefix=${ifx} ;
                 update zak_t_items set status = 2 where idefix=${ifx} ;
-                update zak_t_vl_v set datumvraceni=now(),idefix_vratil=${self.idefix} where  idefix_item=${dataTemp.idefix_src} ;
+                update zak_t_vl_v set datumvraceni=now(),idefix_vratil=${self.idefix},poradi2=0,status=2 where  idefix_item=${dataTemp.idefix_src} ;
+                select vl_set(idefix_zak(${ifx}),-1)
                 `
+              f.log('VL 3',q2)
                 Q.post(self.idefix,q2)
                 .then(()=> {
                   self.form.status=2;
@@ -886,6 +900,7 @@ deactivated: function () {
      })
      .then(()=>{
        this.$notify( { title: self.MAINMENULAST,  message: `VL Vracen` , type: 'warning', offset: 100, duration: 5000 })
+
      })
      .catch((e) => {
        console.log(e, q)
@@ -922,6 +937,7 @@ deactivated: function () {
              //Tohle prohodit - napred uspesne vlozit a pak teprv oznacit status = 1 jako ze  existuje VL
              let q2=`update zak_t_items set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak} ;
                      update ${self.cTable} set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak};
+
                      update zak_t_vl_v set datumodeslani=now(),idefix_odeslal=${self.idefix},user_update_idefix=${self.idefix} where idefix_item=${dataTemp.idefix_src} ;
 
                    `
@@ -929,10 +945,16 @@ deactivated: function () {
              Q.post(self.idefix,q2)
              .then((res)=>{
                fceVL.Vklad(dataTemp.idefix_src)
-               self.form.status=1;
-               eventBus.$emit('STATUS', {key: 1 })
+               .then(()=>{
+                 self.form.status=1;
+                   eventBus.$emit('STATUS', {key: 1 })
+                    f.log("STATUS SEND")
+
+               })
+
                //Vykutit VL
              })
+
              .catch((e)=>{
                f.Alert('Aktualizace  ERR', q)
              })

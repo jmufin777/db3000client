@@ -101,14 +101,21 @@ export default {
       var q= `select a.*,b.nazev as nazev_zak
               ,d.nazev as nazev_firmy
 
-      ,count(*) over() as pocet, row_number() over( order by a.id ) as _poradi from zak_t_vl_v a
+      ,count(*) over() as pocetxxx
+      ,a.vl_znacka
+      ,last.pocet
+      , a.vl_znacka||' '||a.poradi2::text as _poradi
+      , row_number() over( order by a.id ) as _poradixx
+      from zak_t_vl_v a
               join zak_t_list b on a.idefix_zak=b.idefix
               join list_dodavatel d on a.idefix_firma=d.idefix
               join list_users u on a.idefix_obchodnik=u.idefix
+              left join zak_vl_last last on a.idefix_zak=last.idefix_zak
       where a.idefix=${self.IDEFIX_VL}  order by a.id`
 
       q=`select lpad(a.id,10,'0') as id_bar,idefix2fullname(a.idefix_obchodnik) as obchodnik,* from (${q}) a order by a.id`
       console.log(q)
+      f.log('VL VIEW ',q)
       self.VL= (await Q.all(self.idefix,q)).data.data
 
     //  f.Alert2(f.Jstr(self.VL))
