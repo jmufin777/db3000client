@@ -16,16 +16,15 @@
         </button>
 
         <button v-else-if="form.status==2" style=";border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1"
-           @click="sendVL(IDEFIX)"
+           @click="sendAllVL(IDEFIX)"
 
-           title="Odeslat znovu do vyroby"
+           title="Odeslat znovu do vyroby AALL"
            >
            <v-icon size="medium" class="honza_color2 red--text" style="cursor:pointer" >rotate_right</v-icon>
            </button>
            <button v-else style="background:#c3c3bf;border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1n"
-           @click="sendVL(IDEFIX)"
-
-           title="Odeslat do vyroby"
+                @click="sendAllVL(IDEFIX)"
+           title="Odeslat do vyroby ALL"
            >
            <v-icon size="medium" class="honza_color2" style="cursor:pointer" >rotate_right</v-icon>
            </button>
@@ -380,7 +379,7 @@
            </button>
          </div>
          <div>
-           neco
+           neco {{IDEFIX}} {{ cTable }} : {{dataDB}}
            <!-- {{showTemplates }} /{{ID2}} / {{ f1.getBottom('seek'+ID2,0) }} :: {{ ZobrazMenu }} : {{ form }} isOpen:  {{ isOpen}} -->
          </div>
       <div
@@ -909,7 +908,7 @@ deactivated: function () {
 
 
   },
-  async sendVL(ifx) {
+  async sendVL(ifx, sendStatus=true) {
     const self=this
     let dataTemp={}
     let dataItem={}
@@ -937,9 +936,7 @@ deactivated: function () {
              //Tohle prohodit - napred uspesne vlozit a pak teprv oznacit status = 1 jako ze  existuje VL
              let q2=`update zak_t_items set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak} ;
                      update ${self.cTable} set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak};
-
                      update zak_t_vl_v set datumodeslani=now(),idefix_odeslal=${self.idefix},user_update_idefix=${self.idefix} where idefix_item=${dataTemp.idefix_src} ;
-
                    `
               console.log(q2)
              Q.post(self.idefix,q2)
@@ -982,6 +979,80 @@ deactivated: function () {
 
        //f.Alert()
      })
+
+  },
+
+   mAlert(txt, dur=5000){
+    this.$notify( { title: self.MAINMENULAST,  message: `${txt}` , type: 'error', offset: 100, duration: 5000 })
+
+  },
+
+  async sendAllVL(ifx, sendStatus=true) {
+    const self=this
+    let dataTemp={}
+    let dataItem={}
+    var q=''
+    let res=[]
+    let res1=[]
+    let res2=[]
+
+
+    if (self.MAINMENULAST == 'kalkulace') {
+      self.mAlert('V rezimu nabidek nelze zadavat praci na vyrobu, je nutne vytvorit zakazku')
+      return
+    }
+
+
+       f.Alert('Odeslilam do vyroby vse','Uz to jede ....' )
+       //f.Alert('Jeste uplnene, ale bude to v poho co nejryhleji to pujde', self.idefix)
+       f.log('VL ALL 0')
+       //var q=`select * from ${self.cTable} where idefix = ${self.form.idefix}`
+       var q=`select * from ${self.cTable} where status is null or status=0 or status = 2`
+       res = await (Q.all(self.idefix,q))
+
+       f.log('VL ALL 1', q, f.Jstr(res))
+
+
+
+         if (!f.isEmpty(res.data.data)){
+           //f.log('VL ALL 1B', q, f.Jstr(res.data.data))
+           let necores=res.data.data
+           await f.asyncForEach(necores,async (dataTemp,idx) => {
+             f.log('VL ALL - temp ',f.Jstr(dataTemp))
+             // alert('a')
+
+
+
+           f.log('VL ALL 1C', q, f.Jstr(res.data.data))
+
+           //dataTemp = res.data.data[0]
+           if (dataTemp.idefix_src>=0 && dataTemp.idefix_zak>0){
+             //Tohle prohodit - napred uspesne vlozit a pak teprv oznacit status = 1 jako ze  existuje VL
+             let q2=`update zak_t_items set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak} ;
+                     update ${self.cTable} set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak};
+                     update zak_t_vl_v set datumodeslani=now(),idefix_odeslal=${self.idefix},user_update_idefix=${self.idefix} where idefix_item=${dataTemp.idefix_src} ;
+                   `
+              console.log(q2)
+            res2 = await (Q.post(self.idefix,q2))
+            f.log('VL ALL 2')
+            await   fceVL.Vklad(dataTemp.idefix_src)
+            f.log('VL ALL 3')
+            await   Q.post(self.idefix,`select vl_set(idefix_zak(${ifx}),-1)`)
+            f.log('VL ALL 4')
+           }
+
+          })
+           //f.Alert(dataTemp.idefix_src)
+
+         } else {
+           f.Alert('Nemohu najit zaznam pro zpracovani VL', 'Je nutne zkontrolovat, pripadne kontakovat  podporu')
+         }
+
+
+         //f.Alert2(f.Jstr(res), q)
+
+
+
 
   },
 

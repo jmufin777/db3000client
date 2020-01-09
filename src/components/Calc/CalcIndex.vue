@@ -1236,6 +1236,12 @@
         <!-- 1.JARDA //-->
       Obnovit
     </button>
+    <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
+        @click="sendAllVL()"
+        >
+        <!-- 1.JARDA //-->
+      Odeslat Vse
+    </button>
 
   <button  class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden"
      >
