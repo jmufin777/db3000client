@@ -592,8 +592,6 @@ self.$store.dispatch('setFormat')
         resolve(false)
      }
      )
-
-
       })
     },
     async  setPriloha(evt,poradi=-1) {

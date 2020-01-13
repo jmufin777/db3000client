@@ -1237,10 +1237,10 @@
       Obnovit
     </button>
     <button  class="px-4 tlacitkoMenu elevation-2 hoVer"
-        @click="sendAllVL()"
+        @click="sendAllVLDraw()"
         >
         <!-- 1.JARDA //-->
-      Odeslat Vse
+      Odeslat Vse {{ po}}
     </button>
 
   <button  class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden"
@@ -1695,6 +1695,7 @@ import Q from '../../services/query'
 import queryKalk from '../../services/fcesqlKalkulace'
 import prepocty from '../../services/fceKalkulacePrepocty'
 import SQL from '../../services/fcesql'
+import fceVL from '../../services/fceVL'
 // VL
 import VL from './VLIndex.vue'
 
@@ -2029,7 +2030,7 @@ deactivated: function () {
       //self.dialogVL=true
       let route = this.$router.resolve({ name: 'vl' , params: { id: self.IDEFIX_VL } })
           // let route = this.$router.resolve('/link/to/page'); // This also works.
-      window.open(route.href, 'vl2808901',  'width=1000,height=500')
+      window.open(route.href, 'vl_'+ self.IDEFIX_VL,  'width=1000,height=500')
       //self.Q(self.idefix,"")
       //self.VL_LIST =
 
@@ -2601,6 +2602,91 @@ if (self.MAINMENULAST== 'zakazky'){
  //  this.$destroy()
  },
  methods: {
+    async sendAllVLDraw(){
+      const self=this
+      let neco=await this.sendAllVL()
+      if (neco>=1) {
+        setTimeout(function(){
+           self.beforeArray()
+        },500)
+      }
+    },
+    async sendAllVL(ifx=0, sendStatus=true) {
+      const self=this
+      let dataTemp={}
+      let dataItem={}
+      var q=''
+      let res=[]
+      let res1=[]
+      let res2=[]
+      let nRet=0
+
+    if (self.MAINMENULAST == 'kalkulace') {
+      self.mAlert('V rezimu nabidek nelze zadavat praci na vyrobu, je nutne vytvorit zakazku')
+      return
+    }
+
+       //f.Alert('Jeste uplnene, ale bude to v poho co nejryhleji to pujde', self.idefix)
+       f.log('VL ALL 0')
+       //var q=`select * from ${self.cTable} where idefix = ${self.form.idefix}`
+       var q=`select * from ${self.cTable} where status is null or status=0 or status = 2`
+       res = await (Q.all(self.idefix,q))
+       f.log('VL ALL 1', q, f.Jstr(res))
+       //return
+
+         if (!f.isEmpty(res.data.data)){
+           //f.Alert('Odeslilam do vyroby vse','Uz to jede ....' )
+           //f.log('VL ALL 1B', q, f.Jstr(res.data.data))
+           let necores=res.data.data
+           nRet=necores.length
+          if (await self.otazka(`Odeslat ${nRet} zbyvajicich VL ?`)){
+           await f.asyncForEach(necores,async (dataTemp,idx) => {
+             f.log('VL ALL - temp ',f.Jstr(dataTemp))
+             // alert('a')
+           f.log('VL ALL 1C', q, dataTemp.idefix_src)
+           //dataTemp = res.data.data[0]
+           if (dataTemp.idefix_src>=0 && dataTemp.idefix_zak>0){
+             f.log('VL ALL 1D', q, dataTemp.idefix_src)
+             //Tohle prohodit - napred uspesne vlozit a pak teprv oznacit status = 1 jako ze  existuje VL
+             let q2=`update zak_t_items set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak} ;
+                     update ${self.cTable} set status = 1  where idefix = ${dataTemp.idefix_src}  and idefix_zak = ${dataTemp.idefix_zak};
+                     update zak_t_vl_v set datumodeslani=now(),idefix_odeslal=${self.idefix},user_update_idefix=${self.idefix} where idefix_item=${dataTemp.idefix_src} ;
+                   `
+            f.log('VL ALL 2 A',q2)
+            res2 = await (Q.post(self.idefix,q2))
+            f.log('VL ALL 2 B',q2)
+
+            await   fceVL.Vklad(dataTemp.idefix_src,'',self.cTable)
+            f.log('VL ALL 3')
+            await   Q.post(self.idefix,`select vl_set(idefix_zak(${dataTemp.idefix_src}),-1)`)  //uklid
+            //f.log('VL ALL 4')
+           }
+
+          })
+          .then(()=>{ //Uklid presunut az po vsech
+            //Q.post(self.idefix,`select vl_set(idefix_zak(${dataTemp.idefix_src}),-1)`)  //uklid
+            Q.post(self.idefix,`select vl_set(idefix_zak(${self.aktivni_zak}),-1)`)  //uklid
+            f.log('VL ALL 4A ',`select vl_set(idefix_zak(${self.aktivni_zak}),-1)`)
+
+          })
+          .catch((e)=>{
+            f.log('VL ALL 4 ERR ',`select vl_set(idefix_zak(${self.aktivni_zak}),-1)`)
+
+          })
+         } else {
+           nRet=-1
+         }
+           //f.Alert(dataTemp.idefix_src)
+         } else {
+           f.Alert2('Zadne zaznamy k odeslani')
+           nRet=-1
+         }
+    return new Promise((resolve)=>{
+      resolve(nRet)
+    })
+         //f.Alert2(f.Jstr(res), q)
+
+  },
    async ZalozitZobrazit(polozka2){
      const self=this
      //to3N(polozka2,2)
@@ -5202,7 +5288,6 @@ if (self.MAINMENULAST=='kalkulace') {
         f.Alert('Dell Er')
         return
       }
-
    },
 
     async copyVL(idefix){
@@ -5214,15 +5299,6 @@ if (self.MAINMENULAST=='kalkulace') {
       self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
       await self.setZabalit()
 
-      //self.aKalkBefore=[]
-      //self.aKalkBefore = await (queryKalk.getTemplatesUser(self.cTable))
-      //f.Alert(self.IDEFIXACTIVE, " P{RED")
-      //await self.setIdefixActive()
-      //f.Alert(self.IDEFIXACTIVE, " P O")
-      //var tmp = self.IDEFIXACTIVE
-      //self.IDEFIXACTIVE = 0
-      //f.Alert(self.IDEFIXACTIVE)
-      //await self.setVL(tmp)
       return
 
       setTimeout(function(){
@@ -6266,7 +6342,27 @@ if (self.Pocet == - 1) {
       //f.Alert('a')
 
 
-    }
+    },
+    async otazka(txt1='',txt2='') {
+      const self=this
+      return new Promise((resolve,rej)=>{
+        self.$confirm(txt1 , txt2 , {
+        distinguishCancelAndClose: true,
+        confirmButtonText: 'Ano?',
+        cancelButtonText: 'Ne'
+     })
+     .then(()=>{
+
+        resolve(true)
+     })
+     .catch((e)=> {
+        resolve(false)
+     }
+     )
+
+
+      })
+    },
 
  },
  computed: {

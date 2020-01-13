@@ -347,8 +347,37 @@ async CopyUser(idefixactive=0,cTable="") {
   ,'${idefix_vlastnik}','${idefix_vlastnikPrace}'
    from ${cTable} where idefix=${idefixactive}
   `
+  await Q.post(0,q)
+  await Q.post(0,`update ${cTable} set active=false where active`)
+  if (cTable.match(/zak/)){
+    //f.Alert('pokus -sync item s docasnou tabulkou') //syn
+    await Q.sync(0,cTable)
+  }
+  await Q.post(0,`update ${cTable} set nazev = nazev|| ' 2' where idefix = (select max(idefix) from ${cTable})`)
+
+
+},
+
+async CopyUser_old(idefixactive=0,cTable="") {
+  if (idefix_vlastnikPrace==0){
+    await this.Vlastnik()
+    await this.VlastnikPrace()
+  }
+  //f.Alert('hoooohohoho 2', idefix_vlastnikPrace)
+
+  var q = `insert into ${cTable} ( ${cols},user_insert_idefix,user_update_idefix, active
+    ,idefix_dod,idefix_prace
+    )
+  select ${cols},user_insert_idefix,user_update_idefix, true
+  ,'${idefix_vlastnik}','${idefix_vlastnikPrace}'
+   from ${cTable} where idefix=${idefixactive}
+  `
   await Q.post(0,`update ${cTable} set active=false where active`)
   .then ( res=>{
+    if (cTable.match(/zak/)){
+      //f.Alert('pokus -sync item s docasnou tabulkou') //syn
+      Q.sync(0,cTable)
+    }
     //f.Alert('pokus')
   })
   .catch(e=>{

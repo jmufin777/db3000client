@@ -55,7 +55,7 @@ export default {
       return q2
 
   },
-  async Vklad(idefix_item='', cTable='') {
+  async Vklad(idefix_item='', cTable='',tmpTable='') {
     const self=this
 
     var idefix = store.state.idefix
@@ -65,7 +65,6 @@ export default {
     var qI=''
     var qTmp=''
     //return new Promise((resolve,reject)=>{
-
 
 
     if (cTable=='') cTable= 'zak_t_items'
@@ -119,7 +118,12 @@ export default {
                       //if (confirm("VL jiz jsou  zalozeny a  odeslany, chcete jej aktualizovat ?"))  {
                         self.UpdateVL(form_zak,form_item)
                         .then(()=>{
-                          Q.post(idefix,`select vl_set(${form_zak.idefix}, ${form_item.idefix}) `)
+                          //Q.post(idefix,`select vl_set(${form_zak.idefix}, ${form_item.idefix}) `)
+                          var sendString={idefix_zak:form_zak.idefix
+                              ,idefix_item:form_item.idefix
+                              ,tmpTable:tmpTable
+                            }
+                          Q.vl_set(idefix,sendString )
                         })
 
                       //}
@@ -182,7 +186,7 @@ export default {
 //  })
 
   },
-  async getLastID(form_item){  //Tohle je pozustatek,jeste kdyz melo nbyt VL vic,necemu to nevadi, ale nebude to zrejme potreba
+  async getLastID(form_item,zobraz=false){  //Tohle je pozustatek,jeste kdyz melo nbyt VL vic,necemu to nevadi, ale nebude to zrejme potreba
     const self=this
 
     var q=`select * from zak_t_vl_v where idefix_item=${form_item.idefix} order by id desc limit 1`
@@ -191,7 +195,10 @@ export default {
     .then((res)=>{
       if (!f.isEmpty(res.data.data) && res.data.data.length > 0 ){
 //        f.Alert2("IDEFIX_VL ", res.idefix, "Q :", q , f.Jstr(res))
-        eventBus.$emit('IDEFIX_VL',{IDEFIX_VL: res.data.data[0].idefix })
+        if (zobraz){
+          eventBus.$emit('IDEFIX_VL',{IDEFIX_VL: res.data.data[0].idefix })
+        }
+
       }
     })
   },

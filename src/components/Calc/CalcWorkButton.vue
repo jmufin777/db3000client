@@ -16,14 +16,14 @@
         </button>
 
         <button v-else-if="form.status==2" style=";border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1"
-           @click="sendAllVL(IDEFIX)"
+            @click="sendVL(IDEFIX)"
 
            title="Odeslat znovu do vyroby AALL"
            >
            <v-icon size="medium" class="honza_color2 red--text" style="cursor:pointer" >rotate_right</v-icon>
            </button>
            <button v-else style="background:#c3c3bf;border-right: solid 1px white;border-left: solid 1px white;height:90%" class="px-1n"
-                @click="sendAllVL(IDEFIX)"
+                @click="sendVL(IDEFIX)"
            title="Odeslat do vyroby ALL"
            >
            <v-icon size="medium" class="honza_color2" style="cursor:pointer" >rotate_right</v-icon>
@@ -43,7 +43,7 @@
        ><td  class="honza_color pa-0" style="text-align:left"
 
        >
-        <button class="kolecko2" @click="copyVL()">
+        <button class="kolecko2" @click="copyVL()" title="Zkopiruje radek, smaze prilohy">
           <div class="kolecko" >
             <!-- <i class="el-icon-plus" style="color:#93908e;position:absolute;top:-0px;left:0px"></i> -->
             <span style="color:#93908e;position:absolute;top:-5px;left:3px;font-family:Helvetica">+</span>
@@ -882,7 +882,19 @@ deactivated: function () {
                 select vl_set(idefix_zak(${ifx}),-1)
                 `
               f.log('VL 3',q2)
-                Q.post(self.idefix,q2)
+              f.log('VL 3BBCC ',q2)
+
+
+                //Q.post(self.idefix,q2)
+              var sendString={
+                       idefix_zak: 0
+                       ,idefix_item: dataTemp.idefix_src
+                       ,tmpTable: self.cTable
+                    }
+
+                f.log('VL 3BB ',q2)
+                 //alert('sendstring',JSON.stringify(sendString))
+                Q.vl_unset(self.idefix,sendString )
                 .then(()=> {
                   self.form.status=2;
                   eventBus.$emit('STATUS', {key: 2 })
@@ -924,7 +936,6 @@ deactivated: function () {
        cancelButtonText: 'Ne'
      })
      .then(()=>{
-
        //f.Alert('Odeslilam do vyroby','Uz to jede ....' )
        //f.Alert('Jeste uplnene, ale bude to v poho co nejryhleji to pujde', self.idefix)
        var q=`select * from ${self.cTable} where idefix = ${self.form.idefix}`
@@ -941,12 +952,11 @@ deactivated: function () {
               console.log(q2)
              Q.post(self.idefix,q2)
              .then((res)=>{
-               fceVL.Vklad(dataTemp.idefix_src)
+               fceVL.Vklad(dataTemp.idefix_src,'',self.cTable)
                .then(()=>{
                  self.form.status=1;
                    eventBus.$emit('STATUS', {key: 1 })
                     f.log("STATUS SEND")
-
                })
 
                //Vykutit VL
@@ -987,7 +997,7 @@ deactivated: function () {
 
   },
 
-  async sendAllVL(ifx, sendStatus=true) {
+  async sendAllVL(ifx=0, sendStatus=true) {
     const self=this
     let dataTemp={}
     let dataItem={}
@@ -1011,7 +1021,7 @@ deactivated: function () {
        res = await (Q.all(self.idefix,q))
 
        f.log('VL ALL 1', q, f.Jstr(res))
-
+       //return
 
 
          if (!f.isEmpty(res.data.data)){
@@ -1020,8 +1030,6 @@ deactivated: function () {
            await f.asyncForEach(necores,async (dataTemp,idx) => {
              f.log('VL ALL - temp ',f.Jstr(dataTemp))
              // alert('a')
-
-
 
            f.log('VL ALL 1C', q, f.Jstr(res.data.data))
 
@@ -1035,9 +1043,9 @@ deactivated: function () {
               console.log(q2)
             res2 = await (Q.post(self.idefix,q2))
             f.log('VL ALL 2')
-            await   fceVL.Vklad(dataTemp.idefix_src)
+            await   fceVL.Vklad(dataTemp.idefix_src,'',self.cTable)
             f.log('VL ALL 3')
-            await   Q.post(self.idefix,`select vl_set(idefix_zak(${ifx}),-1)`)
+            await   Q.post(self.idefix,`select vl_set(idefix_zak(${dataTemp.idefix_src}),-1)`)
             f.log('VL ALL 4')
            }
 
@@ -1048,11 +1056,7 @@ deactivated: function () {
            f.Alert('Nemohu najit zaznam pro zpracovani VL', 'Je nutne zkontrolovat, pripadne kontakovat  podporu')
          }
 
-
          //f.Alert2(f.Jstr(res), q)
-
-
-
 
   },
 
