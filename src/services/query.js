@@ -28,6 +28,14 @@ export default {
     return Api().post('query', { params: {  user: user,query: query}} )
   }
   ,
+  vl_copy (user, cTable,idefix_item,query ) {
+    //query=query.replace('undefined','0')
+    console.log('POST: query ',user, ++pocet)
+    f.log(query)
+    //return
+    return Api().post('vl_copy', { params: {  user: user,table: cTable,idefix_item:idefix_item,query: query}} )
+  }
+  ,
   vl_set (user, query ) {
     //query=query.replace('undefined','0')
     //console.log('POST: VLSET ',user, ++pocet)
