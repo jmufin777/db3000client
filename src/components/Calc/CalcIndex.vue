@@ -345,25 +345,54 @@
       }"
       :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:solid 1px #cccccc;':''"
 
-
-
-
       >
        <td :key="'zak'+klikyzak+''+idx2" class="pl-1" style="border-bottom:none"
        :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
        >
         <div v-if="polozka2.vzor==-999" ></div>
         <div  v-else style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-4">
+          <!-- @mouseenter="nahled=true" @mouseleave="nahled=false;alert(nahled)"  -->
+
+       <span v-if="polozka2.idefix_vl>0"
+           @click="vl_view(polozka2.idefix_vl);nahled=false"
+
+            @mouseenter="odkaz='#/vl/'+polozka2.idefix_vl;nahledView()" @mouseleave="nahledCancel()"
+
+         >
+       <span v-if="polozka2.status==1 || polozka2.status>2" class="red--text"
+
+          >
+        {{polozka2.vl_znacka}}&nbsp;&nbsp;
+        </span>
+        <span v-else class="green--text">
+
+
+        {{polozka2.vl_znacka}}&nbsp;&nbsp;
+        </span>
+        </span>
 
         <span v-if="!f.isEmpty(polozka2.obsah) " class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;"
         @click="polozka2.vzor==0?to3Z(polozka2,2):
         ZalozitZobrazit(polozka2)
 
-        ">K</span>
+        ">
+
+
+        <!-- <v-icon v-if="polozka2.status==1 || polozka2.status>2"
+        size="small"   class="red--text"
+        >fa-lock</v-icon>
+        <v-icon v-else
+        size="medium"   class="green--text"
+        >fa-unlock</v-icon> -->
+        &nbsp;&nbsp;&nbsp;
+        K
+        </span>
+
         <span v-else class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" >&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
 
-        <i v-if="polozka2.vzor==0" class="el-icon-delete black--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('zak',polozka2)"></i>
+        <i v-if="polozka2.vzor==0 && polozka2.status!==1" class="el-icon-delete black--text d3" style="font-weight:bold;height:25px;zoom:100%;" @click="deleteItem('zak',polozka2)"></i>
         <i v-else  class="el-icon-minus black--text d3" style="font-weight:bold;height:25px;zoom:100%;"></i>
+
         &nbsp;&nbsp;&nbsp;
 
 
@@ -1662,11 +1691,20 @@
           <v-btn color="blue darken-1" text @click="dialogVL = false">Close</v-btn>
           <v-btn color="blue darken-1" text @click="dialogVL = false">Save</v-btn>
         </v-card-actions>
-
       </v-card>
 
     </v-dialog>
   </el-row>
+  <transition name="list1122">
+  <dia-frame v-show=" nahled && odkaz>''" :show="nahled"  @mouseleave="nahled=false" :odkaz="odkaz" title="" style="z-index:1000000000;left:350px"
+    eventName="VLshow"
+    :id="'vlview'+ID"
+    >
+   <div slot="nahled">
+
+    </div>
+</dia-frame>
+  </transition>
     <!-- VL //-->
   </div>
 </template>
@@ -1707,6 +1745,8 @@ import { stringify } from 'querystring';
 import _ from 'lodash'
 import { forEach } from 'p-iteration'
 
+import url from '@/services/url'
+
 // import JQuery from 'jquery'
 // let $ = JQuery
 
@@ -1729,9 +1769,14 @@ export default {
  data () {
 
    return {
+
+     nahled:false,
+     odkaz:'',
+     url:url,
      dialogVL: false,
      IDEFIX_VL:0,
      VL_LIST:[],
+     nahledTimeOut:false,
 
 
      zobrazit:true,
@@ -2018,6 +2063,9 @@ deactivated: function () {
      eventBus.$off('MatCol')
      eventBus.$off('Rend')
      eventBus.$off('IDEFIX_VL')
+
+     eventBus.$off('VLshowOpen')
+     eventBus.$off('VLshowClose')
 
      console.log(serverDel)
      })
@@ -2375,6 +2423,17 @@ deactivated: function () {
       //self.addCol(server.key)
 
     })
+  eventBus.$on('VLshowOpen', (server) => {
+    //self.nahled=true;
+    self.nahledView();
+
+  })
+  eventBus.$on('VLshowClose', (server) => {
+    //alert('close')
+    self.nahled=false;
+    //self.nahledCancel();
+
+  })
 
      eventBus.$on('STATUS', (server) => {
         self.aKalkBefore=[]
@@ -2513,6 +2572,14 @@ if (self.MAINMENULAST== 'zakazky'){
             x = e.pageX;
             y = e.pageY;
         });
+        $("#vlview"+self.ID).mouseover(
+          function () {
+          if($(this).is(':animated')) {
+            $(this).stop().animate({opacity:'100'});
+            self.nahled=true;
+          }
+        }
+       );
       /*
         var $dlg=$("#plovoucimapa11").dialog({
             autoOpen: true,
@@ -2602,6 +2669,46 @@ if (self.MAINMENULAST== 'zakazky'){
  //  this.$destroy()
  },
  methods: {
+   vl_view(_idefix_vl) {
+    eventBus.$emit('IDEFIX_VL', {IDEFIX_VL: _idefix_vl})
+
+  },
+  nahledCancel(){
+    const self=this
+
+    if (this.nahledTimeOut) {
+
+       this.nahledTimeOut=false;
+
+       if($("#vlview"+self.ID).is(':animated')) {
+            $("#vlview"+self.ID).stop().animate({opacity:'100'});
+           // $("#vlview"+self.ID).stop(true,true).fadeIn();
+            //alert('stopka 1')
+            self.nahled=true;
+          }
+        self.nahled=true
+
+       return
+
+    }
+    this.nahledTimeOut=setTimeout(function(){
+      $("#vlview"+self.ID).fadeOut(500, function(){
+        self.nahled=false
+    })
+
+    },1000)
+
+  },
+
+  nahledView(){
+    const self=this
+      $("#vlview"+self.ID).fadeIn(500, function(){
+        self.nahled=true
+      }
+      )
+
+  },
+
     async sendAllVLDraw(){
       const self=this
       let neco=await this.sendAllVL()
@@ -2716,7 +2823,7 @@ if (self.MAINMENULAST== 'zakazky'){
               var ifx=self.seznam_zak[0].idefix
               self.aktivni_zak=ifx
               self.polozky_zak=[]
-              Q.all(self.idefix,`select *,0 as vse from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
+              Q.all(self.idefix,`select *,0 as vse,idefix_vl(idefix) as idefix_vl from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
               .then((res)=>{
                  //f.Alert2(f.Jstr(res.data.data))
                  self.polozky_zak=res.data.data
@@ -2745,7 +2852,7 @@ if (self.MAINMENULAST== 'zakazky'){
               self.aktivni_nab=ifx
               self.polozky_nab=[]
 
-              Q.all(self.idefix,`select *,0 as vse from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
+              Q.all(self.idefix,`select *,0 as vse,idefix_vl(idefix) as idefix_vl from ${server.key}_t_items where idefix_${server.key}= ${ifx} order by idefix`)
               .then((res)=>{
                  //f.Alert2(f.Jstr(res.data.data))
                  self.polozky_nab=res.data.data
@@ -3384,7 +3491,7 @@ if (self.MAINMENULAST== 'zakazky'){
        var b2 = (await Q.post(self.idefix,qoprava2))
        await f.sleep(200)
        .then(()=>{
-           Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)
+           Q.all(self.idefix,`select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)
            .then((res)=>{
             self.polozky_zak = res.data.data
             self.polozky_soucet('zak')
@@ -3465,7 +3572,7 @@ if (self.MAINMENULAST== 'zakazky'){
 
 
        self.updateDefault()  //oprava dodavatele
-       self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)).data.data
+       self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`)).data.data
        self.polozky_soucet('zak')
        self.addPol('zak',polozka.idefix)
 
@@ -3783,6 +3890,7 @@ if (self.MAINMENULAST== 'zakazky'){
     var b = (await Q.post(self.idefix,qoprava))
     if (self.obrazovka_nab==3  && self.MAINMENULAST=='kalkulace'){
       await self.setVL(self.IDEFIXACTIVE,1)
+
     }
     if (self.obrazovka_zak==3  && self.MAINMENULAST=='zakazky'){
       await self.setVL(self.IDEFIXACTIVE,1)
@@ -4001,6 +4109,7 @@ if (self.MAINMENULAST== 'zakazky'){
           status_zak: self.status_zak,
           status_nab: self.status_nab,
        })
+
         self.Seznam('zak')
 
 
@@ -4072,7 +4181,7 @@ if (self.MAINMENULAST== 'zakazky'){
    async InsertSet(idefix_zak, itemIdName='idefix_zak') {
      const self= this
 
-     return `(
+     var creturn= `(
             kod,
             nazev,
             obsah,
@@ -4095,7 +4204,7 @@ if (self.MAINMENULAST== 'zakazky'){
             user_update_idefix,
             idefix_dod,
             idefix_prace,
-            status
+            status,vl_id,vl_znacka,poradi2
 
         )
 
@@ -4123,8 +4232,11 @@ if (self.MAINMENULAST== 'zakazky'){
             ${self.idefix},
             idefix_dod,
             idefix_prace,
-            status
+            status,vl_id,vl_znacka,poradi2
             `
+
+            return creturn
+
    },
    async UpdateSet(data2 ) {
            const self=this
@@ -4448,7 +4560,7 @@ if (self.MAINMENULAST== 'zakazky'){
     // await self.DocasneReseni()
     if (ceho=='zak') {
         if (ev==1){
-          self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak= ${polozka.idefix_zak} order by idefix`)).data.data
+          self.polozky_zak=  (await Q.all(self.idefix,`select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak= ${polozka.idefix_zak} order by idefix`)).data.data
           if (self.polozky_zak.length > 0) {
             self.aktivni_polozka_zak=self.polozky_zak[self.polozky_zak.length-1].idefix
           }
@@ -4467,7 +4579,7 @@ if (self.MAINMENULAST== 'zakazky'){
     } else
     if (ceho=='nab') {
       if (ev==1){
-          self.polozky_nab=  (await Q.all(self.idefix,`select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`)).data.data
+          self.polozky_nab=  (await Q.all(self.idefix,`select *,0 as vse,idefix_vl(idefix) as idefix_vl from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`)).data.data
           if (self.polozky_nab.length > 0) {
             self.aktivni_polozka_nab=self.polozky_nab[self.polozky_nab.length-1].idefix
           }
@@ -4982,7 +5094,7 @@ if (self.MAINMENULAST=='zakazky') {
                         .then((resx)=>{
                           self.aktivni_zak=resx.data.data[0].max
                           //f.Alert(f.Jstr(resx.data.data))
-                              Q.all(self.idefix,`select *,0 as vse from zak_t_items where idefix_zak =${self.aktivni_zak} order by idefix `)
+                              Q.all(self.idefix,`select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak =${self.aktivni_zak} order by idefix `)
                               .then((res)=>{
                                 //f.Alert(self.aktivni_zak)
                                 //f.Alert2(f.Jstr(res.data.data))
@@ -6528,6 +6640,20 @@ table {
   background-color: white;
   border: solid 1px;
 
+}
+
+.list1122-enter,
+.list1122-leave-to {
+  visibility: hidden;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0.5;
+}
+
+.list1122-enter-active,
+.list1122-leave-active {
+  transition: all 1.3s;
 }
 
 

@@ -738,7 +738,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
           a.poradi,
           a.active,
           a.idefix_src,
-          a.status,
+          coalesce(a.status,0) as status,
           c.vl_znacka,
           c.vl_id,
           c.poradi2,
@@ -790,7 +790,7 @@ async getTemplatesUser(cTable,poradiFrom=0,poradiTo=0) {
 
   q= `select * from (${q}) qa  order by
   case when status =1 then 2 else 1 end,
-  poradi2,  qa.idefix `
+  poradi2 desc,  qa.idefix `
 
 f.log('ORDER TEMPLATES', q)
   // q= `${q} order by

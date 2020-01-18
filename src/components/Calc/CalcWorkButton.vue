@@ -335,9 +335,16 @@
          >{{tItem}}</option>
       </select>
       </td>
-      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;width:20em;height:28px" class="honza_color2" >
+      <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;width:20em;height:28px" class="honza_color2 pt-1"
+      :class="{'green lighten-4':dataDB.status==1,'red lighten-4':dataDB.status==2,'blue lighten-4':dataDB.status==0}"
+      >
         &nbsp;
-         VL:<button @click="vl_view(dataDB.idefix_vl)"><b> {{dataDB.vl_znacka }} {{dataDB.poradi2 }} /{{dataDB.pocet_vl }} </b></button>
+
+        VL:<button @click="vl_view(dataDB.idefix_vl)"><b> {{
+          dataDB.vl_znacka > ''?
+          dataDB.vl_znacka +' '+dataDB.poradi2 +' / '+ dataDB.pocet_vl
+          :''
+           }} </b></button>
       </td>
       <td  style="text-align:left;border-top:none;border-bottom:none;border-right: none;height:26px;height:28px" class="honza_color2" >
           <!-- {{ dataDB }} -->
@@ -1146,6 +1153,11 @@ deactivated: function () {
   },
   async delVL(){
     const self = this
+
+    if (self.dataDB.status==1 || self.dataDB.status>2) {
+      f.Alert2('Odeslany VL nelze smazat')
+      return
+    }
     if (f.Confirm('Vymazat tento VL?')){
         eventBus.$emit('MenuHlavni', {key: 669, idefix: self.IDEFIX })
     }
