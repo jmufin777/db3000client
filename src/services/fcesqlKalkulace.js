@@ -612,7 +612,7 @@ async VkladUser(data, kalkulace2, cTable, nazev="", active= false, idefixactive=
 },
 async setActive(idefix=0,cTable, Aktivuj=1){
   f.log('Set ACTIVE FCE')
-  await Q.post(0,`update ${cTable} set active=false where active`)
+  await Q.post(0,`update ${cTable} set active = false where active`)
   if (Aktivuj>0) {
     await Q.post(0,`update ${cTable} set active=true where idefix=${idefix}`)
   }

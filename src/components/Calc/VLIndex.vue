@@ -1,17 +1,15 @@
 <template>
 <div>
   <!-- {{f.Jstr($route.params)}} 2809105 -->
-  <div v-if="VL.length==0" style="font-size:200%;font-weight:900">Neni k dispozici zadny VL</div>
+  <div v-if="VL.length==0" style="font-size:200%;font-weight:900">Neni k dispozici zadny VL pro {{IDEFIX_VL}}</div>
    <!-- <div>Route:{{ $route.params.id }}{{$route}} </div> -->
   <!--912 1286 0.23 0.225 - vyska//-->
 
   <!-- <div v-for="(vl,i) in VL" :key="i" class="A4 white" style="width:210mm"> -->
-<div v-for="(vl,i) in VL" :key="i" class="A4 white" style="width:210mm;padding-left:0mm;padding-top:0mm">
+<div v-for="(vl,i) in VL" :key="i+'VLX'+IDEFIX_VL" class="A4 white" style="width:210mm;height:290mm;padding-left:0mm;padding-top:0mm;page-break-after:always">
   <v-card><v-card-text><vl-view :vl="vl"></vl-view></v-card-text></v-card>
 
-
   {{vl}}
-
 
 
   </div>
@@ -51,19 +49,24 @@ export default {
       fceVL:fceVL,
       IDEFIX_VL_LAST:0,
       IDEFIX_VL:0,
-
       VL:[],
       ITEMS_LEFT:[],
       EXPEDICE:[],
-
-
 
     }
   },
   async mounted(){
     const self=this
     if ( self.IDEFIX_ITEM>0){
-      self.getVL()
+      setInterval(function(){
+        //self.getVL()
+        if (self.VL.length==0){
+          self.getVL()
+          //console.log(self.VL)
+        }
+
+      },1000)
+
     }
 
     if (!f.isEmpty(self.$route.params.id)){
@@ -79,8 +82,8 @@ export default {
 
   },
   watch :{
-  IDEFIX_VL: function(){
-    this.getVL()
+  IDEFIX_VL: async function(){
+    await this.getVL()
 
   },
     '$route' (to, from) {
@@ -111,12 +114,23 @@ export default {
               join list_dodavatel d on a.idefix_firma=d.idefix
               join list_users u on a.idefix_obchodnik=u.idefix
               left join zak_vl_last last on a.idefix_zak=last.idefix_zak
-      where a.idefix=${self.IDEFIX_VL}  order by a.id`
+      where a.idefix in (${self.IDEFIX_VL})  order by a.id`
 
-      q=`select lpad(a.id,10,'0') as id_bar,idefix2fullname(a.idefix_obchodnik) as obchodnik,* from (${q}) a order by a.id`
-      console.log(q)
-      f.log('VL VIEW ',q)
+      q=`select lpad(a.id,10,'0') as id_bar,idefix2fullname(a.idefix_obchodnik) as obchodnik,* from (${q}) a `
+      var order = ''
+      order += ` order by `
+      order += ` case when datumodeslani is not null then datumodeslani else datumodeslani end  `
+      order += ` ,  idefix desc`
+      q = q+= order
+
+
       self.VL= (await Q.all(self.idefix,q)).data.data
+      return new Promise((resolve)=>{
+       //console.log(q)
+      f.log('VL VIEW ',self.VL.length )
+        resolve (1)
+      })
+
 
     //  f.Alert2(f.Jstr(self.VL))
     }

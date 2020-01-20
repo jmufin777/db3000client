@@ -49,6 +49,25 @@ export default {
     //console.log('POST: VLUNSET ',user)
     //f.log('POST: VLUNSET  ',query)
     return Api().post('vlunset', { params: {  user: user,query: query}} )
+  },
+  vl_list (user, query ) {
+    //query=query.replace('undefined','0')
+    //console.log('POST: VLUNSET ',user)
+    //f.log('POST: VLUNSET  ',query)
+    return Api().post('vllist', { params: {  user: user,query: query}} )
+  },
+  get_zak_last (user ) {
+    //query=query.replace('undefined','0')
+    f.log('POST: GETZAK LAST ',user)
+    return Api().post('getzaklast', { params: {  user: user,query: {}}} )
+  },
+  create_tmp_zak (user, cTable,idefix_zak ) {
+    //query=query.replace('undefined','0')
+    console.log('POST: Create temp ',user)
+    //alert(3)
+    //f.log(query)
+    //return
+    return Api().post('create_tmp_zak', { params: {  user: user,table: cTable,idefix_zak:idefix_zak}} )
   }
 
   ,sync (user, query ) {

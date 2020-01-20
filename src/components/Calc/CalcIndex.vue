@@ -144,7 +144,7 @@
   <table slot="head"  :style="f.pof(Sirka,98.1)"  >
     <thead class="c-1 tdline">
       <tr>
-      <th :style="f.pof(Sirka,  4.9)">Ikony</th>
+      <th :style="f.pof(Sirka,  4.9)" ><button @click="vl_viewlist(aktivni_zak)" >VL tisk {{vllist.split(',').length}}</button></th>
       <th :style="f.pof(Sirka,  4.82)" >
         <button  type="button" @click="Seznam('zak','','cislozakazky')"  style="color:#818185" >
           <i  class="el-icon-upload2  green--text"    v-if="order_zak=='cislozakazky' && desc_zak==''"></i>
@@ -309,7 +309,7 @@
   <table style="width:90%;border: solid 1px silver;border-bottom:none">
     <thead>
       <tr>
-      <th style="width:2em">Ikony</th>
+      <th style="width:2em"><button @click="vl_viewlist(aktivni_zak)" >VL tisk {{vllist.split(',').length}}</button></th>
       <th v-if="false" style="width:20em">Text na faktuře</th>
       <th style="width:30em">Práce</th>
       <th style="width:30em">Dodavatel</th>
@@ -352,11 +352,11 @@
         <div v-if="polozka2.vzor==-999" ></div>
         <div  v-else style="height:100%; width:80%%;border-bottom:dotted 1px" class="stred mx-1 pt-4">
           <!-- @mouseenter="nahled=true" @mouseleave="nahled=false;alert(nahled)"  -->
-
+        <!-- @mouseenter="odkaz='#/vl/'+polozka2.idefix_vl;nahledView()" @mouseleave="nahledCancel()" -->
        <span v-if="polozka2.idefix_vl>0"
            @click="vl_view(polozka2.idefix_vl);nahled=false"
 
-            @mouseenter="odkaz='#/vl/'+polozka2.idefix_vl;nahledView()" @mouseleave="nahledCancel()"
+            @mouseenter="odkaz=polozka2.idefix_vl;nahledView()" @mouseleave="nahledCancel()"
 
          >
        <span v-if="polozka2.status==1 || polozka2.status>2" class="red--text"
@@ -1676,15 +1676,15 @@
     </my-layout>
     <!-- VL //-->
 
-  <el-row justify="center">
+  <!-- <el-row justify="center">
     <v-dialog v-model="dialogVL" persistent max-width="220mm" class="pa-0 ma-0">
       <template v-slot:activator="{ on }">
-        <v-btn color="primary" dark v-on="on">Test VL - Docasne</v-btn>
+        <v-btn color="primary" dark v-on="on">Test VL {{vllist.split(',').length}}</v-btn>
       </template>
       <v-card>
 
-      <v-card-text>
-        <vl v-if="IDEFIX_VL>0" :IDEFIX_ITEM="IDEFIX_VL"></vl>
+      <v-card-text >
+        <vl v-if="aktivni_zak>0" :IDEFIX_ITEM="vllist" :key="'VL_CARD'+vllist"></vl>
       </v-card-text>
       <v-card-actions>
           <v-spacer></v-spacer>
@@ -1694,7 +1694,7 @@
       </v-card>
 
     </v-dialog>
-  </el-row>
+  </el-row> -->
   <transition name="list1122">
   <dia-frame v-show=" nahled && odkaz>''" :show="nahled"  @mouseleave="nahled=false" :odkaz="odkaz" title="" style="z-index:1000000000;left:350px"
     eventName="VLshow"
@@ -1857,6 +1857,7 @@ export default {
      polozka_nab:[],
      zak_item_active:[],
      nab_item_active:[],
+     vllist:'',
 
      search_zak:"",
      search_nab:"",
@@ -1924,10 +1925,12 @@ export default {
    }
  },
  watch: {
-   cTable: function(){
+   cTable: async function(){
      const self=this
       self.aKalkBefore=[]
-
+      if (self.cTable.match(/zak/)){
+        await Q.create_tmp_zak(self.idefix,self.cTable,0)
+      }
       //f.Alert(self.IDEFIXACTIVE)
       //self.setIdefixActive()
       queryKalk.getTemplatesUser(self.cTable)
@@ -2024,7 +2027,16 @@ export default {
 
 
       //f.Alert2(self.ITEM1)
-  }
+  },
+  aktivni_zak: async function() {
+    this.vllist =await this.IDEFIXS_VL(this.aktivni_zak)
+    f.log('ZMENA ZAK' , this.aktivni_zak, this.vllist)
+  },
+  obrazovka_zak: async function() {
+    this.vllist =await this.IDEFIXS_VL(this.aktivni_zak)
+    //f.log('ZMENA ZAK' , this.aktivni_zak, this.vllist)
+  },
+
 
 
  },
@@ -2063,6 +2075,7 @@ deactivated: function () {
      eventBus.$off('MatCol')
      eventBus.$off('Rend')
      eventBus.$off('IDEFIX_VL')
+     eventBus.$off('IDEFIX_VLIST')
 
      eventBus.$off('VLshowOpen')
      eventBus.$off('VLshowClose')
@@ -2077,8 +2090,21 @@ deactivated: function () {
       self.IDEFIX_VL= server.IDEFIX_VL
       //self.dialogVL=true
       let route = this.$router.resolve({ name: 'vl' , params: { id: self.IDEFIX_VL } })
+      //let route = this.$router.resolve({ name: 'vl' , params: { id: self.vllist } })
           // let route = this.$router.resolve('/link/to/page'); // This also works.
       window.open(route.href, 'vl_'+ self.IDEFIX_VL,  'width=1000,height=500')
+      //self.Q(self.idefix,"")
+      //self.VL_LIST =
+
+    })
+    eventBus.$on('IDEFIX_VLIST',(server) => {
+      //self.IDEFIX_VL= server.IDEFIX_VL
+      //self.IDEFIX_VL= server.IDEFIX_VL
+      //self.dialogVL=true
+      //let route = this.$router.resolve({ name: 'vl' , params: { id: self.IDEFIX_VL } })
+      let route = this.$router.resolve({ name: 'vl' , params: { id: self.vllist } })
+          // let route = this.$router.resolve('/link/to/page'); // This also works.
+      window.open(route.href, 'vl_'+ self.aktivni_zak,  'width=1000,height=500')
       //self.Q(self.idefix,"")
       //self.VL_LIST =
 
@@ -2462,16 +2488,59 @@ deactivated: function () {
   const self=this
   this.ID = Math.round(Math.random() * 19834581377)
   this.aKalkulace = this.$store.state.Kalkulace
+    //f.log('2XXXXX')
+
+//Cteni last logu ze zakazekpodle usera
+  var neco = await Q.get_zak_last(self.idefix)
+  var obrazovkatmp=0
+  if (!f.isEmpty(neco.data.data.idefix_zak)) {
+    self.aktivni_zak=neco.data.data.idefix_zak
+
+    if (neco.data.data.obrazovka>0){
+      obrazovkatmp=neco.data.data.obrazovka //Uplatneni obrazovkatmp nize
+      //Jeste pridam polozku,lec pozdeji
+
+    }
+
+  }
+
+/* Last log pro nabidky ,dodelatpozdeji podle vzoru zakazek
+  var neco2 = await Q.get_nab_last(self.idefix)
+  var obrazovkatmp2=0
+//  f.log('2 NAB ',f.Jstr(neco.data.data))
+  if (!f.isEmpty(neco2.data.data.idefix_zak)) {
+    self.aktivni_nab=neco2.data.data.idefix_nab
+    if (neco2.data.data.obrazovka>0){
+      obrazovkatmp2=neco2.data.data.obrazovka //Uplatneni obrazovkatmp nize
+      //Jeste pridam polozku,lec pozdeji
+
+    }
+  }
+
+*/
+
+
 
   await self.Skupiny()
 
 
 
-
-
-
 if (self.MAINMENULAST== 'zakazky'){
       self.cTable = 'calc_my_' + self.idefix+"_zak"+self.ID
+      if (self.aktivni_zak >0) {//vytvorim platnou calc tabulku
+      //alert(1)
+      f.log('CREATETEMP',self.idefix,self.cTable,self.aktivni_zak)
+      console.log('CREATETEMPCREATETEMPCREATETEMPCREATETEMPCREATETEMPCREATETEMPCREATETEMP')
+      console.log('CREATETEMP :: ',self.idefix,self.cTable,self.aktivni_zak)
+      await Q.create_tmp_zak(self.idefix,self.cTable,self.aktivni_zak)
+      //alert(2)
+
+      } else { //vytvorim prazdnou calc tabulku
+      await Q.create_temp_zak(self.idefix,self.cTable,0)
+
+      }
+
+
   }
   if (self.MAINMENULAST== 'kalkulace'){
       self.cTable = 'calc_my_' + self.idefix+"_nab"+self.ID
@@ -2537,21 +2606,42 @@ if (self.MAINMENULAST== 'zakazky'){
   await self.CisPraceDod();
   await self.CisDod(0)
   await self.CisDodAll(0)
-  if (self.seznam_zak.length>0){
-    self.aktivni_zak=self.seznam_zak[0].idefix
-    self.FillFormWait(self.seznam_zak[0])
+  var aAkt=[]
+  if (self.seznam_zak.length>0 ){
+    if (self.aktivni_zak>0) {
+         aAkt=self.seznam_zak.filter((el)=>{
+          return el.idefix*1==self.aktivni_zak*1
+        })
+    if (aAkt.length > 0)   {
+      self.aktivni_zak=aAkt[0].idefix
+      await self.FillFormWait(aAkt[0])
+      if (obrazovkatmp==2){
+        //alert('polozka zak')
+        self.to2Z(self.polozka_zak)
+       }
+       if (obrazovkatmp==3){
+        //alert('polozka zak')
+        self.to3Z(self.polozka_zak)
+       }
+      //self.obrazovka_zak=2
+    } else {
+      self.aktivni_zak=self.seznam_zak[0].idefix
+      self.FillFormWait(self.seznam_zak[0])
+    }
+     //  self.aktivni_zak=self.seznam_zak[0].idefix
+    } else {
+      self.aktivni_zak=self.seznam_zak[0].idefix
+      self.FillFormWait(self.seznam_zak[0])
+    }
   }
   //f.Alert2(f.Jstr(self.aktivni_zak))
 
   //self.aktivni_zak=polozka.idefix
-
-
   /*
   f.Alert2(f.Jstr(self.x.filter(self.cis_prace, function(o) {
     return o.prace=='Doprava';
   } )))
   */
-
   //f.Alert(f.Jstr(self.cis_prace))
 
   //f.Alert(qDod)
@@ -2669,8 +2759,27 @@ if (self.MAINMENULAST== 'zakazky'){
  //  this.$destroy()
  },
  methods: {
+
    vl_view(_idefix_vl) {
     eventBus.$emit('IDEFIX_VL', {IDEFIX_VL: _idefix_vl})
+
+  },
+  vl_viewlist(_idefix_vl) {
+    eventBus.$emit('IDEFIX_VLIST', {IDEFIX_VL: _idefix_vl})
+
+  },
+  async IDEFIXS_VL(czak) {
+    const self=this
+    var seznam = await Q.vl_list(self.idefix,{idefix_zak: self.aktivni_zak} )
+
+    return new Promise((resolve)=>{
+      // f.Jstr(seznam),
+       f.log('huhu ',self.aktivni_zak, " SEZNAM ", f.Jstr(seznam.data.vllist)+ " --END")
+       resolve(seznam.data.vllist)
+    })
+    //
+    //f.Alert2('huhu ',self.IDEFIXACTIVE_ZAK)
+
 
   },
   nahledCancel(){
@@ -2910,14 +3019,17 @@ if (self.MAINMENULAST== 'zakazky'){
 
      if (self.MAINMENULAST=='zakazky'){
        f.log('DROP CALC Z', self.idefix)
-       await Q.post(self.idefix,`select drop_tmp(${self.idefix});`)
+       await Q.create_temp_zak(self.idefix,sef.cTable,ifx_aktivni)
 
-       await Q.post(self.idefix,`drop table if exists ${self.cTable}`)
-       await Q.post(self.idefix,`create table  ${self.cTable} without oids as select * from ${ceho}_t_items where idefix_zak=${ifx_aktivni}`)
-       await Q.post(self.idefix,`create sequence ${self.cTable}_seq`)
 
-       await Q.post(self.idefix,`alter table  ${self.cTable}  alter column id set default nextval('${self.cTable}_seq'::regclass ) `)
-       await Q.post(self.idefix,`alter table  ${self.cTable}  alter column idefix set default  nextval('list2_seq'::regclass) `)
+       //await Q.post(self.idefix,`select drop_tmp(${self.idefix});`)
+
+       //await Q.post(self.idefix,`drop table if exists ${self.cTable}`)
+       //await Q.post(self.idefix,`create table  ${self.cTable} without oids as select * from ${ceho}_t_items where idefix_zak=${ifx_aktivni}`)
+       //await Q.post(self.idefix,`create sequence ${self.cTable}_seq`)
+
+       //await Q.post(self.idefix,`alter table  ${self.cTable}  alter column id set default nextval('${self.cTable}_seq'::regclass ) `)
+       //await Q.post(self.idefix,`alter table  ${self.cTable}  alter column idefix set default  nextval('list2_seq'::regclass) `)
        //nextval('calc_my_9_zak_seq'::regclass)
       // nextval('list2_seq'::regclass)
 

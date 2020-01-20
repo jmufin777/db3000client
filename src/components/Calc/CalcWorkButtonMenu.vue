@@ -1025,12 +1025,14 @@ deactivated: function () {
        if (!f.isEmpty(self.ID) && document.getElementById('cislo'+self.ID)
        && document.getElementById('cislo'+self.ID).value*1>0
        ){
+         var obrazovka = (self.setmenu=='zakazky')?self.obrazovka_zak:self.obrazovka_nab
          var qWho=`select * from
             set_open(
               ${self.idefix}
             ,'${self.user}'
             ,'${self.setmenu}'
             ,'${self.form.cislo}'
+            ,${obrazovka}
             )`
             //console.log(qWho)
             //return
