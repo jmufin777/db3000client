@@ -1,6 +1,6 @@
-import axios from 'axios'
-import url from './url'
-import store from '@/store/store'
+import axios from "axios";
+import url from "./url";
+import store from "@/store/store";
 export default () => {
   return axios.create({
     baseURL: `http://78.102.17.162:3003/`,
@@ -9,5 +9,5 @@ export default () => {
     headers: {
       Authorization: `Bearer ${store.state.token}`
     }
-  })
-}
+  });
+};

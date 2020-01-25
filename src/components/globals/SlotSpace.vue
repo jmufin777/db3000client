@@ -1,12 +1,10 @@
 <template>
-<span>
-<slot></slot>
-</span>
+  <span>
+    <slot></slot>
+  </span>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 

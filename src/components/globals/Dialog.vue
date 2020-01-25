@@ -1,28 +1,18 @@
 <template>
   <div class="text-xs-right">
-    <v-dialog
-      v-model="dialog"
-      width="800"
-      height="600"
-    >
+    <v-dialog v-model="dialog" width="800" height="600">
       <!-- <v-btn
         slot="activator"
         color="red lighten-2"
         dark
       >
         Click Me
-      </v-btn> -->
+      </v-btn>-->
 
       <v-card>
-        <v-card-title
-          class="headline grey lighten-2"
-          primary-title
-        >
-           {{ title }}
-        </v-card-title>
+        <v-card-title class="headline grey lighten-2" primary-title>{{ title }}</v-card-title>
 
         <v-card-text>
-
           <slot name="title2"></slot>
         </v-card-text>
 
@@ -30,7 +20,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-         <slot name="tlacitko"></slot>
+          <slot name="tlacitko"></slot>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -38,29 +28,20 @@
 </template>
 
 <script>
-  export default {
-    props: [
-    'title',
-    'show'
-    ],
-    data () {
-      return {
-        dialog: true,
-
-
-      }
-    },
-    updated(){
-
-        if (this.show) {
-          this.dialog= true
-        }
-
-
-
-    },
-    mounted() {
-      // alert('DLG' + this.title )
+export default {
+  props: ["title", "show"],
+  data() {
+    return {
+      dialog: true
+    };
+  },
+  updated() {
+    if (this.show) {
+      this.dialog = true;
     }
+  },
+  mounted() {
+    // alert('DLG' + this.title )
   }
+};
 </script>

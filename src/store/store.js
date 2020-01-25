@@ -119,9 +119,9 @@ export default new Vuex.Store({
 
             if (state.WinDows[ind]) {
               state.WinDows[ind]["z1"] = 999
-              ///console.log("HUHUHU WIN ",ind , "   " , state.WinDows[ind])
+              // console.log("HUHUHU WIN ",ind , "   " , state.WinDows[ind])
             } else {
-              //console.log("HOHOHOHOOOO WIN ",ind , "   " , state.WinDows[ind])
+              // console.log("HOHOHOHOOOO WIN ",ind , "   " , state.WinDows[ind])
 
             }
 
@@ -147,8 +147,8 @@ export default new Vuex.Store({
     },
     addKalk (state, kalkulace) { //Vlozi celou definic
       var tmpIdNew = 1
-      //console.log('A :', JSON.stringify(kalkulace))
-      //alert('A :' + JSON.stringify(kalkulace) + ' // ' + state.Kalkulace.length)
+      // console.log('A :', JSON.stringify(kalkulace))
+      // alert('A :' + JSON.stringify(kalkulace) + ' // ' + state.Kalkulace.length)
 
 
       if (state.Kalkulace == null) {
@@ -156,8 +156,8 @@ export default new Vuex.Store({
       }
       // f.Alert('addKalkTYPE: ', ' ', '  ',f.Jstr(kalkulace) );
       if (state.Kalkulace.length>0) {
-        //f.Alert2('A :' + JSON.stringify(state.Kalkulace[0].data) + ' // ' + state.Kalkulace.length)
-        //JARDA 20191114
+        // f.Alert2('A :' + JSON.stringify(state.Kalkulace[0].data) + ' // ' + state.Kalkulace.length)
+        // JARDA 20191114
         kalkulace.data=state.Kalkulace[0].data
         kalkulace.type=state.Kalkulace[0].type
 
@@ -211,7 +211,7 @@ export default new Vuex.Store({
     async setStrojeV(state) {
 
       if (state.Kalkulace.length==1 || !state.KalkulaceStrojeV.length || state.KalkulaceStrojeV.length==0 ){
-        //alert('For,aty')
+        // alert('For,aty')
         let atmpV=[]
         state.KalkulaceStrojeV=[]
         atmpV=(await ListStroj.one(this.user,-1, 10411)).data.enum_strojmod_full
@@ -224,7 +224,7 @@ export default new Vuex.Store({
     },
     async setStrojeA(state) {
       if (state.Kalkulace.length==1 || !state.KalkulaceStrojeA.length || state.KalkulaceStrojeA.length==0 ){
-        //alert('For,aty')
+        // alert('For,aty')
         let atmpA=[]
         atmpA=(await ListStroj.one(this.user,-1, 10410)).data.enum_strojmod_full
         state.KalkulaceStrojeA=[]
@@ -235,7 +235,7 @@ export default new Vuex.Store({
     },
     async setStrojeJine(state) {
       if (state.Kalkulace.length==1 || !state.KalkulaceStrojeJine.length || state.KalkulaceStrojeJine.length==0 ){
-        //alert('For,aty')
+        // alert('For,aty')
         let atmpJ=[]
         atmpJ=(await ListStroj.one(this.user,-1, 10412)).data.enum_strojmod_full
         state.KalkulaceStrojeJine=[]
@@ -246,7 +246,7 @@ export default new Vuex.Store({
     },
     async setStrojeExterni(state) {
       if (state.Kalkulace.length==1 || !state.KalkulaceStrojeExterni.length || state.KalkulaceStrojeExterni.length==0 ){
-        //alert('For,aty')
+        // alert('For,aty')
         let atmpE=[]
         atmpE=(await ListStroj.one(this.user,-1, 10413)).data.enum_strojmod_full
         state.KalkulaceStrojeExterni=[]
@@ -256,7 +256,7 @@ export default new Vuex.Store({
       }
     },
     addKalkCol (state, kalkulacecoltype) {
-      console.log('A :', JSON.stringify(kalkulacecoltype.kalkulaceid))
+      // console.log('A :', JSON.stringify(kalkulacecoltype.kalkulaceid))
       var newId = -1
       var idK  = -1
       state.Kalkulace.forEach((el, idxk) => {
@@ -276,7 +276,7 @@ export default new Vuex.Store({
         }
       })
       if (newId > 0)  {
-        //console.log('Add : ', state.Kalkulace[idK])
+        // console.log('Add : ', state.Kalkulace[idK])
         state.Kalkulace[idK].sloupecid.push({id: newId, type: kalkulacecoltype.type,  data: {}})
       }
     },
@@ -285,7 +285,7 @@ export default new Vuex.Store({
       state.KalkulaceColThis = ColThis
     },
     saveKalk(state,kalkulace){
-      console.log('SAVE ' ,kalkulace.id)
+      // console.log('SAVE ' ,kalkulace.id)
       state.Kalkulace[kalkulace.id]= kalkulace.data
     },
     saveKalkCela(state,kalkulace){
@@ -293,13 +293,11 @@ export default new Vuex.Store({
       state.Kalkulace = []
       state.Kalkulace= kalkulace.data
       return
-      state.Kalkulace.forEach((elx,idx) => {
-        elx.kalkulaceid = idx+1
-      })
+
 
     },
     saveCols(state,kalkulace){
-      console.log('SAVE ' ,kalkulace.id)
+      // console.log('SAVE COLS' ,kalkulace.id)
        state.Kalkulace[kalkulace.id].sloupecid= []
        state.Kalkulace[kalkulace.id].sloupecid.push(kalkulace.data)
     },
@@ -311,9 +309,9 @@ export default new Vuex.Store({
         // var newId = -1
         // var idK = -1
       if (state.Kalkulace[idK].sloupecid.length>0){
-        console.log('Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
+        // console.log('Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
         if (state.Kalkulace[idK].sloupecid[0].type==type){
-          console.log('Shoda:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
+          // console.log('Shoda:', JSON.stringify(kalkulacecoltype.kalkulaceid), "type orig:", state.Kalkulace[idK].sloupecid[0].type)
           state.Kalkulace[idK].sloupecid[0] = {id: (Math.ceil(Math.random()*91000)) , type: type,  data: {}}
         } else {
           state.Kalkulace[idK].sloupecid.splice(0,0,{id: (Math.ceil(Math.random()*91000)) , type: type ,  data: {}})
@@ -321,7 +319,7 @@ export default new Vuex.Store({
         //state.Kalkulace[idK].sloupecid[0] = {id: newId, type: kalkulacecoltype.type,  data: {}}
       } else {
         state.Kalkulace[idK].sloupecid.push({id: (Math.ceil(Math.random()*91000)) , type: type ,  data: {}})
-        console.log('NE Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid))
+        // console.log('NE Mam delku:', JSON.stringify(kalkulacecoltype.kalkulaceid))
         //state.Kalkulace[idK].sloupecid.push({id: 1, type: kalkulacecoltype.type,  data: {}})
       }
       return
@@ -330,7 +328,7 @@ export default new Vuex.Store({
       var idK = kalkulacecoltype.kalkulaceid
       var type= kalkulacecoltype.type
       var colid= kalkulacecoltype.id
-      console.log('A 2aaaa2:', JSON.stringify(kalkulacecoltype))
+      // console.log('A 2aaaa2:', JSON.stringify(kalkulacecoltype))
       var nfound=-1;
     if (state.Kalkulace[idK].sloupecid.length>0){
       state.Kalkulace[idK].sloupecid.forEach((el,idx) => {
@@ -349,17 +347,17 @@ export default new Vuex.Store({
     return
   },
     removeKalk (state, kalkulaceid) {
-      console.log('Remov ', kalkulaceid)
+      // console.log('Remov ', kalkulaceid)
       state.Kalkulace = state.Kalkulace.filter(function (el) {
         return el.kalkulaceid !== kalkulaceid
       })
     },
     removeKalkAccId (state, kalkulaceid) {
-      console.log('RemoveAccID ', kalkulaceid.kalkulaceid)
+      // console.log('RemoveAccID ', kalkulaceid.kalkulaceid)
       state.Kalkulace.splice(kalkulaceid.kalkulaceid,1)
     },
     setKalkulaceIdefix (state, kalkulaceidefix) {
-      //console.log('Set ', kalkulaceidefix)
+      // console.log('Set ', kalkulaceidefix)
       state.KalkulaceIdefix = kalkulaceidefix
     },
     setKalk2 (state, kalkulaceid) {
@@ -367,7 +365,7 @@ export default new Vuex.Store({
       try {
         state.KalkulaceThis = state.Kalkulace[kalkulaceid].kalkulaceid
       } catch (e) {
-          console.log("Chyba sek Kalk2 ")
+          // console.log("Chyba sek Kalk2 ")
       }
     },
     setKalk (state, kalkulaceid) {
@@ -405,7 +403,7 @@ export default new Vuex.Store({
             newIdC=Math.ceil(Math.random()*5587515)
             neco.sloupecid.forEach(el=>{
             el.id = newIdC++
-        //    console.log("copyKalk ", neco)
+        //    // console.log("copyKalk ", neco)
           })
 
         }
@@ -419,7 +417,7 @@ export default new Vuex.Store({
       var idc = dataAll.sloupecid
       var neco = JSON.parse(JSON.stringify(state.Kalkulace[idx].sloupecid[idc]))
       neco.id=Math.ceil(Math.random()*55875115)
-      console.log("COPY: " , neco)
+      // console.log("COPY: " , neco)
       state.Kalkulace[idx].sloupecid.push(neco)
       //state.Kalkulace[idx].sloupecid.push('ahoj')
     },
@@ -450,37 +448,42 @@ export default new Vuex.Store({
           state.Kalkulace[idx].sloupecid[idxCol].type = dataAll.type
         //  state.Kalkulace[idx].sloupecid[idxCol].id = dataAll.id
         } catch(e) {
-          console.log('Chyba zmeny typu sloupec')
+          // console.log('Chyba zmeny typu sloupec')
         }
 
 
     },
 
     editKalk (state, kalkulaceidKeyValue) {
-      console.log('Edit Klice :  ', kalkulaceidKeyValue)
+  //    f.log('Edit Klice :  ', kalkulaceidKeyValue)
       var klic = kalkulaceidKeyValue.key
-      console.log("Klic :", klic , kalkulaceidKeyValue.key )
+      // f.log("Klic :", klic , kalkulaceidKeyValue.key )
       // state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[`'${kalkulaceidKeyValue.key}'`] = kalkulaceidKeyValue[kalkulaceidKeyValue.value]
       // state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data['Menu1Value'] = kalkulaceidKeyValue.value
       try {
-        state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[klic] = kalkulaceidKeyValue.value
-        console.log("OK  001 STORE klic: ", klic, "hodnota: "  ,kalkulaceidKeyValue.value , " id kalkulace : ",kalkulaceidKeyValue.kalkulaceid )
+        if (state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[klic] == kalkulaceidKeyValue.value){
+          //f.log("OK  001 STORE klic SHODA : "+ klic+ " hodnota: "  ,kalkulaceidKeyValue.value , " id kalkulace : ",kalkulaceidKeyValue.kalkulaceid )
+        } else {
+          state.Kalkulace[kalkulaceidKeyValue.kalkulaceid].data[klic] = kalkulaceidKeyValue.value
+          f.log("OK  001 STORE klic: "+ klic+ " hodnota: "  ,kalkulaceidKeyValue.value , " id kalkulace : ",kalkulaceidKeyValue.kalkulaceid )
+        }
+        // f.log("OK  001 STORE klic: "+ klic+ " hodnota: "  ,kalkulaceidKeyValue.value , " id kalkulace : ",kalkulaceidKeyValue.kalkulaceid )
       } catch (err) {
 
-        console.log("Chybka 001 STORE klic: ", klic, "hodnota: "  ,kalkulaceidKeyValue.value , " id kalkulace : ",kalkulaceidKeyValue.kalkulaceid )
+        f.log("Chybka 001 STORE klic: "+ klic+ " hodnota: "  ,kalkulaceidKeyValue.value , " id kalkulace : ",kalkulaceidKeyValue.kalkulaceid )
       }
 
-      //console.log('Edit 2', state.Kalkulace["'" + kalkulaceidKeyValue.key + "'"])
+      // console.log('Edit 2', state.Kalkulace["'" + kalkulaceidKeyValue.key + "'"])
     },
     removeKalkCol (state, pole) {
       var kalkulaceid = pole.kalkulaceid
       var sloupecid = pole.sloupecid
       var idk = -1
       var ids = -1
-      console.log('A :', JSON.stringify(kalkulaceid, sloupecid))
+      // console.log('A :', JSON.stringify(kalkulaceid, sloupecid))
       state.Kalkulace.forEach((el, idxk) => {
         if (el.kalkulaceid === kalkulaceid) {
-          console.log('C', sloupecid)
+          // console.log('C', sloupecid)
           idk = idxk
 
           el.sloupecid.forEach((el2, idx) => {
@@ -504,7 +507,7 @@ export default new Vuex.Store({
       // console.log('A :', JSON.stringify(kalkulaceid, sloupecid))
       // state.Kalkulace.forEach((el, idxk) => {
       //   if (el.kalkulaceid === kalkulaceid) {
-      //     console.log('C', sloupecid)
+      //     // console.log('C', sloupecid)
       //     idk = idxk
 
       //     el.sloupecid.forEach((el2, idx) => {
@@ -525,19 +528,19 @@ export default new Vuex.Store({
 
       try{
       state.Kalkulace.forEach((el2,idx2) => {
-        console.log("Hledam REMOVE ", pole.sloupecid , "v kalkulaci ", pole.kalkulaceid, " idx2 ", idx2, " // ", el2.kalkulaceid  , pole )
+        // console.log("Hledam REMOVE ", pole.sloupecid , "v kalkulaci ", pole.kalkulaceid, " idx2 ", idx2, " // ", el2.kalkulaceid  , pole )
         if (el2.kalkulaceid === pole.kalkulaceid) {
-          console.log("Hledam REMOVE ", pole.sloupecid , "v kalkulaci ", pole.kalkulaceid, " idx2 ", idx2 , pole )
+          // console.log("Hledam REMOVE ", pole.sloupecid , "v kalkulaci ", pole.kalkulaceid, " idx2 ", idx2 , pole )
           idk=idx2
         state.Kalkulace[idx2].sloupecid.forEach((el, idxk) => {
-          console.log("Hledam REMOVE ", pole.sloupecid , "v kalkulaci ", pole.kalkulaceid, " idx2 ", idx2 , el )
+          // console.log("Hledam REMOVE ", pole.sloupecid , "v kalkulaci ", pole.kalkulaceid, " idx2 ", idx2 , el )
         if (el.id === pole.sloupecid) {
           idx = idxk
           return idx
         }
       })
       if (idk > -1 && idx > -1 ) {
-        //console.log("COL NASEL Id :", pole.sloupecid, "  poradi ",idx )
+        // console.log("COL NASEL Id :", pole.sloupecid, "  poradi ",idx )
         state.Kalkulace[idk].sloupecid.splice(idx, 1)
       }
       return
@@ -548,7 +551,7 @@ export default new Vuex.Store({
 
     } catch(e) {
 
-     console.log("NENI Sloupiec id pr kalkulaci ", idk ,  e )
+     // console.log("NENI Sloupiec id pr kalkulaci ", idk ,  e )
     }
   },
     removeKalkColID0 (state, pole) {
@@ -559,7 +562,7 @@ export default new Vuex.Store({
       // console.log('Remove kalk kol id:', JSON.stringify(kalkulaceid, sloupecid))
       state.Kalkulace.forEach((el, idxk) => {
         if (el.kalkulaceid === kalkulaceid) {
-          console.log('C', sloupecid)
+          // console.log('C', sloupecid)
           idk = idxk
 
           el.sloupecid.forEach((el2, idx) => {
@@ -698,36 +701,36 @@ export default new Vuex.Store({
       commit('removeCol', kalkulaceid)
     },
     addKalkCol ({commit}, kalkulaceid) {
-      //console.log('Actions- addKalkCol -Dispatch', kalkulaceid)
+      // console.log('Actions- addKalkCol -Dispatch', kalkulaceid)
       commit('addKalkCol', kalkulaceid)
     },
     setID ({commit}, kalkulaceid) {
-      //console.log('SET ID ', kalkulaceid)
+      // console.log('SET ID ', kalkulaceid)
       commit('setID', kalkulaceid)
     },
     setFormat ({commit}) {
-      //console.log('SET ID ', kalkulaceid)
+      // console.log('SET ID ', kalkulaceid)
       commit('setFormat')
     },
 
     setStrojeA ({commit}) {
-      //console.log('SET ID ', kalkulaceid)
+      // console.log('SET ID ', kalkulaceid)
       commit('setStrojeA')
     },
     setStrojeV ({commit}) {
-      //console.log('SET ID ', kalkulaceid)
+      // console.log('SET ID ', kalkulaceid)
       commit('setStrojeV')
     },
     setStrojeJine ({commit}) {
-      //console.log('SET ID ', kalkulaceid)
+      // console.log('SET ID ', kalkulaceid)
       commit('setStrojeJine')
     },
     setStrojeExterni ({commit}) {
-      //console.log('SET ID ', kalkulaceid)
+      // console.log('SET ID ', kalkulaceid)
       commit('setStrojeExterni')
     },
     setStrojeAll ({commit}) {
-      //console.log('SET ID ', kalkulaceid)
+      // console.log('SET ID ', kalkulaceid)
       commit('setStrojeA')
       commit('setStrojeV')
       commit('setStrojeJine')
@@ -735,46 +738,46 @@ export default new Vuex.Store({
     },
 
     setKalkulaceIdefix ({commit}, kalkulaceidefix) {
-      console.log('SET ID ', kalkulaceidefix)
+      // console.log('SET ID ', kalkulaceidefix)
       commit('setKalkulaceIdefix', kalkulaceidefix)
     },
 
     setStrana ({commit}, kalkulaceid) {
-      console.log('SET STRANA ', kalkulaceid)
+      // console.log('SET STRANA ', kalkulaceid)
       commit('setStrana', kalkulaceid)
     },
 
 
 
     addColMat ({commit}, kalkulaceid) {
-      console.log('Add Materialy', kalkulaceid)
-      //alert('store mat')
+      // console.log('Add Materialy', kalkulaceid)
+      // alert('store mat')
       commit('addColMat', kalkulaceid)
     },
     addColMat2 ({commit}, kalkulaceid) {
-      console.log('Add Materialy', kalkulaceid)
-      //alert('store mat')
+      // console.log('Add Materialy', kalkulaceid)
+      // alert('store mat')
       commit('addColMat2', kalkulaceid)
     },
 
     removeKalkCol ({commit}, pole) {
-      console.log('Actions- setWin -Dispatch', pole)
+      // console.log('Actions- setWin -Dispatch', pole)
       commit('removeKalkCol', pole)
     }
     ,removeKalkColID ({commit}, pole) {
-      console.log('REMOVE ID', pole)
+      // console.log('REMOVE ID', pole)
       commit('removeKalkColID', pole)
     }
     ,saveKalkCela ({commit}, pole) {
-      console.log('saveKalkCela', pole)
+      // console.log('saveKalkCela', pole)
       commit('saveKalkCela', pole)
     },
     removeKalkAccId ({commit}, pole) {
-      console.log('Actions- setWin -Dispatch', pole)
+      // console.log('Actions- setWin -Dispatch', pole)
       commit('removeKalkAccId', pole)
     },
     KalkulaceColThis ({commit}, pole) {
-      console.log('Actions- setWin -Dispatch', pole)
+      // console.log('Actions- setWin -Dispatch', pole)
       commit('KalkulaceColThis', pole)
     }
 
@@ -805,7 +808,7 @@ export default new Vuex.Store({
           }
         })
       } catch(e){
-        console.log('chybka id')
+        // console.log('chybka id')
       }
 
       return idx
@@ -829,7 +832,7 @@ export default new Vuex.Store({
     })
 
 
-      console.log("Col Id :", icCol, "  poradi ",idx )
+      // console.log("Col Id :", icCol, "  poradi ",idx )
     } catch(e) {
 
      // console.log("neni Sloupiec id pr kalkulaci ", id  )
@@ -857,10 +860,10 @@ export default new Vuex.Store({
     })
 
 
-      console.log("Col Id :", icCol, "  poradi ",idx )
+      // console.log("Col Id :", icCol, "  poradi ",idx )
     } catch(e) {
 
-     //console.log("neni Sloupiec id pro kalkulaci ", id  )
+     // console.log("neni Sloupiec id pro kalkulaci ", id  )
     }
 
       return idx

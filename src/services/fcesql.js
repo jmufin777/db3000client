@@ -1,27 +1,24 @@
-import moment from 'moment'
-import Q from './query'
-import f from './fce'
-import store from '@/store/store'
-
+import moment from "moment";
+import Q from "./query";
+import f from "./fce";
+import store from "@/store/store";
 
 export default {
+  getMatList(strojmod = 0, sirka = 0, vyska = 0) {
+    var cq = "";
+    var cq2 = "";
+    var cq_zaklad = "";
+    var ntmp = sirka;
 
+    if (vyska < ntmp) {
+      sirka = vyska;
+      vyska = ntmp;
+    }
+    cq_zaklad =
+      "select a.idefix as idefix_rozmer,idefix_mat,sirka_mm,vyska_mm,b.zkratka from list_mat_rozmer a  join list2_matdostupnost b on a.idefix_dostupnost=b.idefix ";
 
-
-  getMatList(strojmod=0,sirka=0,vyska=0) {
-   var  cq=""
-   var cq2 =""
-   var cq_zaklad=""
-   var ntmp = sirka
-
-   if (vyska < ntmp) {
-     sirka=vyska
-     vyska=ntmp
-   }
-   cq_zaklad= "select a.idefix as idefix_rozmer,idefix_mat,sirka_mm,vyska_mm,b.zkratka from list_mat_rozmer a  join list2_matdostupnost b on a.idefix_dostupnost=b.idefix "
-
-   // update  list_mat_rozmer set sirka_mm=sirka_mm*10 where idefix_mat in (select idefix  from list_mat where idefix_matskup=276 and idefix_matsubskup!=411 );
-    cq=`${cq_zaklad}
+    // update  list_mat_rozmer set sirka_mm=sirka_mm*10 where idefix_mat in (select idefix  from list_mat where idefix_matskup=276 and idefix_matsubskup!=411 );
+    cq = `${cq_zaklad}
 
     where sirka_mm >= ${sirka} and vyska_mm >= ${vyska}
     and sirka_mm <=
@@ -37,26 +34,23 @@ export default {
         (
           select idefix_stroj from list_strojmod where idefix= ${strojmod}
         )
-      )`
+      )`;
 
-      cq2 = `select * from ( ${cq_zaklad} ) a where not exists (select * from (${cq}) b where a.idefix_rozmer=b.idefix_rozmer)`
-      cq=`select 1::int as poradi,* from (${cq}) a union select 2::int as poradi,* from (${cq2}) b`
+    cq2 = `select * from ( ${cq_zaklad} ) a where not exists (select * from (${cq}) b where a.idefix_rozmer=b.idefix_rozmer)`;
+    cq = `select 1::int as poradi,* from (${cq}) a union select 2::int as poradi,* from (${cq2}) b`;
 
-      cq=`select distinct on (c.nazev,concat2(' ',nazev1,nazev2,nazev3)) c.nazev as sub,concat2(' ',nazev1,nazev2,nazev3) as nazev,b.* from list_mat a  join (
+    cq = `select distinct on (c.nazev,concat2(' ',nazev1,nazev2,nazev3)) c.nazev as sub,concat2(' ',nazev1,nazev2,nazev3) as nazev,b.* from list_mat a  join (
           ${cq}
-      ) b on a.idefix=b.idefix_mat join (select * from list2_matsubskup aa) c on a.idefix_matsubskup=c.idefix `
+      ) b on a.idefix=b.idefix_mat join (select * from list2_matsubskup aa) c on a.idefix_matsubskup=c.idefix `;
 
-      cq = `select a.*,b.cena_naklad_m2,b.cena_prodej_m2 from (${cq}) a join list_mat b on a.idefix_mat=b.idefix where a.zkratka !='X' order by nazev,zkratka `
+    cq = `select a.*,b.cena_naklad_m2,b.cena_prodej_m2 from (${cq}) a join list_mat b on a.idefix_mat=b.idefix where a.zkratka !='X' order by nazev,zkratka `;
 
+    //console.log("AAAAA", cq)
 
-      //console.log("AAAAA", cq)
+    return cq;
+  },
 
-     return cq
-
-  }  ,
-
-   getStrojItems(cwhere = '', technologie='')  {
-
+  getStrojItems(cwhere = "", technologie = "") {
     var cq = `select a.*
       ,b.nazev as nazev_stroj
       ,b.nazev_text as technologie
@@ -74,29 +68,26 @@ export default {
       ,priprava_cas_minuta,priprava_celkem_naklad,priprava_celkem_prodej
       ,tisk
 
-      from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix`
-      if (cwhere == 'Jine') {
-        cq+=` where not b.tisk `
-        cq+=` and not b.nazev_text ilike any(array['lam%','bal%','%ez_n%','%ka__r%'] ) `
-      } else
-      if (technologie>''){
-        cq+=` where b.nazev_text ilike '${cwhere}'`
-      } else {
-        cq+=` where a.nazev ilike '${cwhere}'`
-      }
+      from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix`;
+    if (cwhere == "Jine") {
+      cq += ` where not b.tisk `;
+      cq += ` and not b.nazev_text ilike any(array['lam%','bal%','%ez_n%','%ka__r%'] ) `;
+    } else if (technologie > "") {
+      cq += ` where b.nazev_text ilike '${cwhere}'`;
+    } else {
+      cq += ` where a.nazev ilike '${cwhere}'`;
+    }
 
-      cq+=` order by case when a.mod_priorita = true then 1 else 2 end,  a.kod`
-       cq = `select distinct on (a.nazev)  * from ( ${cq} ) a order by nazev`
-       if (cwhere=='') {
-         cq += ' limit 0'
-         alert('Limit 0')
-       }
+    cq += ` order by case when a.mod_priorita = true then 1 else 2 end,  a.kod`;
+    cq = `select distinct on (a.nazev)  * from ( ${cq} ) a order by nazev`;
+    if (cwhere == "") {
+      cq += " limit 0";
+      alert("Limit 0");
+    }
 
-    return cq ;
-
-   },
-   getStrojOnly(cwhere = '')  {
-
+    return cq;
+  },
+  getStrojOnly(cwhere = "") {
     var cq = `select a.*, b.nazev as nazev_stroj
       ,b.delka_mat_max_mm,b.sirka_mat_max_mm
       ,b.delka_tisk_max_mm,b.sirka_tisk_max_mm
@@ -113,73 +104,65 @@ export default {
       ,tisk
 
       from list_strojmod a join list_stroj b on a.idefix_stroj = b.idefix  where b.nazev ilike '${cwhere}'
-      order by case when a.mod_priorita = true then 1 else 2 end,  a.kod`
-       cq = `select distinct on (a.nazev_stroj)  * from ( ${cq} ) a order by nazev_stroj`
-       if (cwhere=='') {
-         cq += ' limit 0'
-         alert('Limit 0')
-       }
-
-    return cq ;
-
-   },
-   getLaminace() {
-    return this.getStrojItems('%lam%','1'); // hleda jen v laminatorech
-   },
-   getRezani() {
-    return this.getStrojItems('%ez_n%','1');
-   },
-   getKasir(kalkulace="") {
-    return this.getStrojItems('%ka__r%','1');
-   },
-   getBaleni() {
-    return this.getStrojItems('%balen%','1');
-   },
-   getJine() {
-    return this.getStrojItems('Jine','1');
-   },
-   getStroj1(colType="") {
-//    alert(colType)
-     if (colType=="Rezani"){
-
-      return this.getStrojOnly('%ez_n%',"1");
-     }
-     if (colType=="Kasir"){
-      return this.getStrojOnly('%Ka__r%',"1");
-     }
-
-
-   },
-   getStroj(colType="") {
-    if (colType=='Kasir') {
-      return this.getKasir();
-    } else
-    if (colType=='Laminace') {
-      return this.getLaminace();
+      order by case when a.mod_priorita = true then 1 else 2 end,  a.kod`;
+    cq = `select distinct on (a.nazev_stroj)  * from ( ${cq} ) a order by nazev_stroj`;
+    if (cwhere == "") {
+      cq += " limit 0";
+      alert("Limit 0");
     }
-    else
-    if (colType=='Baleni') {
 
+    return cq;
+  },
+  getLaminace() {
+    return this.getStrojItems("%lam%", "1"); // hleda jen v laminatorech
+  },
+  getRezani() {
+    return this.getStrojItems("%ez_n%", "1");
+  },
+  getKasir(kalkulace = "") {
+    return this.getStrojItems("%ka__r%", "1");
+  },
+  getBaleni() {
+    return this.getStrojItems("%balen%", "1");
+  },
+  getJine() {
+    return this.getStrojItems("Jine", "1");
+  },
+  getStroj1(colType = "") {
+    //    alert(colType)
+    if (colType == "Rezani") {
+      return this.getStrojOnly("%ez_n%", "1");
+    }
+    if (colType == "Kasir") {
+      return this.getStrojOnly("%Ka__r%", "1");
+    }
+  },
+  getStroj(colType = "") {
+    if (colType == "Kasir") {
+      return this.getKasir();
+    } else if (colType == "Laminace") {
+      return this.getLaminace();
+    } else if (colType == "Baleni") {
       return this.getBaleni();
     }
-    if (colType=='Rezani') {
-
+    if (colType == "Rezani") {
       return this.getRezani();
     }
-    if (colType=='Jine') {
+    if (colType == "Jine") {
       return this.getJine();
     }
-    return ''
-   }
+    return "";
+  },
 
-///Prace
+  ///Prace
 
-,getPraceDod(){
-  var q="select b.nazev as firma,c.nazev as prace, a.idefix_prace, a.idefix_firma from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix";
-  return q;
-}
-,getPrace(idefix_dod=0,nazevPrace=''){
-  var q=`select distinct c.nazev as prace, a.idefix_prace,array_agg(b.idefix) as dod_seznam, count(distinct b.idefix) as pocet_dod from list_firmaprace a
+  getPraceDod() {
+    var q =
+      "select b.nazev as firma,c.nazev as prace, a.idefix_prace, a.idefix_firma from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix";
+    return q;
+  },
+  getPrace(idefix_dod = 0, nazevPrace = "") {
+    var q = `select distinct c.nazev as prace, a.idefix_prace,array_agg(b.idefix) as dod_seznam, count(distinct b.idefix) as pocet_dod from list_firmaprace a
         join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix
         where
         (${idefix_dod}=0 or a.idefix_firma = ${idefix_dod} )
@@ -187,215 +170,186 @@ export default {
         ( '${nazevPrace}' = '' or ('${nazevPrace}' > '' and to_aascii(c.nazev) ~*  to_aascii('${nazevPrace}')  ))
         group by c.nazev,a.idefix_prace order by c.nazev`;
 
-  return q;
-}
-,getPraceAll(idefix_dod=0,nazevPrace=''){
-  var q=`select distinct c.nazev as prace, c.idefix as idefix_prace,array_agg(b.idefix) as dod_seznam, count(b.idefix) as pocet_dod, c.text_na_fakturu
+    return q;
+  },
+  getPraceAll(idefix_dod = 0, nazevPrace = "") {
+    var q = `select distinct c.nazev as prace, c.idefix as idefix_prace,array_agg(b.idefix) as dod_seznam, count(b.idefix) as pocet_dod, c.text_na_fakturu
           from
           list2_prace c left join list_firmaprace a on a.idefix_prace =c.idefix
           left join list_dodavatel b on a.idefix_firma=b.idefix
           group by c.nazev,c.idefix, c.text_na_fakturu order by pocet_dod desc, c.nazev limit 1150`;
-       /*
-       where
-        (${idefix_dod}=0 or a.idefix_firma = ${idefix_dod} )
-        and
-        ( '${nazevPrace}' = '' or ('${nazevPrace}' > '' and to_aascii(c.nazev) ~*  to_aascii('${nazevPrace}')  ))
-       */
-       //q=`select a.nazev *,idefix as idefix_prace,nazev as prace from list2_prace `
-  return q;
-}
-,getDod(idefix_prace=0){
-  var q=`select  b.nazev as firma, a.idefix_firma,array_agg(a.idefix_prace) as prace_seznam from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix
+      return q;
+  },
+  getDod(idefix_prace = 0) {
+    var q = `select  b.nazev as firma, a.idefix_firma,array_agg(a.idefix_prace) as prace_seznam from list_firmaprace a join list_dodavatel b on a.idefix_firma=b.idefix join list2_prace c on a.idefix_prace =c.idefix
           where ${idefix_prace} = 0  or a.idefix_prace = ${idefix_prace}
           group by b.nazev , a.idefix_firma
   order by b.nazev`;
-  return q;
-}
-,getDodAll(idefix_prace=0){
-  var q=''
+    return q;
+  },
+  getDodAll(idefix_prace = 0) {
+    var q = "";
 
-
-    q=`select  b.nazev as firma, b.idefix as idefix_firma , array_agg(a.idefix_prace) as prace_seznam, count(a.idefix_prace) as pocet_praci from   list_dodavatel b     left join list_firmaprace a on b.idefix = a.idefix_firma
+    q = `select  b.nazev as firma, b.idefix as idefix_firma , array_agg(a.idefix_prace) as prace_seznam, count(a.idefix_prace) as pocet_praci from   list_dodavatel b     left join list_firmaprace a on b.idefix = a.idefix_firma
                left join  list2_prace c on a.idefix_prace =c.idefix
           where true or to_aascii(b.nazev) ~*  to_aascii('${idefix_prace}')
           group by b.nazev , b.idefix
   order by pocet_praci desc, b.nazev  limit 11120 `;
-  console.log('pismena!!!')
+    f.log('GETDODALL');
+    // console.log("pismena!!!");
 
+    return q;
+  },
 
-  return q;
-}
-
-,async getFirma(idefix_firma=0, firmanazev='', nlimit = 0){
-  var idefix=store.state.idefix
-  var defer = $.Deferred();
-  var q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
+  async getFirma(idefix_firma = 0, firmanazev = "", nlimit = 0) {
+    var idefix = store.state.idefix;
+    var defer = $.Deferred();
+    var q = `select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
   left join (select distinct on (idefix_firma) idefix_firma,idefix_user,idefix2fullname(idefix_user) as fullname from list_firmaaccount where _do is null or _do <= now()::date order by idefix_firma, _do desc) b
       on a.idefix = b.idefix_firma
   order by nazev `;
-  if (idefix_firma>0){
-
-      q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
+    if (idefix_firma > 0) {
+      q = `select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
       left join (select distinct on (idefix_firma) idefix_firma,idefix_user,idefix2fullname(idefix_user) as fullname from list_firmaaccount where _do is null or _do <= now()::date order by idefix_firma, _do desc) b
       on a.idefix = b.idefix_firma
       where a.idefix = ${idefix_firma}  order by a.nazev `;
       //f.Alert2(q)
-
-  } else
-  if (firmanazev>'') {
-      q=`select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
+    } else if (firmanazev > "") {
+      q = `select a.idefix,a.nazev,a.ico,idefix2fullname(user_update_idefix), b.fullname,b.idefix_user from list_dodavatel a
       left join (select distinct on (idefix_firma) idefix_firma,idefix_user,idefix2fullname(idefix_user) as fullname from list_firmaaccount where _do is null or _do <= now()::date order by idefix_firma, _do desc) b
       on a.idefix = b.idefix_firma
       where to_aascii(a.nazev || coalesce(a.ico,'')) ~* to_aascii('^${firmanazev}') order by a.nazev `;
       //f.Alert2(q)
-  }
-  if (nlimit>0 ) {
-     q= `${q} limit ${nlimit}`
-  }
+    }
+    if (nlimit > 0) {
+      q = `${q} limit ${nlimit}`;
+    }
 
+    var atmp = [];
+    try {
+      // f.Alert('kve 1')
+      atmp = (await Q.all(idefix, q)).data.data;
+      // f.Info('Get Firma 1', "DATA: ",JSON.stringify(atmp))
+      defer.resolve(atmp);
+    } catch (e) {
+      defer.resolve(atmp);
+      f.Alert2("Chyba  Dotaz Firma", e);
+    }
 
-  var atmp=[]
-  try {
-    // f.Alert('kve 1')
-    atmp= (await Q.all(idefix,q)).data.data
-    // f.Info('Get Firma 1', "DATA: ",JSON.stringify(atmp))
-    defer.resolve(atmp)
+    return defer.promise();
+  },
 
+  async getFirmaOsoba(idefix_firma = 0) {
+    var idefix = store.state.idefix;
 
-
-  }  catch(e) {
-    defer.resolve(atmp)
-    f.Alert2('Chyba  Dotaz Firma', e )
-  }
-
-
-
-
-  return defer.promise();
-}
-
-,async getFirmaOsoba(idefix_firma=0){
-  var idefix=store.state.idefix
-
-  var q=`select idefix, idefix_firma, osoba(idefix ) as nazev, aktivni,mail,tel, prioritni from list_firmaosoba where idefix_firma = ${idefix_firma} and aktivni = true
+    var q = `select idefix, idefix_firma, osoba(idefix ) as nazev, aktivni,mail,tel, prioritni from list_firmaosoba where idefix_firma = ${idefix_firma} and aktivni = true
       order by
         case when aktivni then 1 else 2 end,
         case when prioritni then 1 else 2 end,
-        jmeno`
+        jmeno`;
 
+    var defer = $.Deferred();
+    var atmp = [];
+    try {
+      // f.Alert('kve 1')
+      atmp = (await Q.all(idefix, q)).data.data;
 
-
-  var defer = $.Deferred();
-  var atmp=[]
-  try {
-    // f.Alert('kve 1')
-    atmp= (await Q.all(idefix,q)).data.data
-
-    if (atmp.length==0) {
-      defer.resolve(atmp)
-    } else  {
-    await atmp.forEach(el=>{
-
-      defer.resolve(atmp)
-      // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
-    })
+      if (atmp.length == 0) {
+        defer.resolve(atmp);
+      } else {
+        await atmp.forEach(el => {
+          defer.resolve(atmp);
+          // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
+        });
+      }
+    } catch (e) {
+      defer.resolve(atmp);
+      f.Alert2("Chyba  getFirmaOsoba", e);
     }
-  }  catch(e) {
-    defer.resolve(atmp)
-    f.Alert2('Chyba  getFirmaOsoba', e )
-  }
 
+    return defer.promise();
+  },
 
-  return defer.promise();
-},
-
-async Skupiny(){
-  var idefix=store.state.idefix
-  var q=`select idefix,login,email,telefon, plati, zobraz ,level,idefix2fullname(idefix) as fullname, coalesce(b.skupiny,'N') as skupiny from list_users u
+  async Skupiny() {
+    var idefix = store.state.idefix;
+    var q = `select idefix,login,email,telefon, plati, zobraz ,level,idefix2fullname(idefix) as fullname, coalesce(b.skupiny,'N') as skupiny from list_users u
   left join (
   select a.idefix_user,array_to_string(array_agg(b.nazev order by nazev ),',') as skupiny  from list_groups_users a join list_groups b on a.idefix_group = b.idefix group by idefix_user
   ) b on u.idefix = b.idefix_user
   where u.plati= 1 and u.idefix=${idefix}
-  `
+  `;
 
-  var defer = $.Deferred();
-  var atmp=[]
-  try {
-    // f.Alert('kve 1')
-    atmp= (await Q.all(idefix,q)).data.data
+    var defer = $.Deferred();
+    var atmp = [];
+    try {
+      // f.Alert('kve 1')
+      atmp = (await Q.all(idefix, q)).data.data;
 
-    if (atmp.length==0) {
-      defer.resolve(false)
-    } else  {
-    await atmp.forEach(el=>{
-      defer.resolve(atmp[0].skupiny)
-      // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
-    })
+      if (atmp.length == 0) {
+        defer.resolve(false);
+      } else {
+        await atmp.forEach(el => {
+          defer.resolve(atmp[0].skupiny);
+          // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
+        });
+      }
+    } catch (e) {
+      defer.resolve(atmp);
+      f.Alert2("Chyba  getFirmaOsoba", e, q);
     }
-  }  catch(e) {
-    defer.resolve(atmp)
-    f.Alert2('Chyba  getFirmaOsoba', e , q )
-  }
 
-  return defer.promise();
+    return defer.promise();
+  },
+  isObchod() {
+    var cret = "";
+    var defer = $.Deferred();
 
-},
-isObchod(){
-  var cret=''
-  var defer = $.Deferred();
-
-  this.Skupiny()
-  .then(cr=>{
-    defer.resolve(cr)
-  //  alert(cr)
-  })
-  .catch((e) => {
-    defer.resolve(false)
-
-  })
-  return defer.promise()
-
-
-},
-async getOsoba(idefix_osoba=0, skupina=''){
-  var idefix=store.state.idefix
-  var q=`select idefix,login,email,telefon, plati, zobraz ,level,idefix2fullname(idefix) as fullname, coalesce(b.skupiny,'N') as skupiny from list_users u
+    this.Skupiny()
+      .then(cr => {
+        defer.resolve(cr);
+        //  alert(cr)
+      })
+      .catch(e => {
+        defer.resolve(false);
+      });
+    return defer.promise();
+  },
+  async getOsoba(idefix_osoba = 0, skupina = "") {
+    var idefix = store.state.idefix;
+    var q = `select idefix,login,email,telefon, plati, zobraz ,level,idefix2fullname(idefix) as fullname, coalesce(b.skupiny,'N') as skupiny from list_users u
   left join (
   select a.idefix_user,array_to_string(array_agg(b.nazev order by nazev ),',') as skupiny  from list_groups_users a join list_groups b on a.idefix_group = b.idefix group by idefix_user
   ) b on u.idefix = b.idefix_user
   where u.plati= 1
-  `
-  q= `select * from (${q}) a where
+  `;
+    q = `select * from (${q}) a where
 
   ( ${idefix_osoba} = 0 or idefix = ${idefix_osoba}   )
   and
   ( '${skupina}' = '' or  skupiny ilike '%${skupina}%'  or  skupiny ilike '%veden%'  )
 
   order by fullname
-  `
+  `;
 
-  var defer = $.Deferred();
-  var atmp=[]
-  try {
-    // f.Alert('kve 1')
-    atmp= (await Q.all(idefix,q)).data.data
+    var defer = $.Deferred();
+    var atmp = [];
+    try {
+      // f.Alert('kve 1')
+      atmp = (await Q.all(idefix, q)).data.data;
 
-    if (atmp.length==0) {
-      defer.resolve(atmp)
-    } else  {
-    await atmp.forEach(el=>{
-
-      defer.resolve(atmp)
-      // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
-    })
+      if (atmp.length == 0) {
+        defer.resolve(atmp);
+      } else {
+        await atmp.forEach(el => {
+          defer.resolve(atmp);
+          // f.Info('Get User 1',el.expedice_datum, "DATA: ",JSON.stringify(atmp))
+        });
+      }
+    } catch (e) {
+      defer.resolve(atmp);
+      f.Alert2("Chyba  getFirmaOsoba", e, q);
     }
-  }  catch(e) {
-    defer.resolve(atmp)
-    f.Alert2('Chyba  getFirmaOsoba', e , q )
+
+    return defer.promise();
   }
-
-  return defer.promise();
-}
-
-
-}
+};

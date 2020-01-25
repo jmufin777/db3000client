@@ -11,9 +11,10 @@ export default {
     //}
     if (query.match(/set_open|prilohy_prijem/g) ){
     }else {
-      f.log(query)
+      //f.log(query)
     }
     if (neco=='undefined') {
+      f.log('GET ', query)
       console.log('GET Vracim nahradu dotaz je undefined : ',user, query, neco, `select '${neco}' as nazev, 2 as nazev_txt,3 as idefix,4 as idefix_stroj,5 as idefix_mat` )
       return Api().get('query',{ params: {  user: user,query: `select '${neco}' as nazev, 2 as nazev_txt,3 as idefix,4 as idefix_stroj,5 as idefix_mat limit 0`   }})
     }
@@ -22,16 +23,24 @@ export default {
 
   post (user, query ) {
     //query=query.replace('undefined','0')
-    console.log('POST: query ',user, ++pocet)
-    f.log(query)
+    //console.log('POST: query ',user, ++pocet)
+    // f.log('POST ', query)
     //return
     return Api().post('query', { params: {  user: user,query: query}} )
   }
   ,
+  Q2 (user, query ) {
+    //query=query.replace('undefined','0')
+    //console.log('POST: query ',user, ++pocet)
+    // f.log('POST ', query)
+    //return
+    return Api().post('query22', { params: {  user: user,query: query}} )
+  }
+  ,
   vl_copy (user, cTable,idefix_item,query ) {
     //query=query.replace('undefined','0')
-    console.log('POST: query ',user, ++pocet)
-    f.log(query)
+    console.log('VL_COPY  ',user, ++pocet)
+    //f.log(query)
     //return
     return Api().post('vl_copy', { params: {  user: user,table: cTable,idefix_item:idefix_item,query: query}} )
   }
