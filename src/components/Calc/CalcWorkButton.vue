@@ -73,7 +73,7 @@
                   </button>
                 </td>
                 <td class="honza_color pa-0" style="text-align:left">
-                  <button class="kolecko2" @click="setVL()" title="Zabalit - ulozit">
+                  <button class="kolecko2" @click="setVL()" :title="IDEFIX==IDEFIXACTIVE?'Zabalit - ulozit':'Rozbalit'">
                     <div class="kolecko" v-if="IDEFIX==IDEFIXACTIVE">
                       <i
                         class="el-icon-arrow-down"
@@ -1337,6 +1337,7 @@ export default {
 
     async setVL() {
       const self = this;
+      f.log('ZAB 671 START ---------------')
       if (self.IDEFIX == 0) {
         //f.Alert('Nelze rozbalit - neni v databazi')
         await eventBus.$emit("MenuHlavni", {
@@ -1347,6 +1348,7 @@ export default {
         return;
       }
       await eventBus.$emit("MenuHlavni", { key: 671, idefix: self.IDEFIX });
+      f.log('ZAB 671 END ----------------')
       //f.Alert('setVL- rozbleni zabaleni', self.IDEFIX)
     },
 

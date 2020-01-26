@@ -29,14 +29,20 @@ export default {
     return Api().post('query', { params: {  user: user,query: query}} )
   }
   ,
-  Q2 (user, query ) {
+  Q2 (user, query ) {  //Posila sql dptazy - query je json - do stejnych poli jao sql vraci data na klienta, data upravi o konverze potrebne opakovane v palikaci
     //query=query.replace('undefined','0')
     //console.log('POST: query ',user, ++pocet)
     // f.log('POST ', query)
     //return
     return Api().post('query22', { params: {  user: user,query: query}} )
-  }
-  ,
+  } ,
+  Q2raw (user, query ) {  //Posila sql dptazy - query je json - do stejnych poli jao sql vraci data na klienta, data neupravuje
+    //query=query.replace('undefined','0')
+    //console.log('POST: query ',user, ++pocet)
+    // f.log('POST ', query)
+    //return
+    return Api().post('query22raw', { params: {  user: user,query: query}} )
+  } ,
   vl_copy (user, cTable,idefix_item,query ) {
     //query=query.replace('undefined','0')
     console.log('VL_COPY  ',user, ++pocet)

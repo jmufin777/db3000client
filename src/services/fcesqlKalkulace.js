@@ -609,9 +609,9 @@ export default {
     }
   },
    setActiveQ(idefix = 0, cTable, Aktivuj = 1) {
-    var q=`update ${cTable} set active = false where active ;`
+    var q=`update ${cTable} set active = false where active `
     if (Aktivuj > 0) {
-      q+=  `update ${cTable} set active=true where idefix=${idefix}`
+      q+=  `; update ${cTable} set active=true where idefix=${idefix}` // Pozor strednik pred druhym dotazem
     }
     return q;
 
@@ -837,7 +837,7 @@ export default {
   case when status =1 then 2 else 1 end,
   poradi2 desc,  qa.idefix --datum--cas--`
 console.log('case when qa.active  then 1 else 2 end', '')
-    f.log("ORDER TEMPLATES STRING :", q);
+    //f.log("ORDER TEMPLATES STRING :", q);
     return q
 
     ///f.Alert(JSON.stringify(atmp))
