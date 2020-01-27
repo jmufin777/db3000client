@@ -562,13 +562,11 @@
                   style="height:100%; width:80%%;border-bottom:dotted 1px"
                   class="stred mx-1 pt-4"
                 >
-                  <!-- @mouseenter="nahled=true" @mouseleave="nahled=false;alert(nahled)"  -->
-                  <!-- @mouseenter="odkaz='#/vl/'+polozka2.idefix_vl;nahledView()" @mouseleave="nahledCancel()" -->
+                  <!-- @mouseenter="odkaz=polozka2.idefix_vl;nahledView()"
+                  @mouseleave="nahledCancel()"-->
                   <span
                     v-if="polozka2.idefix_vl>0"
                     @click="vl_view(polozka2.idefix_vl);nahled=false"
-                    @mouseenter="odkaz=polozka2.idefix_vl;nahledView()"
-                    @mouseleave="nahledCancel()"
                   >
                     <span
                       v-if="polozka2.status==1 || polozka2.status>2"
@@ -581,10 +579,7 @@
                     v-if="!f.isEmpty(polozka2.obsah) "
                     class="black--text d3"
                     style="font-weight:bold;height:20px;zoom:100%;"
-                    @click="polozka2.vzor==0?to3Z(polozka2,2):
-        ZalozitZobrazit(polozka2)
-
-        "
+                    @click="polozka2.vzor==0?to3Z(polozka2,2):ZalozitZobrazit(polozka2)"
                   >
                     <!-- <v-icon v-if="polozka2.status==1 || polozka2.status>2"
         size="small"   class="red--text"
@@ -1850,12 +1845,12 @@
       </div>
 
       <div
-        v-if="(obrazovka_nab==3 && MAINMENULAST=='kalkulace')  || (obrazovka_zak==3 && MAINMENULAST=='zakazky')"
+        v-if=" ((obrazovka_nab==3 && MAINMENULAST=='kalkulace')  || (obrazovka_zak==3 && MAINMENULAST=='zakazky'))"
         slot="kalkulace"
         style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%"
         id="obalKalkulace"
       >
-        <div class="leva pt-0 pb-2">
+        <div class="leva pt-0 pb-2" >
           <button
             class="px-4 tlacitkoMenu elevation-2 hoVer"
             v-if="MAINMENULAST=='kalkulace'"
@@ -1899,9 +1894,7 @@
           >3N</span>
         </div>
 
-
-
-        <div v-cloak v-for="idxK in 1" :key="'x'+idxK" slot="kalkulace">
+        <div  v-cloak v-for="idxK in 1" :key="'x'+idxK" slot="kalkulace">   <!--//CHYBA 1 //-->
           <work
             v-cloak
             slot="kalkulace"
@@ -1915,6 +1908,7 @@
             <span v-if="iK==0" slot="tlacitka" style="position:relative;left:4px">
               <!-- ||  IDEFIXACTIVE==0 -->
               <work-but
+
                 v-cloak
                 v-if="aKalkBefore.length==0 || (IDEFIXACTIVE == 0 && aKalkulace.length >0 ) "
                 :ID="'AB_'+iK"
@@ -2007,7 +2001,10 @@
                 </button>
               </work-left>
             </span>
+            <!--CHYBA 2 //-->
             <div
+
+
               v-cloak
               v-for="(iSloupec,i) in iKalk.sloupecid"
               :key="i"
@@ -2041,7 +2038,9 @@
             <div slot="mezera" class="red">&nbsp;</div>
           </work>
         </div>
+        <!--CHYBA 2 //-->
         <div
+
           v-cloak
           v-for="(aBefore,iBefore ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix<IDEFIXACTIVE || IDEFIXACTIVE==0) })"
           :key="iBefore"
@@ -2063,7 +2062,9 @@
 
           <!-- / {{aBefore.idefix }} -->
         </div>
+        <!--CHYBA 3 //-->
         <div
+
           v-for="(aBefore2,iBefore2 ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix>IDEFIXACTIVE && IDEFIXACTIVE>0 )})"
           :key="iBefore2+15000"
           slot="kalkulace"
@@ -2683,7 +2684,8 @@ export default {
       IDEFIXACTIVE_NAB: 0,
       Zacatek: 0,
 
-      StopStav: false
+      StopStav: false,
+      //naklad: 0 // CHYBA
     };
   },
   watch: {
@@ -2752,6 +2754,7 @@ export default {
     aKalkulace: function(a) {
       console.log("Sleduji kalkulace", a);
       try {
+             f.log('Ulozil bych kalkulaci', this.aKalkulace.length)
         //    this.$store.dispatch('setKalkulace', this.aKalkulace)
       } catch (err) {
         console.log("jebka");
@@ -3076,10 +3079,11 @@ export default {
           self.saveVL(server.idefix);
           //self.RozdelKalkulaci(server)
         }
-        if (server.key == 671) {  //Zabaloit polozku
+        if (server.key == 671) {
+          //Zabaloit polozku
 
           try {
-            self.setVL(server.idefix);  //Automaticky pozna zda jde o zabaleni ci rozbaleni podle stavu active
+            self.setVL(server.idefix); //Automaticky pozna zda jde o zabaleni ci rozbaleni podle stavu active
           } catch (e) {
             f.Alert2("HAVARIE");
           }
@@ -3466,6 +3470,10 @@ export default {
     //  this.$destroy()
   },
   methods: {
+    po() {
+
+      return ''
+    },
     vl_view(_idefix_vl) {
       eventBus.$emit("IDEFIX_VL", { IDEFIX_VL: _idefix_vl });
     },
@@ -3699,18 +3707,21 @@ export default {
       self._IsObchod = self._Skupiny.match(/obchod/i) ? true : false;
       self._IsVedeni = self._Skupiny.match(/vedeni/i) ? true : false;
     },
-    async beforeArray(neco=null) {
+    async beforeArray(neco = null) {
       const self = this;
-      self.aKalkBefore = [];
-      f.log("4 getTemplatesUser");
-      if (f.isEmpty(neco)){
-        self.aKalkBefore = await queryKalk.getTemplatesUser(self.cTable);
-        f.log('A BEFORE Z DB')
-      } else {
-        f.log('A BEFORE Z LOCAL')
-        self.aKalkBefore = neco
-      }
 
+      // self.aKalkBefore = [];
+
+      f.log("4 getTemplatesUser");
+
+      if (f.isEmpty(neco)) {
+        self.aKalkBefore = await queryKalk.getTemplatesUser(self.cTable);
+
+        f.log("A BEFORE Z DB");
+      } else {
+        f.log("A BEFORE Z LOCAL");
+        self.aKalkBefore = neco;
+      }
     },
     async copyRadek(ifx) {
       const self = this;
@@ -6621,27 +6632,25 @@ export default {
       //--await queryKalk.setActive(idefix, self.cTable);
       f.log("2", "setActive");
       var qAct = queryKalk.setActiveQ(idefix, self.cTable);
-      var qnK =  queryKalk.getTemplateUserIdefixQ(idefix, self.cTable);
-      var qBef = queryKalk.getTemplatesUserQ(self.cTable)
+      var qnK = queryKalk.getTemplateUserIdefixQ(idefix, self.cTable);
+      var qBef = queryKalk.getTemplatesUserQ(self.cTable);
 
       var qTest = await Q.Q2(self.idefix, {
-        'a1': qAct,
-        'a2parse': qnK,
-        'a3': qBef
-      })
+        a1: qAct,
+        a2parse: qnK,
+        a3: qBef
+      });
       if (!f.isEmpty(qTest.data.data)) {
-        f.log("12 QQQQQ OK", "setActive") //,f.Jstr(qTest.data.data.a2)
+        f.log("12 QQQQQ OK", "setActive"); //,f.Jstr(qTest.data.data.a2)
       } else {
-        f.log("12 QQQQQ ERR", "setActive",f.Jstr(qTest));
-
+        f.log("12 QQQQQ ERR", "setActive", f.Jstr(qTest));
       }
-
 
       f.log("12A", "setActive");
 
-      self.aKalkulace = qTest.data.data.a2parse[0].obsah
+      self.aKalkulace = qTest.data.data.a2parse[0].obsah;
       f.log("12C PARSE END", "setActive");
-      self.aKalkBefore = qTest.data.data.a3
+      self.aKalkBefore = qTest.data.data.a3;
       f.log("12B", "setActive");
 
       self.IDEFIXACTIVE = idefix;
@@ -6662,7 +6671,7 @@ export default {
     },
     async setZabalit() {
       const self = this;
-      f.log('ZAB 0:')
+      f.log("ZAB 0:");
       self.aKalkulace = [];
       self.$store.dispatch("cleanKalk");
       if (self.IDEFIXACTIVE > 0) {
@@ -6670,21 +6679,42 @@ export default {
         self.IDEFIXACTIVELAST = self.IDEFIXACTIVE;
       }
       //return
-      f.log('ZAB 1:')
+      f.log("ZAB 1:");
       //Kolekce
       var kolekce = {
         Active: queryKalk.setActiveQ(0, self.cTable, 0),
         Abefore: queryKalk.getTemplatesUserQ(self.cTable)
-      }
-      f.log('KOLEKCE 1:' , f.Jstr(kolekce))
-      var aKolekce = await Q.Q2(self.idefix, kolekce)
+      };
+      f.log("KOLEKCE 1:", f.Jstr(kolekce));
+      var aKolekce = await Q.Q2(self.idefix, kolekce);
       //console.log(f.Jstr(kolekce))
-      self.aKalkBefore = aKolekce.data.data.Abefore
 
-      self.IDEFIXACTIVE = 0;   //nahrazuje funckci deactive
-      self.NAZEVACTIVE = "";   //nahrazuje funckci deactive
-      f.log('KOLEKCE 2: Return test' , f.Jstr(kolekce))
-      return
+
+      self.IDEFIXACTIVE = 0; //nahrazuje funckci deactive
+      self.NAZEVACTIVE = ""; //nahrazuje funckci deactive
+     f.log("KOLEKCE 2 TEST",(self.aKalkBefore == aKolekce.data.data.Abefore) )
+      self.aKalkBefore = [];
+      try {
+        aKolekce.data.data.Abefore.forEach((el,id)=>{
+        self.aKalkBefore.push(el)
+        //f.log("KOLEKCE 2 PUSH")
+
+      })
+
+      } catch(e){
+        console.log('Kolekce ma potize')
+
+
+      }
+
+      //self.aKalkBefore = aKolekce.data.data.Abefore;
+      //await self.beforeArray(aKolekce.data.data.Abefore); //2.JARDA
+      f.log("KOLEKCE 2: Return test", self.TestRend,  self.IDEFIXACTIVELAST);
+
+        self.idRend++;
+        self.TestRend++;
+
+      //return;
 
       //queryKalk.getTemplatesUser(self.cTable);
       /*
@@ -6694,7 +6724,6 @@ export default {
       } catch (e) {
         console.log("1: ", e);
       }
-      */
 
       try {
         await self.setIdefixDeActive();
@@ -6708,6 +6737,8 @@ export default {
       } catch (e) {
         console.log("3 ", e);
       }
+      */
+
     },
     async setVL(idefix, jenUloz = 0) {
       const self = this;
@@ -6732,6 +6763,7 @@ export default {
         alert("0. Je  treba ulozit neulozenou");
         f.log("4", "setVL");
         var dataRadka = f.dataRadka(0);
+
         try {
           f.log("EMIT 10 ", "SAVEZAZNAM");
           f.log("5", "setVL");
@@ -6757,50 +6789,36 @@ export default {
         await self.setZabalit();
         f.log("11", "setVL");
         self.StopStav = false;
-        //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
-        //$(document.getElementById("obalKalkulace")).toggle( "slide" );
         document.getElementById("obalKalkulace").style.opacity = 1;
         f.log("12", "setVL");
-        // alert('Jen jsem to ulozil')
         return;
       }
       //alert("Save Result " + necoSave)
       if (necoSave < 0) {
         self.StopStav = false;
-        //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
-        //$(document.getElementById("obalKalkulace")).toggle( "slide" );
         f.log("13", "setVL");
         document.getElementById("obalKalkulace").style.opacity = 1;
         f.log("14", "setVL");
-
         return;
       }
 
       if (idefixActive == 0 && idefix > 0) {
-        //alert(idefixActive +" " + idefix +' Rozbalit ')
-        //alert('A Rozbaliti')
         f.log("15", "setVL");
         await self.setRozbalit(idefix);
         f.log("16", "setVL");
         self.StopStav = false;
-        //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
-        //$(document.getElementById("obalKalkulace")).toggle( "slide" );
         document.getElementById("obalKalkulace").style.opacity = 1;
         f.log("17", "setVL");
         return;
       }
-      //      f.Alert(idefixActive, " / ", idefix)
       if (idefixActive > 0 && idefix == idefixActive) {
-        //      alert(idefixActive +" " + idefix +' Rozbalit ')
-        //  alert('B Zabaliti')
+
         f.log("18", "setVL");
         await self.setRozbalit(idefix);
         f.log("19", "setVL");
         await self.setZabalit(idefix);
         f.log("20", "setVL");
         self.StopStav = false;
-        //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
-        //$(document.getElementById("obalKalkulace")).toggle( "slide" );
         document.getElementById("obalKalkulace").style.opacity = 1;
         f.log("21", "setVL");
         return;
@@ -6812,10 +6830,10 @@ export default {
         await self.setZabalit();
         f.log("23", "setVL");
         await self.setRozbalit(idefix);
+
         f.log("24", "setVL");
         self.StopStav = false;
-        //$(document.getElementById("obalKalkulace")).stop().fadeIn( 100 );
-        //$(document.getElementById("obalKalkulace")).toggle( "slide" );
+
         document.getElementById("obalKalkulace").style.opacity = 1;
         f.log("25", "setVL");
         return;
@@ -7286,9 +7304,10 @@ export default {
       //self.$store.dispatch('addColMat', {kalkulaceid: self.KalkulaceThis, type: 'Mat'})
       //self.$store.dispatch('addColMat',  {kalkulaceid: idK, type: 'Mat1'})
       if (
-        !f.isEmpty(self.aKalkulace[idK].sloupecid) &&
-        self.aKalkulace[idK].sloupecid.length > 0
+        !f.isEmpty(self.aKalkulace[idK].sloupecid)
+        //&& self.aKalkulace[idK].sloupecid.length > 0
       )
+      f.log('ADDCOLMAT',self.aKalkulace[idK])
         return;
 
       self.$store.dispatch("addColMat2", {
@@ -7322,8 +7341,6 @@ export default {
       // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'FormatSirka' , value: 9999 })
       // alert("Pridma mat na prvni misto")
     },
-
-
 
     addKalkCol(type = "X") {
       const self = this;

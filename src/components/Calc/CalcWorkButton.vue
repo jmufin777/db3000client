@@ -749,6 +749,7 @@ export default {
         status: 0,
         ID: 0
       },
+      status:0,  //CHYBA - nema tu nejt, nekde ho chce
       timelist: [
         "00:00",
         "08:00",

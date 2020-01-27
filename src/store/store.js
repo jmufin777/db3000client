@@ -419,14 +419,20 @@ export default new Vuex.Store({
       neco.id=Math.ceil(Math.random()*55875115)
       // console.log("COPY: " , neco)
       state.Kalkulace[idx].sloupecid.push(neco)
+      f.log('copyCol ')
       //state.Kalkulace[idx].sloupecid.push('ahoj')
     },
     replaceKalkCol (state, dataAll) {
       //var idx = this.getters.getId(dataAll.kalkulaceid)
-      var idx = dataAll.kalkulaceid
-      var idxCol = dataAll.idxCol
+      try {
+        var idx = dataAll.kalkulaceid
+        var idxCol = dataAll.idxCol
         state.Kalkulace[idx].sloupecid[idxCol].data = dataAll.data
-        return ;
+        f.log('replaceKalkCol- SAVE')
+      } catch (e) {
+        f.log('replaceKalkCol- EROR')
+      }
+      return ;
         /*
         try {
           state.Kalkulace[idx].sloupecid[idxCol].type = dataAll.type
