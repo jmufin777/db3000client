@@ -457,13 +457,13 @@
             <option v-for="(tItem,i) in timelist" :key="i" :label="tItem" :value="tItem">{{tItem}}</option>
           </select>
         </td>
-        <td
+        <td v-if="dataDB.hasOwnProperty('status')"
           style="text-align:left;border-top:none;border-bottom:none;border-right: none;width:20em;height:28px"
           class="honza_color2 pt-1"
           :class="{'green lighten-4':dataDB.status==1,'red lighten-4':dataDB.status==2,'blue lighten-4':dataDB.status==0}"
         >
           &nbsp;
-          VL:
+          VL: [{{dataDB.hasOwnProperty('status') }}]
           <button @click="vl_view(dataDB.idefix_vl)">
             <b>
               {{
@@ -707,7 +707,10 @@ export default {
       default: 0
     },
     dataDB: {
-      required: false
+      type: Object,
+      required: false,
+      default: () => ({
+      })
     },
     cTable: {
       type: String,

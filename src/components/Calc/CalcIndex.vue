@@ -1850,7 +1850,7 @@
         style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%"
         id="obalKalkulace"
       >
-        <div class="leva pt-0 pb-2" >
+        <div class="leva pt-0 pb-2">
           <button
             class="px-4 tlacitkoMenu elevation-2 hoVer"
             v-if="MAINMENULAST=='kalkulace'"
@@ -1877,7 +1877,7 @@
           </button>
           <button class="px-4 tlacitkoMenu elevation-2 hoVer" @click="sendAllVLDraw()">
             <!-- 1.JARDA //-->
-            Odeslat Vse {{ po}}
+            Odeslat Vse
           </button>
 
           <button class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden">NICKA</button>
@@ -1894,7 +1894,8 @@
           >3N</span>
         </div>
 
-        <div  v-cloak v-for="idxK in 1" :key="'x'+idxK" slot="kalkulace">   <!--//CHYBA 1 //-->
+        <div v-cloak v-for="idxK in 1" :key="'x'+idxK" slot="kalkulace">
+          <!--//CHYBA 1 //-->
           <work
             v-cloak
             slot="kalkulace"
@@ -1908,7 +1909,6 @@
             <span v-if="iK==0" slot="tlacitka" style="position:relative;left:4px">
               <!-- ||  IDEFIXACTIVE==0 -->
               <work-but
-
                 v-cloak
                 v-if="aKalkBefore.length==0 || (IDEFIXACTIVE == 0 && aKalkulace.length >0 ) "
                 :ID="'AB_'+iK"
@@ -2003,8 +2003,6 @@
             </span>
             <!--CHYBA 2 //-->
             <div
-
-
               v-cloak
               v-for="(iSloupec,i) in iKalk.sloupecid"
               :key="i"
@@ -2040,7 +2038,6 @@
         </div>
         <!--CHYBA 2 //-->
         <div
-
           v-cloak
           v-for="(aBefore,iBefore ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix<IDEFIXACTIVE || IDEFIXACTIVE==0) })"
           :key="iBefore"
@@ -2064,7 +2061,6 @@
         </div>
         <!--CHYBA 3 //-->
         <div
-
           v-for="(aBefore2,iBefore2 ) in aKalkBefore.filter(e=>{return e.active==false && (e.idefix>IDEFIXACTIVE && IDEFIXACTIVE>0 )})"
           :key="iBefore2+15000"
           slot="kalkulace"
@@ -2684,7 +2680,7 @@ export default {
       IDEFIXACTIVE_NAB: 0,
       Zacatek: 0,
 
-      StopStav: false,
+      StopStav: false
       //naklad: 0 // CHYBA
     };
   },
@@ -2754,7 +2750,7 @@ export default {
     aKalkulace: function(a) {
       console.log("Sleduji kalkulace", a);
       try {
-             f.log('Ulozil bych kalkulaci', this.aKalkulace.length)
+        f.log("Ulozil bych kalkulaci", this.aKalkulace.length);
         //    this.$store.dispatch('setKalkulace', this.aKalkulace)
       } catch (err) {
         console.log("jebka");
@@ -3471,8 +3467,7 @@ export default {
   },
   methods: {
     po() {
-
-      return ''
+      return "";
     },
     vl_view(_idefix_vl) {
       eventBus.$emit("IDEFIX_VL", { IDEFIX_VL: _idefix_vl });
@@ -6689,30 +6684,25 @@ export default {
       var aKolekce = await Q.Q2(self.idefix, kolekce);
       //console.log(f.Jstr(kolekce))
 
-
       self.IDEFIXACTIVE = 0; //nahrazuje funckci deactive
       self.NAZEVACTIVE = ""; //nahrazuje funckci deactive
-     f.log("KOLEKCE 2 TEST",(self.aKalkBefore == aKolekce.data.data.Abefore) )
+      f.log("KOLEKCE 2 TEST", self.aKalkBefore == aKolekce.data.data.Abefore);
       self.aKalkBefore = [];
       try {
-        aKolekce.data.data.Abefore.forEach((el,id)=>{
-        self.aKalkBefore.push(el)
-        //f.log("KOLEKCE 2 PUSH")
-
-      })
-
-      } catch(e){
-        console.log('Kolekce ma potize')
-
-
+        aKolekce.data.data.Abefore.forEach((el, id) => {
+          self.aKalkBefore.push(el);
+          //f.log("KOLEKCE 2 PUSH")
+        });
+      } catch (e) {
+        console.log("Kolekce ma potize");
       }
 
       //self.aKalkBefore = aKolekce.data.data.Abefore;
       //await self.beforeArray(aKolekce.data.data.Abefore); //2.JARDA
-      f.log("KOLEKCE 2: Return test", self.TestRend,  self.IDEFIXACTIVELAST);
+      f.log("KOLEKCE 2: Return test", self.TestRend, self.IDEFIXACTIVELAST);
 
-        self.idRend++;
-        self.TestRend++;
+      self.idRend++;
+      self.TestRend++;
 
       //return;
 
@@ -6738,7 +6728,6 @@ export default {
         console.log("3 ", e);
       }
       */
-
     },
     async setVL(idefix, jenUloz = 0) {
       const self = this;
@@ -6812,7 +6801,6 @@ export default {
         return;
       }
       if (idefixActive > 0 && idefix == idefixActive) {
-
         f.log("18", "setVL");
         await self.setRozbalit(idefix);
         f.log("19", "setVL");
@@ -7307,8 +7295,8 @@ export default {
         !f.isEmpty(self.aKalkulace[idK].sloupecid)
         //&& self.aKalkulace[idK].sloupecid.length > 0
       )
-      f.log('ADDCOLMAT',self.aKalkulace[idK])
-        return;
+        f.log("ADDCOLMAT", self.aKalkulace[idK]);
+      return;
 
       self.$store.dispatch("addColMat2", {
         kalkulaceid: idK,
