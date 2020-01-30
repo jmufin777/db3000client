@@ -2045,7 +2045,7 @@
           style="position:relative;width:100%;top:0em;overflow:scroll"
           id="obalKalkulace2b"
         >
-          <!-- Zabalena radka //-->
+        <!-- Zabalena radka //-->
           <work-but
             :ID="'A_'+aBefore.idefix"
             :dataDB="aBefore"
@@ -2099,19 +2099,254 @@
         </div>
       </div>
 
-      <!--MAPA Menu//-->
-      <mapa-menu
-      v-if="true || (obrazovka_nab==3 && MAINMENULAST=='kalkulace')|| (MAINMENULAST=='zakazky' && obrazovka_zak==3)"
-      slot="Plovouci2"
-      :ID="ID"
+      <div
+        v-if="(obrazovka_nab==3 && MAINMENULAST=='kalkulace')|| (MAINMENULAST=='zakazky' && obrazovka_zak==3)"
+        style="right:10%;;top:-56px;z-index:99999;border-radius:20px !important"
+        class="plovouci grey lighten-1 pt-2 pb-2"
+        slot="Plovouci2"
+        id="plovoucimapa11"
       >
-      </mapa-menu>
+        <!--2 = prepinac -->
+        <v-btn @click="panel(2,$event)" small class="yellow">MAPA</v-btn>
+        <br />
+        <v-btn @click="panelPrehled(2,$event)" small class="yellow">Kalkulace</v-btn>
+        <br />
+        <el-dropdown
+          split-button
+          size="small"
+          trigger="click"
+          @command="zmenaType"
+          :key="$store.state.KalkulaceThis"
+          class="px-1"
+        >
+          Typ sloupce
+          {{ $store.state.KalkulaceThis }}
+          <el-dropdown-menu slot="dropdown" class="grey lighten-5">
+            <el-dropdown-item :command="'Mat1'">Materialy</el-dropdown-item>
+            <el-dropdown-item :command="'Laminace'">Laminace</el-dropdown-item>
+            <el-dropdown-item :command="'Kasir'">Kasir</el-dropdown-item>
+            <el-dropdown-item :command="'Rezani'">Rezani</el-dropdown-item>
+            <el-dropdown-item :command="'Baleni'">Baleni</el-dropdown-item>
+            <el-dropdown-item :command="'Jine'">Jine</el-dropdown-item>
+            <el-dropdown-item :command="'Externi'">Externi</el-dropdown-item>
+            <el-dropdown-item :command="'DTP'">DTP</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
 
+      <transition name="fade" slot="PlovouciObsah">
+        <vue-draggable-resizable
+          class="grey lighten-2 pa-0 elevation-12"
+          style="opacity:1;max-width:2000px;max-height:550px"
+          :h="20"
+          :w="1000"
+          :x="-1000"
+          :parent="false"
+          :drag-handle="'.drag00'"
+          :handles="[]"
+          v-if="zobrazitPanel"
+        >
+          <div
+            class="drag00 blue lighten-4"
+            style="cursor:pointer;height:20px"
+            :key="'M'+ TestRend"
+          >
+            <div style="width:10%;float:left">
+              <button class="mybutton pr-3 stred pl-3" @click="TestRend=TestRend+1">{{TestRend}}</button>
+            </div>
+            <div style="width:70%;float:left">{{StatusMapy}}</div>
+            <div style="width:19%;float:right;text-align:right">
+              <button class="mybutton pr-3 stred pl-3" @click="zobrazitPanel=!zobrazitPanel">x</button>
+            </div>
+          </div>
+          <div class="pa-0 pt-1" style="width:100%;max-height:550px;overflow-y:auto">
+            <v-card>
+              <v-card-text class="grey pa-0">
+                <draggable
+                  v-model="aKalkulace"
+                  :options="{group: 'people2' }"
+                  @start="pripravRadky2()"
+                  @end="drag=false;chooseRadky2()"
+                  :move="chooseRadky"
+                  style="min-width:500px;"
+                >
+                  <div
+                    v-for="(iK,i) in aKalkulace"
+                    :key="i"
+                    style="width:100%;float:none"
+                    class="grey lighten-2 pl-1 pt-1"
+                  >
+                    <div style="float:left;border:4px solid #eeeeee">
+                      <!-- @click="setKalk2(i);f.Alert2('klik2')" -->
+                      <!-- @mouseover="setKalk2(i)"  -->
+                      <!-- @mouseenter="setKalk(iK.kalkulaceid)" -->
+                      <v-card @click="setKalk(iK.kalkulaceid)">
+                        <v-card-text
+                          style="width:15em;font-size:12px;min-height:29px;cursor:pointer;text-align:left"
+                          class="pb-0 pt-0 grey lighten-3"
+                          :class="{'green lighten-1': $store.state.KalkulaceThis*1 == iK.kalkulaceid*1 }"
+                        >
+                          <a
+                            :href="'#'+iK.kalkulaceid"
+                            @click="setKalk(iK.kalkulaceid)"
+                            :ref="'ref_'+iK.kalkulaceid"
+                            :id="'ref_'+iK.kalkulaceid + ID"
+                          >
+                            <span class="pr-2">{{iK.kalkulaceid}}</span>
+                          </a>
+                          <span class="pl-0">{{Kalkulace[i].data.txtStroj}}</span>
+                          <span style="position:absolute;top:0px;right:1px">
+                            <button
+                              type="button"
+                              class="elevation-1 mybutton"
+                              @click="removeKalkAccId(i)"
+                            >x</button>
+                          </span>
+                          <span
+                            style="position:absolute;bottom:0px;left:1px"
+                            class="elevation-1 mybutton"
+                          >
+                            <button type="button" @click="copyKalk(i)">+</button>
+                          </span>
+                        </v-card-text>
+                      </v-card>
+                    </div>
+                    <!-- <draggable v-model="iK.sloupecid"  :options="{group: 'people11' }"  @start="drag=true" @end="drag=false" :move="chooseSloupce" > -->
+                    <draggable
+                      v-model="iK.sloupecid"
+                      :options="{group: 'people11' }"
+                      @start="pripravRadky2()"
+                      @end="drag=false;chooseRadky2()"
+                      :move="chooseSloupce"
+                    >
+                      <div
+                        v-for="(sl, iSloupcex ) in iK.sloupecid"
+                        :key="iSloupcex"
+                        style="float:left;border:2px solid white;width:8em;text-align:center"
+                      >
+                        <!-- <v-card><v-card-text style="font-size:12px;height:28px" class="pb-1 pt-1" -->
+                        <v-card>
+                          <v-card-text
+                            style="font-size:12px;height:28px"
+                            class="pb-1 pt-1"
+                            :class="{
+                    'blue lighten-4': $store.state.KalkulaceColThis==sl.id,
+                    'brown lighten-3': sl.type=='Mat1','green lighten-1': sl.type=='Laminace','orange lighten-1': sl.type=='Kasir','yellow lighten-2': sl.type=='Rezani','   lighten-2': sl.type=='Rezani'
+                    , 'pink lighten-5': sl.type =='Baleni', 'red lighten-2': sl.type=='Jine'
+                    , 'cyan lighten-3': sl.type =='DTP' , 'lime lighten-3': sl.type =='Externi'
 
+                    }"
+                          >
+                            <span
+                              :class="{'elevation-12':$store.state.KalkulaceColThis==sl.id}"
+                            >{{sl.type}}</span>
+                            <span style="position:absolute;top:0px;right:1px">
+                              <button
+                                type="button"
+                                class="elevation-1 mybutton"
+                                @click="deleteCol(i, iSloupcex)"
+                              >x</button>
+                            </span>
+                            <span
+                              style="position:absolute;bottom:0px;left:1px"
+                              class="elevation-1 mybutton"
+                              @click="copyCol(i, iSloupcex)"
+                            >
+                              <button type="button">+</button>
+                            </span>
+                          </v-card-text>
+                        </v-card>
+                      </div>
+                    </draggable>
+                    <div style="width:10%;font-size:1px">&nbsp;</div>
+                  </div>
+                </draggable>
+              </v-card-text>
+            </v-card>
+          </div>
+        </vue-draggable-resizable>
+      </transition>
 
       <!-- <div style="position:absolute;top:20%;right:5%;z-index:99999;overflow:scroll;height:500px;border:solid 2px black" class="grey lighten-5" slot="obsah" v-if="zobrazitPanel" >  -->
+      <transition name="fade" slot="PlovouciObsah2">
+        <vue-draggable-resizable
+          class="grey lighten-2 pa-0 elevation-12"
+          style="opacity:1;max-width:2000px;max-height:550px;z-index:1000"
+          :h="20"
+          :w="1000"
+          :x="-1000"
+          :parent="false"
+          :drag-handle="'.drag00'"
+          :handles="[]"
+          v-if="zobrazitPrehled"
+        >
+          <div class="drag00 teal lighten-4" style="cursor:pointer;height:20px">
+            <div style="width:10%;float:left">
+              <button class="mybutton pr-3 stred pl-3" @click="TestRend=TestRend+1">{{TestRend}}</button>
+            </div>
+            <div style="width:70%;float:left">Kalkulace</div>
+            <div style="width:19%;float:right;text-align:right">
+              <button class="mybutton pr-3 stred pl-3" @click="zobrazitPrehled=!zobrazitPrehled">x</button>
+            </div>
+          </div>
+          <div class="pink" style="height:800px">
+            <v-card v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;position:relative;">
+              <v-card style="width:20%;float:auto">
+                <v-card-title style="font-size:12px;height:14px">{{iK.data.txtStroj}}</v-card-title>
+                <v-card-text>
+                  <table>
+                    <tr>
+                      <td>Format</td>
+                      <td>{{iK.data.txtFormat}}</td>
+                    </tr>
+                    <tr>
+                      <td>Kusu</td>
+                      <td>{{iK.data.FormatNakladKs}}</td>
+                    </tr>
+                  </table>
+                </v-card-text>
+              </v-card>
+              <v-card style="width:60%;float:left">
+                <v-card-title>Detail</v-card-title>
+                <v-card-text>
+                  <table>
+                    <tr>
+                      <td
+                        v-for="(Sloupec, idSloupce) in iK.sloupecid"
+                        :key="idSloupce"
+                      >{{Sloupec.type}}</td>
+                    </tr>
+                  </table>
+                </v-card-text>
+              </v-card>
+            </v-card>
+          </div>
+        </vue-draggable-resizable>
+      </transition>
 
+      <!-- <prehled slot="prehled" v-for="(itemP, iP) in aKalkulace" :key="iP"> -->
 
+      <!-- <div style="position:fixed;top:30%;right:1%;z-index:99999" class="grey lighten-5" slot="Plovouci"> -->
+      <div style="right:1%;z-index:99999" class="grey lighten-5" slot="Plovouci111">
+        <el-dropdown
+          split-button
+          size="small"
+          trigger="click"
+          @command="zmenaType"
+          :key="$store.state.KalkulaceThis"
+        >
+          Typ sloupce {{ $store.state.KalkulaceThis }}
+          <el-dropdown-menu slot="dropdown" class="grey lighten-5">
+            <el-dropdown-item :command="'Mat1'">Materialy</el-dropdown-item>
+            <el-dropdown-item :command="'Laminace'">Laminace</el-dropdown-item>
+            <el-dropdown-item :command="'Kasir'">Kasir</el-dropdown-item>
+            <el-dropdown-item :command="'Rezani'">Rezani</el-dropdown-item>
+            <el-dropdown-item :command="'Baleni'">Baleni</el-dropdown-item>
+            <el-dropdown-item :command="'Jine'">Jine</el-dropdown-item>
+            <el-dropdown-item :command="'Externi'">Externi</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
 
       <span slot="prehled">
         <!-- <v-btn-toggle v-if="showPrehled==1 && iP==0"> -->
@@ -2137,7 +2372,7 @@
               <v-card>
                 <v-card-title style="font-size:12px;height:14px">{{Kalkulace[i].data.txtStroj}}</v-card-title>
                 <v-card-text>
-                  <div class="white" style="float:left">RozmerOS {{Kalkulace[i].data.txtFormat}}</div>
+                  <div class="white" style="float:left">Rozmer {{Kalkulace[i].data.txtFormat}}</div>
                   <div>{{Kalkulace[i].data.FormatSirka}}x{{Kalkulace[i].data.FormatVyska}}mm</div>
                   <div class="white" style="float:left">Panelovat</div>
                   <div>{{Kalkulace[i].data.FormatPanelovat}}</div>
@@ -2207,7 +2442,27 @@
         <div :ref="'neco11'"></div>
       </div>
     </my-layout>
+    <!-- VL //-->
 
+    <!-- <el-row justify="center">
+    <v-dialog v-model="dialogVL" persistent max-width="220mm" class="pa-0 ma-0">
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" dark v-on="on">Test VL {{vllist.split(',').length}}</v-btn>
+      </template>
+      <v-card>
+
+      <v-card-text >
+        <vl v-if="aktivni_zak>0" :IDEFIX_ITEM="vllist" :key="'VL_CARD'+vllist"></vl>
+      </v-card-text>
+      <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialogVL = false">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="dialogVL = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+
+    </v-dialog>
+    </el-row>-->
     <transition name="list1122">
       <dia-frame
         v-show=" nahled && odkaz>''"
@@ -2227,45 +2482,42 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { getters } from 'vuex';
-import { mutations } from 'vuex';
-import { eventBus } from '@/main.js';
-import { setTimeout, clearInterval } from 'timers';
-import MyLayout from './CalcMyLayout.vue';
+import { mapState } from "vuex";
+import { getters } from "vuex";
+import { mutations } from "vuex";
+import { eventBus } from "@/main.js";
+import { setTimeout, clearInterval } from "timers";
+import MyLayout from "./CalcMyLayout.vue";
 //import MenuHlavni from './CalcMenuHlavni.vue'
-import MenuLeft from './CalcMenuLeft.vue';
+import MenuLeft from "./CalcMenuLeft.vue";
 
-import Work from './CalcWork.vue'; // Pracovni cast nahore, obshahuje levou cast a sloupce
-import WorkLeft from './CalcWorkLeft.vue'; // Pracovni cast nahore
-import WorkCol from './CalcWorkCol.vue'; // Prehledova dole
-import WorkBut from './CalcWorkButton.vue'; // Prehledova dole
-import WorkButPlus from './CalcWorkButtonPlus.vue'; // Prehledova dole
-import WorkButMenu from './CalcWorkButtonMenu.vue'; // Prehledova dole
+import Work from "./CalcWork.vue"; // Pracovni cast nahore, obshahuje levou cast a sloupce
+import WorkLeft from "./CalcWorkLeft.vue"; // Pracovni cast nahore
+import WorkCol from "./CalcWorkCol.vue"; // Prehledova dole
+import WorkBut from "./CalcWorkButton.vue"; // Prehledova dole
+import WorkButPlus from "./CalcWorkButtonPlus.vue"; // Prehledova dole
+import WorkButMenu from "./CalcWorkButtonMenu.vue"; // Prehledova dole
 
-import ListStroj from '../../services/ListStrojService';
-import f from '@/services/fce';
+import ListStroj from "../../services/ListStrojService";
+import f from "@/services/fce";
 // import query from '../../services/query'
-import Q from '../../services/query';
-import queryKalk from '../../services/fcesqlKalkulace';
-import prepocty from '../../services/fceKalkulacePrepocty';
-import SQL from '../../services/fcesql';
-import fceVL from '../../services/fceVL';
+import Q from "../../services/query";
+import queryKalk from "../../services/fcesqlKalkulace";
+import prepocty from "../../services/fceKalkulacePrepocty";
+import SQL from "../../services/fcesql";
+import fceVL from "../../services/fceVL";
 // VL
-import VL from './VLIndex.vue';
+import VL from "./VLIndex.vue";
 
 //10411
 
-import Prehled from './CalcPrehled.vue'; // Prehledova dole
-import { stringify } from 'querystring';
+import Prehled from "./CalcPrehled.vue"; // Prehledova dole
+import { stringify } from "querystring";
 
-import _ from 'lodash';
-import { forEach } from 'p-iteration';
+import _ from "lodash";
+import { forEach } from "p-iteration";
 
-import url from '@/services/url';
-
-import MapaMenu from './CalcMapaMenu'
-
+import url from "@/services/url";
 
 // import JQuery from 'jquery'
 // let $ = JQuery
@@ -2273,16 +2525,15 @@ import MapaMenu from './CalcMapaMenu'
 export default {
   components: {
     prehled: Prehled,
-    'menu-left': MenuLeft,
-    'my-layout': MyLayout,
-    'work': Work,
-    'work-left': WorkLeft,
-    'work-col': WorkCol,
-    'work-but': WorkBut,
-    'work-but-plus': WorkButPlus,
-    'work-but-menu': WorkButMenu,
-    'vl': VL,
-     'mapa-menu': MapaMenu,
+    "menu-left": MenuLeft,
+    "my-layout": MyLayout,
+    work: Work,
+    "work-left": WorkLeft,
+    "work-col": WorkCol,
+    "work-but": WorkBut,
+    "work-but-plus": WorkButPlus,
+    "work-but-menu": WorkButMenu,
+    vl: VL
     // 'menu-hlavni': MenuHlavni,
   },
   data() {
@@ -2298,7 +2549,7 @@ export default {
       zobrazit: true,
       zobrazitPanel: false,
       zobrazitPrehled: false,
-
+      StatusMapy: "Mapa",
       Navigace: 0,
       Hlavni: 0,
       Left: 0,
@@ -5575,7 +5826,7 @@ export default {
           self.query_zak_last = q;
           // if (self.seek_zak_obchodnik){
           // f.Alert2(q)
-          // }
+              // }
 
           self.seznam_zak = (await Q.all(self.idefix, q)).data.data;
           self.seznam_zak_sum = (await Q.all(self.idefix, `${qsum}`)).data.data;
@@ -6696,7 +6947,34 @@ export default {
       }
       return "neni " + klic;
     },
-
+    panel(zobraz = 1, e = 0) {
+      const self = this;
+      switch (zobraz) {
+        case 1:
+          self.zobrazitPanel = true;
+          break;
+        case 0:
+          self.zobrazitPanel = false;
+          break;
+        case 2:
+          self.zobrazitPanel = !self.zobrazitPanel;
+          break;
+      }
+    },
+    panelPrehled(zobraz = 1, e = 0) {
+      const self = this;
+      switch (zobraz) {
+        case 1:
+          self.zobrazitPrehled = true;
+          break;
+        case 0:
+          self.zobrazitPrehled = false;
+          break;
+        case 2:
+          self.zobrazitPrehled = !self.zobrazitPrehled;
+          break;
+      }
+    },
     deleteCol(iK, iS) {
       if (!confirm("Smazat sloupec")) return;
       eventBus.$emit("MenuHlavni", {
@@ -6784,7 +7062,10 @@ export default {
       self.drag = true;
       return;
     },
-
+    async chooseRadky(event, bEvent) {
+      const self = this;
+      return;
+    },
     async strojmod(type) {
       const self = this;
       var atmp = [];
@@ -6993,6 +7274,7 @@ export default {
         //self.KalkulaceThis = self.aKalkulace[0].kalkulaceid
       }
     },
+
     k_id() {
       var kRet = this.$store.getters.getId(this.KalkulaceThis);
       return kRet;
@@ -7166,7 +7448,31 @@ export default {
       console.log("Choos item: ", event.draggedRect, "B", bEvent);
       // alert(Object.keys(bEvent))
     },
+    zmenaType(cSloup = "") {
+      const self = this;
+      /// f.Alert('a')
+      self.KalkulaceThis = self.$store.state.KalkulaceThis;
 
+      var idK = self.KalkulaceThis - 1;
+
+      var idK = this.k_id();
+
+      self.$store.dispatch("addColMat2", {
+        kalkulaceid: idK,
+        type: cSloup,
+        id: Math.random()
+      });
+      self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
+      self.$store.dispatch("saveKalkCela", { data: self.aKalkulace });
+
+      self.TestRend++;
+
+      //self.aKalkulace = []
+      //self.$store.dispatch('saveKalkCela', {data: tmpKalk})
+      //self.aKalkulace=JSON.parse(JSON.stringify(self.$store.state.Kalkulace))
+      //self.chooseRadky2()
+      //f.Alert('a')
+    },
     async otazka(txt1 = "", txt2 = "") {
       const self = this;
       return new Promise((resolve, rej) => {

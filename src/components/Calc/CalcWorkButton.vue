@@ -639,10 +639,14 @@
 import { mapState } from "vuex";
 import { eventBus } from "@/main.js";
 import { setTimeout, clearInterval, setInterval } from "timers";
+import Q from "@/services/query";
+
 import f from "@/services/fce";
 import WorkLeft from "./CalcWorkLeft.vue"; // Pracovni cast nahore
 import WorkCol from "./CalcWorkCol.vue"; // Prehledova dole
-import Q from "@/services/query";
+
+
+
 import queryKalk from "../../services/fcesqlKalkulace";
 import prepocty from "../../services/fceKalkulacePrepocty";
 import fceVL from "../../services/fceVL";
@@ -657,9 +661,10 @@ import { locales } from "moment";
 
 export default {
   components: {
-    "work-left": WorkLeft,
-    "work-col": WorkCol,
-    vl: VL
+    'work-left': WorkLeft,
+    'work-col': WorkCol,
+     'vl': VL,
+
   },
   props: {
     ID: 0,

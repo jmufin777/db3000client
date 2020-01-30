@@ -1,0 +1,164 @@
+<template>
+<div v-if="Kalkulace.length>0">
+  <div
+    style="right:10%;;top:-56px;z-index:99999;border-radius:20px !important"
+    class="plovouci grey lighten-1 pt-2 pb-2"
+    id="plovoucimapa11"
+  >
+    <v-btn @click="panel(2,$event)" small class="yellow">MAPA</v-btn>
+    <br />
+    <v-btn @click="panelPrehled(2,$event)" small class="yellow">Kalkulace</v-btn>
+    <br />
+    <el-dropdown
+      split-button
+      size="small"
+      trigger="click"
+      @command="zmenaType"
+      :key="$store.state.KalkulaceThis"
+      class="px-1"
+    >
+      Typ sloupce
+
+      {{ $store.state.KalkulaceThis }}
+      <el-dropdown-menu slot="dropdown" class="grey lighten-5">
+        <el-dropdown-item :command="'Mat1'">Materialyos</el-dropdown-item>
+        <el-dropdown-item :command="'Laminace'">Laminace</el-dropdown-item>
+        <el-dropdown-item :command="'Kasir'">Kasir</el-dropdown-item>
+        <el-dropdown-item :command="'Rezani'">Rezani</el-dropdown-item>
+        <el-dropdown-item :command="'Baleni'">Baleni</el-dropdown-item>
+        <el-dropdown-item :command="'Jine'">Jine</el-dropdown-item>
+        <el-dropdown-item :command="'Externi'">Externi</el-dropdown-item>
+        <el-dropdown-item :command="'DTP'">DTP</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+  </div>
+
+  <span >
+  <mapa :ID="'mapa_'+ID" ref="mapa"
+  ></mapa>
+  <prehled :ID="'prehled_'+ID" ref="prehled"
+  ></prehled>
+  </span>
+
+</div>
+
+</template>
+
+<script>
+import { mapState } from "vuex";
+import { eventBus } from "@/main.js";
+import { setTimeout, clearInterval, setInterval } from "timers";
+import Mapa     from './CalcMapa'
+import Prehled     from './CalcMapaPrehled'
+import Q from "@/services/query";
+
+export default {
+  props: {
+
+  },
+  components: {
+         'mapa': Mapa,
+         'prehled':Prehled,
+  },
+  data() {
+    return {
+
+      ID:0,
+    }
+  },
+  watch: {},
+  created() {},
+  mounted() {
+    this.ID = Math.round(Math.random() * 19834581377);
+  },
+  methods: {
+    panel(zobraz = 1, e = 0) {
+      const self = this;
+      switch (zobraz) {
+        case 1:
+          this.$refs.mapa.zobrazitPanel = true;
+          break;
+        case 0:
+          this.$refs.mapa.zobrazitPanel = false;
+          break;
+        case 2:
+          self.$refs.mapa.zobrazitPanel = !self.$refs.mapa.zobrazitPanel;
+            console.log('AAA',this.$refs.mapa.zobrazitPanel)
+          break;
+      }
+    },
+    panelPrehled(zobraz = 1, e = 0) {
+      const self = this;
+      switch (zobraz) {
+        case 1:
+          this.$refs.prehled.zobrazitPrehled = true;
+
+          break;
+        case 0:
+          this.$refs.prehled.zobrazitPrehled = false;
+          break;
+        case 2:
+          this.$refs.prehled.zobrazitPrehled = !this.$refs.prehled.zobrazitPrehled;
+          break;
+      }
+    },
+    zmenaType(cSloup = "") {
+      const self = this;
+      /// f.Alert('a')
+      self.KalkulaceThis = self.$store.state.KalkulaceThis;
+
+      var idK = self.KalkulaceThis - 1;
+
+      var idK = this.k_id();
+
+      self.$store.dispatch("addColMat2", {
+        kalkulaceid: idK,
+        type: cSloup,
+        id: Math.random()
+      });
+      self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
+      self.$store.dispatch("saveKalkCela", { data: self.aKalkulace });
+
+      self.TestRend++;
+
+      //self.aKalkulace = []
+      //self.$store.dispatch('saveKalkCela', {data: tmpKalk})
+      //self.aKalkulace=JSON.parse(JSON.stringify(self.$store.state.Kalkulace))
+      //self.chooseRadky2()
+      //f.Alert('a')
+    },
+    k_id() {
+      var kRet = this.$store.getters.getId(this.KalkulaceThis);
+      return kRet;
+    },
+  },
+  computed: {
+    ...mapState([
+      "isUserLoggedIn",
+      "xMenuMain",
+      "level",
+      "idefix",
+      "compaStore",
+      "Kalkulace",
+      "KalkulaceThis",
+      "user"
+    ])
+  }
+};
+</script>
+<style scoped>
+button:focus {
+  outline: 0px;
+  color: red;
+}
+.plovouci {
+  opacity: 0.91;
+  z-index: 10;
+  position: absolute;
+}
+
+.plovouci:hover {
+  opacity: 1;
+  z-index: 1000;
+}
+</style>
