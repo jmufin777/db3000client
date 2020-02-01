@@ -52,6 +52,7 @@ import Mapa     from './CalcMapa'
 import Prehled     from './CalcMapaPrehled'
 import Q from "@/services/query";
 
+
 export default {
   props: {
 
@@ -62,14 +63,27 @@ export default {
   },
   data() {
     return {
-
+      aKalkulace:[],
+      zobrazitPanel:false,
       ID:0,
     }
   },
   watch: {},
-  created() {},
+  created() {
+    const self=this
+    // Nacist kalkulaci
+    eventBus.$off("KalkulaceRead");
+    eventBus.$on("KalkulaceRead", server=>{
+
+      // self.$refs.mapa.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
+      alert('read')
+    });
+
+
+  },
   mounted() {
     this.ID = Math.round(Math.random() * 19834581377);
+    //this.$refs.prehled.zobrazitPrehled = true
   },
   methods: {
     panel(zobraz = 1, e = 0) {
@@ -77,13 +91,23 @@ export default {
       switch (zobraz) {
         case 1:
           this.$refs.mapa.zobrazitPanel = true;
+          self.$refs.mapa.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
           break;
         case 0:
           this.$refs.mapa.zobrazitPanel = false;
+          self.$refs.mapa.aKalkulace2 = []
           break;
         case 2:
-          self.$refs.mapa.zobrazitPanel = !self.$refs.mapa.zobrazitPanel;
-            console.log('AAA',this.$refs.mapa.zobrazitPanel)
+          //self.$refs.mapa.zobrazitPanel = !self.$refs.mapa.zobrazitPanel;
+          self.zobrazitPanel = !self.zobrazitPanel
+          self.$refs.mapa.zobrazitPanel = self.zobrazitPanel
+          eventBus.$emit('NaplnKalkulaci')
+          return;
+          if (self.$refs.mapa.zobrazitPanel) {
+              self.$refs.mapa.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
+          }
+
+            console.log('AAA',this.$refs.mapa.zobrazitPanel, ' : ',self.zobrazitPanel)
           break;
       }
     },
@@ -105,7 +129,7 @@ export default {
     zmenaType(cSloup = "") {
       const self = this;
       /// f.Alert('a')
-      self.KalkulaceThis = self.$store.state.KalkulaceThis;
+      //self.KalkulaceThis = self.$store.state.KalkulaceThis;
 
       var idK = self.KalkulaceThis - 1;
 
@@ -116,11 +140,13 @@ export default {
         type: cSloup,
         id: Math.random()
       });
+      eventBus.$emit('NaplnKalkulaci')
+      eventBus.$emit('mywatch')
+
+      return
       self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
       self.$store.dispatch("saveKalkCela", { data: self.aKalkulace });
-
       self.TestRend++;
-
       //self.aKalkulace = []
       //self.$store.dispatch('saveKalkCela', {data: tmpKalk})
       //self.aKalkulace=JSON.parse(JSON.stringify(self.$store.state.Kalkulace))

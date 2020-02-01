@@ -69,6 +69,7 @@
         </td>
       </tr>
     </table>
+
     <div style="position:absolute;top:5%;right:1%" id="plovoucimapa">
       <slot name="Plovouci">
         <!-- Plovouci1 -->
@@ -76,6 +77,9 @@
     </div>
     <div style="position:fixed;top:15%;right:1%">
       <slot name="Plovouci2">Plovouci2</slot>
+    </div>
+    <div style="position:fixed;top:15%;left:1%;backgroud:black">
+      <slot name="PlovouciOdkazy"></slot>
     </div>
     <div style="position:fixed;top:25%;right:5%;z-index:999999">
       <slot name="PlovouciObsah">

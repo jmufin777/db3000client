@@ -2098,7 +2098,6 @@
           //-->
         </div>
       </div>
-
       <!--MAPA Menu//-->
       <mapa-menu
       v-if="true || (obrazovka_nab==3 && MAINMENULAST=='kalkulace')|| (MAINMENULAST=='zakazky' && obrazovka_zak==3)"
@@ -2106,105 +2105,14 @@
       :ID="ID"
       >
       </mapa-menu>
-
-
+       <span slot="prehled" v-if="true"  >
+         <CalcPrehledSlot></CalcPrehledSlot>
+       </span>
 
       <!-- <div style="position:absolute;top:20%;right:5%;z-index:99999;overflow:scroll;height:500px;border:solid 2px black" class="grey lighten-5" slot="obsah" v-if="zobrazitPanel" >  -->
 
-
-
-      <span slot="prehled">
-        <!-- <v-btn-toggle v-if="showPrehled==1 && iP==0"> -->
-        <v-btn-toggle>
-          <v-btn flat value="vyroba">Vyroba</v-btn>
-          <v-btn flat value="expedice">Expedice</v-btn>
-          <v-btn flat value="data">Data</v-btn>
-          <v-btn flat value="vl">Vl</v-btn>
-        </v-btn-toggle>
-        <draggable
-          v-model="aKalkulace"
-          :options="{group: 'people2' }"
-          @start="drag=true"
-          @end="chooseSloupce"
-        >
-          <div v-for="(iK,i) in aKalkulace" :key="i" style="width:100%;">
-            <div style="width:2%;float:left">
-              <v-card>
-                <v-card-text>{{iK.kalkulaceid}}</v-card-text>
-              </v-card>
-            </div>
-            <div style="float:left">
-              <v-card>
-                <v-card-title style="font-size:12px;height:14px">{{Kalkulace[i].data.txtStroj}}</v-card-title>
-                <v-card-text>
-                  <div class="white" style="float:left">RozmerOS {{Kalkulace[i].data.txtFormat}}</div>
-                  <div>{{Kalkulace[i].data.FormatSirka}}x{{Kalkulace[i].data.FormatVyska}}mm</div>
-                  <div class="white" style="float:left">Panelovat</div>
-                  <div>{{Kalkulace[i].data.FormatPanelovat}}</div>
-                  <div class="white" style="float:left">Naklad</div>
-                  <div>{{Kalkulace[i].data.FormatNakladKs}}</div>
-                </v-card-text>
-              </v-card>
-            </div>
-            <draggable
-              v-model="iK.sloupecid"
-              :options="{group: 'people1' }"
-              @start="drag=true"
-              @end="chooseSloupce"
-            >
-              <div v-for="(sl, iSloupce ) in iK.sloupecid" :key="iSloupce" style="float:left">
-                <v-card>
-                  <v-card-title style="font-size:12px;height:14px">Typ: {{sl.type}}</v-card-title>
-                  <v-card-text>
-                    <div
-                      class="white"
-                      style="font-size:12px;height:14px"
-                    >Mat11:{{ getVal(sl.data.mat,"nazev")}}</div>
-                    <div
-                      class="white"
-                      style="font-size:12px;height:14px"
-                    >Stroj:{{ getVal(sl.data.stroj, "nazev")}}</div>
-                    <div class="white" style="float:left">Naklad:</div>
-                    <div class="white" style="float:left">{{sl.data.naklad}}</div>
-                  </v-card-text>
-                </v-card>
-              </div>
-            </draggable>
-            <div style="width:1%">.</div>
-          </div>
-        </draggable>
-      </span>
-
-      <div slot="odkazy" v-if="aKalkulace.length">
-        <!-- <v-pagination
-      v-model="Navigace"
-      :length="aKalkulace.length"
-      prev-icon="mdi-menu-left"
-      next-icon="mdi-menu-right"
-
-        ></v-pagination>-->
-        <draggable
-          v-model="aKalkulace"
-          :options="{group:{ name:'Kalkulace' }}"
-          @start="drag=true"
-          @end="drag=false"
-          :move="chooseItem"
-        >
-          <span v-for="(iKalk0 ,iK0) in aKalkulace" :key="iK0">
-            <div
-              style="position:relative;float:left;border: solid 2px white;width:30px;text-align:center;"
-              class="elevation-5"
-            >
-              <a
-                :href="'#'+iKalk0.kalkulaceid"
-                @click="setKalk(iKalk0.kalkulaceid)"
-                :ref="'ref_'+iKalk0.kalkulaceid"
-                :id="'ref_'+iKalk0.kalkulaceid + ID"
-              >&nbsp;{{iKalk0.kalkulaceid}}</a>
-            </div>
-          </span>
-        </draggable>
-        <div :ref="'neco11'"></div>
+      <div slot="PlovouciOdkazy" v-if="aKalkulace.length>0 && false" > <!-- Funkcni odkazy //-->
+      <CalcOdkazy :ID="ID"></CalcOdkazy>
       </div>
     </my-layout>
 
@@ -2264,7 +2172,9 @@ import { forEach } from 'p-iteration';
 
 import url from '@/services/url';
 
-import MapaMenu from './CalcMapaMenu'
+import MapaMenu from './CalcMapaMenu'  //Tlacitka pro zobrazebi mapy
+import CalcPrehledSlot from './CalcPrehledSlot' // Puvodni rozhrani prehedu pod kalkulaci, nejpsis nebudepotreba, otestuji zde vymenu promene aKalkulace
+import CalcOdkazy from './CalcOdkazy'
 
 
 // import JQuery from 'jquery'
@@ -2283,6 +2193,8 @@ export default {
     'work-but-menu': WorkButMenu,
     'vl': VL,
      'mapa-menu': MapaMenu,
+     'CalcPrehledSlot':CalcPrehledSlot,
+     'CalcOdkazy': CalcOdkazy
     // 'menu-hlavni': MenuHlavni,
   },
   data() {
@@ -2498,9 +2410,19 @@ export default {
       });
     },
     aKalkulace: function(a) {
-      console.log("Sleduji kalkulace", a);
+      console.log("Sleduji kalkulace MEM", a);
       try {
-        f.log("Ulozil bych kalkulaci", this.aKalkulace.length);
+        f.log("Ulozil bych kalkulaci z MEM", this.aKalkulace.length);
+        //    this.$store.dispatch('setKalkulace', this.aKalkulace)
+      } catch (err) {
+        console.log("jebka");
+      }
+      //alert('a')
+    },
+    Kalkulace: function(a) {
+      console.log("Sleduji kalkulace VUEX", a);
+      try {
+        f.log("Zmeneno ", this.Kalkulace.length);
         //    this.$store.dispatch('setKalkulace', this.aKalkulace)
       } catch (err) {
         console.log("jebka");
@@ -2555,10 +2477,16 @@ export default {
   async created() {
     const self = this;
     //self.cTable = 'calc_my_' + self.idefix
+    setInterval(function () {
+      self.idRend = self.idRend+1
+      //console.log(self.idRend)
+     },20000) ;
     eventBus.$off("MenuHlavni");
     eventBus.$off("MenuLeft");
     eventBus.$off("SAVETEMPLATE");
+    //Uklada zaznam cele radky vcetne kalkulace
     eventBus.$off("SAVEZAZNAM");
+    //Smaze vzor templatu kalkulace z databaze
     eventBus.$off("DELETETEMPLATE");
     eventBus.$off("AnswerID2");
     eventBus.$off("seekzaknab");
@@ -2566,7 +2494,7 @@ export default {
     //alert('Tvorim')
     eventBus.$on("kalkulaceDelete", serverDel => {
       eventBus.$off("MatCol");
-      eventBus.$off("Rend");
+      eventBus.$off('Rend');
       eventBus.$off("IDEFIX_VL");
       eventBus.$off("IDEFIX_VLIST");
 
@@ -2620,7 +2548,12 @@ export default {
       self.ID2ASK = server.id2;
       //f.Alert('Answer Index 1:' , self.ID2ASK , ' / Active : ', self.IDEFIXACTIVE )
     });
-
+    eventBus.$on('saveKalkCela', server=> {
+      f.log('saveKalkCela')
+      // self.aKalkulace=[]
+      // self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
+      self.TestRend++;
+    });
     eventBus.$on("MatCol", server => {
       console.log("Pridam jej Mt");
       setTimeout(function() {
@@ -2628,9 +2561,11 @@ export default {
       }, 1000);
       //self.addColMat(server)
     });
-    eventBus.$on("Rend", server => {
+    eventBus.$on('Rend', server => {
+      self.aKalkulace=[]
       self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
       self.TestRend++;
+      f.log('Rend',self.TestRend)
       //self.addColMat(server)
     });
     await eventBus.$on("SAVETEMPLATE", server => {

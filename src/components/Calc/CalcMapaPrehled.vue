@@ -83,6 +83,7 @@ export default {
   mounted(){
     const self=this
     self.nC=0
+    return
     setInterval(function(){
       self.nC= self.nC+1
       self.TestRend= self.nC+1

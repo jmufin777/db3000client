@@ -4,6 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 import _ from 'lodash'
 import ListStroj from '../services/ListStrojService'
 import f from '@/services/fce'
+import { eventBus } from "@/main.js";
 // https://vuex.vuejs.org/guide/structure.html
 // https://vuex.vuejs.org/guide/plugins.html
 
@@ -259,6 +260,7 @@ export default new Vuex.Store({
       // console.log('A :', JSON.stringify(kalkulacecoltype.kalkulaceid))
       var newId = -1
       var idK  = -1
+      return new Promise((resolve)=>{
       state.Kalkulace.forEach((el, idxk) => {
         if (el.kalkulaceid === kalkulacecoltype.kalkulaceid) {
           idK = idxk
@@ -279,6 +281,8 @@ export default new Vuex.Store({
         // console.log('Add : ', state.Kalkulace[idK])
         state.Kalkulace[idK].sloupecid.push({id: newId, type: kalkulacecoltype.type,  data: {}})
       }
+      resolve(eventBus.$emit('addKalkCol'))
+     })
     },
     KalkulaceColThis(state,ColThis){
 
@@ -290,8 +294,13 @@ export default new Vuex.Store({
     },
     saveKalkCela(state,kalkulace){
       // console.log('SAVE ' ,kalkulace.id)
-      state.Kalkulace = []
-      state.Kalkulace= kalkulace.data
+      return new Promise((resolve)=>{
+        state.Kalkulace = []
+        state.Kalkulace= kalkulace.data
+        resolve(eventBus.$emit('saveKalkCela'))
+
+      })
+
       return
 
 
