@@ -2493,13 +2493,13 @@ export default {
     eventBus.$off("ULOZ");
     //alert('Tvorim')
     eventBus.$on("kalkulaceDelete", serverDel => {
-    eventBus.$off("MatCol");
-    eventBus.$off('Rend');
-    eventBus.$off("IDEFIX_VL");
-    eventBus.$off("IDEFIX_VLIST");
+      eventBus.$off("MatCol");
+      eventBus.$off('Rend');
+      eventBus.$off("IDEFIX_VL");
+      eventBus.$off("IDEFIX_VLIST");
 
-    eventBus.$off("VLshowOpen");
-    eventBus.$off("VLshowClose");
+      eventBus.$off("VLshowOpen");
+      eventBus.$off("VLshowClose");
 
       console.log(serverDel);
     });

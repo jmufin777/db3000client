@@ -74,85 +74,21 @@ export default {
       nC:0,
       TestRend:1,
       StatusMapy: "Prehled",
-      zobrazitPanel:false,
       zobrazitPrehled:false,
       f:f
     }
-
   },
   mounted(){
     const self=this
     self.nC=0
-    return
-    setInterval(function(){
-      self.nC= self.nC+1
-      self.TestRend= self.nC+1
-      self.aKalkulace=[]
-      self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
-      self.TestRend= self.nC+1
-      //console.log('nC ', self.nC, f.Jstr(self.aKalkulace))
-    },2000)
+    eventBus.$off('NaplnKalkulaciPrehledu') ;
+    eventBus.$on('NaplnKalkulaciPrehledu',server =>{
+            self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
 
+    })
+    return
   },
   methods: {
-    setKalk(idK) {
-      this.$store.dispatch("setKalk", idK);
-      this.$store.dispatch("KalkulaceColThis", 0); //Jen nastavi KalkulaceThis
-
-      var neco = "ref_" + idK + this.ID;
-      //document.getElementById(neco).click()
-      if (document.getElementById(neco)) {
-        document.getElementById(neco).click();
-      }
-      //
-      this.defaultStyle(idK);
-      //console.log('setKalk',idK)
-    },
-    async chooseRadky(event, bEvent) {
-      const self = this;
-      return;
-    },
-    async removeKalkAccId(idK) {
-      const self = this;
-      if (!confirm("Smazat radek")) return;
-      //await self.pripravRadky2()
-      $(".obal").animate({ opacity: 0.7 }, 200);
-      self.$store.dispatch("removeKalkAccId", {
-        kalkulaceid: idK
-      });
-      setTimeout(function() {
-        self.aKalkulace = JSON.parse(
-          JSON.stringify(self.$store.state.Kalkulace)
-        );
-        setTimeout(function() {
-          self.TestRend++;
-          $(".obal").animate({ opacity: 1 }, 200);
-        }, 300);
-      }, 100);
-    },
-    async chooseSloupce(event, bEvent) {
-      //alert("sloupy")
-      const self = this;
-      return;
-    },
-    async chooseRadky2() {
-      const self = this;
-      var tmpKalk = JSON.parse(JSON.stringify(self.aKalkulace));
-      tmpKalk.forEach((el, idx) => {
-        tmpKalk[idx].kalkulaceid = idx + 1;
-        // el.kalkulaceid =idx +1
-      });
-      //f.Alert2(tmpKalk[idx].kalkulaceid)
-      self.$store.dispatch("saveKalkCela", { data: tmpKalk });
-      self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
-      self.TestRend++;
-    },
-    async pripravRadky2() {
-      const self = this;
-      self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
-      self.drag = true;
-      return;
-    },
     k_id() {
       var kRet = this.$store.getters.getId(this.KalkulaceThis);
       return kRet;

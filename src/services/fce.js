@@ -1,8 +1,27 @@
 import moment from "moment";
 import axios from "axios";
 import url from "@/services/url";
+import store from "@/store/store";
+import { mapState } from "vuex";
 
 export default {
+  //Obsluha vuexu
+  setVal(cname, cval) {
+    const jVal={}
+    jVal[cname]=cval
+    store.dispatch('setVal',jVal)
+  },
+  setValObj(jVal) {
+    store.dispatch('setVal', jVal)
+  },
+  setValInit(jVal) {
+    store.dispatch('setValInit', jVal)
+  },
+  unset(jVal) {
+    store.dispatch('unset', jVal)
+  },
+  //Eof obsluha Vuexu
+
   getBottom(id, addPoz = 10) {
     var neco = -1000;
     var oNeco;

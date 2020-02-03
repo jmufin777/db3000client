@@ -77,13 +77,24 @@ export default {
     return Api().post('getzaklast', { params: {  user: user,query: {}}} )
   },
   create_tmp_zak (user, cTable,idefix_zak ) {
+    //alert('Tvor')
     //query=query.replace('undefined','0')
     console.log('POST: Create temp ',user)
     //alert(3)
     //f.log(query)
     //return
     return Api().post('create_tmp_zak', { params: {  user: user,table: cTable,idefix_zak:idefix_zak}} )
+  },
+  create_tmp_nab (user, cTable,idefix_zak ) {
+    //alert('Tvor NAB')
+    //query=query.replace('undefined','0')
+    console.log('POST: Create temp NAB ',user)
+    //alert(3)
+    //f.log(query)
+    //return
+    return Api().post('create_tmp_nab', { params: {  user: user,table: cTable,idefix_zak:idefix_zak}} )
   }
+
 
   ,sync (user, query ) {
     //query=query.replace('undefined','0')

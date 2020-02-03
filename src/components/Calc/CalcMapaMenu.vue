@@ -5,7 +5,7 @@
     class="plovouci grey lighten-1 pt-2 pb-2"
     id="plovoucimapa11"
   >
-    <v-btn @click="panel(2,$event)" small class="yellow">MAPA</v-btn>
+    <v-btn @click="panel(2,$event)" small class="yellow">MAPA </v-btn>
     <br />
     <v-btn @click="panelPrehled(2,$event)" small class="yellow">Kalkulace</v-btn>
     <br />
@@ -51,6 +51,7 @@ import { setTimeout, clearInterval, setInterval } from "timers";
 import Mapa     from './CalcMapa'
 import Prehled     from './CalcMapaPrehled'
 import Q from "@/services/query";
+import f from '@/services/fce';
 
 
 export default {
@@ -66,6 +67,7 @@ export default {
       aKalkulace:[],
       zobrazitPanel:false,
       ID:0,
+      aVars:[],
     }
   },
   watch: {},
@@ -82,8 +84,10 @@ export default {
 
   },
   mounted() {
+    const self=this
     this.ID = Math.round(Math.random() * 19834581377);
-    //this.$refs.prehled.zobrazitPrehled = true
+    let nTest=0
+
   },
   methods: {
     panel(zobraz = 1, e = 0) {
@@ -98,16 +102,11 @@ export default {
           self.$refs.mapa.aKalkulace2 = []
           break;
         case 2:
-          //self.$refs.mapa.zobrazitPanel = !self.$refs.mapa.zobrazitPanel;
-          self.zobrazitPanel = !self.zobrazitPanel
-          self.$refs.mapa.zobrazitPanel = self.zobrazitPanel
-          eventBus.$emit('NaplnKalkulaci')
-          return;
+          f.log("LLL 2", self.$refs.mapa.zobrazitPanel)
+          self.$refs.mapa.zobrazitPanel = !self.$refs.mapa.zobrazitPanel
           if (self.$refs.mapa.zobrazitPanel) {
-              self.$refs.mapa.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
+              eventBus.$emit('NaplnKalkulaci')
           }
-
-            console.log('AAA',this.$refs.mapa.zobrazitPanel, ' : ',self.zobrazitPanel)
           break;
       }
     },
@@ -115,18 +114,24 @@ export default {
       const self = this;
       switch (zobraz) {
         case 1:
-          this.$refs.prehled.zobrazitPrehled = true;
-
+          f.log("LLL 1", self.$refs.prehled.zobrazitPrehled)
+          self.$refs.prehled.zobrazitPrehled = true;
           break;
         case 0:
-          this.$refs.prehled.zobrazitPrehled = false;
+          f.log("LLL 0", self.$refs.prehled.zobrazitPrehled)
+          self.$refs.prehled.zobrazitPrehled = false;
+
           break;
         case 2:
-          this.$refs.prehled.zobrazitPrehled = !this.$refs.prehled.zobrazitPrehled;
+          f.log("LLL 2", self.$refs.prehled.zobrazitPrehled)
+          self.$refs.prehled.zobrazitPrehled = !self.$refs.prehled.zobrazitPrehled;
+          if (self.$refs.prehled.zobrazitPrehled){
+            eventBus.$emit('NaplnKalkulaciPrehledu')
+          }
           break;
       }
     },
-    zmenaType(cSloup = "") {
+    zmenaType(cSloup = "") {  //Jedina funkce ktere meni primo vuex, nesuvisi s mapou, ale aktualizuje ji
       const self = this;
       /// f.Alert('a')
       //self.KalkulaceThis = self.$store.state.KalkulaceThis;
@@ -140,18 +145,18 @@ export default {
         type: cSloup,
         id: Math.random()
       });
-      eventBus.$emit('NaplnKalkulaci')
-      eventBus.$emit('mywatch')
+      f.log(self.$refs.mapa.zobrazitPanel)
+      if (self.$refs.mapa.zobrazitPanel) {  //When Mapa is Open
+        eventBus.$emit('NaplnKalkulaci')
+      }
+      eventBus.$emit('Rend')
+
+      //eventBus.$emit('mywatch')
 
       return
       self.aKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
       self.$store.dispatch("saveKalkCela", { data: self.aKalkulace });
       self.TestRend++;
-      //self.aKalkulace = []
-      //self.$store.dispatch('saveKalkCela', {data: tmpKalk})
-      //self.aKalkulace=JSON.parse(JSON.stringify(self.$store.state.Kalkulace))
-      //self.chooseRadky2()
-      //f.Alert('a')
     },
     k_id() {
       var kRet = this.$store.getters.getId(this.KalkulaceThis);
@@ -159,16 +164,18 @@ export default {
     },
   },
   computed: {
+
     ...mapState([
-      "isUserLoggedIn",
-      "xMenuMain",
-      "level",
-      "idefix",
-      "compaStore",
-      "Kalkulace",
-      "KalkulaceThis",
-      "user"
-    ])
+      'isUserLoggedIn',
+      'xMenuMain',
+      'level',
+      'idefix',
+      'compaStore',
+      'Kalkulace',
+      'KalkulaceThis',
+      'user',
+    ]),
+
   }
 };
 </script>

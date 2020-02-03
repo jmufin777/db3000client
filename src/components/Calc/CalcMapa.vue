@@ -12,9 +12,9 @@
     >
       <div class="drag00 blue lighten-4" style="cursor:pointer;height:28px" :key="'M'+ TestRend">
         <div style="width:10%;float:left">
-          <button class="mybutton pr-3 stred pl-3" @click="TestRend=TestRend+1">{{TestRend}}</button>
+          <button class="mybutton pr-3 stred pl-3" @click="TestRend=TestRend+1">&nbsp;</button> <!--{{TestRend}} Infomrace o prekreslovani, ted ni treba, bude zrejme smazano//-->
         </div>
-        <div style="width:70%;float:left">{{StatusMapy}} <span style="float:right">
+        <div style="width:70%;float:left"><button @click="NaplnKalkulaci()" class="green px-4">{{StatusMapy}}</button> <span style="float:right">
           <el-checkbox size="medium" type="danger" v-model="neprekresluj"
           >{{neprekresluj?'Neaktualizuji':'Aktualizuji'}}</el-checkbox>
           <el-button v-if="neprekresluj" @click="mywatch()" size="mini" type="warning">Aktualizace</el-button>
@@ -153,7 +153,7 @@ export default {
       nC:0,
       TestRend:1,
       StatusMapy: "Mapa",
-      zobrazitPanel:true,
+      zobrazitPanel:false,
       neprekresluj: false,
       zobrazitPrehled:false,
       f:f
@@ -164,8 +164,12 @@ export default {
    if (!this.neprekresluj) {
      this.mywatch()  //Kod pro ulozeni, nekera operace watch neregistruje, napri. kopie sloupce, je proto volana po akci
    }
-
   },
+zobrazitPanel: function() {
+  if (!this.zobrazitPanel) {
+    this.aKalkulace2=[]
+  }
+}
 
   },
  mounted(){
@@ -176,18 +180,18 @@ export default {
          self.$store.dispatch("saveKalkCela", { data: JSON.parse(JSON.stringify(self.aKalkulace2)) });
          eventBus.$emit('Rend')
       //self.mywatch()
-
     })
 
     eventBus.$off('NaplnKalkulaci') ;
     eventBus.$on('NaplnKalkulaci',server =>{
-
-            self.aKalkulace2 = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
-            self.chooseRadky2()
+        if (!self.zobrazitPanel)    {
+          // f.log('Delka ',self.aKalkulace2.length)
+          return
+        }
+            self.NaplnKalkulaci()
             if (self.aKalkulace2.length > 3 ) {
               self.neprekresluj = true
             }
-
             //self.aKalkulace2 = _.filter(self.$store.state.Kalkulace, function(){ return true})
             //alert('Plnim')
     })
@@ -204,6 +208,11 @@ export default {
          self.$store.dispatch("saveKalkCela", { data: JSON.parse(JSON.stringify(self.aKalkulace2)) });
          eventBus.$emit('Rend')
       }
+    },
+    NaplnKalkulaci(){
+          const self = this
+          self.aKalkulace2 = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
+          self.chooseRadky2()
     },
     setKalk(idK) {
       this.$store.dispatch("setKalk", idK);

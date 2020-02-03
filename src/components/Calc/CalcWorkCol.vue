@@ -1213,6 +1213,7 @@ export default {
           self.filtrPrac = [];
         }, 100);
       }, 100);
+      eventBus.$emit('NaplnKalkulaci')
     },
     deleteCol() {
       const self = this;

@@ -28,7 +28,6 @@ var idefix_vlastnikPrace = 0;
 
 export default {
   ///Prace
-
   async setKalk(data, kalkulace, _idefix = 0) {
     const self = this;
     var q = "";
@@ -735,7 +734,7 @@ export default {
     q = this.getTemplatesUserQ(cTable,poradiFrom,poradiTo)
 
 
-    f.log("ORDER TEMPLATES");
+    f.log("ORDER TEMPLATES" , q);
 
     var atmp = [];
     try {

@@ -52,6 +52,38 @@ export default new Vuex.Store({
       state.token = token
       state.isUserLoggedIn = !!(token)
     },
+    setVal (state, jval) {
+      for (const i in jval) {
+        //  console.log(i)
+          if (state.hasOwnProperty(i)) {  //Je t stejny, ale ty jo nevim tak je to jakoby rozdeleny, abyto slo upravit kdyby to nebylo takle spravne
+            state[i]=jval[i]
+          } else {
+            state[i]=jval[i]
+          }
+      }
+      //state['JARDATEST'] = jval.val
+    },
+    setValInit (state, jval) {
+      for (const i in jval) {
+        //  console.log(i)
+          if (state.hasOwnProperty(i)) {  //Je t stejny, ale ty jo nevim tak je to jakoby rozdeleny, abyto slo upravit kdyby to nebylo takle spravne
+            //pokud existuje nedela nic
+          } else {
+            state[i]=jval[i]  //Vklada nebo zaklada nboiu
+          }
+      }
+      //state['JARDATEST'] = jval.val
+    },
+    unset (state, jval) {
+      let nc=0;
+      for (const i in jval) {
+        //  console.log(i)
+          if (state.hasOwnProperty(i)) {  //Pokud narazi na shodu, vrati jeho index ve state a odstrani jej
+            delete state[i]
+          }
+      }
+    },
+
     setUser (state, user) {
       state.user = user
     },
@@ -361,7 +393,7 @@ export default new Vuex.Store({
         return el.kalkulaceid !== kalkulaceid
       })
     },
-    removeKalkAccId (state, kalkulaceid) {
+    removeKalkAccIdXXXXX (state, kalkulaceid) {
       // console.log('RemoveAccID ', kalkulaceid.kalkulaceid)
       state.Kalkulace.splice(kalkulaceid.kalkulaceid,1)
     },
@@ -787,14 +819,26 @@ export default new Vuex.Store({
       // console.log('saveKalkCela', pole)
       commit('saveKalkCela', pole)
     },
-    removeKalkAccId ({commit}, pole) {
+    removeKalkAccIdXXXXX ({commit}, pole) {
       // console.log('Actions- setWin -Dispatch', pole)
       commit('removeKalkAccId', pole)
     },
     KalkulaceColThis ({commit}, pole) {
       // console.log('Actions- setWin -Dispatch', pole)
       commit('KalkulaceColThis', pole)
-    }
+    },
+    setVal ({commit}, jval) {  //Vlozi nebo zalozi hodnotu
+      commit('setVal', jval)
+    },
+    setValInit ({commit}, jval) {  //Vlozi pouze hodnoty( klice of state), ktere nejsou dosud pouzity
+       commit('setValInit', jval)
+    },
+    unset ({commit}, jval) {
+      // console.log('Actions- setWin -Dispatch', pole)
+      commit('unset', jval)
+    },
+
+
 
 
 
