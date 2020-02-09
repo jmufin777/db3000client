@@ -38,8 +38,8 @@
         <div  class="leva blue lighten-5" :style="f.pof( c1.Sirka,98)" style="position:relative;">
           <CalcVueFirmySeekBAr></CalcVueFirmySeekBAr>
         </div>
-
-        <ta-ble3
+        <CalcVueZakazky></CalcVueZakazky>
+        <ta-ble3 v-if="false"
           v-cloak
           :h="'530px;'+f.pof( c1.Sirka,98.1)+';top:1px'"
           :Sirka="1000"
@@ -2055,6 +2055,8 @@ import CalcVueZ13Buttons from './CalcVueZ13Buttons.vue'; // Funkce seznam
 import CalcVueFirmySeekBAr from './CalcVueFirmySeekBAr.vue'; // Funkce seznam
 import fceSwitch13Z from './CalcFceSwitch13Z.js'; // Funkce seznam
 import fceFillForm  from './CalcFceFillForm.js'; // Funkce seznam
+import CalcVueZakazky  from './CalcVueZakazky.vue'; // Seznam zakazek
+
 
 
 // import JQuery from 'jquery'
@@ -2077,7 +2079,9 @@ export default {
      'CalcPrehledSlot':CalcPrehledSlot,
      'CalcOdkazy': CalcOdkazy,
      'CalcVueZ13Buttons': CalcVueZ13Buttons,
-     'CalcVueFirmySeekBAr': CalcVueFirmySeekBAr
+     'CalcVueFirmySeekBAr': CalcVueFirmySeekBAr,
+     'CalcVueZakazky':CalcVueZakazky,
+
     // 'menu-hlavni': MenuHlavni,
   },
   data() {
