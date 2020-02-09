@@ -35,113 +35,8 @@
         class="stred"
       >
 
-        <div v-if="false" style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999">
-          <span style="color:red; font-size:10em">1Z</span>
-        </div>
         <div  class="leva blue lighten-5" :style="f.pof( c1.Sirka,98)" style="position:relative;">
           <CalcVueFirmySeekBAr></CalcVueFirmySeekBAr>
-          <div v-if="false" style="position:relative;font-size:110%">
-            <button
-              class="px-4 tlacitkoMenu elevation-2 hoVer"
-              @click="fceSwitch13Z.to2Z(c1.polozka_zak)"
-              v-if="!f.isEmpty(c1.polozka_zak)"
-            >Polozky 2Z OK</button>
-            <button
-              class="px-4 tlacitkoMenu elevation-2 hoVer"
-              @click="fceSwitch13Z.to3Z(c1.polozka_zak,1)"
-              v-if="!f.isEmpty(c1.polozka_zak)"
-            >3Z A</button>
-
-            <button class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden">NICKA</button>
-            <span
-              class="elevation-0 ml-4 pr-2 pb-0 pt-0"
-              style="position:absolute;border-radius:0px 0px 0px 0px;background:#e4eff8;left:10%;"
-            >
-              <span>
-                Rok:
-                <input
-                  v-model="c1.search_zak_rok"
-                  type="number"
-                  class="white px-0"
-                  style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black;font-size:110%"
-                  @keyup="fceSeznam.Seznam('zak')"
-                />
-                Cislo:
-                <input
-                  v-model="c1.search_zak_cislo"
-                  type="text"
-                  class="white px-2"
-                  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%"
-                  @keyup="fceSeznam.Seznam('zak')"
-                />
-                <input
-                  v-model="c1.search_zak_cislo2"
-                  type="hidden"
-                  class="white px-2"
-                  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%"
-                />
-                Neco:
-                <input
-                  v-model="c1.search_zak"
-                  type="text"
-                  class="white px-2"
-                  style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black;font-size:110%"
-                  @keyup="fceSeznam.Seznam('zak')"
-                />
-
-                <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
-                  <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
-                </span>
-                <button
-                  style="border-radius::0px 10px 10px 0px;"
-                  @click="c1.seek_zak_moje=!c1.seek_zak_moje;Seznam('zak')"
-                  title="Moje zakazky"
-                >
-                  <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
-                    <i
-                      class="el-icon-user-solid d3"
-                      :class="{'green--text': c1.seek_zak_moje , 'orange--text': !c1.seek_zak_moje }"
-                      style="font-weight:bold;height:15px;color:#89a4b3"
-                    ></i>
-                  </span>
-                </button>
-                <button
-                  style="border-radius::0px 10px 10px 0px;"
-                  @click="c1.search_zak_cislo='';c1.search_zak_cislo2='';c1.search_zak=''
-                          c1.seek_zak_obchodnik=false;
-                          c1.seek_zak_firma=false;
-                          c1.seek_zak_stav=false;
-                          ;fceSeznam.Seznam('zak')"
-                  v-if="c1.search_zak_cislo>'' || c1.search_zak>''|| c1.search_zak_cislo2>''"
-                >
-                  <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
-                    <i
-                      class="el-icon-close d3 red--text"
-                      style="font-weight:bold;height:15px;color:#89a4b3"
-                    ></i>
-                  </span>
-                </button>
-              </span>
-
-              <span v-if="c1.seznam_zak_sum.length>0">
-                {{c1.seznam_zak_sum}}
-                Naklad: {{f.getCisloInt(c1.seznam_zak_sum[0].naklad)}}
-                Prodej: {{f.getCisloInt(c1.seznam_zak_sum[0].prodej)}}
-                Zisk: {{f.getCisloInt(c1.seznam_zak_sum[0].zisk)}}
-                Marze: {{f.getCislo(c1.seznam_zak_sum[0].marze)}}
-                Pocet: {{f.getCisloInt(c1.seznam_zak_sum[0].pocet)}}
-                Od: {{f.obdobi(c1.seznam_zak_sum[0]._od)}}-{{f.obdobi(c1.seznam_zak_sum[0]._do)}}
-                <table>
-                  <thead>
-                    <th>Pocet</th>
-                    <th>{{c1.seznam_zak_sum[0].pocet}}</th>
-                    <th>Naklad</th>
-                    <th>{{c1.seznam_zak_sum[0].naklad}}</th>
-                  </thead>
-                </table>
-              </span>
-            </span>
-          </div>
         </div>
 
         <ta-ble3
@@ -371,7 +266,7 @@
               <tr
                 v-for="(polozka,idx) in c1.seznam_zak"
                 :key="idx"
-                @dblclick="f.Alert('aaaa');fceSwitch13Z.to2Z(polozka);"
+                @dblclick="fceSwitch13Z.to2Z(polozka);"
                 @click="FillFormWait(polozka);c1.aktivni_zak=polozka.idefix"
                 style="cursor:pointer"
                 :id="'trz_'+polozka.idefix"

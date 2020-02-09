@@ -1,19 +1,18 @@
 import f from '@/services/fce';
-// import query from '../../services/query'
 import Q from '../../services/query';
 import SQL from '../../services/fcesql';
 // import query from '../../services/query'
 import c1 from './CalcCentral.js';
-//import queryKalk from '../../services/fcesqlKalkulace';
+import queryKalk from '../../services/fcesqlKalkulace';
 
 //import w1 from './CalcWorkButtonMenu.vue'; // Prehledova dole
 
 //import { Notification } from 'element-ui';
 import { eventBus } from '@/main.js';
 import fceNova from './CalcFceNova.js'; // Funkce seznam
+import fceFillForm  from './CalcFceFillForm.js'; // Funkce seznam
+import fceSave from './CalcFceSave.js'; // Funkce seznam
 //import fceSeznam from './CalcFceSeznam.js'; // Funkce seznam
-
-
 
 export default {
 
@@ -152,7 +151,7 @@ export default {
       fceNova.polozky_soucet("zak");
       fceNova.addPol("zak", polozka.idefix);
 
-      await self.FillForm(polozka);
+      await fceFillForm.FillForm(polozka);
       //self.$refs.w1.form.osoba   = polozka.idefix_firma
       //f.Alert(polozka.idefix, f.Jstr(polozka))
     } else {
@@ -239,11 +238,13 @@ export default {
 
     //eventBus.$emit('MenuHlavni', {key: 666 })
     //if ()
-    self.$store.dispatch("cleanKalk");
+    //self.$store.dispatch("cleanKalk");
+    f.dispatch("cleanKalk");
     self.c1.bKalkulace = [];
     self.c1.aKalkBefore = [];
     self.c1.aKalkAfter = [];
-    this.$store.dispatch("setKalk", -1);
+    //this.$store.dispatch("setKalk", -1);
+    f.dispatch("setKalk", -1);
     self.c1.KalkulaceLast = -1;
     self.c1.IDEFIXACTIVE = 0;
 
@@ -348,7 +349,7 @@ export default {
       ).data.data;
       fceNova.polozky_soucet("nab");
       fceNova.addPol("nab", polozka.idefix);
-      await self.FillForm(polozka);
+      await fceFillForm.FillForm(polozka);
       // var clean=  (await Q.post(self.idefix,`truncate table ${self.c1.cTable}`))
       // self.$store.dispatch('cleanKalk')
       // self.c1.bKalkulace=[]

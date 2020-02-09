@@ -24,8 +24,7 @@
     <div :ref="'neco11'"></div>
 </div>
 
-</template>>
-
+</template>
 
 <script>
 import { mapState } from 'vuex';

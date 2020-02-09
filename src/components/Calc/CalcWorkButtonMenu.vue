@@ -988,6 +988,7 @@ export default {
       setsub: 0,
       f: f,
 
+
       showTemplates: true,
       showFirma: true,
       ZobrazMenu: true,
@@ -1370,10 +1371,11 @@ eventBus.$on('w1fillform', polozka => {
   methods: {
     TestRend() {
       //alert('aRend')
-      eventBus.$emit("Rend");
+      eventBus.$emit('Rend');
     },
     async FillForm(polozka) {
       const selfW1 = this;
+      const self   = this;
       selfW1.aOsoba = await SQL.getFirmaOsoba(polozka.idefix_firma);
     //selfW1.aFirma=   await SQL.getFirmaOsoba(polozka.idefix_firma)
       selfW1.aFirma = await SQL.getFirma(
@@ -1383,17 +1385,17 @@ eventBus.$on('w1fillform', polozka => {
       );
 
     selfW1.form.osoba = "";
-    if (self.c1.MAINMENULAST == "zakazky") {
+    if (c1.MAINMENULAST == "zakazky") {
       selfW1.form.cislo = polozka.cislozakazky;
 
-      self.c1.polozka_zak = polozka;
-      //f.Alert2('A',f.Jstr(self.c1.polozka_zak.zamek))
+      c1.polozka_zak = polozka;
+      //f.Alert2('A',f.Jstr(c1.polozka_zak.zamek))
       //return
-      self.c1.status_zak = 2;
-    } else if (self.c1.MAINMENULAST == "kalkulace") {
+      c1.status_zak = 2;
+    } else if (c1.MAINMENULAST == "kalkulace") {
       selfW1.form.cislo = polozka.cislonabidky;
-      self.c1.polozka_nab = polozka;
-      self.c1.status_nab = 2;
+      c1.polozka_nab = polozka;
+      c1.status_nab = 2;
     }
 
     selfW1.form.idefix = polozka.idefix;
