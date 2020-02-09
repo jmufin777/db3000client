@@ -3,13 +3,13 @@
     <!-- Link:
     <router-link :to="{name: 'col', params: {ktery: 1 }}">Moduly</router-link>-->
     <my-layout>
-
       <div
         slot="hlavninew"
         style="position:fixed;top:4.8em;left:10px;background:#ffffff;text-align:left;width:100%"
         id="hlavninabidka"
         class="HlavniNabidka"
       >
+        <!-- <div slot="hlavninew" style="position:relative;top:0px;left:10px;background:#fdf0f7;text-align:left;width:100%">   -->
         <div>
           <input type="hidden" id="Zmenad" value="0" class="black black--text" style="width:100px" />
           <work-but-menu
@@ -19,12 +19,43 @@
             :obrazovka_nab="c1.obrazovka_nab"
           >
             <span slot="tlacitkazakazky"  >
-              <CalcVueZ13Buttons></CalcVueZ13Buttons>
-              <!-- <component :is="'CalcVueZ13Buttons'"></component> -->
+              <button
+                class="px-4 tlacitkoMenu elevation-2 hoVer"
+                @click="Nova()"
+                :style="c1.aktivni_zak>0?'color:green':''"
+                :title="c1.status_zak +'/'+ c1.aktivni_zak"
+              >
+                Nova
+                {{c1.IDEFIXACTIVELAST}}
+              </button>
+              <button class="px-4 tlacitkoMenu elevation-2 hoVer" @click="Ulozit()">Ulozit</button>
+              <button
+                class="px-4 tlacitkoMenu elevation-2 hoVer"
+                @click="Nova(true)"
+                :disabled="(c1.MAINMENULAST=='zakazky' && c1.status_zak==1) || (c1.MAINMENULAST=='kalkulace' && c1.status_nab==1)"
+                :class="{'white elevation-0': (c1.MAINMENULAST=='zakazky' && c1.status_zak==1) || (c1.MAINMENULAST=='kalkulace' && c1.status_nab==1)}"
+              >Nova upravou</button>
+              <button class="px-4 tlacitkoMenu elevation-2 hoVer">Smazat</button>
+              <button
+                v-if="c1.MAINMENULAST=='kalkulace'"
+                class="px-4 tlacitkoMenu elevation-2 hoVer"
+                @click="Ulozit('z')"
+              >Ulozit jako zakazku</button>
+              <button
+                v-if="c1.MAINMENULAST=='zakazky'"
+                class="px-4 tlacitkoMenu elevation-2 hoVer"
+                @click="Ulozit('n')"
+              >Ulozit jako nabidku</button>
+              <button>Aktivni zak {{c1.aktivni_zak}} {{c1.aktivni_zak_short}}</button>
             </span>
           </work-but-menu>
         </div>
-
+        <span v-if="false">
+          {{ KalkulaceThis}} /Last {{ c1.KalkulaceLast }}
+          {{ $store.state.KalkulaceThis }} {{ c1.TestRend }}
+        </span>
+        <!-- <menu-left slot="menuleft"></menu-left>
+        <menu-hlavni></menu-hlavni>-->
       </div>
 
       <div
@@ -34,21 +65,19 @@
         id="obalKalkulace"
         class="stred"
       >
-
         <div v-if="false" style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999">
           <span style="color:red; font-size:10em">1Z</span>
         </div>
-        <div  class="leva blue lighten-5" :style="f.pof( c1.Sirka,98)" style="position:relative;">
-          <CalcVueFirmySeekBAr></CalcVueFirmySeekBAr>
-          <div v-if="false" style="position:relative;font-size:110%">
+        <div class="leva blue lighten-5" :style="f.pof( c1.Sirka,98)" style="position:relative;">
+          <div style="position:relative;font-size:110%">
             <button
               class="px-4 tlacitkoMenu elevation-2 hoVer"
-              @click="fceSwitch13Z.to2Z(c1.polozka_zak)"
+              @click="to2Z(c1.polozka_zak)"
               v-if="!f.isEmpty(c1.polozka_zak)"
             >Polozky 2Z OK</button>
             <button
               class="px-4 tlacitkoMenu elevation-2 hoVer"
-              @click="fceSwitch13Z.to3Z(c1.polozka_zak,1)"
+              @click="to3Z(c1.polozka_zak,1)"
               v-if="!f.isEmpty(c1.polozka_zak)"
             >3Z A</button>
 
@@ -64,7 +93,7 @@
                   type="number"
                   class="white px-0"
                   style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black;font-size:110%"
-                  @keyup="fceSeznam.Seznam('zak')"
+                  @keyup="Seznam('zak')"
                 />
                 Cislo:
                 <input
@@ -72,7 +101,7 @@
                   type="text"
                   class="white px-2"
                   style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%"
-                  @keyup="fceSeznam.Seznam('zak')"
+                  @keyup="Seznam('zak')"
                 />
                 <input
                   v-model="c1.search_zak_cislo2"
@@ -86,7 +115,7 @@
                   type="text"
                   class="white px-2"
                   style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black;font-size:110%"
-                  @keyup="fceSeznam.Seznam('zak')"
+                  @keyup="Seznam('zak')"
                 />
 
                 <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
@@ -111,7 +140,7 @@
                           c1.seek_zak_obchodnik=false;
                           c1.seek_zak_firma=false;
                           c1.seek_zak_stav=false;
-                          ;fceSeznam.Seznam('zak')"
+                          ;Seznam('zak')"
                   v-if="c1.search_zak_cislo>'' || c1.search_zak>''|| c1.search_zak_cislo2>''"
                 >
                   <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
@@ -123,8 +152,7 @@
                 </button>
               </span>
 
-              <span v-if="c1.seznam_zak_sum.length>0">
-                {{c1.seznam_zak_sum}}
+              <span>
                 Naklad: {{f.getCisloInt(c1.seznam_zak_sum[0].naklad)}}
                 Prodej: {{f.getCisloInt(c1.seznam_zak_sum[0].prodej)}}
                 Zisk: {{f.getCisloInt(c1.seznam_zak_sum[0].zisk)}}
@@ -164,7 +192,7 @@
                 <th :style="f.pof(c1.Sirka,  4.82)">
                   <button
                     type="button"
-                    @click="fceSeznam.Seznam('zak','','cislozakazky')"
+                    @click="Seznam('zak','','cislozakazky')"
                     style="color:#818185"
                   >
                     <i
@@ -188,7 +216,7 @@
                       <td style="width:80%;border:none;background:#f7f8fb">
                         <button
                           type="button"
-                          @click="fceSeznam.Seznam('zak','','firma')"
+                          @click="Seznam('zak','','firma')"
                           style="color:#818185"
                         >
                           <i
@@ -203,7 +231,7 @@
                         </button>
                       </td>
                       <td style="width:20%;border:none;text-align:center;background:#f7f8fb">
-                        <input type="checkbox" v-model="c1.seek_zak_firma" @change="fceSeznam.Seznam('zak')" />
+                        <input type="checkbox" v-model="c1.seek_zak_firma" @change="Seznam('zak')" />
                       </td>
                     </tr>
                   </table>
@@ -214,7 +242,7 @@
                       <td style="width:80%;border:none;background:#f7f8fb">
                         <button
                           type="button"
-                          @click="fceSeznam.Seznam('zak','','nazev')"
+                          @click="Seznam('zak','','nazev')"
                           style="color:#818185"
                         >
                           <i
@@ -229,7 +257,7 @@
                         </button>
                       </td>
                       <td style="width:20%;border:none;text-align:center;background:#f7f8fb">
-                        <input type="checkbox" v-model="c1.seek_zak_nazev" @change="fceSeznam.Seznam('zak')" />
+                        <input type="checkbox" v-model="c1.seek_zak_nazev" @change="Seznam('zak')" />
                       </td>
                     </tr>
                   </table>
@@ -237,7 +265,7 @@
                 <th :style="f.pof(c1.Sirka,  8)">
                   <button
                     type="button"
-                    @click="fceSeznam.Seznam('zak','','datumzadani')"
+                    @click="Seznam('zak','','datumzadani')"
                     style="color:#818185"
                   >
                     <i
@@ -254,7 +282,7 @@
                 <th :style="f.pof(c1.Sirka,  7.5)">
                   <button
                     type="button"
-                    @click="fceSeznam.Seznam('zak','','time_update')"
+                    @click="Seznam('zak','','time_update')"
                     style="color:#818185"
                   >
                     <i
@@ -269,7 +297,7 @@
                   </button>
                 </th>
                 <th :style="f.pof(c1.Sirka,  7.5)">
-                  <button type="button" @click="fceSeznam.Seznam('zak','','nakladsum')" style="color:#818185">
+                  <button type="button" @click="Seznam('zak','','nakladsum')" style="color:#818185">
                     <i
                       class="el-icon-upload2 green--text"
                       v-if="c1.order_zak=='nakladsum' && c1.desc_zak==''"
@@ -281,8 +309,8 @@
                     Nákladová cena
                   </button>
                 </th>
-                <th :style="f.pof(c1.Sirka,  8)" @click="fceSeznam.Seznam('zak','','prodejsum')">
-                  <button type="button" @click="fceSeznam.Seznam('zak','','prodejsum')" style="color:#818185">
+                <th :style="f.pof(c1.Sirka,  8)" @click="Seznam('zak','','prodejsum')">
+                  <button type="button" @click="Seznam('zak','','prodejsum')" style="color:#818185">
                     <i
                       class="el-icon-upload2 green--text"
                       v-if="c1.order_zak=='prodejsum' && c1.desc_zak==''"
@@ -297,7 +325,7 @@
                 <th :style="f.pof(c1.Sirka,  5.5)">
                   <button
                     type="button"
-                    @click="fceSeznam.Seznam('zak','','(prodejsum-nakladsum)')"
+                    @click="Seznam('zak','','(prodejsum-nakladsum)')"
                     style="color:#818185"
                   >
                     <i
@@ -317,7 +345,7 @@
                       <td style="width:80%;border:none;background:#f7f8fb">
                         <button
                           type="button"
-                          @click="fceSeznam.Seznam('zak','','obchodnik')"
+                          @click="Seznam('zak','','obchodnik')"
                           style="color:#818185"
                         >
                           <i
@@ -332,7 +360,7 @@
                         </button>
                       </td>
                       <td style="width:20%;border:none;text-align:center;background:#f7f8fb">
-                        <input type="checkbox" v-model="c1.seek_zak_obchodnik" @change="fceSeznam.Seznam('zak')" />
+                        <input type="checkbox" v-model="c1.seek_zak_obchodnik" @change="Seznam('zak')" />
                       </td>
                     </tr>
                   </table>
@@ -343,7 +371,7 @@
                       <td style="width:80%;border:none;background:#f7f8fb">
                         <button
                           type="button"
-                          @click="fceSeznam.Seznam('zak','','stav')"
+                          @click="Seznam('zak','','stav')"
                           style="color:#818185"
                         >
                           <i
@@ -358,7 +386,7 @@
                         </button>
                       </td>
                       <td style="width:20%;border:none;text-align:center;background:#f7f8fb">
-                        <input type="checkbox" v-model="c1.seek_zak_stav" @change="fceSeznam.Seznam('zak')" />
+                        <input type="checkbox" v-model="c1.seek_zak_stav" @change="Seznam('zak')" />
                       </td>
                     </tr>
                   </table>
@@ -371,7 +399,7 @@
               <tr
                 v-for="(polozka,idx) in c1.seznam_zak"
                 :key="idx"
-                @dblclick="f.Alert('aaaa');fceSwitch13Z.to2Z(polozka);"
+                @dblclick="to2Z(polozka);"
                 @click="FillFormWait(polozka);c1.aktivni_zak=polozka.idefix"
                 style="cursor:pointer"
                 :id="'trz_'+polozka.idefix"
@@ -548,7 +576,7 @@
                     v-if="!f.isEmpty(polozka2.obsah) "
                     class="black--text d3"
                     style="font-weight:bold;height:20px;zoom:100%;"
-                    @click="polozka2.vzor==0?fceSwitch13Z.to3Z(polozka2,2):ZalozitZobrazit(polozka2)"
+                    @click="polozka2.vzor==0?to3Z(polozka2,2):ZalozitZobrazit(polozka2)"
                   >
                     <!-- <v-icon v-if="polozka2.c1.status==1 || polozka2.c1.status>2"
         size="small"   class="red--text"
@@ -976,7 +1004,7 @@
                 type="number"
                 class="white px-0"
                 style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black;font-size:110%"
-                @keyup="fceSeznam.Seznam('nab')"
+                @keyup="Seznam('nab')"
               />
               Cislo:
               <input
@@ -984,7 +1012,7 @@
                 type="text"
                 class="white px-2"
                 style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%"
-                @keyup="fceSeznam.Seznam('nab')"
+                @keyup="Seznam('nab')"
               />
               <input
                 v-model="c1.search_nab_cislo2"
@@ -998,7 +1026,7 @@
                 type="text"
                 class="white px-2"
                 style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black;font-size:110%"
-                @keyup="fceSeznam.Seznam('nab')"
+                @keyup="Seznam('nab')"
               />
               <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
                 <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
@@ -1054,10 +1082,10 @@
           </span>
           <!-- <span class="elevation-0 ml-4 pr-2 pb-0 pt-0 " style="position:absolute;border-radius:0px 0px 0px 0px;background:#e4eff8;right:30%">
           {{c1.seznam_nab_sum}}
-           Rok:<input    v-model="c1.search_nab_rok"   type="number" class="white px-0 "  style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black"  @keyup="fceSeznam.Seznam('nab')">
-           Cislo:<input v-model="c1.search_nab_cislo" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black" @keyup="fceSeznam.Seznam('nab')">
+           Rok:<input    v-model="c1.search_nab_rok"   type="number" class="white px-0 "  style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black"  @keyup="Seznam('nab')">
+           Cislo:<input v-model="c1.search_nab_cislo" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black" @keyup="Seznam('nab')">
             : <input v-model="c1.search_nab_cislo2" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black" >
-           Neco:<input  v-model="c1.search_nab"       type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black" @keyup="fceSeznam.Seznam('nab')" >
+           Neco:<input  v-model="c1.search_nab"       type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black" @keyup="Seznam('nab')" >
 
 
            <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
@@ -1085,7 +1113,7 @@
                 <th :style="f.pof(c1.Sirka,  4.82)">
                   <button
                     type="button"
-                    @click="fceSeznam.Seznam('nab','','cislonabidky')"
+                    @click="Seznam('nab','','cislonabidky')"
                     style="color:#818185"
                   >
                     <i
@@ -1109,7 +1137,7 @@
                       <td style="width:80%;border:none;background:#f7f8fb">
                         <button
                           type="button"
-                          @click="fceSeznam.Seznam('nab','','firma')"
+                          @click="Seznam('nab','','firma')"
                           style="color:#818185"
                         >
                           <i
@@ -1124,7 +1152,7 @@
                         </button>
                       </td>
                       <td style="width:20%;border:none;text-align:center;background:#f7f8fb">
-                        <input type="checkbox" v-model="c1.seek_nab_firma" @change="fceSeznam.Seznam('nab')" />
+                        <input type="checkbox" v-model="c1.seek_nab_firma" @change="Seznam('nab')" />
                       </td>
                     </tr>
                   </table>
@@ -1135,7 +1163,7 @@
                       <td style="width:80%;border:none;background:#f7f8fb">
                         <button
                           type="button"
-                          @click="fceSeznam.Seznam('nab','','nazev')"
+                          @click="Seznam('nab','','nazev')"
                           style="color:#818185"
                         >
                           <i
@@ -1150,7 +1178,7 @@
                         </button>
                       </td>
                       <td style="width:20%;border:none;text-align:center;background:#f7f8fb">
-                        <input type="checkbox" v-model="c1.seek_nab_nazev" @change="fceSeznam.Seznam('nab')" />
+                        <input type="checkbox" v-model="c1.seek_nab_nazev" @change="Seznam('nab')" />
                       </td>
                     </tr>
                   </table>
@@ -1158,7 +1186,7 @@
                 <th :style="f.pof(c1.Sirka,  8)">
                   <button
                     type="button"
-                    @click="fceSeznam.Seznam('nab','','datumzadani')"
+                    @click="Seznam('nab','','datumzadani')"
                     style="color:#818185"
                   >
                     <i
@@ -1175,7 +1203,7 @@
                 <th :style="f.pof(c1.Sirka,  7.5)">
                   <button
                     type="button"
-                    @click="fceSeznam.Seznam('nab','','time_update')"
+                    @click="Seznam('nab','','time_update')"
                     style="color:#818185"
                   >
                     <i
@@ -1190,7 +1218,7 @@
                   </button>
                 </th>
                 <th :style="f.pof(c1.Sirka,  7.5)">
-                  <button type="button" @click="fceSeznam.Seznam('nab','','nakladsum')" style="color:#818185">
+                  <button type="button" @click="Seznam('nab','','nakladsum')" style="color:#818185">
                     <i
                       class="el-icon-upload2 green--text"
                       v-if="c1.order_nab=='nakladsum' && c1.desc_nab==''"
@@ -1202,8 +1230,8 @@
                     Nákladová cena
                   </button>
                 </th>
-                <th :style="f.pof(c1.Sirka,  8)" @click="fceSeznam.Seznam('nab','','prodejsum')">
-                  <button type="button" @click="fceSeznam.Seznam('nab','','prodejsum')" style="color:#818185">
+                <th :style="f.pof(c1.Sirka,  8)" @click="Seznam('nab','','prodejsum')">
+                  <button type="button" @click="Seznam('nab','','prodejsum')" style="color:#818185">
                     <i
                       class="el-icon-upload2 green--text"
                       v-if="c1.order_nab=='prodejsum' && c1.desc_nab==''"
@@ -1218,7 +1246,7 @@
                 <th :style="f.pof(c1.Sirka,  5.5)">
                   <button
                     type="button"
-                    @click="fceSeznam.Seznam('nab','','(prodejsum-nakladsum)')"
+                    @click="Seznam('nab','','(prodejsum-nakladsum)')"
                     style="color:#818185"
                   >
                     <i
@@ -1238,7 +1266,7 @@
                       <td style="width:80%;border:none;background:#f7f8fb">
                         <button
                           type="button"
-                          @click="fceSeznam.Seznam('nab','','obchodnik')"
+                          @click="Seznam('nab','','obchodnik')"
                           style="color:#818185"
                         >
                           <i
@@ -1253,7 +1281,7 @@
                         </button>
                       </td>
                       <td style="width:20%;border:none;text-align:center;background:#f7f8fb">
-                        <input type="checkbox" v-model="c1.seek_nab_obchodnik" @change="fceSeznam.Seznam('nab')" />
+                        <input type="checkbox" v-model="c1.seek_nab_obchodnik" @change="Seznam('nab')" />
                       </td>
                     </tr>
                   </table>
@@ -1264,7 +1292,7 @@
                       <td style="width:80%;border:none;background:#f7f8fb">
                         <button
                           type="button"
-                          @click="fceSeznam.Seznam('nab','','stav')"
+                          @click="Seznam('nab','','stav')"
                           style="color:#818185"
                         >
                           <i
@@ -1279,7 +1307,7 @@
                         </button>
                       </td>
                       <td style="width:20%;border:none;text-align:center;background:#f7f8fb">
-                        <input type="checkbox" v-model="c1.seek_nab_stav" @change="fceSeznam.Seznam('nab')" />
+                        <input type="checkbox" v-model="c1.seek_nab_stav" @change="Seznam('nab')" />
                       </td>
                     </tr>
                   </table>
@@ -1840,7 +1868,7 @@
           <button
             class="px-4 tlacitkoMenu elevation-2 hoVer"
             v-if="c1.MAINMENULAST=='zakazky' && !f.isEmpty(c1.polozka_zak)"
-            @click="fceSwitch13Z.to2Z(c1.polozka_zak)"
+            @click="to2Z(c1.polozka_zak)"
           >2Z</button>
           <button class="px-4 tlacitkoMenu elevation-2 hoVer" @click="beforeArray()">
             <!-- 1.JARDA //-->
@@ -2150,17 +2178,6 @@ import CalcOdkazy from './CalcOdkazy'
 //NOve 202002 - pokus o prevod a sdileni hlavnich promennych do samostatneho modulu  pro moduly Kalkulaci
 //import Central from './CalcCentral.vue'; // Prehledova dole
 import Central from './CalcCentral.js'; // Prehledova dole
-import fceSeznam from './CalcFceSeznam.js'; // Funkce seznam
-import fceSave from './CalcFceSave.js'; // Funkce seznam
-import fceNova from './CalcFceNova.js'; // Funkce seznam
-
-
-//Nove moduly Vue
-import CalcVueZ13Buttons from './CalcVueZ13Buttons.vue'; // Funkce seznam
-import CalcVueFirmySeekBAr from './CalcVueFirmySeekBAr.vue'; // Funkce seznam
-import fceSwitch13Z from './CalcFceSwitch13Z.js'; // Funkce seznam
-import fceFillForm  from './CalcFceFillForm.js'; // Funkce seznam
-
 
 // import JQuery from 'jquery'
 // let $ = JQuery
@@ -2180,29 +2197,189 @@ export default {
     'vl': VL,
      'mapa-menu': MapaMenu,
      'CalcPrehledSlot':CalcPrehledSlot,
-     'CalcOdkazy': CalcOdkazy,
-     'CalcVueZ13Buttons': CalcVueZ13Buttons,
-     'CalcVueFirmySeekBAr': CalcVueFirmySeekBAr
+     'CalcOdkazy': CalcOdkazy
     // 'menu-hlavni': MenuHlavni,
   },
   data() {
     return {
       c1: Central,
-      fceSeznam: fceSeznam,
-      fceSave: fceSave,
-      fceNova: fceNova,
-      fceSwitch13Z: fceSwitch13Z,
-      fceFillForm: fceFillForm ,
       $: $,
       f: f,
       x: _,
       w1: WorkButMenu,
 
+
+
+
+      // url: url,  //Nepouzito
+      // dialogVL: false, //Nepouzito
+
+      // VL_LIST: [], //Nepouzito
+
+
+
+
+
+
+
       aKalkulace: [],  //Pokus odtraneni - pokud pujde vymazat
       aKalkBefore: [],   //Prevedeno lec neodstarnuji zatim
       aKalkAfter: [],  //Prevedeno lec neodstarnuji zatim
 
+      //KalkulaceThis: -1,
+
       ID: 0,
+
+
+
+
+      /* Prevod 5
+      c1.zobrazit: true,
+      c1.IDEFIX_VL: 0,
+      c1.odkaz: "",
+      c1.Left: 0,
+      c1.Sirka: 1000,
+      c1.drag: false,
+      c1.ID2ASK: -1, //id2 z radky z ktere prepinam, modul vrati id2 na zaklade prideleneho idefixu
+      c1.MAINMENULAST: "kalkulace",
+      c1.NAZEVACTIVE: "",
+      c1.TestRend: 0,
+      cTable: "",
+      c1.ITEM1: [],
+      c1.Pocet: 0,
+      c1.idRend: 0,
+      c1.KalkulaceLast: -1,
+      c1.showPrehled: 1,
+      c1.CalcCount: 0,
+      c1.ColCount: 0,
+      c1.aKalkBefore: [],
+      c1.aKalkAfter: [],
+      c1.lastIdK: -1,
+      c1.Hlavni: 0,
+
+      c1.nahledTimeOut: false,
+      c1.nahled: false,
+
+      */
+
+
+
+
+/* Prevod 3
+      c1.obrazovka_nab: 3,
+      c1.obrazovka_zak: 1,
+
+      c1.status: 0, //c1.status pro ulozeni 1 = nova
+      c1.status_zak: 0, //c1.status pro ulozeni 1 = nova
+      c1.status_nab: 0, //c1.status pro ulozeni 1 = nova
+
+      c1.seznam_zak: [],
+      c1.seznam_nab: [],
+      c1.seznam_zak_sum: [],
+      c1.seznam_nab_sum: [],
+
+      c1.polozky_zak: [],
+      c1.polozky_nab: [],
+
+      c1.polozky_zak_add: [],
+      c1.polozky_nab_add: [],
+
+      c1.zak_naklady: 0,
+      c1.zak_marze: 0,
+      c1.zak_prodej: 0,
+      c1.nab_naklady: 0,
+      c1.nab_marze: 0,
+      c1.nab_prodej: 0,
+*/
+
+
+
+
+/* prevod 1
+      c1.aktivni_zak: 0,
+      c1.aktivni_nab: 0,
+      c1.aktivni_zak_short: "0",
+      c1.aktivni_zak_rok: "0",
+      c1.aktivni_nab_short: "0",
+      c1.aktivni_nab_rok: "0",
+      c1.aktivni_polozka_zak: 0,
+      c1.aktivni_polozka_nab: 0,
+
+      c1.polozka_zak: [],
+      c1.polozka_nab: [],
+      c1.zak_item_active: [],
+      c1.nab_item_active: [],
+      vllist: "",
+    */
+
+
+/*
+      search_zak: "",
+      search_nab: "",
+      search_zak_rok: "",
+      search_nab_rok: "",
+      search_zak_cislo: "",
+      search_nab_cislo: "",
+      search_zak_cislo2: "",
+      search_nab_cislo2: "",
+      order_zak: "",
+      order_nab: "",
+      order_zak_default: "idefix",
+      order_nab_default: "idefix",
+      desc_zak: "",
+      desc_nab: "",
+
+      seek_zak_firma: false,
+      seek_zak_nazev: false,
+      seek_zak_obchodnik: false,
+      seek_zak_stav: false,
+      seek_zak_moje: false,
+
+      seek_nab_firma: false,
+      seek_nab_nazev: false,
+      seek_nab_obchodnik: false,
+      seek_nab_stav: false,
+      seek_nab_moje: false,
+
+      desc_zak_default: " desc ",
+      desc_nab_default: " desc ",
+      query_zak_last: "",
+      query_nab_last: "",
+*/
+
+
+
+
+/*
+
+      c1.cis_prace: [],
+      c1.cis_dod: [],
+      c1.cis_dod_all: [],
+
+      c1.cis_prace_vlastnik: [], //asi to samy jne vlastnik bude na prvni pozici, jestli to chapu dobre
+      c1.cis_dod_vlastnik: [],
+      c1.idefix_vlastnik: 0,
+      c1.idefix_vlastnikPrace: 0,
+      c1.loading: false,
+      c1.timeout: false,
+      c1.timeoutDrag: null,
+      c1.klikyzak: 0,
+      c1.klikynab: 0,
+
+      //Rizeni - lidi
+      c1._Skupiny: "",
+      c1._IsObchod: false,
+      c1._IsVedeni: false,
+
+      c1.Zacatek: 0,
+      c1.StopStav: false,
+
+      IDEFIXACTIVE: "0",
+      IDEFIXACTIVELAST: 0,
+      IDEFIXACTIVE_ZAK: 0,
+      IDEFIXACTIVE_NAB: 0,
+
+    */
 
 
 
@@ -2217,7 +2394,7 @@ export default {
         await Q.create_tmp_zak(self.idefix, self.c1.cTable, 0);
       }
       //f.Alert(self.c1.IDEFIXACTIVE)
-      //fceSave.setIdefixActive()
+      //self.setIdefixActive()
       f.log("2 getTemplatesUser");
       queryKalk.getTemplatesUser(self.c1.cTable).then(res => {
         self.c1.aKalkBefore = res;
@@ -2229,7 +2406,7 @@ export default {
 
         self.$store.dispatch("cleanKalk");
         self.c1.bKalkulace = [];
-        fceSave.setZabalit();
+        self.setZabalit();
 
         self.c1.KalkulaceLast = -1;
 
@@ -2250,18 +2427,18 @@ export default {
           }
           if (self.c1.MAINMENULAST == "kalkulace" && self.c1.IDEFIXACTIVE_NAB > 0) {
             self.c1.IDEFIXACTIVE = self.c1.IDEFIXACTIVE_NAB;
-            fceSave.setRozbalit(self.c1.IDEFIXACTIVE).then(() => {
+            self.setRozbalit(self.c1.IDEFIXACTIVE).then(() => {
               f.sleep(1500).then(() => {
-                fceSave.setIdefixActive();
+                self.setIdefixActive();
                 //f.Alert('Rozbalim Za')
               });
             });
           }
           if (self.c1.MAINMENULAST == "zakazky" && self.c1.IDEFIXACTIVE_ZAK > 0) {
             self.c1.IDEFIXACTIVE = self.c1.IDEFIXACTIVE_ZAK;
-            fceSave.setRozbalit(self.c1.IDEFIXACTIVE).then(() => {
+            self.setRozbalit(self.c1.IDEFIXACTIVE).then(() => {
               f.sleep(1500).then(() => {
-                fceSave.setIdefixActive();
+                self.setIdefixActive();
                 //f.Alert('Rozbalim Za')
               });
             });
@@ -2333,7 +2510,7 @@ export default {
     });
     eventBus.$on("ULOZ", server => {
       //f.Alert('Prisel se ul')
-      fceSave.Ulozit();
+      self.Ulozit();
     });
     eventBus.$on("IDEFIX_VL", server => {
       self.c1.IDEFIX_VL = server.IDEFIX_VL;
@@ -2423,18 +2600,18 @@ export default {
             //        f.Alert(server.idefix , self.c1.IDEFIXACTIVE , " - kalkulace ne"  )
             SaveKalkulkace = false;
             f.log("EMIT 2 ", "SAVEZAZNAM");
-            fceSave.saveZaznam(server, 1); // prepis radky
+            self.saveZaznam(server, 1); // prepis radky
             //queryKalk.VkladUser(server.data, self.c1.bKalkulace, self.c1.cTable, "", false, server.idefix, SaveKalkulkace )
           } else if (server.idefix == self.c1.IDEFIXACTIVE && server.idefix > 0) {
             //f.Alert(server.idefix , self.c1.IDEFIXACTIVE , " - kalkulace Ano ZDE"  )
             f.log("EMIT 3 ", "SAVEZAZNAM");
-            fceSave.saveZaznam(server, 2); //prepis radky a kalkulace
+            self.saveZaznam(server, 2); //prepis radky a kalkulace
             SaveKalkulkace = true;
             //queryKalk.VkladUser(server.data, self.c1.bKalkulace, self.c1.cTable, "", false, server.idefix, SaveKalkulkace )
           } else if (server.idefix == 0 && self.c1.IDEFIXACTIVE == 0) {
             //f.Alert(server.idefix , self.c1.IDEFIXACTIVE , " - kalkulace Ano , VKLAD ANO KOD 3"  )
             f.log("EMIT 4 ", "SAVEZAZNAM");
-            fceSave.saveZaznam(server, 3); //vklad radky i kalkulace
+            self.saveZaznam(server, 3); //vklad radky i kalkulace
             SaveKalkulkace = true;
             //queryKalk.VkladUser(server.data, self.c1.bKalkulace, self.c1.cTable, "", true, server.idefix, SaveKalkulkace )
           }
@@ -2467,18 +2644,18 @@ export default {
             if (self.c1.MAINMENULAST == "kalkulace") {
               self.c1.cTable = "calc_my_" + self.idefix + "_nab" + self.ID;
               //alert('a'+self.ID)
-              fceSeznam.Seznam("nab");
+              self.Seznam("nab");
               self.FillFormWait(self.c1.polozka_nab);
             } else if (self.c1.MAINMENULAST == "zakazky") {
               self.c1.cTable = "calc_my_" + self.idefix + "_zak" + self.ID;
-              fceSeznam.Seznam("zak");
+              self.Seznam("zak");
               self.FillFormWait(self.c1.polozka_zak);
             }
 
             $("#Zmenad").get(0).value = 0;
             self.$store.dispatch("cleanKalk");
             self.c1.bKalkulace = [];
-            fceSave.setZabalit();
+            self.setZabalit();
           }
           return;
         }
@@ -2585,14 +2762,14 @@ export default {
 
           f.Alert2("670", server.idefix);
 
-          fceSave.saveVL(server.idefix);
+          self.saveVL(server.idefix);
           //self.RozdelKalkulaci(server)
         }
         if (server.key == 671) {
           //Zabaloit polozku
 
           try {
-            fceSave.setVL(server.idefix); //Automaticky pozna zda jde o zabaleni ci rozbaleni podle stavu active
+            self.setVL(server.idefix); //Automaticky pozna zda jde o zabaleni ci rozbaleni podle stavu active
           } catch (e) {
             f.Alert2("HAVARIE");
           }
@@ -2797,7 +2974,7 @@ export default {
     //   self.c1.aKalkBefore = []
 
     self.c1.Sirka = Math.ceil(window.innerWidth * 0.9);
-    await fceSave.setIdefixActive();
+    await self.setIdefixActive();
     // setInterval(function(){
 
     //     console.log('a', self.idefix, self.c1.MAINMENULAST, self.c1.aktivni_zak,self.c1.aktivni_nab,self.$refs.w1.form.cislo)
@@ -2841,7 +3018,7 @@ export default {
 
     await self.Vlastnik();
     await self.VlastnikPrace();
-    await fceSeznam.Seznam("zak");
+    await self.Seznam("zak");
     await self.CisPraceDod();
     await self.CisDod(0);
     await self.CisDodAll(0);
@@ -2856,11 +3033,11 @@ export default {
           await self.FillFormWait(aAkt[0]);
           if (obrazovkatmp == 2) {
             //alert('polozka zak')
-            fceSwitch13Z.to2Z(self.c1.polozka_zak);
+            self.to2Z(self.c1.polozka_zak);
           }
           if (obrazovkatmp == 3) {
             //alert('polozka zak')
-            fceSwitch13Z.to3Z(self.c1.polozka_zak);
+            self.to3Z(self.c1.polozka_zak);
           }
           //self.c1.obrazovka_zak=2
         } else {
@@ -3159,7 +3336,7 @@ export default {
         // self.c1.search_zak_rok=''
         self.$nextTick(function() {
           self.c1.desc_zak = "desc";
-          fceSeznam.Seznam("zak", "", "cislozakazky desc", true).then(() => {
+          self.Seznam("zak", "", "cislozakazky desc", true).then(() => {
             if (self.c1.seznam_zak.length > 0) {
               self.$refs.w1.form.cislo = self.c1.seznam_zak[0].cislozakazky;
               self.$refs.w1.pocet_nal_zak = self.c1.seznam_zak.length;
@@ -3173,9 +3350,8 @@ export default {
               ).then(res => {
                 //f.Alert2(f.Jstr(res.data.data))
                 self.c1.polozky_zak = res.data.data;
-
-                fceNova.addPol("zak", ifx);
-                fceNova.polozky_soucet("zak");
+                self.addPol("zak", ifx);
+                self.polozky_soucet("zak");
               });
             } else {
               self.$refs.w1.pocet_nal_zak = 0;
@@ -3187,7 +3363,7 @@ export default {
         //self.c1.search_nab_rok=''
         self.$nextTick(function() {
           self.c1.desc_nab = "desc";
-          fceSeznam.Seznam("nab", "", "cislonabidky desc", true).then(() => {
+          self.Seznam("nab", "", "cislonabidky desc", true).then(() => {
             if (self.c1.seznam_nab.length > 0) {
               self.$refs.w1.form.cislo = self.c1.seznam_nab[0].cislonabidky;
               self.$refs.w1.pocet_nal_nab = self.c1.seznam_nab.length;
@@ -3202,8 +3378,8 @@ export default {
               ).then(res => {
                 //f.Alert2(f.Jstr(res.data.data))
                 self.c1.polozky_nab = res.data.data;
-                fceNova.addPol("nab", ifx);
-                fceNova.polozky_soucet("nab");
+                self.addPol("nab", ifx);
+                self.polozky_soucet("nab");
               });
             } else {
               self.$refs.w1.pocet_nal_nab = 0;
@@ -3282,8 +3458,8 @@ export default {
             `select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${ifx_aktivni} order by idefix`
           )
         ).data.data;
-        fceNova.addPol("zak", polozka.idefix);
-        fceNova.polozky_soucet("zak");
+        self.addPol("zak", polozka.idefix);
+        self.polozky_soucet("zak");
       } else if (self.c1.MAINMENULAST == "kalkulace") {
         await Q.post(self.idefix, `drop table if exists ${self.c1.cTable}`);
         await Q.post(
@@ -3305,8 +3481,8 @@ export default {
             `select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${ifx_aktivni} order by idefix`
           )
         ).data.data;
-        fceNova.addPol("nab", polozka.idefix);
-        fceNova.polozky_soucet("nab");
+        self.addPol("nab", polozka.idefix);
+        self.polozky_soucet("nab");
       }
 
       //   f.Alert2(qC)
@@ -3407,7 +3583,7 @@ export default {
           )
         ).data.data;
 
-        fceNova.polozky_soucet("zak");
+        self.polozky_soucet("zak");
 
         self.c1.klikyzak++;
       }
@@ -3419,11 +3595,11 @@ export default {
           )
         ).data.data;
 
-        fceNova.polozky_soucet("nab");
+        self.polozky_soucet("nab");
         self.c1.klikynab++;
       }
 
-      await fceNova.addPol(ceho, idefix_ceho);
+      await self.addPol(ceho, idefix_ceho);
       //await f.sleep(1000)
     },
 
@@ -3447,7 +3623,7 @@ export default {
       var q = `${q0} ; update zak_t_list set nazev = '[[STORNO]]' where idefix = ${polozka.idefix}`;
       var b = await Q.post(self.idefix, q);
 
-      await fceSeznam.Seznam("zak");
+      await self.Seznam("zak");
       setTimeout(function() {
         self.$refs.w1.form.nazev = "[[STORNO]]";
       }, 500);
@@ -3482,7 +3658,7 @@ export default {
       var q = `${q0} ; update nab_t_list set nazev = '[[STORNO]]' where idefix = ${polozka.idefix}`;
 
       var b = await Q.post(self.idefix, q);
-      fceSeznam.Seznam("nab");
+      self.Seznam("nab");
       setTimeout(function() {
         self.$refs.w1.form.nazev = "[[STORNO]]";
       }, 500);
@@ -3544,7 +3720,7 @@ export default {
         if (nova == true) {
           //nova upravou
           setTimeout(function() {
-            fce.Nova(true);
+            self.Nova(true);
             if (self.c1.MAINMENULAST == "zakazky") {
               self.$notify({
                 title: self.c1.MAINMENULAST,
@@ -3629,7 +3805,77 @@ export default {
         }, 1000);
       }
     },
+    async addPol(ceho = "zak", idefix_zaknab = -1) {
+      const self = this;
+      var addPol = [];
+      var addEmpty = {};
 
+      addPol = (
+        await Q.all(
+          self.idefix,
+          `select *,0 as vse from ${ceho}_t_items where vzor>=1 order by idefix_dod desc limit 2`
+        )
+      ).data.data;
+      //Pridatprazdnou radku
+
+      addPol.forEach(el => {
+        if (ceho == "zak") {
+          el.idefix_zak = idefix_zaknab;
+          if (
+            _.findIndex(self.c1.polozky_zak, function(o) {
+              return o.vzor == -999;
+            }) == -1
+          ) {
+            addEmpty = f.Jparse(el);
+            addEmpty.nazev = "XXXXX";
+            addEmpty.idefix *= -1;
+            addEmpty.obsah = [];
+            //addEmpty.idefix_zak=-999
+            addEmpty.idefix_dod = -999;
+            addEmpty.idefix_prace = -999;
+            addEmpty.vzor = -999;
+            self.c1.polozky_zak.push(addEmpty);
+
+            //f.Alert(f.Jstr(self.c1.polozky_zak))
+            //f.Alert(f.Jstr(el))
+          }
+          if (
+            _.findIndex(self.c1.polozky_zak, function(o) {
+              return o.nazev == el.nazev && o.idefix_dod == el.idefix_dod;
+            }) == -1
+          ) {
+            self.c1.polozky_zak.push(el);
+          }
+        } else if (ceho == "nab") {
+          el.idefix_nab = idefix_zaknab;
+          if (
+            _.findIndex(self.c1.polozky_nab, function(o) {
+              return o.vzor == -999;
+            }) == -1
+          ) {
+            addEmpty = f.Jparse(el);
+            addEmpty.nazev = "AAAAAA";
+            addEmpty.idefix *= -1;
+            addEmpty.obsah = [];
+            //addEmpty.idefix_zak=-999
+            addEmpty.idefix_dod = -999;
+            addEmpty.idefix_prace = -999;
+            addEmpty.vzor = -999;
+            self.c1.polozky_nab.push(addEmpty);
+            // f.Alert(f.Jstr(addEmpty))
+            //f.Alert(f.Jstr(self.c1.polozky_zak))
+            //f.Alert(f.Jstr(el))
+          }
+          if (
+            _.findIndex(self.c1.polozky_nab, function(o) {
+              return o.nazev == el.nazev && o.idefix_dod == el.idefix_dod;
+            }) == -1
+          ) {
+            self.c1.polozky_nab.push(el);
+          }
+        }
+      });
+    },
     async to1Z() {
       const self = this;
       //f.Alert(self.c1.status_zak)
@@ -3638,7 +3884,8 @@ export default {
         self.c1.obrazovka_zak == 3 &&
         self.c1.status_zak == 2
       ) {
-        await fceSave.Ulozit()
+        await self
+          .Ulozit()
           .then(() => {
             //     alert('bobry')
           })
@@ -3741,7 +3988,8 @@ export default {
         self.c1.obrazovka_nab == 3 &&
         self.c1.status_nab == 2
       ) {
-        await fceSave.Ulozit()
+        await self
+          .Ulozit()
           .then(() => {
             //     alert('bobry')
           })
@@ -3783,8 +4031,141 @@ export default {
         self.c1.obrazovka_nab = 1;
       }
     },
+    async to2Z(polozka) {
+      const self = this;
+      var ceho = "";
+      var b = "";
+      var b2 = "";
+      var qoprava = "";
+      var qoprava2 = "";
+      self.c1.StopStav = false;
+      if (self.c1.MAINMENULAST == "kalkulace") {
+        ceho = "nab";
+      } else if (self.c1.MAINMENULAST == "zakazky") {
+        ceho = "zak";
+      }
 
+      var qoprava = `update ${self.c1.cTable} set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${self.c1.cTable} ) a where rn >1 and radek > 1 order by id
+    )
+    ;`;
+      var b = await Q.post(self.idefix, qoprava);
+      var qoprava2 = `update ${ceho}_t_items set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${ceho}_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`;
 
+      if (self.c1.obrazovka_zak == 3) {
+        await self.Ulozit();
+        var b2 = await Q.post(self.idefix, qoprava2);
+        await f.sleep(200).then(() => {
+          Q.all(
+            self.idefix,
+            `select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`
+          )
+            .then(res => {
+              self.c1.polozky_zak = res.data.data;
+              self.polozky_soucet("zak");
+            })
+            .then(() => {
+              self.addPol("zak", polozka.idefix);
+            })
+            .then(() => {
+              self.c1.obrazovka_zak = 2;
+            });
+        });
+
+        return;
+      }
+      if (self.c1.MAINMENULAST == "zakazky" && self.c1.status_zak == 1) {
+        this.$confirm("Zrusit zakladni nove zakazky ? ??", "", {
+          distinguishCancelAndClose: true,
+          confirmButtonText: "Ano?",
+          cancelButtonText: "Ne"
+        }).then(() => {
+          self.c1.obrazovka_zak = 1;
+
+          eventBus.$emit("SavedZN", {
+            id: self.c1.MAINMENULAST,
+            // cislo: c.cislo,
+            // exp: c.exp,
+            // prod: self.idefix,
+            // prod_txt : c.produkce,
+            // zadani:c.zadani,
+            status_zak: 0,
+            status_nab: self.c1.status_nab
+          });
+
+          if (self.c1.aktivni_zak > 0) {
+            //document.getElementById('trn_'+self.c1.aktivni_zak)
+            setTimeout(function() {
+              if (document.getElementById("trz_" + self.c1.aktivni_zak)) {
+                document.getElementById("trz_" + self.c1.aktivni_zak).click();
+
+                //f.Alert('trn_'+self.c1.aktivni_zak, document.getElementById('trz_'+self.c1.aktivni_zak)  )
+              }
+            }, 1000);
+          }
+        });
+
+        return;
+      } else {
+        self.c1.obrazovka_zak = 1;
+      }
+
+      if (self.c1.obrazovka_zak == 3) {
+        alert("Jonea neeee?");
+        await self.Ulozit();
+        await f.sleep(1000);
+      }
+
+      self.$refs.w1.aOsoba = await SQL.getFirmaOsoba(polozka.idefix_firma);
+      if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
+        self.c1.status_zak = 2;
+        self.c1.obrazovka_zak = 2;
+        //update zak_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=1, obsah=null  where idefix in ( 67198, 67199 ) ;
+        //update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null  where idefix in ( 67156, 67157 ) ;
+        //update nab_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=1, obsah=null,idefix_dod = 0  where idefix in (  67157 ) ;
+        //update zak_t_items  set nazev='Prázdný',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=1, obsah=null,idefix_dod = 0  where idefix in (  67199 ) ;
+        //update zak_t_items  set nazev='Prázdný s',kcks =0,naklad=0,prodej=0, idefix_zak=-1,vzor=2  where idefix in (  135369 ) ;
+        //update nab_t_items  set nazev='Prázdný s',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=2  where idefix in (  135371 ) ;
+
+        self.updateDefault(); //oprava dodavatele
+        self.c1.polozky_zak = (
+          await Q.all(
+            self.idefix,
+            `select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`
+          )
+        ).data.data;
+        self.polozky_soucet("zak");
+        self.addPol("zak", polozka.idefix);
+
+        await self.FillForm(polozka);
+        //self.$refs.w1.form.osoba   = polozka.idefix_firma
+        //f.Alert(polozka.idefix, f.Jstr(polozka))
+      } else {
+        this.$notify({
+          title: self.c1.MAINMENULAST,
+          message: `Chyba pri nacteni polozek`,
+          type: "error",
+          offset: 100,
+          duration: 5000
+        });
+      }
+    },
+    async updateDefault() {
+      const self = this;
+      if (self.c1.idefix_vlastnik > 0 && self.c1.idefix_vlastnikPrace > 0) {
+        var q = `update zak_t_items set idefix_dod=${self.c1.idefix_vlastnik}, idefix_prace= ${self.c1.idefix_vlastnikPrace} where obsah::text  ~*  '[a-z]'
+             and (idefix_dod is null  or idefix_prace!=${self.c1.idefix_vlastnikPrace} or idefix_dod!=${self.c1.idefix_vlastnik}) or idefix_prace is null    `;
+
+        var a = await Q.post(self.idefix, q);
+      }
+    },
 
     async to3N(polozka, odkud = 1) {
       const self = this;
@@ -3847,9 +4228,658 @@ export default {
       }
     },
 
+    async to3Z(polozka, odkud = 1) {
+      const self = this;
+      var idfx = 0;
+      var idfxKalkulace = 0;
+      var presun = true;
+      self.c1.StopStav = false;
+      if (self.c1.MAINMENULAST == "zakazky" && self.c1.aktivni_zak > 0) {
+        var q = `select rok(cislozakazky) as rok,cislo(cislozakazky) as cislo, cislozakazky from zak_t_list  where idefix = ${self.c1.aktivni_zak} `;
+        var aneco = (await Q.all(self.idefix, q)).data.data;
+        self.c1.aktivni_zak_short = aneco[0].cislo;
+        self.c1.aktivni_zak_rok = aneco[0].rok;
+
+        //var b2 = (await Q.post(self.idefix,qoprava2))
+        // f.Alert2('v poho', q, f.Jstr(aneco))
+      }
+
+      if (self.c1.MAINMENULAST == "kalkulace" && self.c1.aktivni_nab > 0) {
+        var q = `select rok(cislonabidky) as rok,cislo(cislonabidky) as cislo, cislonabidky from nab_t_list  where idefix = ${self.c1.aktivni_nab} `;
+        var aneco = (await Q.all(self.idefix, q)).data.data;
+        self.c1.aktivni_nab_short = aneco[0].cislo;
+        self.c1.aktivni_nab_rok = aneco[0].rok;
+        //var b2 = (await Q.post(self.idefix,qoprava2))
+        //f.Alert2('v poho', q, f.Jstr(aneco))
+      }
+
+      if (odkud == 1 && self.c1.aktivni_polozka_zak > 0) {
+        //Polozka vybarna, pristup pres tlacitko nahore
+        self.c1.polozky_zak.forEach(el => {
+          if (el.idefix == self.c1.aktivni_polozka_zak) {
+            if (el.obsah > "") {
+              //f.Alert2(f.Jstr(el) ) ;
+              polozka = el;
+              odkud = 2;
+              return;
+            }
+          }
+        });
+      }
+
+      if (odkud == 2) {
+        //Polozky
+        if (polozka.idefix_dod == self.c1.idefix_vlastnik) {
+          presun = true;
+        } else {
+          presun = false;
+          this.$notify({
+            title: self.c1.MAINMENULAST,
+            message: `Pro cizi dodavatele nejsou  kalkulacek dispozici`,
+            type: "error",
+            offset: 100,
+            duration: 5000
+          });
+          return;
+        }
+        idfxKalkulace = polozka.idefix;
+        idfx = polozka.idefix_zak;
+      } else if (odkud == 1) {
+        idfx = polozka.idefix;
+      }
+      if (presun == true) {
+        self.c1.obrazovka_zak = 3;
+        await self.to3(polozka, "zak", idfx, idfxKalkulace);
+      } else {
+      }
+    },
+    async to3(polozka, typ = "zak", idfx = 0, idfxKalkulace) {
+      const self = this;
+
+      //      f.Alert('to3  ', idfx)
+
+      //eventBus.$emit('MenuHlavni', {key: 666 })
+      //if ()
+      self.$store.dispatch("cleanKalk");
+      self.c1.bKalkulace = [];
+      self.c1.aKalkBefore = [];
+      self.c1.aKalkAfter = [];
+      this.$store.dispatch("setKalk", -1);
+      self.c1.KalkulaceLast = -1;
+      self.c1.IDEFIXACTIVE = 0;
+
+      //eventBus.$emit(666)
+      //var a = (await Q.post(self.idefix,`drop table if exists ${self.c1.cTable}`))
+      //;create table ${self.c1.cTable} without oids as select * from calc_templates limit 0
+      //  ;alter table ${self.c1.cTable} add poradi serial
+      //  ;alter table ${self.c1.cTable} add active bool default false
+      //  ;alter table ${self.c1.cTable} add idefix_src bigint default 0
+      var qb = `drop table if exists ${self.c1.cTable} ;drop sequence if exists ${self.c1.cTable}_seq
+         ;create sequence ${self.c1.cTable}_seq
+         ;create table ${self.c1.cTable} without oids  as select * from ${typ}_t_items where idefix_${typ} = ${idfx}
+
+         ;alter table ${self.c1.cTable} alter idefix  set default nextval('list2_seq')
+         ;alter table ${self.c1.cTable} alter id set default nextval('${self.c1.cTable}_seq')
+        `;
+      //f.Alert2(f.Jstr(polozka))
+      //var qb=`create table ${self.c1.cTable} without oids  as select * from zak_t_items where idefix_zak = ${polozka.idefix}`
+
+      var b = await Q.post(self.idefix, qb);
+      //f.Alert2( qb);
+      self.c1.aKalkBefore = []; // 1.JARDA
+      f.log("5 getTemplatesUser");
+      self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable);
+
+      //f.Alert(f.Jstr(self.c1.aKalkBefore))
+      await self.setZabalit();
+      if (idfxKalkulace > 0) {
+        await self.setRozbalit(idfxKalkulace);
+      }
+
+      $("#Zmenad").get(0).value = 0;
+
+      // f.Alert2('3Z?', qb)
+    },
+
+    async to2N(polozka) {
+      const self = this;
+      var ceho = "";
+      var b = "";
+      var b2 = "";
+      var qoprava = "";
+      var qoprava2 = "";
+      if (self.c1.MAINMENULAST == "kalkulace") {
+        ceho = "nab";
+      } else if (self.c1.MAINMENULAST == "zakazky") {
+        ceho = "zak";
+      }
+
+      var qoprava = `update ${self.c1.cTable} set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${self.c1.cTable} ) a where rn >1 and radek > 1 order by id
+    )
+    ;`;
+      var b = await Q.post(self.idefix, qoprava);
+      var qoprava2 = `update ${ceho}_t_items set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${ceho}_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`;
+
+      if (self.c1.obrazovka_nab == 3) {
+        await self.Ulozit();
+        var b2 = await Q.post(self.idefix, qoprava2);
+        await f
+          .sleep(200)
+
+          .then(() => {
+            Q.all(
+              self.idefix,
+              `select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix} order by idefix`
+            )
+              .then(res => {
+                self.c1.polozky_nab = res.data.data;
+                self.polozky_soucet("nab");
+              })
+              .then(() => {
+                self.addPol("nab", polozka.idefix);
+              })
+              .then(() => {
+                self.c1.obrazovka_nab = 2;
+                //f.Alert(self.c1.aktivni_polozka_nab)
+              });
+          });
+
+        return;
+      }
+      self.$refs.w1.aOsoba = await SQL.getFirmaOsoba(polozka.idefix_firma);
+      //alert(self.c1.obrazovka_zak)
+
+      if (!f.isEmpty(polozka) && !f.isEmpty(polozka.idefix)) {
+        self.c1.status_nab = 2;
+        self.c1.obrazovka_nab = 2;
+
+        self.c1.polozky_nab = (
+          await Q.all(
+            self.idefix,
+            `select *,0 as vse from nab_t_items where idefix_nab= ${polozka.idefix}`
+          )
+        ).data.data;
+        self.polozky_soucet("nab");
+        self.addPol("nab", polozka.idefix);
+        await self.FillForm(polozka);
+        // var clean=  (await Q.post(self.idefix,`truncate table ${self.c1.cTable}`))
+        // self.$store.dispatch('cleanKalk')
+        // self.c1.bKalkulace=[]
+
+        //self.$refs.w1.form.osoba   = polozka.idefix_firma
+        //f.Alert(polozka.idefix, f.Jstr(polozka))
+      } else {
+        this.$notify({
+          title: self.c1.MAINMENULAST,
+          message: `Chyba pri nacteni polozek`,
+          type: "error",
+          offset: 100,
+          duration: 5000
+        });
+      }
+    },
+    async Ulozit(kod = "") {
+      const self = this;
+      var ceho = "";
+      var qoprava = "";
+      var qoprava2 = "";
+      var b = "";
+      //return
+      f.log("ULOZIT LOG 1");
+
+      //f.Alert(self.c1.IDEFIXACTIVE, self.c1.bKalkulace.length)
+      if (self.c1.MAINMENULAST == "kalkulace") {
+        ceho = "nab";
+      } else if (self.c1.MAINMENULAST == "zakazky") {
+        ceho = "zak";
+      }
+
+      qoprava = `update ${self.c1.cTable} set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${self.c1.cTable})  a where rn >1 and radek > 1 order by id
+    )
+    ;`;
+      b = await Q.post(self.idefix, qoprava);
+
+      //f.Alert2(qoprava)
+
+      qoprava2 = `update ${ceho}_t_items set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${ceho}_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`;
+      b = await Q.post(self.idefix, qoprava2);
+      //f.Alert2(qoprava)
+
+      var b = await Q.post(self.idefix, qoprava);
+      if (self.c1.obrazovka_nab == 3 && self.c1.MAINMENULAST == "kalkulace") {
+        await self.setVL(self.c1.IDEFIXACTIVE, 1);
+      }
+      if (self.c1.obrazovka_zak == 3 && self.c1.MAINMENULAST == "zakazky") {
+        await self.setVL(self.c1.IDEFIXACTIVE, 1);
+      }
+
+      var data2 = self.$refs.w1.form;
+      var q1 = "";
+      var _idefix = 0;
+      if (kod == "n") {
+        self.c1.MAINMENULAST = "kalkulace";
+        self.c1.status_nab = 1; // Save AS nb - zakazku - zmena c1.statusu na vklad
+        eventBus.$emit("setmenu", { setmenu: "kalkulace" });
+      } else if (kod == "z") {
+        self.c1.MAINMENULAST = "zakazky";
+        self.c1.status_zak = 1; // Save AS nb - zakazku - zmena c1.statusu na vklad
+        eventBus.$emit("setmenu", { setmenu: "zakazky" });
+      }
+      this.$notify({
+        title: `Kod kliku: ${kod} ${self.c1.MAINMENULAST}`,
+        message: `Status kliku : Zak:   ${self.c1.status_zak} Nab:  ${self.c1.status_nab} `,
+        type: "success",
+        offset: 100,
+        duration: 2000
+      });
+
+      if (true || self.c1.status_zak == 2) {
+        if (self.c1.status_nab == 2 && self.c1.MAINMENULAST == "kalkulace") {
+          //Tohle domyslet co vlastne vidim
+          if (self.c1.obrazovka_nab == 2) {
+            //self.mAlert('a'+ self.c1.obrazovka_nab)
+            return;
+          }
+
+          //self.$refs.w1.form.cislo
+          //        f.Alert2(`select * from nab_t_list where cislonabidky= ${self.$refs.w1.form.cislo}`, ' :: ', self.c1.status_zak, ' :: ',self.c1.status_nab)
+          var c = (
+            await Q.all(
+              self.idefix,
+              `select * from nab_t_list where cislonabidky= ${self.$refs.w1.form.cislo}`
+            )
+          ).data.data[0];
+
+          var qset = await self.UpdateSet(data2);
+          if (!self.ZpravaValidace(data2)) {
+            return;
+          }
+          var q = `update nab_t_list ${qset} where idefix = ${c.idefix}`;
+          var d = await Q.post(self.idefix, q);
+          var dporadi = `update ${self.c1.cTable} set poradi = id where poradi is null`;
+          //f.Alert('ZakTus' ,dporadi)
+          var uporadi = await Q.post(self.idefix, dporadi);
+
+          var iset = await self.InsertSet(c.idefix);
+          var del = await Q.post(
+            self.idefix,
+            `delete from nab_t_items where obsah::text > '' and idefix_nab = ${c.idefix}`
+          );
+
+          var qitems = `insert into nab_t_items
+             ${iset}
+             from ${self.c1.cTable} where obsah::text >''
+           `;
+          qitems = qitems.replace("idefix_zak", "idefix_nab");
+          //f.Alert2(qitems)
+
+          var e = await Q.post(self.idefix, qitems);
+          var pomocIdefix = await Q.post(
+            self.idefix,
+            `update nab_t_items set idefix = idefix_src where idefix_src>0 and idefix_nab = ${c.idefix}`
+          );
+
+          this.$notify({
+            title: self.c1.MAINMENULAST,
+            message: `Zmeneno 1  ${c.cislonabidky}`,
+            type: "success",
+            offset: 100,
+            duration: 5000
+          });
+
+          self.Seznam("nab");
+
+          self.c1.status_nab = 2;
+        }
+        if (self.c1.status_zak == 2 && self.c1.MAINMENULAST == "zakazky") {
+          if (self.c1.obrazovka_zak == 2) {
+            //self.mAlert('a'+ self.c1.obrazovka_nab)
+            return;
+          }
+
+          //self.$refs.w1.form.cislo = c.cislo
+
+          var c = (
+            await Q.all(
+              self.idefix,
+              `select * from zak_t_list where cislozakazky= ${self.$refs.w1.form.cislo}`
+            )
+          ).data.data[0];
+          if (!self.ZpravaValidace(data2)) {
+            return;
+          }
+          var qset = await self.UpdateSet(data2);
+          var q = `update zak_t_list ${qset} where idefix = ${c.idefix}`;
+          var d = await Q.post(self.idefix, q);
+          //Vlozit (zmenit ) polozky z kalkulace
+          // f.Alert(self.c1.cTable)
+          var dporadi = `update ${self.c1.cTable} set poradi = id where poradi is null`;
+          //f.Alert('ZakTus' ,dporadi)
+          var uporadi = await Q.post(self.idefix, dporadi);
+          var iset = await self.InsertSet(c.idefix);
+          var del = await Q.post(
+            self.idefix,
+            `delete from zak_t_items where obsah::text > '' and idefix_zak = ${c.idefix}`
+          );
+
+          var qitems = `insert into zak_t_items
+            ${iset}
+            from ${self.c1.cTable} where obsah::text >''
+          `;
+          //f.Alert2(qitems)
+          //var pomocIdefix=(await Q.post(self.idefix,`update ${self.c1.cTable} set idefix = idefix_src where idefix_src>0`))
+
+          var e = await Q.post(self.idefix, qitems);
+          var pomocIdefix = await Q.post(
+            self.idefix,
+            `update zak_t_items set idefix = idefix_src where idefix_src>0 and idefix_zak = ${c.idefix}`
+          );
+          this.$notify({
+            title: self.c1.MAINMENULAST,
+            message: `Zmeneno 1   ${c.cislozakazky}`,
+            type: "success",
+            offset: 100,
+            duration: 5000
+          });
+          self.Seznam("zak");
+          self.c1.status_zak = 2;
+        }
+      }
+      if (true || self.c1.status == 1) {
+        if (self.c1.status_nab == 1 && self.c1.MAINMENULAST == "kalkulace") {
+          //f.Alert('Vlozim novou', self.c1.MAINMENULAST )
+          data2.idefix_obchodnik = this.idefix;
+          if (f.isEmpty(data2.idefix_firma)) {
+            data2.idefix_firma = 0;
+          }
+
+          q1 = `select * from nab_insert(${self.idefix},${data2.idefix_firma}, '${data2.datumexpedice}')  `;
+          if (!self.ZpravaValidace(data2)) {
+            return;
+          }
+
+          // f.Alert2(q1)
+          // return
+          var c = (await Q.all(self.idefix, q1)).data.data[0];
+
+          self.$refs.w1.form.cislo = c.cislo;
+          //self.$refs.w1.form.cislo
+          //f.Alert("NAB", f.Jstr(c));
+          var qset = await self.UpdateSet(data2);
+          var q = `update nab_t_list ${qset} where idefix = ${c.idefix}`;
+          var d = await Q.post(self.idefix, q);
+          var dporadi = `update ${self.c1.cTable} set poradi = id where poradi is null`;
+          //f.Alert('ZakTus' ,dporadi)
+          var uporadi = await Q.post(self.idefix, dporadi);
+
+          var iset = await self.InsertSet(c.idefix, "idefix_nab");
+
+          var del = await Q.post(
+            self.idefix,
+            `delete from nab_t_items where obsah::text > '' and idefix_nab = ${c.idefix}`
+          );
+          var qitems = `insert into nab_t_items
+          ${iset}
+          from ${self.c1.cTable} where obsah::text >''
+        `;
+          var e = await Q.post(self.idefix, qitems);
+          this.$notify({
+            title: self.c1.MAINMENULAST,
+            message: `Ulozeno ${c.cislo}`,
+            type: "success",
+            offset: 100,
+            duration: 5000
+          });
+          self.c1.status_nab = 2;
+          eventBus.$emit("SavedZN", {
+            id: self.c1.MAINMENULAST,
+            // cislo: c.cislo,
+            // exp: c.exp,
+            // prod: self.idefix,
+            // prod_txt : c.produkce,
+            // zadani:c.zadani,
+            status_zak: self.c1.status_zak,
+            status_nab: self.c1.status_nab
+          });
+          self.Seznam("nab");
+
+          //Vlozit polozky z kalkulace
+        } else if (self.c1.status_zak == 1 && self.c1.MAINMENULAST == "zakazky") {
+          q1 = `select * from zak_insert(${self.idefix},${data2.idefix_firma}, '${data2.datumexpedice}')  `;
+          //f.Alert2(q1)
+          //return
+
+          if (!self.ZpravaValidace(data2)) {
+            return;
+          }
+          var c = (await Q.all(self.idefix, q1)).data.data[0]; //Pouziju polozky idefix, splatnost, zbytek by mel byt ve formulari spravne
+          self.$refs.w1.form.cislo = c.cislo;
+          var qset = await self.UpdateSet(data2);
+          var q = `update zak_t_list ${qset} where idefix = ${c.idefix}`;
+          q = q.replace("'undefined'", "''");
+
+          var d;
+          try {
+            d = await Q.post(self.idefix, q);
+          } catch (e) {
+            this.$notify({
+              title: `ERROR ${e}`,
+              message: `${q}`,
+              type: "error",
+              offset: 100,
+              duration: 5000
+            });
+            f.Alert2(
+              `${q}`,
+              data2.idefix_obchodnik,
+              parseInt(data2.idefix_obchodnik),
+              data2.idefix_obchodnik * 1
+            );
+            return;
+          }
+
+          //Vlozit (zmenit ) polozky z kalkulace
+          //f.Alert(self.c1.cTable)
+          var dporadi = `update ${self.c1.cTable} set poradi = id where poradi is null`;
+          //f.Alert('ZakTus' ,dporadi)
+          var uporadi = await Q.post(self.idefix, dporadi);
+          var iset = await self.InsertSet(c.idefix);
+          var del = await Q.post(
+            self.idefix,
+            `delete from zak_t_items where obsah::text > '' and idefix_zak = ${c.idefix}`
+          );
+          var qitems = `insert into zak_t_items
+          ${iset}
+          from ${self.c1.cTable} where obsah::text >''
+        `;
+          var e = await Q.post(self.idefix, qitems);
+          this.$notify({
+            title: self.c1.MAINMENULAST,
+            message: `Ulozeno  ${c.cislo}`,
+            type: "success",
+            offset: 100,
+            duration: 5000
+          });
+          self.c1.status_zak = 2;
+          eventBus.$emit("SavedZN", {
+            id: self.c1.MAINMENULAST,
+            // cislo: c.cislo,
+            // exp: c.exp,
+            // prod: self.idefix,
+            // prod_txt : c.produkce,
+            // zadani:c.zadani,
+            status_zak: self.c1.status_zak,
+            status_nab: self.c1.status_nab
+          });
+
+          self.Seznam("zak");
+
+          //Zmena c1.statusu
+
+          //f.Alert2(d)
+
+          //f.Alert("ZAK", f.Jstr(c));
+        }
+
+        //f.Alert2(f.Jstr(data2))
+
+        //    var necox = {"cislo":"1900900016","vl_rozsah":"","idefix_firma":"13464","idefix_firmaosoba":0,
+        //    "nazev":"neco je to","cisloobjednavky":"petka","datumzadani":"18.08.2019 06:32:21",
+        //    "datumexpedice":"28.08.2019","datumsplatnosti":null,"vyrobapopis":"","naklad":0,
+        //    "poznamky":"rychle hlavne mez to uvidis to zaplat","zamknuto":null,"idefix_user_lock":0,
+        //    "odemknuto":null,"idefix_user_unlock":0,"zamek":false,"uct_rok":2019,"login":"",
+        //    "vyrobapopis_print":"uriznout tak aby ve skladu zbylo na dalsi","cislofaktury":"","idefix_obchodnik":0,
+        //    "idefix_produkce":"9","idefix_last":0,"idefix_nabidka":0,"dodak0":"","objednavka0":"",
+        //    "pdf0":"","informace":"",
+        //    "nazevfirmy":"AbbVie s.r.o.",
+        //    "osoba":"Belasová Iva","obchodnik":"","produkce":"mares mares "}
+      }
+    },
+    ZpravaValidace(data2) {
+      var zpravatxt = "";
+
+      if (this.c1.MAINMENULAST == "kalkulace") {
+        return true;
+      }
+      //if (f.isEmpty(data2.nazevfirmy)) {
+      if (f.isEmpty(data2.idefix_firma)) {
+        zpravatxt += ", Firma ";
+        eventBus.$emit("Focus", { pole: "firma" });
+      }
+
+      if (f.isEmpty(data2.idefix_obchodnik)) {
+        zpravatxt += ", Obchodnik ";
+      }
+      if (f.isEmpty(data2.idefix_produkce)) {
+        zpravatxt += ", Produkce";
+      }
+      if (f.isEmpty(data2.nazev)) {
+        zpravatxt += ", Nazev zakazky (nabidky) ";
+      }
+      if (f.isEmpty(data2.poznamky)) {
+        data2.poznamky = "";
+      }
+      if (f.isEmpty(data2.vyrobapopis_print)) {
+        data2.vyrobapopis_print = "";
+      }
+      if (zpravatxt > "") {
+        //this.$notify( { title: 'Upozorneni',  message: `Tyto povinne polozky nejsou vyplneny : ${zpravatxt}`, type: 'error', offset: 100, duration: 5000 })
+        f.Alert2(`Tyto povinne polozky nejsou vyplneny : `, `${zpravatxt}`);
+
+        return false;
+      }
+      return true;
+    },
+    async InsertSet(idefix_zak, itemIdName = "idefix_zak") {
+      const self = this;
+
+      var creturn = `(
+            kod,
+            nazev,
+            obsah,
+            kcks,
+            ks,
+            naklad,
+            marze,
+            prodej,
+            marze_pomer,
+            expedice_datum,
+            expedice_cas,
+            datum,
+            poradi,
+
+            id_src,
+            active,
+            idefix_src,
+            ${itemIdName},
+            user_insert_idefix,
+            user_update_idefix,
+            idefix_dod,
+            idefix_prace,
+            status,vl_id,vl_znacka,poradi2
+
+        )
+
+            select
+            kod,
+            nazev,
+            obsah,
+            kcks,
+            ks,
+            naklad,
+            marze,
+            prodej,
+            marze_pomer,
+            expedice_datum,
+            expedice_cas,
+            datum,
+            poradi,
 
 
+            id,
+            active,
+            idefix,
+            ${idefix_zak},
+            ${self.idefix},
+            ${self.idefix},
+            idefix_dod,
+            idefix_prace,
+            status,vl_id,vl_znacka,poradi2
+            `;
 
+      return creturn;
+    },
+    async UpdateSet(data2) {
+      const self = this;
+      var qset = `set `;
+      if (self.c1.MAINMENULAST == "zakazky") {
+        //             qset+=`cislozakazky        =  ${data2.cislo},`
+      } else if (self.c1.MAINMENULAST == "kalkulace") {
+        //           qset+=`cislonabidky        =  ${data2.cislo},`
+      }
+
+      qset += `vl_rozsah           =  '',`; // vymenit za funkci
+      qset += `idefix_firma        =  ${data2.idefix_firma},`; // pujde ci nepujde menit ?
+      qset += `idefix_firmaosoba   =  coalesce(${data2.idefix_firmaosoba},0),`; // pujde ci nepujde menit ?
+      qset += `nazev               =  '${data2.nazev}',`; // pujde ci nepujde menit ?
+      qset += `cisloobjednavky     =  '${data2.cisloobjednavky}',`; // pujde ci nepujde menit ?
+      qset += `cislofaktury        =  '${data2.cislofaktury}',`; // pujde ci nepujde menit ?
+      //qset+=`datumzadani         =  '${data2.datumzadani}',`  // nebude - je jen proi vlozeni!!!!
+      qset += `datumexpedice       =  '${data2.datumexpedice}',`; // pujde ci nepujde menit ?
+      //qset+=`datumsplatnosti     =  '${data2.datumsplatnosti}',`  // na starem datum studio, co to vlastneje
+      qset += `vyrobapopis         =  '${data2.vyrobapopis}',`; // pujde ci nepujde menit ?
+      qset += `odemknuto           =   null,`; // !!!!DULEZITE   - pri zmene zamku
+      qset += `zamknuto            =   null,`; // !!!!DULEZITE   - pri zmene zamku
+      qset += `idefix_user_unlock  =  '${data2.idefix_user_unlock}',`; // !!!!DULEZITE
+      qset += `zamek               =  '${data2.zamek}',`; // pujde ci nepujde menit ?
+      qset += `login               =   idefix2login(${self.idefix}),`; // pujde ci nepujde menit ?
+      qset += `vyrobapopis_print   =  '${data2.vyrobapopis_print}',`; // pujde ci nepujde menit ?
+      qset += `poznamky            =  '${data2.poznamky}',`; // pujde ci nepujde menit ?
+      qset += `idefix_obchodnik    =  '${data2.idefix_obchodnik}',`; // !!!!DULEZITE
+      qset += `idefix_produkce     =  '${data2.idefix_produkce}',`; // !!!!DULEZITE
+      qset += `idefix_last         =  '${data2.idefix_last}',`; // !!!!DULEZITE  - nova uprvou - originalni zakazka
+      qset += `idefix_nabidka      =  '${data2.idefix_nabidka}',`; // !!!!DULEZITE  - Vychozi nabidka (zakazka)
+      qset += `dodak0              =  '${data2.dodak0}',`; // !!!!DULEZITE  PRILOHY
+      qset += `objednavka0         =  '${data2.objednavka0}',`; // !!!!DULEZITE  PRILOHY
+      qset += `pdf0                =  '${data2.pdf0}' `; // !!!!DULEZITE  PRILOHY
+      return qset;
+    },
     async CisPrace(query = "") {
       const self = this;
       var qPrace = SQL.getPraceAll(0, query);
@@ -4162,11 +5192,11 @@ export default {
           //f.Alert("Insert")
         }
 
-        fceNova.polozky_soucet("zak");
+        self.polozky_soucet("zak");
 
         //f.Alert(ev)
         if (ev == 1) {
-          fceNova.addPol("zak", polozka.idefix_zak);
+          self.addPol("zak", polozka.idefix_zak);
         }
       } else if (ceho == "nab") {
         if (ev == 1) {
@@ -4181,10 +5211,10 @@ export default {
               self.c1.polozky_nab[self.c1.polozky_nab.length - 1].idefix;
           }
         }
-        await fceNova.polozky_soucet("nab");
+        await self.polozky_soucet("nab");
 
         if (ev == 1) {
-          fceNova.addPol("nab", polozka.idefix_nab);
+          self.addPol("nab", polozka.idefix_nab);
         }
       }
     },
@@ -4197,7 +5227,29 @@ export default {
         duration: 5000
       });
     },
-
+    async polozky_soucet(ceho = "zak") {
+      const self = this;
+      if (ceho == "nab") {
+        self.c1.nab_naklady = 0;
+        self.c1.nab_marze = 0;
+        self.c1.nab_prodej = 0;
+        self.c1.polozky_nab.forEach(el => {
+          self.c1.nab_naklady += el.naklad * 1;
+          self.c1.nab_prodej += el.prodej * 1;
+          self.c1.nab_marze += self.c1.nab_prodej - self.c1.nab_naklady;
+        });
+      }
+      if (ceho == "zak") {
+        self.c1.zak_naklady = 0;
+        self.c1.zak_marze = 0;
+        self.c1.zak_prodej = 0;
+        self.c1.polozky_zak.forEach(el => {
+          self.c1.zak_naklady += el.naklad * 1;
+          self.c1.zak_prodej += el.prodej * 1;
+          self.c1.zak_marze += self.c1.zak_prodej - self.c1.zak_naklady;
+        });
+      }
+    },
 
     async DocasneReseni() {
       const self = this;
@@ -4214,9 +5266,641 @@ export default {
 
       var b = await Q.post(self.idefix, qqTemp);
     },
+    async Seznam(ceho = "zak", where = "", orderby = "", add = false) {
+      const self = this;
+      var desc = "";
 
+      var cWhereRow = "";
+      var cWhereCislo = "";
+      var cWhereRok = "";
+      var cislo = "";
+      var qadd = "";
+      var q = `select a.*,b.nazev as firma,b.splatnost,b.hotovost,b.vlastnik,c.*, osoba( coalesce(o.idefix,0)) as osoba
 
+            , coalesce(o.idefix,0) as idefix_osoba
+            , 'F,N,KOSIK'::text as  stav
+            ,zamek
 
+          from ${ceho}_t_list a
+          left join list_dodavatel b on a.idefix_firma= b.idefix
+          left join list_firmaosoba o on a.idefix_firmaosoba = o.idefix
+
+          left join (
+      	  select idefix_${ceho}, sum(naklad) as nakladsum, sum(prodej) as prodejsum from ${ceho}_t_items  group by idefix_${ceho}
+      ) c on a.idefix = c.idefix_${ceho}`;
+
+      //order by a.idefix desc limit 100 `
+
+      // 2 as kategorie,
+
+      if (ceho == "zak") {
+        cislo = "cislozakazky";
+        if (self.c1.search_zak > "") {
+          cWhereRow = self.c1.search_zak;
+        }
+        if (self.c1.search_zak_rok > "") {
+          cWhereRok = self.c1.search_zak_rok;
+        }
+        if (self.c1.search_zak_cislo > "") {
+          cWhereCislo = self.c1.search_zak_cislo;
+        }
+        if (f.isEmpty(orderby) && self.c1.order_zak > "") {
+          //f.Alert2("TED",self.c1.order_zak, ' b: ', orderby )
+          orderby = self.c1.order_zak;
+          desc = self.c1.desc_zak;
+        } else if (self.c1.order_zak == orderby) {
+          if (self.c1.desc_zak == "") {
+            self.c1.desc_zak = "desc";
+          } else {
+            self.c1.desc_zak = "";
+          }
+        } else {
+          self.c1.order_zak = orderby;
+          self.c1.desc_zak = "";
+        }
+
+        desc = self.c1.desc_zak;
+      }
+      if (ceho == "nab") {
+        //where podmninka
+        cislo = "cislonabidky";
+        if (self.c1.search_nab > "") {
+          cWhereRow = self.c1.search_nab;
+        }
+        if (self.c1.search_nab_rok > "") {
+          cWhereRok = self.c1.search_nab_rok;
+        }
+        if (self.c1.search_nab_cislo > "") {
+          cWhereCislo = self.c1.search_nab_cislo;
+        }
+        if (f.isEmpty(orderby) && self.c1.order_nab > "") {
+          //f.Alert2("TED",self.c1.order_zak, ' b: ', orderby )
+          orderby = self.c1.order_nab;
+          desc = self.c1.desc_nab;
+        } else if (self.c1.order_nab == orderby) {
+          if (self.c1.desc_nab == "") {
+            self.c1.desc_nab = "desc";
+          } else {
+            self.c1.desc_nab = "";
+          }
+        } else {
+          self.c1.order_nab = orderby;
+          self.c1.desc_nab = "";
+        }
+
+        desc = self.c1.desc_nab;
+      }
+
+      //where to_aascii(row(a.*)::text)  ilike '%ruzi%'
+
+      // f.Alert2(orderby)
+      if (add && self.c1.search_zak_cislo2 > 0 && ceho == "zak") {
+        cislo = "cislozakazky";
+
+        qadd = `select  *
+                    , idefix2fullname(idefix_obchodnik) as obchodnik
+                    , idefix2fullname(idefix_produkce)  as produkce
+             from (${q}) a    where datumexpedice>=now()::date +'-365 days'::interval and right(${cislo},5)::bigint = right(${self.c1.search_zak_cislo2},5)::bigint`;
+      } else if (add && self.c1.search_nab_cislo2 > 0 && ceho == "nab") {
+        cislo = "cislonabidky";
+        qadd = `select  *
+                    , idefix2fullname(idefix_obchodnik) as obchodnik
+                    , idefix2fullname(idefix_produkce)  as produkce
+             from (${q}) a    where datumexpedice>=now()::date +'-365 days'::interval and right(${cislo},5)::bigint = right(${self.c1.search_zak_cislo2},5)::bigint`;
+      }
+      if (ceho == "zak" && self.c1.seek_zak_moje && !self.c1.search_nab_cislo2 > 0) {
+        q = `select * from (${q}) a  where a.idefix_obchodnik  = ${self.idefix}`;
+      }
+      if (ceho == "nab" && self.c1.seek_nab_moje && !self.c1.search_nab_cislo2 > 0) {
+        q = `select * from (${q}) a  where a.idefix_obchodnik  = ${self.idefix}`;
+      }
+      if (cWhereRok > "") {
+        /// cWhereRow= `where to_aascii(row(a.*)::text)  ilike '%ruzi%'`
+        q = `select * from (${q}) a  where left(${cislo},2) = right(${cWhereRok},2)`;
+        //f.Alert2(q)
+      }
+      if (cWhereCislo > "") {
+        /// cWhereRow= `where to_aascii(row(a.*)::text)  ilike '%ruzi%'`
+        q = `select * from (${q}) a  where right(${cislo},5)::bigint = right(${cWhereCislo},5)::bigint`;
+        // f.Alert2(q)
+      }
+      if (cWhereRow > "") {
+        if (ceho == "zak") {
+          var cWhereCol = [];
+          if (
+            !self.c1.seek_zak_firma &&
+            !self.c1.seek_zak_nazev &&
+            !self.c1.seek_zak_obchodnik &&
+            !self.c1.seek_zak_stav
+          ) {
+            q = `select * from (${q}) a  where to_aascii(row(a.*)::text)  ilike '%${cWhereRow}%'`;
+          } else {
+            if (self.c1.seek_zak_firma) {
+              cWhereCol.push(
+                `to_aascii(a.firma::text)  ilike '%${cWhereRow}%'`
+              );
+            }
+            if (self.c1.seek_zak_nazev) {
+              cWhereCol.push(
+                `to_aascii(a.nazev::text)  ilike '%${cWhereRow}%'`
+              );
+            }
+
+            if (self.c1.seek_zak_obchodnik) {
+              //                 select idefix from list_users where to_aascii(idefix2fullname(idefix)) ilike '%${cWhereRow}%'
+              //cWhereCol.push(`to_aascii(a.obchodnik::text)  ilike '%${cWhereRow}%'`)
+              cWhereCol.push(`a.idefix_obchodnik   in (
+                   select idefix_obchodnik from list_users where to_aascii(idefix2fullname(idefix_obchodnik)) ilike '%${cWhereRow}%'
+                  )`);
+            }
+            if (self.c1.seek_zak_stav) {
+              cWhereCol.push(`to_aascii(a.stav::text)  ilike '%${cWhereRow}%'`);
+            }
+            var cPomoc = cWhereCol.join(" or ");
+            q = `select * from (${q}) a  where ${cPomoc}`;
+
+            //f.Alert(cPomoc)
+          }
+        }
+        if (ceho == "nab") {
+          var cWhereCol = [];
+          if (
+            !self.c1.seek_nab_firma &&
+            !self.c1.seek_nab_nazev &&
+            !self.c1.seek_nab_obchodnik &&
+            !self.c1.seek_nab_stav
+          ) {
+            q = `select * from (${q}) a  where to_aascii(row(a.*)::text)  ilike '%${cWhereRow}%'`;
+          } else {
+            if (self.c1.seek_nab_firma) {
+              cWhereCol.push(
+                `to_aascii(a.firma::text)  ilike '%${cWhereRow}%'`
+              );
+            }
+            if (self.c1.seek_nab_nazev) {
+              cWhereCol.push(
+                `to_aascii(a.nazev::text)  ilike '%${cWhereRow}%'`
+              );
+            }
+            if (self.c1.seek_nab_obchodnik) {
+              //                 select idefix from list_users where to_aascii(idefix2fullname(idefix)) ilike '%${cWhereRow}%'
+              //cWhereCol.push(`to_aascii(a.obchodnik::text)  ilike '%${cWhereRow}%'`)
+              cWhereCol.push(`a.idefix_obchodnik   in (
+                   select idefix_obchodnik from list_users where to_aascii(idefix2fullname(idefix_obchodnik)) ilike '%${cWhereRow}%'
+                  )`);
+            }
+            if (self.c1.seek_nab_stav) {
+              cWhereCol.push(`to_aascii(a.stav::text)  ilike '%${cWhereRow}%'`);
+            }
+            var cPomoc = cWhereCol.join(" or ");
+            q = `select * from (${q}) a  where ${cPomoc}`;
+            //f.Alert(cPomoc)
+          }
+        }
+        /// cWhereRow= `where to_aascii(row(a.*)::text)  ilike '%ruzi%'`
+
+        //f.Alert2(q)
+      }
+      var qsubSum = q;
+      self.Skupiny();
+      if (self.c1._IsObchod) {
+        qsubSum = `select * from (${q}) a where idefix_obchodnik=${self.idefix}`;
+        // f.Alert2(qsubSum)
+      } else if (!self.c1._IsObchod && self.c1._IsVedeni) {
+        qsubSum = `select * from (${q}) a `;
+        // f.Alert2(qsubSum)
+      } else {
+        qsubSum = `select * from (${q}) a limit 1 `;
+      }
+      //f.Alert( self.c1._IsObchod , self.c1._IsVedeni, self.c1._Skupiny )
+
+      var qsum = `select count(*) as pocet, min(datumexpedice::date)::text as _od, max(datumexpedice::date)::text as _do ,sum(prodejsum) as prodej,sum(nakladsum) as naklad  from ( ${qsubSum} ) a`;
+
+      qsum = `select *, prodej - naklad as zisk, (prodej/nullif(naklad,0))::numeric(15,2) as marze from (${qsum}) a `;
+
+      q = `select *
+            , idefix2fullname(idefix_obchodnik) as obchodnik
+            , idefix2fullname(idefix_produkce)  as produkce
+         from (${q}) a  `; // c1.seznam_zak
+      var orderbyfull = "";
+      if (orderby > "") {
+        if (orderby == "cislozakazky" || orderby == "cislonabidky") {
+          orderbyfull = ` right(${orderby},5) ${desc} `;
+          f.Alert2(orderbyfull, q); //JARDA
+          q = `select * from (${q}) a order by right(${orderby},5) ${desc} limit 105`;
+        } else {
+          orderbyfull = `${orderby} ${desc}  `;
+          q = `select * from (${q}) a  order by ${orderby} ${desc}  `;
+        }
+      } else {
+        orderbyfull = ` a.idefix desc   `;
+        // f.Alert2(q)
+      }
+      if (add && qadd > "") {
+        q = `select 1 as kategorie, * from (${qadd}) a  union select * from (select 2 as kategorie, * from (${q} ) a order by ${orderbyfull} limit 105) a  `;
+      } else {
+        q = `select 2 as kategorie, * from (${q} ) a   order by ${orderbyfull} limit 105`;
+      }
+      //f.Alert2(q)
+      q = `select * from (${q}) a  order by kategorie , ${orderbyfull}`;
+
+      // f.Alert2(q)
+      if (ceho == "zak") {
+        try {
+          q = q.replace("cislozakazky desc", "right(cislozakazky,5) desc");
+          q = q.replace("  ", "");
+          q = q.replace("  ", "");
+          q = q.replace("  ", "");
+          q = q.replace("cislozakazky desc", "right(cislozakazky,5) desc");
+          //q=q.replace('cislozakazky  desc', 'right(cislozakazky,5) desc')
+          //q=q.replace('cislozakazky', 'right(cislozakazky,5)')
+          // q=''
+          //f.Alert2(q)
+
+          self.c1.query_zak_last = q;
+          // if (self.c1.seek_zak_obchodnik){
+          // f.Alert2(q)
+          // }
+
+          self.c1.seznam_zak = (await Q.all(self.idefix, q)).data.data;
+          self.c1.seznam_zak_sum = (await Q.all(self.idefix, `${qsum}`)).data.data;
+        } catch (e) {
+          console.log("EROROR : ", q);
+        }
+      }
+      if (ceho == "nab") {
+        try {
+          q = q.replace("cislonabidky desc", "right(cislonabidky,5) desc");
+          q = q.replace("  ", "");
+          q = q.replace("  ", "");
+          q = q.replace("  ", "");
+          q = q.replace("cislonabidky desc", "right(cislonabidky,5) desc");
+          self.c1.query_nab_last = q;
+          self.c1.seznam_nab = (await Q.all(self.idefix, q)).data.data;
+          self.c1.seznam_nab_sum = (await Q.all(self.idefix, `${qsum}`)).data.data;
+        } catch (e) {
+          console.log("EROROR : ", q);
+        }
+      }
+    },
+
+    async Nova(upravou = false) {
+      const self = this;
+      var c = 0;
+      if (self.c1.MAINMENULAST == "zakazky" && self.c1.aktivni_zak < 1) {
+        f.Alert("Pro kopii musi být zakazka vybrána", self.c1.aktivni_zak);
+        return;
+      }
+      if (self.c1.MAINMENULAST == "kalkulace" && self.c1.aktivni_nab < 1) {
+        f.Alert("Pro kopii musi být nabidka vybrána");
+        return;
+      }
+
+      self.c1.bKalkulace = [];
+      self.$store.dispatch("cleanKalk");
+      //await queryKalk.setActive(0,self.c1.cTable,0)  //tj.vypne vse, nezalezina idefixu
+      //self.setIdefixDeActive()
+      var c = await Q.post(self.idefix, `delete from  ${self.c1.cTable}`);
+      //await queryKalk.setActive(0,self.c1.cTable,0)  //tj.vypne vse, nezalezina idefixu
+      self.c1.aKalkBefore = [];
+      self.c1.aKalkAfter = [];
+      // f.Alert(self.c1.cTable)
+
+      //self.cleanItems
+
+      if (self.c1.MAINMENULAST == "zakazky") {
+        if (upravou == false) {
+          self.c1.status_zak = 1;
+          self.c1.obrazovka_zak = 2;
+        }
+        var cisti = await Q.post(
+          self.idefix,
+          `delete from zak_t_items where user_insert_idefix = ${self.idefix} and idefix_zak=-100`
+        );
+
+        var c = (
+          await Q.all(
+            self.idefix,
+            `select newzak(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce`
+          )
+        ).data.data[0];
+        if (upravou == false) {
+          self.c1.polozky_zak = [];
+
+          self.addPol("zak", -100);
+          self.polozky_soucet("zak");
+        }
+        // `select newzak(9) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(9) as produkce`
+      }
+      if (self.c1.MAINMENULAST == "kalkulace") {
+        if (upravou == false) {
+          self.c1.status_nab = 1;
+          self.c1.obrazovka_nab = 3;
+        }
+        var cisti = await Q.post(
+          self.idefix,
+          `delete from nab_t_items where user_insert_idefix = ${self.idefix} and idefix_nab=-100`
+        );
+
+        if (upravou == false) {
+          if (upravou == false) {
+            self.c1.polozky_nab = [];
+            self.addPol("nab", -100);
+            self.polozky_soucet("nab");
+          }
+        }
+
+        var c = (
+          await Q.all(
+            self.idefix,
+            `select newnab(${self.idefix}) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(${self.idefix}) as produkce `
+          )
+        ).data.data[0];
+        //select newnab(9) as cislo, d_exp(10) as exp, now()::timestamp(0) as zadani,fce_user_fullname(9) as produkce
+      }
+      //f.Alert('A',f.Jstr(c));
+      c.exp = f.datum3(c.exp);
+      c.zadani = f.datum20(c.zadani);
+
+      //f.Alert('B',f.Jstr(c));
+      if (upravou == false) {
+        eventBus.$emit("NovaZN", {
+          id: self.c1.MAINMENULAST,
+          cislo: c.cislo,
+          exp: c.exp,
+          prod: self.idefix,
+          prod_txt: c.produkce,
+          zadani: c.zadani,
+          status_zak: self.c1.status_zak,
+          status_nab: self.c1.status_nab
+        });
+      } else if (upravou == true) {
+        if (self.c1.MAINMENULAST == "zakazky" && self.c1.status_zak == 1) {
+          f.Alert("Nelze zakladat novou upravou , pokud todlencto");
+          return;
+        }
+        this.$confirm(
+          self.c1.MAINMENULAST == "kalkulace"
+            ? "Nabidka"
+            : "Zakazka" + " bude zalozena ?",
+          {
+            distinguishCancelAndClose: true,
+            confirmButtonText: "Ano?",
+            cancelButtonText: "Ne"
+          }
+        ).then(() => {
+          eventBus.$emit("NovaZNU", {
+            id: self.c1.MAINMENULAST,
+            cislo: c.cislo,
+            exp: c.exp,
+            prod: self.idefix,
+            prod_txt: c.produkce,
+            zadani: c.zadani,
+            status_zak: self.c1.status_zak,
+            status_nab: self.c1.status_nab
+          });
+          if (self.c1.MAINMENULAST == "kalkulace") {
+            self.c1.status_nab = 1;
+            self.c1.obrazovka_nab = 2;
+          } else if (self.c1.MAINMENULAST == "zakazky") {
+            self.c1.status_zak = 1;
+            self.c1.obrazovka_zak = 2;
+          }
+          var cT1 = self.c1.cTable + "_1";
+          var cT2 = self.c1.cTable + "_2";
+          var qU1 = "";
+          var qCopy1 = `create `;
+          //          f.Alert('Zalozim zakazku nobou', c.cislo, self.c1.aktivni_zak, self.c1.cTable)
+          if (self.c1.MAINMENULAST == "zakazky") {
+            qCopy1 = `create table ${cT1} without oids as select * from zak_t_list where idefix = ${self.c1.aktivni_zak};
+                  create table ${cT2} without oids as select * from zak_t_items where idefix_zak = ${self.c1.aktivni_zak} order by idefix`;
+
+            Q.post(
+              self.idefix,
+              `drop table if exists ${cT1}; drop table if exists ${cT2};`
+            ).then(() => {
+              Q.post(self.idefix, `${qCopy1}`).then(() => {
+                qU1 = `begin ;
+                  update ${cT1} set idefix = nextval('list2_seq'::regclass ),id=nextval('zak_t_list_id_seq'::regclass) , idefix_last = ${self.c1.aktivni_zak}
+                  , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+                  , datumzadani=now()
+                  , cislozakazky = ${c.cislo}
+                  ,idefix_produkce=${self.idefix}, datumexpedice='${c.exp}'
+                  ,zamek=false
+                  ,zamknuto=null
+                  ,idefix_user_lock=0
+                  ,odemknuto=null
+                  ,idefix_user_unlock =0
+                  `;
+                qU1 += `;update ${cT2} set idefix = nextval('list2_seq'::regclass ),id=nextval('zak_t_items_id_seq'::regclass)
+                  , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+
+                  ,idefix_zak=(select max(idefix) from ${cT1})`;
+
+                qU1 += `;update ${cT2} set idefix_src=idefix,  status=0`;
+
+                qU1 += `;insert into zak_t_list (select * from ${cT1} );`;
+                qU1 += `;insert into zak_t_items (select * from ${cT2});`;
+                qU1 += `;update zak_t_list set datumsplatnosti = splatnost(idefix) where idefix  =(select max(idefix) from ${cT1} )`;
+                qU1 += `;commit`;
+                //Vymazat
+
+                //f.Alert2(c.cislo, f.Jstr(c) , " > ",qU1)
+                Q.post(self.idefix, `${qU1} `).then(() => {
+                  self.c1.order_zak == "cislozakazky";
+                  self.c1.desc_zak = " desc ";
+                  //self.Seznam('zak', '','cislozakazky')
+                  self
+                    .Seznam("zak")
+
+                    .then(() => {
+                      var ifx = 0;
+                      Q.all(
+                        self.idefix,
+                        `select max(idefix) from ${cT1} `
+                      ).then(resx => {
+                        self.c1.aktivni_zak = resx.data.data[0].max;
+                        //f.Alert(f.Jstr(resx.data.data))
+                        Q.all(
+                          self.idefix,
+                          `select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak =${self.c1.aktivni_zak} order by idefix `
+                        ).then(res => {
+                          //f.Alert(self.c1.aktivni_zak)
+                          //f.Alert2(f.Jstr(res.data.data))
+                          self.c1.polozky_zak = [];
+                          self.c1.polozky_zak = res.data.data;
+                          self.addPol("zak", self.c1.aktivni_zak);
+                          self.polozky_soucet("zak");
+                          self.c1.status_zak = 2;
+                          if (self.c1.polozky_zak.length > 0) {
+                            self.c1.status_zak = 2;
+                            var naklad = 0;
+                            ///
+                            self.c1.polozky_zak.forEach(el => {
+                              naklad = 0;
+                              //f.Alert(f.Jstr(el.obsah)=='null')
+                              //queryKalk.setKorekce(el.obsah )
+                              queryKalk
+                                .setKorekceAndPrilohy(el.obsah)
+
+                                .then(() => {
+                                  prepocty.getNaklad(el.obsah).then(n => {
+                                    naklad = n;
+                                    //f.Alert(naklad)
+                                    //f.Alert2(f.Jstr(el.obsah))
+                                    //polozka.obsah=f.Jstr(polozka.obsah)
+                                    var obsah = f.Jstr(el.obsah);
+                                    if (obsah.length > 100) {
+                                      var _qsetitem = `update zak_t_items set obsah = '${obsah}'::jsonb, naklad=${naklad} where idefix = ${el.idefix}`;
+                                      //f.Alert(_qsetitem)
+                                      Q.post(self.idefix, _qsetitem).then(
+                                        () => {
+                                          el.naklad = naklad;
+                                        }
+                                      );
+                                    }
+                                  });
+                                });
+                            });
+                            ///
+
+                            //self.to3N(self.c1.polozky_zak[0],2)
+                          }
+                        });
+                      });
+                    });
+
+                  //f.Alert(f.Jstr('part 1 ok'))
+                });
+              });
+            });
+          }
+          //////////////////
+
+          if (self.c1.MAINMENULAST == "kalkulace") {
+            qCopy1 = `create table ${cT1} without oids as select * from nab_t_list where idefix = ${self.c1.aktivni_nab};
+                  create table ${cT2} without oids as select * from nab_t_items where idefix_nab = ${self.c1.aktivni_nab} order by idefix`;
+
+            Q.post(
+              self.idefix,
+              `drop table if exists ${cT1}; drop table if exists ${cT2};`
+            ).then(() => {
+              Q.post(self.idefix, `${qCopy1}`).then(() => {
+                qU1 = `begin ;
+                  update ${cT1} set idefix = nextval('list2_seq'::regclass ),id=nextval('nab_t_list_id_seq'::regclass) , idefix_last = ${self.c1.aktivni_nab}
+                  , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+                  , datumzadani=now()
+                  , cislonabidky = ${c.cislo}
+                  ,idefix_produkce=${self.idefix}, datumexpedice='${c.exp}'`;
+                qU1 += `;update ${cT2} set idefix = nextval('list2_seq'::regclass ),id=nextval('nab_t_items_id_seq'::regclass)
+                  , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+                  ,idefix_nab=(select max(idefix) from ${cT1})`;
+
+                qU1 += `;insert into nab_t_list (select * from ${cT1} );`;
+                qU1 += `;insert into nab_t_items (select * from ${cT2});`;
+                qU1 += `;update nab_t_list set datumsplatnosti = splatnost(idefix) where idefix  =(select max(idefix) from ${cT1} )`;
+                qU1 += `;commit`;
+
+                //f.Alert2(c.cislo, f.Jstr(c) , " > ",qU1)
+                Q.post(self.idefix, `${qU1} `).then(() => {
+                  self.c1.order_nab == "cislonabidky";
+                  self.c1.desc_nab = " desc ";
+                  //self.Seznam('nab', '','cislonabidky')
+                  self
+                    .Seznam("nab")
+
+                    .then(() => {
+                      var ifx = 0;
+                      Q.all(
+                        self.idefix,
+                        `select max(idefix) from ${cT1} `
+                      ).then(resx => {
+                        self.c1.aktivni_nab = resx.data.data[0].max;
+                        //f.Alert(f.Jstr(resx.data.data))
+                        Q.all(
+                          self.idefix,
+                          `select *,0 as vse from nab_t_items where idefix_nab =${self.c1.aktivni_nab} order by idefix `
+                        ).then(res => {
+                          //f.Alert(self.c1.aktivni_nab)
+                          //f.Alert2(f.Jstr(res.data.data))
+                          self.c1.polozky_nab = [];
+                          self.c1.polozky_nab = res.data.data;
+                          self.addPol("nab", self.c1.aktivni_nab);
+                          self.polozky_soucet("nab");
+                          self.c1.status_nab = 2;
+                          if (self.c1.polozky_nab.length > 0) {
+                            self.c1.status_nab = 2;
+                            var naklad = 0;
+                            self.c1.polozky_nab.forEach(el => {
+                              naklad = 0;
+                              queryKalk.setKorekce(el.obsah).then(() => {
+                                prepocty.getNaklad(el.obsah).then(n => {
+                                  naklad = n;
+                                  //f.Alert(naklad)
+                                  //f.Alert2(f.Jstr(el.obsah))
+                                  //polozka.obsah=f.Jstr(polozka.obsah)
+                                  var obsah = f.Jstr(el.obsah);
+                                  if (obsah.length > 100) {
+                                    var _qsetitem = `update nab_t_items set obsah = '${obsah}'::jsonb, naklad=${naklad} where idefix = ${el.idefix}`;
+                                    //f.Alert(_qsetitem)
+                                    Q.post(self.idefix, _qsetitem).then(() => {
+                                      el.naklad = naklad;
+                                    });
+                                  }
+                                });
+                              });
+                            });
+                            //self.to3N(self.c1.polozky_nab[0],2)
+                          }
+                        });
+                      });
+                    });
+                  //f.Alert(f.Jstr('part 1 ok'))
+                });
+              });
+            });
+          }
+          ////////nabidky///nab////////
+        });
+      }
+
+      //await self.setVL(self.c1.IDEFIXACTIVE,1)
+
+      //f.Alert('Nova ', self.c1.MAINMENULAST )
+    },
+    async setIdefixActive() {
+      const self = this;
+      self.c1.aKalkBefore.forEach(el => {
+        if (el.active == true) {
+          self.c1.IDEFIXACTIVE = el.idefix;
+          self.c1.NAZEVACTIVE = el.nazev;
+          if (self.c1.MAINMENULAST == "zakazky") {
+            if (el.idefix_src > 0) {
+              self.c1.aktivni_polozka_zak = el.idefix_src;
+            }
+          }
+          if (self.c1.MAINMENULAST == "kalkulace") {
+            if (el.idefix_src > 0) {
+              self.c1.aktivni_polozka_nab = el.idefix_src;
+            }
+          }
+
+          return;
+        }
+      });
+    },
+    async setIdefixDeActive() {
+      const self = this;
+      self.c1.aKalkBefore.forEach(el => {
+        if (el.active == true) {
+          self.c1.IDEFIXACTIVE = 0;
+
+          self.c1.NAZEVACTIVE = "";
+          el.active = false;
+          return;
+        }
+      });
+    },
     IsZmena() {
       if (!document.getElementById("Zmenad")) {
         return;
@@ -4292,7 +5976,7 @@ export default {
       //self.c1.aKalkBefore=[]
       f.log("6 getTemplatesUser");
       self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable);
-      fceSave.setIdefixActive();
+      self.setIdefixActive();
       setTimeout(function() {
         self.c1.idRend++;
       }, 500);
@@ -4309,7 +5993,7 @@ export default {
       self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable);
 
       try {
-        await fceSave.setIdefixActive();
+        await self.setIdefixActive();
       } catch (e) {
         f.Alert("Chyba ACTIVE");
         console.log("Chyba ACTIVE");
@@ -4353,7 +6037,7 @@ export default {
       self.c1.aKalkBefore = []; // 1.JARDA
       f.log("8 getTemplatesUser");
       self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable);
-      await fceSave.setZabalit();
+      await self.setZabalit();
 
       return;
 
@@ -4362,7 +6046,102 @@ export default {
         self.c1.TestRend++;
       }, 500);
     },
+    async saveZaznam(server, kod) {
+      const self = this;
+      var SaveKalkulkace = false;
 
+      f.log(" SAVE ZAZNAM");
+      if (kod == 1) {
+        SaveKalkulkace = false; //Ulozeni radky zavrene kalkulace
+        //f.Alert('kod 1 - prepis bez Kalk')
+        //saveZaznam(server,SaveKalkulace,1)
+        await queryKalk.VkladUser(
+          server.data,
+          self.c1.bKalkulace,
+          self.c1.cTable,
+          "",
+          false,
+          server.idefix,
+          SaveKalkulkace
+        );
+
+        //f.Alert(kod," : ", self.c1.IDEFIXACTIVE)
+      }
+      if (kod == 2) {
+        SaveKalkulkace = true; //Ulozeni otevrene kalkulace
+        //f.Alert('kod 2 - prepis - otevrena Kalkulace')
+        //saveZaznam(server,SaveKalkulace,1)
+        await queryKalk.VkladUser(
+          server.data,
+          self.c1.bKalkulace,
+          self.c1.cTable,
+          "",
+          false,
+          server.idefix,
+          SaveKalkulkace
+        );
+      }
+      if (kod == 3) {
+        //saveZaznam(server,SaveKalkulace,3)
+        // f.Alert('kod 3 - Vklad - otevrenakalkulace')
+        SaveKalkulkace = true;
+        await queryKalk
+          .VkladUser(
+            server.data,
+            self.c1.bKalkulace,
+            self.c1.cTable,
+            "",
+            true,
+            server.idefix,
+            SaveKalkulkace
+          )
+          .then(res => {
+            this.$message({
+              message: "Vlozeno",
+              type: "error",
+              center: true,
+              duration: 5000
+            });
+          });
+      }
+      if (kod == 4) {
+        f.Alert("kod 4 - prepis - en kalkulace ne datova radka");
+        //Pri prepnuti ulozit kalkulaci a data v radce ponechat
+        SaveKalkulkace = true;
+        await queryKalk.VkladUser(
+          server.data,
+          self.c1.bKalkulace,
+          self.c1.cTable,
+          "",
+          false,
+          server.idefix,
+          SaveKalkulkace,
+          false
+        );
+      }
+      return;
+      $("#Zmenad").get(0).value = 0;
+      //var nK=            await(queryKalk.getTemplateUser(idefix,self.c1.cTable))
+      f.log("9 getTemplatesUser");
+      self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable);
+      await self.setIdefixActive();
+      // alert(self.c1.IDEFIXACTIVE)
+
+      //self.c1.bKalkulace=[]
+      //self.c1.bKalkulace =  f.Jparse(nK[0].obsah)
+      //self.c1.bKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+      //await  self.$store.dispatch('saveKalkCela', {data: self.c1.bKalkulace })
+
+      if (self.c1.IDEFIXACTIVE > 0) {
+        //AAAAAAA
+        self.c1.IDEFIXACTIVELAST = self.c1.IDEFIXACTIVE;
+      }
+
+      setTimeout(function() {
+        self.c1.idRend++;
+        self.c1.TestRend++;
+      }, 500);
+    },
 
     async addVL() {
       const self = this;
@@ -4394,8 +6173,8 @@ export default {
 
       if (idefixActive > 0) {
         self.c1.aKalkBefore = []; // 1.JARDA
-        await fceSave.setRozbalit(idefixActive);
-        await fceSave.setZabalit();
+        await self.setRozbalit(idefixActive);
+        await self.setZabalit();
         await self.addKalk(1);
         await self.setRender();
         await f.sleep(500);
@@ -4423,12 +6202,12 @@ export default {
             return;
           } else {
             f.log("EMIT 6 ", "SAVEZAZNAM");
-            fceSave.saveZaznam({ idefix: 0, data: resolve }, 3).then(() => {
+            self.saveZaznam({ idefix: 0, data: resolve }, 3).then(() => {
               self
                 .setRender()
                 .then(() => {
                   self.c1.aKalkBefore = []; // 1.JARDA
-                  fceSave.setZabalit();
+                  self.setZabalit();
                 })
                 .then(() => {
                   self.addKalk(1);
@@ -4449,10 +6228,411 @@ export default {
         }
       }
     },
+    async SaveAll(idefix = 0, PreskocChybu = 0) {
+      const self = this;
+      var dataRadka = {};
 
+      var idefixActive = self.c1.IDEFIXACTIVE;
+      var neco = $("#Zmenad").get(0).value;
+      var neco = false;
+      //$('div').css({opacity:'0.8'})
 
+      if (neco < 0) {
+        //neuklada
+        return;
+      }
+      self.c1.Pocet = 0;
 
+      //while(self.Z)
+      await f.asyncForEach(self.c1.aKalkBefore, async el => {
+        if (el.idefix > 0) {
+          dataRadka = f.dataRadka(el.idefix);
+          if (f.isEmpty(dataRadka.nazev)) {
+            dataRadka.nazev = "-";
+          }
 
+          if (f.isEmpty(dataRadka.nazev)) {
+            dataRadka.nazev += " ERROR (1) ";
+            alert("Error" + dataRadka.nazev);
+            var objFiluta = f.getElByIdefix("seek", el.idefix);
+            objFiluta.focus();
+            self.c1.Pocet = -1;
+            if (PreskocChybu == 0) {
+              return;
+            }
+          } else if (
+            self.c1.bKalkulace.length > 0 &&
+            self.c1.IDEFIXACTIVE == el.idefix
+          ) {
+            f.log("EMIT 7 ", "SAVEZAZNAM");
+            await self
+              .saveZaznam({ idefix: el.idefix, data: dataRadka }, 2)
+              .then(res => {
+                self.c1.Pocet++;
+              });
+          } else {
+            neco = true;
+            self.c1.Pocet++;
+
+            // f.log("EMIT 8 ", "SAVEZAZNAM");
+            //await self.saveZaznam({idefix: el.idefix, data: dataRadka   },1)
+            // await f.sleep(1).then(res => {
+            //   self.c1.Pocet++;
+            // });
+          }
+          //f.Alert(f.Jstr(dataRadka))
+        }
+      });
+      if (self.c1.Pocet == -1) {
+        f.Alert("Pochybeni");
+        return -1;
+      }
+      if (
+        idefixActive == 0 &&
+        self.c1.bKalkulace.length > 0 &&
+        f.getElByIdefix("seek", "0")
+      ) {
+        //alert('1 Vklad by idefix - zabalit Active 0' )
+        dataRadka = f.dataRadka(idefix);
+        try {
+          f.log("EMIT 9 ", "SAVEZAZNAM");
+          await self.saveZaznam({ idefix: idefixActive, data: dataRadka }, 3);
+          await self.setRender();
+          self.c1.aKalkBefore = []; // 1.JARDA
+          await self.setZabalit();
+          // f.Alert('Vkladam prvni')
+          self.c1.Pocet++;
+        } catch (e) {
+          f.Alert("Vklad selhal", e);
+        }
+      }
+      $("#Zmenad").get(0).value = 0;
+      //alert('Pocet ' + self.c1.Pocet)
+      return 0;
+    },
+    async setRozbalit(idefix) {
+      const self = this;
+      f.log("1", "Rozbalit");
+      //funkce serveru
+      //1 onzacit active
+      //2 vratit aktualni viditelnou kalkulaci
+      //3
+
+      //--await queryKalk.setActive(idefix, self.c1.cTable);
+      f.log("2", "setActive");
+      var qAct = queryKalk.setActiveQ(idefix, self.c1.cTable);
+      var qnK = queryKalk.getTemplateUserIdefixQ(idefix, self.c1.cTable);
+      var qBef = queryKalk.getTemplatesUserQ(self.c1.cTable);
+
+      var qTest = await Q.Q2(self.idefix, {
+        a1: qAct,
+        a2parse: qnK,
+        a3: qBef
+      });
+      if (!f.isEmpty(qTest.data.data)) {
+        f.log("12 QQQQQ OK", "setActive"); //,f.Jstr(qTest.data.data.a2)
+      } else {
+        f.log("12 QQQQQ ERR", "setActive", f.Jstr(qTest));
+      }
+
+      f.log("12A", "setActive");
+
+      self.c1.bKalkulace = qTest.data.data.a2parse[0].obsah;
+      f.log("12C PARSE END", "setActive");
+      self.c1.aKalkBefore = qTest.data.data.a3;
+      f.log("12B", "setActive");
+
+      self.c1.IDEFIXACTIVE = idefix;
+      f.log("14", "setActive");
+      await self.$store.dispatch("saveKalkCela", { data: self.c1.bKalkulace });
+      f.log("5", "SaveKalk ok");
+      await self.setIdefixActive();
+      f.log("6", "Active OK");
+
+      if (self.c1.IDEFIXACTIVE > 0) {
+        //AAAAAAA
+        self.c1.IDEFIXACTIVELAST = self.c1.IDEFIXACTIVE;
+      }
+      setTimeout(function() {
+        self.c1.idRend++;
+        self.c1.TestRend++;
+      }, 100);
+    },
+    async setZabalit() {
+      const self = this;
+      f.log("ZAB 0:");
+      self.c1.bKalkulace = [];
+      self.$store.dispatch("cleanKalk");
+      if (self.c1.IDEFIXACTIVE > 0) {
+        //AAAAAAA
+        self.c1.IDEFIXACTIVELAST = self.c1.IDEFIXACTIVE;
+      }
+      //return
+      f.log("ZAB 1:");
+      //Kolekce
+      var kolekce = {
+        Active: queryKalk.setActiveQ(0, self.c1.cTable, 0),
+        Abefore: queryKalk.getTemplatesUserQ(self.c1.cTable)
+      };
+      f.log("KOLEKCE 1:", f.Jstr(kolekce));
+      var aKolekce = await Q.Q2(self.idefix, kolekce);
+      //console.log(f.Jstr(kolekce))
+
+      self.c1.IDEFIXACTIVE = 0; //nahrazuje funckci deactive
+      self.c1.NAZEVACTIVE = ""; //nahrazuje funckci deactive
+      f.log("KOLEKCE 2 TEST", self.c1.aKalkBefore == aKolekce.data.data.Abefore);
+      self.c1.aKalkBefore = [];
+      try {
+        aKolekce.data.data.Abefore.forEach((el, id) => {
+          self.c1.aKalkBefore.push(el);
+          //f.log("KOLEKCE 2 PUSH")
+        });
+      } catch (e) {
+//        f.log('Kolekce ma potize 1',e)
+  //       f.log('Kolekce ma potize 2',f.Jstr(kolekce))
+        console.log("Kolekce ma potize 1");
+
+      }
+
+      //self.c1.aKalkBefore = aKolekce.data.data.Abefore;
+      //await self.beforeArray(aKolekce.data.data.Abefore); //2.JARDA
+      f.log("KOLEKCE 2: Return test", self.c1.TestRend, self.c1.IDEFIXACTIVELAST);
+
+      self.c1.idRend++;
+      self.c1.TestRend++;
+
+      //return;
+
+      //queryKalk.getTemplatesUser(self.c1.cTable);
+      /*
+      try {
+        await queryKalk.setActive(0, self.c1.cTable, 0); //tj.vypne vse, nezalezina idefixu
+        f.log('ZAB 2:')
+      } catch (e) {
+        console.log("1: ", e);
+      }
+
+      try {
+        await self.setIdefixDeActive();
+        f.log('ZAB 3:')
+      } catch (e) {
+        console.log("2: ", e);
+      }
+      try {
+        await self.beforeArray(); //2.JARDA
+        f.log('ZAB 4:')
+      } catch (e) {
+        console.log("3 ", e);
+      }
+      */
+    },
+    async setVL(idefix, jenUloz = 0) {
+      const self = this;
+      var idefixActive = self.c1.IDEFIXACTIVE;
+      var neco = $("#Zmenad").get(0).value;
+      f.log("1", "setVL", idefix, idefixActive);
+      document.getElementById("obalKalkulace").style.opacity = 0.5;
+
+      if (self.c1.StopStav) {
+        self.mAlert("Cekam", 2000);
+        f.log("2", "setVL");
+
+        setTimeout(function() {
+          //self.c1.StopStav=false
+          f.log("3", "setVL");
+        }, 2000);
+        return;
+      }
+      self.c1.StopStav = true;
+
+      if (idefixActive == 0 && self.c1.bKalkulace.length > 0 && idefix > 0) {
+        alert("0. Je  treba ulozit neulozenou");
+        f.log("4", "setVL");
+        var dataRadka = f.dataRadka(0);
+
+        try {
+          f.log("EMIT 10 ", "SAVEZAZNAM");
+          f.log("5", "setVL");
+          await self.saveZaznam({ idefix: 0, data: dataRadka }, 3);
+          f.log("6", "setVL");
+          await self.setRender();
+          f.log("7", "setVL");
+          await self.setZabalit();
+          f.log("8", "setVL");
+
+          self.c1.Pocet++;
+        } catch (e) {
+          f.Alert("Vklad selhal");
+        }
+        //        alert('Bylo  treba ulozit neulozenou')
+        //      return
+      }
+      var necoSave = 0;
+      f.log("9", "setVL");
+      necoSave = await self.SaveAll(idefix);
+      if (jenUloz == 1) {
+        f.log("10", "setVL");
+        await self.setZabalit();
+        f.log("11", "setVL");
+        self.c1.StopStav = false;
+        document.getElementById("obalKalkulace").style.opacity = 1;
+        f.log("12", "setVL");
+        return;
+      }
+      //alert("Save Result " + necoSave)
+      if (necoSave < 0) {
+        self.c1.StopStav = false;
+        f.log("13", "setVL");
+        document.getElementById("obalKalkulace").style.opacity = 1;
+        f.log("14", "setVL");
+        return;
+      }
+
+      if (idefixActive == 0 && idefix > 0) {
+        f.log("15", "setVL");
+        await self.setRozbalit(idefix);
+        f.log("16", "setVL");
+        self.c1.StopStav = false;
+        document.getElementById("obalKalkulace").style.opacity = 1;
+        f.log("17", "setVL");
+        return;
+      }
+      if (idefixActive > 0 && idefix == idefixActive) {
+        f.log("18", "setVL");
+        await self.setRozbalit(idefix);
+        f.log("19", "setVL");
+        await self.setZabalit(idefix);
+        f.log("20", "setVL");
+        self.c1.StopStav = false;
+        document.getElementById("obalKalkulace").style.opacity = 1;
+        f.log("21", "setVL");
+        return;
+        //await self.setRozbalit(idefix)
+      }
+      if (idefixActive > 0 && idefix != idefixActive && idefix > 0) {
+        f.log("22", "setVL");
+        //alert('C Prebalit')
+        await self.setZabalit();
+        f.log("23", "setVL");
+        await self.setRozbalit(idefix);
+
+        f.log("24", "setVL");
+        self.c1.StopStav = false;
+
+        document.getElementById("obalKalkulace").style.opacity = 1;
+        f.log("25", "setVL");
+        return;
+      }
+
+      return;
+
+      self.c1.bKalkulace = [];
+      self.$store.dispatch("cleanKalk");
+      await queryKalk.setActive(0, self.c1.cTable, 0); //tj.vypne vse, nezalezina idefixu
+      self.setIdefixDeActive();
+    },
+
+    async setVLOld(idefix) {
+      const self = this;
+      var idefixActive = self.c1.IDEFIXACTIVE;
+
+      await self.SaveAll(idefix);
+      //  return
+
+      //       eventBus.$emit('AskID2',{idefix:idefix})
+
+      //return
+      // alert('setVL '+ idefix)
+
+      var neco = $("#Zmenad").get(0).value;
+      if (idefixActive == 0 && self.c1.bKalkulace.length > 0) {
+        // await self.addVL()
+        f.Alert("Pridat novou kalkulaci!!!");
+        return;
+      }
+
+      return;
+
+      if (neco * 1 >= 0) {
+        //self.c1.ID2ASK = -2
+        //  await eventBus.$emit('AskID2',{idefix: idefixActive})
+
+        //alert('Answer Index 2A: \n' + idefix + ' \n / Active :'+ idefixActive )
+        //var dataRadka= f.dataRadka(self.c1.ID2ASK)
+
+        var dataRadka1 = f.dataRadka(idefix);
+        var dataRadka2 = f.dataRadka(idefixActive);
+
+        if (self.c1.bKalkulace.length > 0) {
+          if (idefixActive == 0) {
+            //                 alert('kalkulace otevrena - vlozit novy')
+          } else {
+            //                alert('kalkulace otevrena - update pro '+ self.c1.IDEFIXACTIVE)
+            f.log("EMIT 11 ", "SAVEZAZNAM");
+            self.saveZaznam({ idefix: self.c1.IDEFIXACTIVE, data: dataRadka2 }, 2);
+            if (idefix == self.c1.IDEFIXACTIVE) {
+              //                alert('stejne, druhou nedelam')
+            } else {
+              f.log("EMIT 12 ", "SAVEZAZNAM");
+              self.saveZaznam({ idefix: idefix, data: dataRadka1 }, 1);
+            }
+          }
+          $("#Zmenad").get(0).value = 0;
+        } else {
+          alert("bez kalkulace");
+          //self.saveZaznam({idefix: idefix, data: dataRadka1   },1)   //obe bez kalkulace
+          //self.saveZaznam({idefix: idefix, data: dataRadka2   },1)
+          $("#Zmenad").get(0).value = 0;
+
+          //return
+        }
+      }
+
+      if (idefix == idefixActive) {
+        self.c1.bKalkulace = [];
+        self.$store.dispatch("cleanKalk");
+        await queryKalk.setActive(0, self.c1.cTable, 0); //tj.vypne vse, nezalezina idefixu
+        self.setIdefixDeActive();
+        return;
+      }
+
+      //&&  self.c1.IDEFIXACTIVELAST>0
+
+      await queryKalk.setActive(idefix, self.c1.cTable);
+      // return
+      self.c1.IDEFIXACTIVE = idefix;
+      //self.c1.IDEFIXACTIVE =  (await queryKalk.getActive(self.c1.cTable))
+      // f.Alert2("RETAC", self.c1.IDEFIXACTIVE)
+      var nK = await queryKalk.getTemplateUserIdefix(idefix, self.c1.cTable); //Aktualni kalulkulace
+
+      //self.c1.aKalkBefore=[]
+      self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable); //Vsechny kalkulace - c1.seznam
+
+      //self.c1.bKalkulace=[]
+      self.c1.bKalkulace = f.Jparse(nK[0].obsah);
+      //self.c1.bKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
+      await self.$store.dispatch("saveKalkCela", { data: self.c1.bKalkulace });
+      self.setIdefixActive();
+
+      if (self.c1.IDEFIXACTIVE > 0) {
+        //AAAAAAA
+        self.c1.IDEFIXACTIVELAST = self.c1.IDEFIXACTIVE;
+      }
+      setTimeout(function() {
+        self.c1.idRend++;
+        self.c1.TestRend++;
+      }, 500);
+
+      // self.KalkulaceThis = -1
+      // self.c1.KalkulaceLast = -1
+      return;
+    },
+
+    async saveVL(idefix) {
+      const self = this;
+      f.Alert("Uloz - update saveVL ", idefix);
+      //var nK= await(queryKalk.getTemplate(self.form.idefix))
+    },
     getVal(obj, klic) {
       var cRet = "";
 
@@ -4464,8 +6644,32 @@ export default {
       return "neni " + klic;
     },
 
-
-
+    deleteColxxx(iK, iS) {
+      if (!confirm("Smazat sloupec")) return;
+      eventBus.$emit("MenuHlavni", {
+        kalkulaceid: iK,
+        idxCol: iS,
+        key: 555
+      });
+    },
+    async copyColxxx(iK, iS) {
+      const self = this;
+      await self
+        .pripravRadky2()
+        .then(res => {
+          self.$store.dispatch("copyCol", {
+            kalkulaceid: iK,
+            sloupecid: iS
+          });
+        })
+        .then(res2 => {
+          self.pripravRadky2();
+        })
+        .then(res3 => {
+          self.c1.TestRend++;
+        });
+      return;
+    },
     copyKalk(iK) {
       const self = this;
       $(".obal").animate({ opacity: 0.7 }, 200);
@@ -4486,7 +6690,24 @@ export default {
 
       return;
     },
-
+    async removeKalkAccIdXXXXX(idK) {
+      const self = this;
+      if (!confirm("Smazat radek")) return;
+      //await self.pripravRadky2()
+      $(".obal").animate({ opacity: 0.7 }, 200);
+      self.$store.dispatch("removeKalkAccId", {
+        kalkulaceid: idK
+      });
+      setTimeout(function() {
+        self.c1.bKalkulace = JSON.parse(
+          JSON.stringify(self.$store.state.Kalkulace)
+        );
+        setTimeout(function() {
+          self.c1.TestRend++;
+          $(".obal").animate({ opacity: 1 }, 200);
+        }, 300);
+      }, 100);
+    },
     async chooseSloupce(event, bEvent) {
       //alert("sloupy")
       const self = this;
@@ -4631,11 +6852,11 @@ export default {
           oData.Format = [];
           oData.FormatMenu1 = [];
           oData.FormatValue = "";
-          oData.Format.Sirka = 0;
+          oData.Formatc1.Sirka = 0;
           oData.FormatVyska = 0;
           oData.FormatTisk = 0; //Jednostranny,oboustranny, oboustranny ruzny
           oData.FormatPanelovat = 0;
-          oData.Format.SirkaPanel = 0;
+          oData.Formatc1.SirkaPanel = 0;
           oData.FormatNakladKs = 0;
           (oData.stroj = []),
             (oData.strojmod = []),
@@ -4655,7 +6876,7 @@ export default {
 
           self.c1.KalkulaceLast = self.$store.getters.getKalkLast;
           setTimeout(function() {
-            if (self.c1.KalkulaceLast != KalkulaceLast) {
+            if (self.c1.KalkulaceLast != c1.KalkulaceLast) {
               eventBus.$emit("enable");
               self.$store.dispatch("setKalk", self.c1.KalkulaceLast);
               //self.KalkulaceThis = self.c1.KalkulaceLast
@@ -4693,7 +6914,7 @@ export default {
           //self.KalkulaceThis = newId
           self.c1.KalkulaceLast = self.$store.getters.getKalkLast;
           setTimeout(function() {
-            if (self.c1.KalkulaceLast != KalkulaceLast) {
+            if (self.c1.KalkulaceLast != c1.KalkulaceLast) {
               eventBus.$emit("enable");
 
             }
@@ -4774,7 +6995,7 @@ export default {
       /////self.addKalkCol("Mat");
       self.c1.bKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
       eventBus.$emit('NaplnKalkulaci') //Synchronizace s mapou, mapa si sama resi zda je viditelna
-      // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Format.Sirka' , value: 9999 })
+      // self.$store.dispatch('editKalk', {kalkulaceid: idK, key: 'Formatc1.Sirka' , value: 9999 })
       // alert("Pridma mat na prvni misto")
     },
 

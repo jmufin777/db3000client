@@ -2,7 +2,9 @@ import moment from "moment";
 import axios from "axios";
 import url from "@/services/url";
 import store from "@/store/store";
-import { mapState } from "vuex";
+//import { mapState } from "vuex";
+import { Notification } from 'element-ui';
+import { MessageBox } from 'element-ui'
 
 export default {
   //Obsluha vuexu
@@ -20,7 +22,55 @@ export default {
   unset(jVal) {
     store.dispatch('unset', jVal)
   },
+  getStore( varname) {
+    return store.state[varname]
+  },
+  dispatch(cname, jVal={}){
+    store.dispatch(cname, jVal)
+
+  },
   //Eof obsluha Vuexu
+
+  //Hlasky
+  notify(jVal={title: "hello", message: "world", type: "error"}){
+    if (jVal.type=='error'){
+      Notification.error(jVal);
+    }
+    if (jVal.type=='warning'){
+      Notification.warning(jVal);
+    }
+    if (jVal.type=='succes'){
+      Notification.success(jVal);
+    }
+    if (jVal.type=='succes'){
+      Notification.info(jVal);
+    }
+
+  },
+
+  Confirm2(txt='Nic confirm',txt2='AnoNe',Jval=
+  {
+    distinguishCancelAndClose: true,
+    confirmButtonText: "Ano?",
+    cancelButtonText: "Ne"
+  }
+  ) {
+    return new Promise((resolve, reject)=>{
+    var neco = MessageBox.confirm(txt,
+    txt2,
+    Jval
+    )
+    .then((res)=>{
+      resolve(true)
+    })
+    .catch(()=>{
+      //reject('jarda')
+      resolve(false)
+    })
+  })
+  },
+
+//Hlasky
 
   getBottom(id, addPoz = 10) {
     var neco = -1000;

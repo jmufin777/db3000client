@@ -963,6 +963,7 @@ import f from "@/services/fce";
 import SQL from "../../services/fcesql";
 import Q from "../../services/query";
 import Prevod from "./CalcPrevodDat.vue";
+import c1 from './CalcCentral.js';
 
 export default {
   components: {
@@ -1113,6 +1114,51 @@ export default {
   async created() {
     const self = this;
     //alert(11111)
+
+    //socket.on('test', payload => this.test = payload))
+
+   //...
+   eventBus.$off('w1set')
+   eventBus.$on('w1set', server => {
+     for (const el in server) {
+           if (!self.form.hasOwnProperty[el]){
+         self.form[el] = server[el]
+       } else
+       if (self.form[el] == el){
+       } else{
+         self.form[el] = el
+       }
+     }
+     c1.tmp=f.Jparse(this.form)
+   }),
+
+  eventBus.$off('w1setvar')
+  eventBus.$on('w1setvar', server => {
+     for (const el in server) {
+      if (!self.hasOwnProperty[el]){
+        alert(el)
+         self[el] = server[el]
+       } else
+       if (self[el] == el){
+       } else{
+         self[el] = el
+       }
+     }
+     //c1.tmp=f.Jparse(this.form)
+   }),
+
+  eventBus.$off('w1fillform')
+eventBus.$on('w1fillform', polozka => {
+    const selfW1 = self //Pro prehlednost
+
+    selfW1.FillForm(polozka)
+
+
+
+   }),
+
+
+
 
     self.aFirma = await SQL.getFirma(0, "", 10);
 
@@ -1326,6 +1372,69 @@ export default {
       //alert('aRend')
       eventBus.$emit("Rend");
     },
+    async FillForm(polozka) {
+      const selfW1 = this;
+      selfW1.aOsoba = await SQL.getFirmaOsoba(polozka.idefix_firma);
+    //selfW1.aFirma=   await SQL.getFirmaOsoba(polozka.idefix_firma)
+      selfW1.aFirma = await SQL.getFirma(
+        polozka.idefix_firma,
+        "",
+        100000
+      );
+
+    selfW1.form.osoba = "";
+    if (self.c1.MAINMENULAST == "zakazky") {
+      selfW1.form.cislo = polozka.cislozakazky;
+
+      self.c1.polozka_zak = polozka;
+      //f.Alert2('A',f.Jstr(self.c1.polozka_zak.zamek))
+      //return
+      self.c1.status_zak = 2;
+    } else if (self.c1.MAINMENULAST == "kalkulace") {
+      selfW1.form.cislo = polozka.cislonabidky;
+      self.c1.polozka_nab = polozka;
+      self.c1.status_nab = 2;
+    }
+
+    selfW1.form.idefix = polozka.idefix;
+    selfW1.form.nazev = polozka.nazev;
+    selfW1.form.idefix_firma = polozka.idefix_firma;
+    selfW1.form.idefix_firmaosoba = polozka.idefix_firmaosoba;
+    selfW1.form.nazevfirmy = polozka.firma;
+    selfW1.form.idefix_obchodnik = polozka.idefix_obchodnik;
+    selfW1.form.idefix_produkce = polozka.idefix_produkce;
+    selfW1.form.obchodnik = polozka.obchodnik;
+    selfW1.form.produkce = polozka.produkce;
+    selfW1.form.osoba = polozka.osoba;
+
+    selfW1.form.splatnost = polozka.splatnost;
+    selfW1.form.hotovost = polozka.hotovost;
+    selfW1.form.stav = polozka.stav;
+
+    selfW1.form.datumzadani = f.datum20(polozka.datumzadani);
+    selfW1.form.datumexpedice = f.datum3(polozka.datumexpedice);
+
+    selfW1.form.vyrobapopis_print = (
+      polozka.vyrobapopis_print + ""
+    ).replace("null", "");
+    selfW1.form.poznamky = (polozka.poznamky + "").replace("null", "");
+
+    if (selfW1.aOsoba.length > 0) {
+      if (selfW1.aOsoba.length == 1) {
+        selfW1.form.idefix_firmaosoba = selfW1.aOsoba[0].idefix;
+        selfW1.form.osoba = selfW1.aOsoba[0].nazev;
+      }
+      // f.Alert(selfW1.form.idefix_firmaosoba, " ", f.Jstr(selfW1.aOsoba), f.Jstr(polozka) )
+      setTimeout(function() {
+        $("#" + selfW1.fields["osoba"]["nazev"]).focus();
+      }, 1000);
+    }
+
+
+
+
+    },
+
     seekzaknab(ceho = "zak") {
       const self = this;
       var obj, val;

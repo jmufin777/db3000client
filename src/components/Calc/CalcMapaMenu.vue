@@ -9,6 +9,7 @@
     <br />
     <v-btn @click="panelPrehled(2,$event)" small class="yellow">Kalkulace</v-btn>
     <br />
+    {{c2.bKalkulace.length}}
     <el-dropdown
       split-button
       size="small"
@@ -18,7 +19,6 @@
       class="px-1"
     >
       Typ sloupce
-
       {{ $store.state.KalkulaceThis }}
       <el-dropdown-menu slot="dropdown" class="grey lighten-5">
         <el-dropdown-item :command="'Mat1'">Materialyos</el-dropdown-item>
@@ -52,7 +52,7 @@ import Mapa     from './CalcMapa'
 import Prehled     from './CalcMapaPrehled'
 import Q from "@/services/query";
 import f from '@/services/fce';
-
+import Central from './CalcCentral.js'; // Prehledova dole
 
 export default {
   props: {
@@ -68,6 +68,7 @@ export default {
       zobrazitPanel:false,
       ID:0,
       aVars:[],
+      c2:Central,
     }
   },
   watch: {},
