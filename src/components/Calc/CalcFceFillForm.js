@@ -36,9 +36,9 @@ export default {
   },
   async FillFormWait(polozka, nova = false) {
     const self = this;
-    await f.Alert2(f.Jstr(c1.tmp.cislo), f.Jstr(polozka))
+    //await f.Alert2("A",f.Jstr(c1.tmp.cislo), f.Jstr(polozka))
     eventBus.$emit('w1fillform',polozka)
-    await f.Alert2(f.Jstr(c1.tmp))
+    //await f.Alert2("B",f.Jstr(c1.tmp.cislo), f.Jstr(polozka))
     f.dispatch("cleanKalk");
     self.c1.bKalkulace = [];
     await self.cleanItems(polozka);
@@ -114,6 +114,25 @@ export default {
   async FillForm(polozka) {
     const self = this;
     eventBus.$emit('w1fillform',polozka)
+    if (self.c1.MAINMENULAST == "zakazky") {
+      eventBus.$emit('w1set',{cislo:polozka.cislozakazky })
+      eventBus.$emit('w1setvar',{status_zak:2 })
+
+      //self.$refs.w1.form.cislo = polozka.cislozakazky;
+
+      // self.c1.polozka_zak = polozka;
+      //f.Alert2('A',f.Jstr(self.c1.polozka_zak.zamek))
+      //return
+      self.c1.status_zak = 2;
+    } else if (self.c1.MAINMENULAST == "kalkulace") {
+      eventBus.$emit('w1set',{cislo:polozka.cislonabidky })
+      eventBus.$emit('w1setvar',{status_nab:2 })
+
+      //self.$refs.w1.form.cislo = polozka.cislonabidky;
+      //self.c1.polozka_nab = polozka;
+      self.c1.status_nab = 2;
+    }
+
     return
 
     self.$refs.w1.aOsoba = await SQL.getFirmaOsoba(polozka.idefix_firma);

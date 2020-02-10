@@ -1137,7 +1137,7 @@ export default {
   eventBus.$on('w1setvar', server => {
      for (const el in server) {
       if (!self.hasOwnProperty[el]){
-        alert(el)
+        //alert(el)
          self[el] = server[el]
        } else
        if (self[el] == el){
@@ -1148,8 +1148,8 @@ export default {
      //c1.tmp=f.Jparse(this.form)
    }),
 
-  eventBus.$off('w1fillform')
-eventBus.$on('w1fillform', polozka => {
+    eventBus.$off('w1fillform')
+    eventBus.$on('w1fillform', polozka => {
     const selfW1 = self //Pro prehlednost
 
     selfW1.FillForm(polozka)
