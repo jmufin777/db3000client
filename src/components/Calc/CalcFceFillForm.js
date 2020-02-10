@@ -36,6 +36,9 @@ export default {
   },
   async FillFormWait(polozka, nova = false) {
     const self = this;
+    await f.Alert2(f.Jstr(c1.tmp.cislo), f.Jstr(polozka))
+    eventBus.$emit('w1fillform',polozka)
+    await f.Alert2(f.Jstr(c1.tmp))
     f.dispatch("cleanKalk");
     self.c1.bKalkulace = [];
     await self.cleanItems(polozka);
