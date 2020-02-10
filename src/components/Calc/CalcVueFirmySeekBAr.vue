@@ -108,6 +108,7 @@
 import f from '@/services/fce';
 import c1 from './CalcCentral.js'; // Prehledova dole
 import fceSwitch13Z from './CalcFceSwitch13Z.js'; // Prehledova dole
+import fceSeznam from './CalcFceSeznam.js'; // Funkce seznam
 
 
 export default {
@@ -116,6 +117,7 @@ export default {
       f: f,
       c1: c1,
       fceSwitch13Z:fceSwitch13Z,
+      fceSeznam: fceSeznam,
     }
   }
 

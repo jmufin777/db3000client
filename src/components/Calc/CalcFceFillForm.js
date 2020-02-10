@@ -78,6 +78,36 @@ export default {
     }, 500);
   },
 
+  async cleanItems(polozka) {
+    const self = this;
+    var typ = "zak";
+    var idfx = 0;
+
+    if (self.c1.MAINMENULAST == "zakazky") {
+      typ = "zak";
+      idfx = polozka.idefix;
+    }
+    if (self.c1.MAINMENULAST == "kalkulace") {
+      typ = "nab";
+      idfx = polozka.idefix;
+    }
+    if (f.isEmpty(idfx)) {
+      //alert('ted ne')
+      return;
+    }
+    var qb = `drop table if exists ${self.c1.cTable} ;drop sequence if exists ${self.c1.cTable}_seq
+       ;create sequence ${self.c1.cTable}_seq
+       ;create table ${self.c1.cTable} without oids  as select * from ${typ}_t_items where idefix_${typ} = ${idfx}
+
+       ;alter table ${self.c1.cTable} alter idefix  set default nextval('list2_seq')
+       ;alter table ${self.c1.cTable} alter id set default nextval('${self.c1.cTable}_seq')
+      `;
+    //f.Alert2(f.Jstr(polozka))
+    //var qb=`create table ${self.c1.cTable} without oids  as select * from zak_t_items where idefix_zak = ${polozka.idefix}`
+
+    var b = await Q.post(self.idefix, qb);
+  },
+
   async FillForm(polozka) {
     const self = this;
     eventBus.$emit('w1fillform',polozka)
