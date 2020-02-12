@@ -234,7 +234,7 @@
                 class="hoVer2"
               >
 
-                <td colspan="100">
+                <td colspan="100" v-if="false">
 
                   {{c1.aktivni_zak}} {{polozka.cislozakazky}}
                   ==<br>

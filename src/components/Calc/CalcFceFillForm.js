@@ -120,7 +120,7 @@ export default {
 
       //self.$refs.w1.form.cislo = polozka.cislozakazky;
 
-      // self.c1.polozka_zak = polozka;
+       self.c1.polozka_zak = polozka;
       //f.Alert2('A',f.Jstr(self.c1.polozka_zak.zamek))
       //return
       self.c1.status_zak = 2;

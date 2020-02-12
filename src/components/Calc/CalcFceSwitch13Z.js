@@ -33,6 +33,112 @@ export default {
     })
     return 1;
   },
+  async to1Z() {
+    const self = this;
+    await eventBus.$emit('w1set',{})
+    //f.Alert(c1.tmp.cislo)
+    //return
+    if (
+      c1.tmp.cislo > 0 &&
+      //self.$refs.w1.form.cislo > 0 &&
+      self.c1.obrazovka_zak == 3 &&
+      self.c1.status_zak == 2
+    ) {
+      await fceSave.Ulozit()
+        .then(() => {
+          //     alert('bobry')
+        })
+        .catch(e => {
+          f.Alert2("Chyba 1", e);
+          self.c1.obrazovka_zak = 1;
+        });
+      //         await self.to2N(self.c1.polozka_nab)
+      //       await f.sleep(3000)
+    }
+    if (
+      self.c1.order_zak != self.c1.order_zak_default &&
+      self.c1.query_zak_last > ""
+    ) {
+      self.c1.query_zak_last = `select * from (${self.c1.query_zak_last}) a order by kategorie, ${self.c1.order_zak_default} ${self.c1.desc_zak_default}`;
+      var q = `select * from (${self.c1.query_zak_last}) a order by kategorie, ${self.c1.order_zak_default} ${self.c1.desc_zak_default}`;
+
+      self.c1.order_zak = self.c1.order_zak_default;
+      self.c1.desc_zak = self.c1.desc_zak_default;
+      q = q.replace("  ", "");
+      q = q.replace("  ", "");
+      q = q.replace("  ", "");
+      q = q.replace("cislozakazky desc", "right(cislozakazky,5) desc");
+
+      self.c1.seznam_zak = (await Q.all(self.idefix, q)).data.data;
+    }
+
+    if (self.c1.MAINMENULAST == "zakazky" && self.c1.status_zak == 1) {
+      this.$confirm(
+        "Zrusit zakladni nove zakazky ? " + self.c1.aktivni_zak,
+        "",
+        {
+          distinguishCancelAndClose: true,
+          confirmButtonText: "Ano?",
+          cancelButtonText: "Ne"
+        }
+      ).then(() => {
+        self.c1.obrazovka_zak = 1;
+
+        eventBus.$emit("SavedZN", {
+          id: self.c1.MAINMENULAST,
+          // cislo: c.cislo,
+          // exp: c.exp,
+          // prod: self.idefix,
+          // prod_txt : c.produkce,
+          // zadani:c.zadani,
+          status_zak: 0,
+          status_nab: self.c1.status_nab
+        });
+
+        if (self.c1.aktivni_zak > 0) {
+          //document.getElementById('trn_'+self.c1.aktivni_zak)
+          var bck_aktivni = self.c1.aktivni_zak;
+          self.c1.query_zak_last = `select * from (${self.c1.query_zak_last}) a order by kategorie, ${self.c1.order_zak_default} ${self.c1.desc_zak_default}`;
+          var q = `select * from (${self.c1.query_zak_last}) a order by kategorie, ${self.c1.order_zak_default} ${self.c1.desc_zak_default}`;
+
+          //self.c1.query_zak_last,
+          //f.Alert2("1",self.c1.order_zak,q)
+          self.c1.order_zak = self.c1.order_zak_default;
+          self.c1.desc_zak = self.c1.desc_zak_default;
+          q = q.replace("  ", "");
+          q = q.replace("  ", "");
+          q = q.replace("  ", "");
+          q = q.replace("cislozakazky desc", "right(cislozakazky,5) desc");
+          //self.c1.seznam_zak = (await Q.all(self.idefix,q)).data.data
+          Q.all(self.idefix, q).then(res => {
+            if (!f.isEmpty(res.data.data)) {
+              self.c1.seznam_zak = res.data.data;
+              self.c1.aktivni_zak = self.c1.seznam_zak[0].idefix;
+              fceFillForm.FillFormWait(self.c1.seznam_zak[0]);
+            }
+          });
+
+          /*
+          setTimeout(function(){
+            f.Alert("huhu 2",self.c1.aktivni_zak )
+            self.seekzaknab('zak', self.c1.aktivni_zak);
+
+            return
+            if ( document.getElementById('trz_'+self.c1.aktivni_zak) ){
+                document.getElementById('trz_'+self.c1.aktivni_zak).click()
+
+
+               //f.Alert('trn_'+self.c1.aktivni_zak, document.getElementById('trz_'+self.c1.aktivni_zak)  )
+            }
+
+          },1000)
+        */
+        }
+      });
+    } else {
+      self.c1.obrazovka_zak = 1;
+    }
+  },
 
   async to2Z(polozka) {
     const self = this;
@@ -41,6 +147,7 @@ export default {
     var b2 = "";
     var qoprava = "";
     var qoprava2 = "";
+    self.getState()
     self.c1.StopStav = false;
     if (self.c1.MAINMENULAST == "kalkulace") {
       ceho = "nab";
@@ -142,10 +249,13 @@ export default {
       //update nab_t_items  set nazev='Prázdný s',kcks =0,naklad=0,prodej=0, idefix_nab=-1,vzor=2  where idefix in (  135371 ) ;
 
       self.updateDefault(); //oprava dodavatele
+      var q= `select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`
+
+//      f.Alert2('ERR',q, "IDFX" , self.idefix)
       self.c1.polozky_zak = (
         await Q.all(
           self.idefix,
-          `select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak= ${polozka.idefix} order by idefix`
+          q
         )
       ).data.data;
       fceNova.polozky_soucet("zak");
@@ -155,9 +265,10 @@ export default {
       //self.$refs.w1.form.osoba   = polozka.idefix_firma
       //f.Alert(polozka.idefix, f.Jstr(polozka))
     } else {
-      this.$notify({
+      f.Alert2('ERR :',f.Jstr(polozka), "IDFX" , self.idefix)
+      f.notify({
         title: self.c1.MAINMENULAST,
-        message: `Chyba pri nacteni polozek`,
+        message: `Chyba pri nacteni polozek `,
         type: "error",
         offset: 100,
         duration: 5000
@@ -173,7 +284,7 @@ export default {
     self.c1.StopStav = false;
     if (self.c1.MAINMENULAST == "zakazky" && self.c1.aktivni_zak > 0) {
       var q = `select rok(cislozakazky) as rok,cislo(cislozakazky) as cislo, cislozakazky from zak_t_list  where idefix = ${self.c1.aktivni_zak} `;
-      var aneco = (await Q.all(self.idefix, q)).data.data;
+        var aneco = (await Q.all(self.idefix, q)).data.data;
       self.c1.aktivni_zak_short = aneco[0].cislo;
       self.c1.aktivni_zak_rok = aneco[0].rok;
 
