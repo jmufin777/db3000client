@@ -1,9 +1,9 @@
 import f from '@/services/fce';
-// import query from '../../services/query'
 import Q from '../../services/query';
 import SQL from '../../services/fcesql';
 // import query from '../../services/query'
 import c1 from './CalcCentral.js';
+import { eventBus } from '@/main.js';
 
 
 export default {
@@ -311,6 +311,75 @@ export default {
     self.c1._IsObchod = self.c1._Skupiny.match(/obchod/i) ? true : false;
     self.c1._IsVedeni = self.c1._Skupiny.match(/vedeni/i) ? true : false;
   },
+
+  async delzak(polozka) {
+    const self = this;
+    if (polozka.nazev == "[[STORNO]]") {
+      f.notify({
+        title: self.c1.MAINMENULAST,
+        message: `Jiz bylo stornovano`,
+        type: "error",
+        offset: 100,
+        duration: 5000
+      });
+      return;
+    }
+    if (!await f.Confirm2(`Storno pro  ${polozka.cislozakazky} ?`)) {
+      return;
+    }
+
+    var q0 = `update zak_t_items set prodej = 0 where idefix_zak = ${polozka.idefix} ;`;
+    var q = `${q0} ; update zak_t_list set nazev = '[[STORNO]]' where idefix = ${polozka.idefix}`;
+    var b = await Q.post(self.idefix, q);
+
+    await self.Seznam("zak");
+    eventBus.$emit('w1set',{nazev:'[[STORNO]]'})  //Zapis do pole form we w1
+
+    f.notify({
+      title: self.c1.MAINMENULAST,
+      message: `Zakazka ${polozka.cislozakazky} byla stornovana`,
+      type: "error",
+      offset: 100,
+      duration: 5000
+    });
+
+    //f.Alert2(f.Jstr(polozka))
+  },
+  async delnab(polozka) {
+    const self = this;
+    if (polozka.nazev == "[[STORNO]]") {
+      f.notify({
+        title: self.c1.MAINMENULAST,
+        message: `Jiz bylo stornovano`,
+        type: "error",
+        offset: 100,
+        duration: 5000
+      });
+      return;
+    }
+    if (!await f.Confirm2(`Storno pro  ${polozka.cislonabidky} ?`)) {
+      return;
+    }
+    //     alert('delzak')
+    var q0 = `update nab_t_items set prodej = 0 where idefix_nab = ${polozka.idefix} ;`;
+    var q = `${q0} ; update nab_t_list set nazev = '[[STORNO]]' where idefix = ${polozka.idefix}`;
+
+    var b = await Q.post(self.idefix, q);
+    self.Seznam("nab");
+    eventBus.$emit('w1set',{nazev:'[[STORNO]]'})  //Zapis do poleform we w1
+
+
+    f.notify({
+      title: self.c1.MAINMENULAST,
+      message: `Zakazka ${polozka.cislonabidky} byla stornovana`,
+      type: "error",
+      offset: 100,
+      duration: 5000
+    });
+
+    //f.Alert2(q, f.Jstr(polozka))
+  },
+
 
 
 }

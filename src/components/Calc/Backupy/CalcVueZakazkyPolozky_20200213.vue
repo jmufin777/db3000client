@@ -10,13 +10,13 @@
           <button class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden">NICKA</button>
         </div>
 
-        <table v-if="true" style="width:90%;border: solid 1px silver;border-bottom:none">
-          <thead>
+        <table style="width:90%;border: solid 1px silver;border-bottom:none" >
+          <thead >
             <tr>
               <th style="width:2em">
                 <button @click="vl_viewlist(c1.aktivni_zak)">VL tisk {{c1.vllist.split(',').length}}</button>
               </th>
-              <th v-if="false" style="width:20em">Text na faktuře</th>
+              <th v-if="true" style="width:20em">Text na faktuře</th>
               <th style="width:30em">Práce</th>
               <th style="width:30em">Dodavatel</th>
               <th style="width:">Kč/ks</th>
@@ -39,19 +39,18 @@
               <!-- <th style="width:">Sloupec</th> -->
             </tr>
           </thead>
-          <tbody>
+          <tbody >
             <tr
               v-for="(polozka2,idx2) in c1.polozky_zak"
               :key="idx2"
               class="hoVer2"
               @click="polozka2.vzor>-999?c1.aktivni_polozka_zak=polozka2.idefix:false"
               :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==c1.aktivni_polozka_zak && polozka2.vzor >-999
-      ,'nerusit': polozka2.nazev.match(/^Pr.zdn.*$/) && c1.aktivni_polozka_zak!==polozka2.idefix
-      }"
+                ,'nerusit': polozka2.nazev.match(/^Pr.zdn.*$/) && c1.aktivni_polozka_zak!==polozka2.idefix
+                }"
               :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:solid 1px #cccccc;':''"
             >
-              <td
-
+              <td v-if="true"
                 :key="'zak'+c1.klikyzak+''+idx2"
                 class="pl-1"
                 style="border-bottom:none"
@@ -65,7 +64,7 @@
                 >
                   <!-- @mouseenter="odkaz=polozka2.idefix_vl;nahledView()"
                   @mouseleave="nahledCancel()"-->
-                  {{polozka2.idefix}}
+                  {{polozka2.idefix_vl}}
                   <span
                     v-if="polozka2.idefix_vl>0"
                     @click="vl_view(polozka2.idefix_vl);c1.nahled=false"
@@ -81,7 +80,7 @@
                     v-if="!f.isEmpty(polozka2.obsah) "
                     class="black--text d3"
                     style="font-weight:bold;height:20px;zoom:100%;"
-                    @click="polozka2.vzor==0?fceSwitch13Z.to3Z(polozka2,2):fceCiselniky.ZalozitZobrazit(polozka2)"
+                    @click="polozka2.vzor==0?fceSwitch13Z.to3Z(polozka2,2):ZalozitZobrazit(polozka2)"
                   >
                     <!-- <v-icon v-if="polozka2.c1.status==1 || polozka2.c1.status>2"
         size="small"   class="red--text"
@@ -117,12 +116,30 @@
                       style="font-weight:bold;height:25px;zoom:100%;"
                     ></i>
                   </button>
-                  <!-- <span  class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="ZmenPolozku('zak',polozka2)">S</span> -->
+                  <!-- <span  class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="fceCiselniky.ZmenPolozku('zak',polozka2)">S</span> -->
                 </div>
               </td>
-
-
               <td
+                v-if="true"
+                class="rborder leva pl-2 pr-2"
+                style="border-bottom:none"
+                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+                <input
+                  v-else
+                  type="text"
+                  v-model="polozka2.nazev"
+                  @change="false?fceCiselniky.ZmenPolozku('zak',polozka2):true"
+                  @focus="c1.aktivni_polozka_zak=polozka2.idefix"
+                  style="height:100%; border-bottom:dotted 0px;"
+                  :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
+                  class="elevation-0"
+                  v-bind:readonly="c1.polozka_zak.zamek"
+                />
+              </td>
+
+              <td v-if="true"
                 class="rborder pr-0 pt-1 pl-2 pr-1"
                 style="border-bottom:none"
                 :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
@@ -138,7 +155,7 @@
                   <span style="float: left;width:100%">
                     <table border="0" style="border: solid 0px black;width:100%">
                       <tr>
-                        <td style="width:90%" >
+                        <td v-if="true" style="width:90%">
                           <el-select
                             v-model="polozka2.idefix_prace"
                             filterable
@@ -172,7 +189,7 @@
                             </el-option>
                           </el-select>
                         </td>
-                        <td style="width:10%;text-align:right">
+                        <td v-if="true" style="width:10%;text-align:right">
                           <span
                             style="float: right; color: #8492a6; font-size: 13px"
                             @click="polozka2.vse=(polozka2.vse==0?1:0)"
@@ -225,7 +242,7 @@
                   :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'"
                   class="leva pl-1"
                 >
-                  <span >
+                  <span>
                     {{ (c1.cis_prace.filter(el=>{
                     return el.idefix_prace*1==c1.idefix_vlastnikPrace*1
                     }) )[0]['prace']}}
@@ -237,7 +254,7 @@
                     >
                       <!-- <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Text:</div> -->
                       <div style="float:right;width:100%;" class="elevation-0 pt-1">
-                        <!-- @change="false?ZmenPolozku('zak',polozka2):true"    -->
+                        <!-- @change="false?fceCiselniky.ZmenPolozku('zak',polozka2):true"    -->
                         <input
                           type="text"
                           v-model="polozka2.nazev"
@@ -254,7 +271,9 @@
                   </span>
                 </div>
               </td>
-              <td
+
+              <td v-if="false"
+
                 class="rborder pr-0 pt-1 pl-2 pr-1"
                 style="border-bottom:none"
                 :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
@@ -263,9 +282,7 @@
 
                 <div v-else>
                   <!-- {{polozka2.idefix_dod}} -->
-
                   <el-select
-
                     v-model="polozka2.idefix_dod "
                     v-if="c1.cis_dod.length>=0 && f.isEmpty(polozka2.obsah)"
                     filterable
@@ -279,12 +296,17 @@
                     placeholder="Prace"
                     @focus="c1.zak_item_active=polozka2;"
                     @change="polozka2.vse==1&& polozka2.idefix_dod>0?fceCiselniky.Sparuj(polozka2):false; polozka2.vse=0
-                    ;fceCiselniky.ZmenPolozku('zak',polozka2)
+                ;fceCiselniky.fceCiselniky.ZmenPolozku('zak',polozka2)
                 "
                     :disabled="c1.polozka_zak.zamek"
                   >
-
-                      <el-option
+                    <!--
+                remote
+                :remote-method="CisDodAll"
+                :c1.loading="c1.loading"
+                    -->
+                    <!-- x.filter(c1.cis_dod, function(o){ return filterDod(polozka2, o) }) -->
+                    <el-option
                       v-if="polozka2.vse==0"
                       v-for="item02 in x.filter(c1.cis_dod, function(o){ return fceCiselniky.filterDod(polozka2, o) })"
                       :key="item02.idefix_firma"
@@ -297,9 +319,8 @@
                         style="float: right; color: #8492a6; font-size: 13px"
                       >{{item02.pocet_praci}}</span>
                     </el-option>
-
                     <el-option
-                      v-if="polozka2.vse==1 "
+                      v-if="polozka2.vse==1"
                       v-for="item02 in c1.cis_dod_all"
                       :key="item02.idefix_firma"
                       :label="item02.firma"
@@ -311,9 +332,7 @@
                         style="float: right; color: #8492a6; font-size: 13px"
                       >{{item02.pocet_praci}}</span>
                     </el-option>
-
                   </el-select>
-
                   <div
                     v-else
                     :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'"
@@ -357,7 +376,7 @@
                   >&nbsp;</div>
                 </div>
               </td>
-              <td
+              <td v-if="true"
                 class="rborder pr-2 pl-1"
                 :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
@@ -375,7 +394,7 @@
                   @change="polozka2.naklad=polozka2.kcks * polozka2.ks;fceCiselniky.ZmenPolozku('zak',polozka2,0)"
                 />
               </td>
-              <td
+              <td v-if="true"
                 class="rborder pr-2"
                 :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
@@ -398,7 +417,7 @@
                 >{{c1.polozka_zak.zamek }} {{ !f.isEmpty(polozka2.obsah) }}</span>
                 <!-- {{polozka2.ks}} -->
               </td>
-              <td
+              <td v-if="true"
                 class="rborder pr-2 pl-1"
                 :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
@@ -416,7 +435,7 @@
       fceCiselniky.ZmenPolozku('zak',polozka2,0)"
                 />
               </td>
-              <td
+              <td v-if="true"
                 class="rborder pr-2"
                 style="border-bottom: solid 1px silver"
                 :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
@@ -435,8 +454,8 @@
                   <!-- {{polozka2.prodej - polozka2.naklad}} -->
                 </span>
               </td>
-              <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
-              <td
+              <!--<td v-if="false" class="rborder pr-2">{{polozka2.marze}}</td>!-->
+              <td v-if="true"
                 class="rborder pr-2 pl-1 pb-0"
                 :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
@@ -454,8 +473,6 @@
             </tr>
           </tbody>
         </table>
-
-
 </div>
 
 </template>
@@ -468,7 +485,7 @@ import fceSeznam from './CalcFceSeznam.js'; // Funkce seznam
 import fceFillForm from './CalcFceFillForm.js'; // Funkce seznam
 import fceSwitch13Z from './CalcFceSwitch13Z.js'; // Prehledova dole
 import fceCiselniky from './CalcFceCiselniky.js'; // Prehledova dole
-import _ from 'lodash'
+
 
 
 export default {
@@ -483,8 +500,6 @@ export default {
       fceFillForm:fceFillForm,
       fceSwitch13Z:fceSwitch13Z,
       fceCiselniky: fceCiselniky,
-      _: _,
-      x: _
 
     }
   },

@@ -1,7 +1,7 @@
 <template>
-        <ta-ble3
+<ta-ble3
           v-cloak
-          :h="'530px;'+f.pof( c1.Sirka,98.1)+';top:0px'"
+          :h="'530px;'+f.pof( c1.Sirka,98.1)+';top:1px'"
           :Sirka="1000"
           :Leva="'0%'"
           :Prava="'0%'"
@@ -13,7 +13,9 @@
           <table slot="head" :style="f.pof(c1.Sirka,98.1)">
             <thead class="c-1 tdline">
               <tr>
-                <th :style="f.pof(c1.Sirka,  4.9)">Ikony</th>
+                <th :style="f.pof(c1.Sirka,  4.9)">
+                  <button @click="vl_viewlist(c1.aktivni_nab)">VL tisk {{c1.vllist.split(',').length}}</button>
+                </th>
                 <th :style="f.pof(c1.Sirka,  4.82)">
                   <button
                     type="button"
@@ -28,7 +30,7 @@
                       class="el-icon-download orange--text"
                       v-if="c1.order_nab=='cislonabidky' && c1.desc_nab>''"
                     ></i>
-                    Č.nabazky
+                    Č.nabidky
                   </button>
                 </th>
                 <th :style="f.pof(c1.Sirka, 14.8)">
@@ -219,24 +221,42 @@
               </tr>
             </thead>
           </table>
-          <table slot="body" :style="f.pof(c1.Sirka,98.1)">
+          <table v-cloak slot="body" :style="f.pof(c1.Sirka,98.1)">
             <tbody>
+
               <tr
                 v-for="(polozka,idx) in c1.seznam_nab"
                 :key="idx"
-                @dblclick="to2N(polozka);"
+                @dblclick="fceSwitch13N.to2N(polozka);"
                 @click="fceFillForm.FillFormWait(polozka);c1.aktivni_nab=polozka.idefix"
                 style="cursor:pointer"
-                :id="'trn_'+polozka.idefix"
+                :id="'trz_'+polozka.idefix"
                 class="hoVer2"
               >
+
+                <td colspan="100" v-if="false">
+
+                  {{c1.aktivni_nab}} {{polozka.cislonabidky}}
+                  ==<br>
+                  {{c1.tmp.cislo}}
+                  -----
+                </td>
+
+
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo}"
                   :style="f.pof(c1.Sirka, 5)"
                 >
-                  <button @click="delnab(polozka)">
+                  <button v-if="polozka.zamek" @click="f.Alert2('Uzmaceno')" style="zoom:70%">
+                    <v-icon size="medium" class="red--text">fa-lock</v-icon>
+                  </button>
+                  <button v-else @click="false" style="zoom:70%;opacity:0.1">
+                    <v-icon size="medium" class="white--text">fa-unlock</v-icon>
+                  </button>
+                  &nbsp;
+                  <button @click="fceSeznam.delnab(polozka)">
                     <i
-                      class="el-icon-delete black--text d3"
+                      class="el-icon-delete black--text darken-4 d3"
                       style="font-weight:bold;height:25px;zoom:100%;"
                     ></i>
                   </button>
@@ -249,51 +269,51 @@
                   </button>
                 </td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka, 5)"
                 >{{polozka.cislonabidky}}</td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka,15)"
                   class="leva pl-2"
                 >{{polozka.firma}}</td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka,15)"
                   class="leva pl-2"
                 >{{polozka.nazev}}</td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka, 8)"
                   class="stred pl-2"
                 >{{f.datum3(polozka.datumzadani)}}</td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka, 8)"
                   class="stred pl-2"
                 >{{f.datum3(polozka.time_update)}}</td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka, 8)"
                   class="prava pr-4"
                 >{{polozka.nakladsum}}</td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka, 8)"
                   class="prava pr-4"
                 >{{polozka.prodejsum}}</td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka, 5)"
                   class="prava pr-4"
                 >{{polozka.prodejsum - polozka.nakladsum }}</td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka,15)"
                   class="leva pl-2"
                 >{{polozka.obchodnik }}</td>
                 <td
-                  :class="{'green lighten-5 elevation-2': polozka.cislonabidky==$refs.w1.form.cislo , 'sedadel': polozka.nazev=='[[STORNO]]'}"
+                  :class="{'blue lighten-5 elevation-1': polozka.cislonabidky==c1.tmp.cislo  , 'sedadel': polozka.nazev=='[[STORNO]]'}"
                   :style="f.pof(c1.Sirka, 5)"
                   class="leva pl-2"
                 >{{polozka.stav }}</td>
@@ -301,7 +321,6 @@
             </tbody>
           </table>
         </ta-ble3>
-
 </template>
 
 <script>
@@ -310,7 +329,7 @@ import f from '@/services/fce';
 import c1 from './CalcCentral.js'; // Prehledova dole
 import fceSeznam from './CalcFceSeznam.js'; // Funkce seznam
 import fceFillForm from './CalcFceFillForm.js'; // Funkce seznam
-import fceSwitch13Z from './CalcFceSwitch13Z.js'; // Prehledova dole
+import fceSwitch13N from './CalcFceSwitch13N.js'; // Prehledova dole
 
 
 export default {
@@ -323,7 +342,7 @@ export default {
       c1:c1,
       fceSeznam: fceSeznam,
       fceFillForm:fceFillForm,
-      fceSwitch13Z:fceSwitch13Z,
+      fceSwitch13N:fceSwitch13N,
 
     }
   },

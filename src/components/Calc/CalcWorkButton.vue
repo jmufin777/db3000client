@@ -1029,7 +1029,7 @@ export default {
       let dataItem = {};
       f.log("VL X ");
       if (self.MAINMENULAST == "kalkulace") {
-        self.mAlert("V rezimu nabidek nelze vracet z vyrby VL");
+        f.mAlert("V rezimu nabidek nelze vracet z vyrby VL");
         return;
       }
 
@@ -1098,7 +1098,7 @@ export default {
       var q = "";
 
       if (self.MAINMENULAST == "kalkulace") {
-        self.mAlert(
+        f.mAlert(
           "V rezimu nabidek nelze zadavat praci na vyrobu, je nutne vytvorit zakazku"
         );
         return;

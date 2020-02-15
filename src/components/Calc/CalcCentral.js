@@ -16,8 +16,9 @@
   import VL from './VLIndex.vue';
 
 
-export default {
 
+
+export default {
 
   components:{
 
@@ -25,6 +26,7 @@ export default {
   props:{
     ID:''
   },
+
      tmp:{},
      bKalkulace: [],
      //Prevod 1 TOP

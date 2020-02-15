@@ -6,6 +6,8 @@ import store from "@/store/store";
 import { Notification } from 'element-ui';
 import { MessageBox } from 'element-ui'
 
+//import {MAINMENULAST} from '../components/Calc/CalcCentral.js';  //
+
 export default {
   //Obsluha vuexu
   setVal(cname, cval) {
@@ -68,6 +70,17 @@ export default {
       resolve(false)
     })
   })
+  },
+
+  mAlert(txt, dur = 5000,title='Oznameni') {
+
+    this.notify({
+      title: title,
+      message: `${txt}`,
+      type: "error",
+      offset: 100,
+      duration: 5000
+    });
   },
 
 //Hlasky

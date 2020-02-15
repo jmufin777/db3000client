@@ -1,12 +1,12 @@
 <template>
 <div>
         <div class="leva pt-0 pb-0"  >
-          <button class="px-4 tlacitkoMenu elevation-2 hoVer" @click="fceSwitch13Z.to1Z()">Kniha 1Z</button>
+          <button class="px-4 tlacitkoMenu elevation-2 hoVer" @click="fceSwitch13N.to1N()">Kniha 1Z</button>
           <button
             class="px-4 tlacitkoMenu elevation-2 hoVer"
-            @click="fceSwitch13Z.to3Z(c1.polozka_zak,1)"
-            v-if="!f.isEmpty(c1.polozka_zak)"
-          >3Z A</button>
+            @click="fceSwitch13N.to3N(c1.polozka_nab,1)"
+            v-if="!f.isEmpty(c1.polozka_nab)"
+          >3N AAA</button>
           <button class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden">NICKA</button>
         </div>
 
@@ -14,7 +14,7 @@
           <thead>
             <tr>
               <th style="width:2em">
-                <button @click="vl_viewlist(c1.aktivni_zak)">VL tisk {{c1.vllist.split(',').length}}</button>
+                <button @click="vl_viewlist(c1.aktivni_nab)">VL tisk {{c1.vllist.split(',').length}}</button>
               </th>
               <th v-if="false" style="width:20em">Text na faktuře</th>
               <th style="width:30em">Práce</th>
@@ -41,21 +41,21 @@
           </thead>
           <tbody>
             <tr
-              v-for="(polozka2,idx2) in c1.polozky_zak"
+              v-for="(polozka2,idx2) in c1.polozky_nab"
               :key="idx2"
               class="hoVer2"
-              @click="polozka2.vzor>-999?c1.aktivni_polozka_zak=polozka2.idefix:false"
-              :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==c1.aktivni_polozka_zak && polozka2.vzor >-999
-      ,'nerusit': polozka2.nazev.match(/^Pr.zdn.*$/) && c1.aktivni_polozka_zak!==polozka2.idefix
+              @click="polozka2.vzor>-999?c1.aktivni_polozka_nab=polozka2.idefix:false"
+              :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999 ,'ramspodni': polozka2.idefix!==c1.aktivni_polozka_nab && polozka2.vzor >-999
+      ,'nerusit': polozka2.nazev.match(/^Pr.zdn.*$/) && c1.aktivni_polozka_nab!==polozka2.idefix
       }"
               :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:solid 1px #cccccc;':''"
             >
               <td
 
-                :key="'zak'+c1.klikyzak+''+idx2"
+                :key="'nab'+c1.klikyzak+''+idx2"
                 class="pl-1"
                 style="border-bottom:none"
-                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
                 <div v-if="polozka2.vzor==-999"></div>
                 <div
@@ -81,7 +81,7 @@
                     v-if="!f.isEmpty(polozka2.obsah) "
                     class="black--text d3"
                     style="font-weight:bold;height:20px;zoom:100%;"
-                    @click="polozka2.vzor==0?fceSwitch13Z.to3Z(polozka2,2):fceCiselniky.ZalozitZobrazit(polozka2)"
+                    @click="polozka2.vzor==0?fceSwitch13N.to3N(polozka2,2):fceCiselniky.ZalozitZobrazit(polozka2)"
                   >
                     <!-- <v-icon v-if="polozka2.c1.status==1 || polozka2.c1.status>2"
         size="small"   class="red--text"
@@ -103,7 +103,7 @@
                     v-if="polozka2.vzor==0 && polozka2.status!==1"
                     class="el-icon-delete black--text d3"
                     style="font-weight:bold;height:25px;zoom:100%;"
-                    @click="fceCiselniky.deleteItem('zak',polozka2)"
+                    @click="fceCiselniky.deleteItem('nab',polozka2)"
                   ></i>
                   <i
                     v-else
@@ -117,7 +117,7 @@
                       style="font-weight:bold;height:25px;zoom:100%;"
                     ></i>
                   </button>
-                  <!-- <span  class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="ZmenPolozku('zak',polozka2)">S</span> -->
+                  <!-- <span  class="black--text d3" style="font-weight:bold;height:20px;zoom:100%;" @click="ZmenPolozku('nab',polozka2)">S</span> -->
                 </div>
               </td>
 
@@ -125,7 +125,7 @@
               <td
                 class="rborder pr-0 pt-1 pl-2 pr-1"
                 style="border-bottom:none"
-                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
                 <div v-if="polozka2.vzor==-999"></div>
 
@@ -153,9 +153,9 @@
                             @change="(polozka2.idefix_prace>0 && (polozka2.nazev=='' ||polozka2.nazev.match(/^Pr.zdn.*$/) ) )?polozka2.nazev=(c1.cis_prace.filter(el => {
                   return el.idefix_prace==polozka2.idefix_prace
                 }))[0].text_na_fakturu:''
-                ;fceCiselniky.ZmenPolozku('zak',polozka2)
+                ;fceCiselniky.ZmenPolozku('nab',polozka2)
                 "
-                            :disabled="c1.polozka_zak.zamek"
+                            :disabled="c1.polozka_nab.zamek"
                           >
                             <!-- x.filter(c1.cis_prace, function(o){ return true || filterPrace(polozka2,o) }) -->
                             <el-option
@@ -208,13 +208,13 @@
                         <input
                           type="text"
                           v-model="polozka2.nazev"
-                          @change="fceCiselniky.ZmenPolozku('zak',polozka2)"
-                          @focus="c1.aktivni_polozka_zak=polozka2.idefix"
+                          @change="fceCiselniky.ZmenPolozku('nab',polozka2)"
+                          @focus="c1.aktivni_polozka_nab=polozka2.idefix"
                           style="height:25px; border:dotted 1px silver;font-size:13px"
                           placeholder="Text na fakturu"
                           :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
                           class="elevation-0"
-                          :readonly="c1.polozka_zak.zamek"
+                          :readonly="c1.polozka_nab.zamek"
                         />
                       </div>
                     </div>
@@ -237,17 +237,17 @@
                     >
                       <!-- <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Text:</div> -->
                       <div style="float:right;width:100%;" class="elevation-0 pt-1">
-                        <!-- @change="false?ZmenPolozku('zak',polozka2):true"    -->
+                        <!-- @change="false?ZmenPolozku('nab',polozka2):true"    -->
                         <input
                           type="text"
                           v-model="polozka2.nazev"
-                          @change="fceCiselniky.ZmenPolozku('zak',polozka2)"
-                          @focus="c1.aktivni_polozka_zak=polozka2.idefix"
+                          @change="fceCiselniky.ZmenPolozku('nab',polozka2)"
+                          @focus="c1.aktivni_polozka_nab=polozka2.idefix"
                           style="height:25px; border:dotted 1px silver;font-size:13px"
                           placeholder="Text na fakturu"
                           :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
                           class="elevation-0"
-                          :readonly="c1.polozka_zak.zamek"
+                          :readonly="c1.polozka_nab.zamek"
                         />
                       </div>
                     </div>
@@ -257,7 +257,7 @@
               <td
                 class="rborder pr-0 pt-1 pl-2 pr-1"
                 style="border-bottom:none"
-                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
                 <div v-if="polozka2.vzor==-999"></div>
 
@@ -279,9 +279,9 @@
                     placeholder="Prace"
                     @focus="c1.zak_item_active=polozka2;"
                     @change="polozka2.vse==1&& polozka2.idefix_dod>0?fceCiselniky.Sparuj(polozka2):false; polozka2.vse=0
-                    ;fceCiselniky.ZmenPolozku('zak',polozka2)
+                    ;fceCiselniky.ZmenPolozku('nab',polozka2)
                 "
-                    :disabled="c1.polozka_zak.zamek"
+                    :disabled="c1.polozka_nab.zamek"
                   >
 
                       <el-option
@@ -340,7 +340,7 @@
                       type="text"
                       :disabled="polozka2.nazev.match(/^Pr.zdn.*$/)"
                       v-model="polozka2.faktura"
-                      @keyup="($event.keyCode==13 || $event.keyCode==9 )?fceCiselniky.ZmenPolozku('zak',polozka2):false"
+                      @keyup="($event.keyCode==13 || $event.keyCode==9 )?fceCiselniky.ZmenPolozku('nab',polozka2):false"
                       style="height:22px; border:dotted 1px silver;"
                       class="stred"
                     />
@@ -359,7 +359,7 @@
               </td>
               <td
                 class="rborder pr-2 pl-1"
-                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
                 <div v-if="polozka2.vzor==-999"></div>
                 <!-- {{polozka2.kcks}} -->
@@ -367,40 +367,40 @@
                 <input
                   v-else
                   type="number"
-                  :readonly="c1.polozka_zak.zamek  "
+                  :readonly="c1.polozka_nab.zamek  "
                   v-model="polozka2.kcks"
                   style="height:100%; border-bottom:dotted 1px;font-size:120%"
                   class="prava"
-                  @focus="polozka2.vse=0;c1.aktivni_polozka_zak=polozka2.idefix"
-                  @change="polozka2.naklad=polozka2.kcks * polozka2.ks;fceCiselniky.ZmenPolozku('zak',polozka2,0)"
+                  @focus="polozka2.vse=0;c1.aktivni_polozka_nab=polozka2.idefix"
+                  @change="polozka2.naklad=polozka2.kcks * polozka2.ks;fceCiselniky.ZmenPolozku('nab',polozka2,0)"
                 />
               </td>
               <td
                 class="rborder pr-2"
-                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
                 <div v-if="polozka2.vzor==-999"></div>
                 <!-- ||!f.isEmpty(polozka2.obsah)  -->
                 <input
                   v-else
                   type="number"
-                  :readonly="c1.polozka_zak.zamek "
+                  :readonly="c1.polozka_nab.zamek "
                   v-model="polozka2.ks"
                   style="height:100%; border-bottom:dotted 1px;font-size:120%"
                   class="prava"
                   @change="
         polozka2.naklad=polozka2.kcks * polozka2.ks;
-        fceCiselniky.ZmenPolozku('zak',polozka2,0)
+        fceCiselniky.ZmenPolozku('nab',polozka2,0)
         "
                 />
                 <span
                   style="visibility:hidden"
-                >{{c1.polozka_zak.zamek }} {{ !f.isEmpty(polozka2.obsah) }}</span>
+                >{{c1.polozka_nab.zamek }} {{ !f.isEmpty(polozka2.obsah) }}</span>
                 <!-- {{polozka2.ks}} -->
               </td>
               <td
                 class="rborder pr-2 pl-1"
-                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
                 <div v-if="polozka2.vzor==-999"></div>
                 <!--||!f.isEmpty(polozka2.obsah) //-->
@@ -410,16 +410,16 @@
                   v-model="polozka2.naklad"
                   style="height:100%; border-bottom:dotted 1px;font-size:120%"
                   class="prava"
-                  v-bind:readonly="c1.polozka_zak.zamek"
+                  v-bind:readonly="c1.polozka_nab.zamek"
                   @change="
       polozka2.kcks=(polozka2.ks>0?polozka2.naklad / polozka2.ks:polozka2.kcks).toFixed(2);
-      fceCiselniky.ZmenPolozku('zak',polozka2,0)"
+      fceCiselniky.ZmenPolozku('nab',polozka2,0)"
                 />
               </td>
               <td
                 class="rborder pr-2"
                 style="border-bottom: solid 1px silver"
-                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
                 <div v-if="polozka2.vzor==-999"></div>
                 <span v-else>
@@ -429,8 +429,8 @@
                     :value="(polozka2.prodej - polozka2.naklad)"
                     style="height:100%; border-bottom:dotted 1px;font-size:120%"
                     class="prava"
-                    @change="fceCiselniky.ZmenPolozku('zak',polozka2,0)"
-                    v-bind:readonly="c1.polozka_zak.zamek"
+                    @change="fceCiselniky.ZmenPolozku('nab',polozka2,0)"
+                    v-bind:readonly="c1.polozka_nab.zamek"
                   />
                   <!-- {{polozka2.prodej - polozka2.naklad}} -->
                 </span>
@@ -438,7 +438,7 @@
               <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
               <td
                 class="rborder pr-2 pl-1 pb-0"
-                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_zak && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+                :class="{'blue lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
               >
                 <div v-if="polozka2.vzor==-999"></div>
                 <input
@@ -447,8 +447,8 @@
                   v-model="polozka2.prodej"
                   style="height:100%; border-bottom:dotted 1px;font-size:120%"
                   class="prava"
-                  @change="fceCiselniky.ZmenPolozku('zak',polozka2,0)"
-                  @focus="c1.aktivni_polozka_zak=polozka2.idefix"
+                  @change="fceCiselniky.ZmenPolozku('nab',polozka2,0)"
+                  @focus="c1.aktivni_polozka_nab=polozka2.idefix"
                 />
               </td>
             </tr>
@@ -466,7 +466,7 @@ import f from '@/services/fce';
 import c1 from './CalcCentral.js'; // Prehledova dole
 import fceSeznam from './CalcFceSeznam.js'; // Funkce seznam
 import fceFillForm from './CalcFceFillForm.js'; // Funkce seznam
-import fceSwitch13Z from './CalcFceSwitch13Z.js'; // Prehledova dole
+import fceSwitch13N from './CalcFceSwitch13N.js'; // Prehledova dole
 import fceCiselniky from './CalcFceCiselniky.js'; // Prehledova dole
 import _ from 'lodash'
 
@@ -481,7 +481,7 @@ export default {
       c1:c1,
       fceSeznam: fceSeznam,
       fceFillForm:fceFillForm,
-      fceSwitch13Z:fceSwitch13Z,
+      fceSwitch13N:fceSwitch13N,
       fceCiselniky: fceCiselniky,
       _: _,
       x: _

@@ -39,7 +39,7 @@
         <div  class="leva blue lighten-5" :style="f.pof( c1.Sirka,98)" style="position:relative;">
           <CalcVueFirmySeekBAr></CalcVueFirmySeekBAr>
         </div>
-          <CalcVueZakazky :ID="ID"></CalcVueZakazky>
+        <CalcVueZakazky :ID="ID"></CalcVueZakazky>
 
       </div>
 
@@ -63,13 +63,122 @@
       >
         <!-- Seznam N {{c1.MAINMENULAST}}
         Seznam Z {{c1.MAINMENULAST}}-->
-
         <div v-if="false" style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999;">
           <span style="color:red; font-size:10em;">1N</span>
         </div>
 
         <div class="leva cyan lighten-5" :style="f.pof( c1.Sirka,98)" style="position:relative;">
-          <CalcVueFirmySeekBArN></CalcVueFirmySeekBArN>
+          <button
+            class="px-4 tlacitkoMenu elevation-2 hoVer"
+            @click="fceSwitch13N.to2N(c1.polozka_nab)"
+            v-if="!f.isEmpty(c1.polozka_nab)"
+          >Polozky 2N</button>
+          <button
+            class="px-4 tlacitkoMenu elevation-2 hoVer"
+            @click="fceSwitch13Nto3N(c1.polozka_nab,1)"
+            v-if="!f.isEmpty(c1.polozka_nab)"
+          >3N A</button>
+          <button class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden">NICKA</button>
+          <span
+            class="elevation-0 ml-4 pr-2 pb-0 pt-0"
+            style="position:absolute;border-radius:0px 0px 0px 0px;background:#e4eff8;left:10%;"
+          >
+            <span>
+              Rok:
+              <input
+                v-model="c1.search_nab_rok"
+                type="number"
+                class="white px-0"
+                style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black;font-size:110%"
+                @keyup="fceSeznam.Seznam('nab')"
+              />
+              Cislo:
+              <input
+                v-model="c1.search_nab_cislo"
+                type="text"
+                class="white px-2"
+                style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%"
+                @keyup="fceSeznam.Seznam('nab')"
+              />
+              <input
+                v-model="c1.search_nab_cislo2"
+                type="hidden"
+                class="white px-2"
+                style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black;font-size:110%"
+              />
+              Neco:
+              <input
+                v-model="c1.search_nab"
+                type="text"
+                class="white px-2"
+                style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black;font-size:110%"
+                @keyup="fceSeznam.Seznam('nab')"
+              />
+              <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+                <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
+              </span>
+
+              <button
+                style="border-radius::0px 10px 10px 0px;"
+                @click="c1.seek_nab_moje=!c1.seek_nab_moje;Seznam('nab')"
+                title="Moje nabazky"
+              >
+                <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+                  <i
+                    class="el-icon-user-solid d3"
+                    :class="{'green--text': c1.seek_nab_moje , 'orange--text': !c1.seek_nab_moje }"
+                    style="font-weight:bold;height:15px;color:#89a4b3"
+                  ></i>
+                </span>
+              </button>
+              <button
+                style="border-radius::0px 10px 10px 0px;"
+                @click="c1.search_nab_cislo='';c1.search_nab_cislo2='';c1.search_nab=''
+              c1.seek_nab_obchodnik=false;
+              c1.seek_nab_firma=false;
+              c1.seek_nab_stav=false;
+              ;Seznam('nab')"
+                v-if="c1.search_nab_cislo>'' || c1.search_nab>''|| c1.search_nab_cislo2>''"
+              >
+                <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+                  <i
+                    class="el-icon-close d3 red--text"
+                    style="font-weight:bold;height:15px;color:#89a4b3"
+                  ></i>
+                </span>
+              </button>
+            </span>
+
+            <span>
+              Naklad: {{f.getCisloInt(c1.seznam_nab_sum[0].naklad)}}
+              Prodej: {{f.getCisloInt(c1.seznam_nab_sum[0].prodej)}}
+              Zisk: {{f.getCisloInt(c1.seznam_nab_sum[0].zisk)}}
+              Marze: {{f.getCislo(c1.seznam_nab_sum[0].marze)}}
+              Pocet: {{f.getCisloInt(c1.seznam_nab_sum[0].pocet)}}
+              Od: {{f.obdobi(c1.seznam_nab_sum[0]._od)}}-{{f.obdobi(c1.seznam_nab_sum[0]._do)}}
+              <table>
+                <thead>
+                  <th>Pocet</th>
+                  <th>{{c1.seznam_nab_sum[0].pocet}}</th>
+                  <th>Naklad</th>
+                  <th>{{c1.seznam_nab_sum[0].naklad}}</th>
+                </thead>
+              </table>
+            </span>
+          </span>
+          <!-- <span class="elevation-0 ml-4 pr-2 pb-0 pt-0 " style="position:absolute;border-radius:0px 0px 0px 0px;background:#e4eff8;right:30%">
+          {{c1.seznam_nab_sum}}
+           Rok:<input    v-model="c1.search_nab_rok"   type="number" class="white px-0 "  style="height:15px;font-size:12px;background:white !important;width:4em;border: solid 1px black"  @keyup="fceSeznam.Seznam('nab')">
+           Cislo:<input v-model="c1.search_nab_cislo" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black" @keyup="fceSeznam.Seznam('nab')">
+            : <input v-model="c1.search_nab_cislo2" type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:10em;border: solid 1px black" >
+           Neco:<input  v-model="c1.search_nab"       type="text" class="white px-2 "  style="height:15px;font-size:12px;background:white !important;width:20em;border: solid 1px black" @keyup="fceSeznam.Seznam('nab')" >
+
+
+           <span style="background:#d9e1e7;border-radius:0px 10px 10px 0px;" class="pr-2">
+           <i class="el-icon-search d3" style="font-weight:bold;height:15px;color:#89a4b3"></i>
+           </span>
+
+          </span>-->
         </div>
        <CalcVueNabidky :ID="ID"></CalcVueNabidky>
 
@@ -81,11 +190,442 @@
         id="obalKalkulace"
         class="stred"
       >
-        <CalcVueNabidkyPolozky></CalcVueNabidkyPolozky>
-
         <!-- {{c1.polozky_zak}} -->
+        <div v-if="false" style="position:fixed; top:30em;right:30%;opacity:0.3">
+          <span style="color:red; font-size:10em">2N</span>
+        </div>
+        <div class="leva pt-0 pb-0">
+          <button class="px-4 tlacitkoMenu elevation-2 hoVer" @click="to1N()">Kniha 1N</button>
+          <button
+            class="px-4 tlacitkoMenu elevation-2 hoVer"
+            @click="fceSwitch13Nto3N(c1.polozka_nab,1)"
+            v-if="!f.isEmpty(c1.polozka_nab)"
+          >3N A</button>
+          <button class="px-4 tlacitkoMenu elevation-2 hoVer" style="visibility:hidden">NICKA</button>
+        </div>
 
+        <table
+          v-cloak
+          style="width:90%;border: solid 1px silver;border-bottom:none"
+          :style="f.pof(c1.Sirka,98.1)"
+        >
+          <thead>
+            <tr>
+              <th style="width:3em">Ikony</th>
+              <th v-if="false" style="width:20em">Text na faktuře</th>
+              <th style="width:20em">Práce</th>
+              <th style="width:20em">Dodavatel</th>
+              <th style="width:">Kč/ks</th>
+              <th style="width:">ks</th>
+              <th style="width:">Naklady celkem</th>
+              <th style="width:">Marze</th>
+              <th style="width:">Prodej</th>
+              <!-- <th style="width:">Sloupec</th> -->
+            </tr>
+            <tr style="zoom:120%">
+              <th style="width:3em;border:none" class="nb">&nbsp;</th>
+              <th style="width:20em;border:none" class="nb">&nbsp;</th>
+              <th style="width:20em;border:none" class="nb">&nbsp;</th>
+              <th style="width:20em;border:none" class="nb">&nbsp;</th>
+              <th style="width:;border:none" class="nb">&nbsp;</th>
+              <!-- <th style="width:;border:none" class="nb">&nbsp;</th> -->
+              <th style="width:">{{f.getCisloInt(c1.nab_naklady)}}</th>
+              <th style="width:">{{f.getCisloInt(c1.nab_marze)}}</th>
+              <th style="width:">{{f.getCisloInt(c1.nab_prodej)}}</th>
+              <!-- <th style="width:">Sloupec</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(polozka2,idx2) in c1.polozky_nab"
+              :key="idx2"
+              style="cursor:pointer; height:30px; border-bottom:dotted 0px;"
+              class="hoVer2"
+              @click="polozka2.vzor>-999?c1.aktivni_polozka_nab=polozka2.idefix:false"
+              :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999
+              ,'ramspodni': polozka2.idefix!==c1.aktivni_polozka_nab && polozka2.vzor >-999
+              ,'nerusit': polozka2.nazev.match(/^Pr.zdn.*$/) && c1.aktivni_polozka_nab!==polozka2.idefix
+      }"
 
+              :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:solid 1px #cccccc;':'height:3px'"
+            >
+              <!-- :class="{
+         'blue lighten-5 ': (polozka2.vzor==2 ) || ( polozka2.vzor==0 && !f.isEmpty(polozka2.obsah) ),
+         'green lighten-5 ': (polozka2.vzor==1 && polozka2.idefix_dod==c1.idefix_vlastnik ) || (polozka2.vzor==0 && polozka2.idefix_dod==c1.idefix_vlastnik && f.isEmpty(polozka2.obsah) )
+              }"-->
+              <td
+                :key="'nab'+c1.klikynab+''+idx2"
+                class="pl-1"
+                style="border-bottom:none"
+                :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+                <div
+                  v-else
+                  style="height:100%; width:80%%;border-bottom:dotted 1px"
+                  class="stred mx-1 pt-4"
+                >
+                  <span
+                    v-if="!f.isEmpty(polozka2.obsah) "
+                    class="black--text d3"
+                    style="font-weight:bold;height:20px;zoom:100%;"
+                    @click="polozka2.vzor==0?to3N(polozka2,2):ZalozitZobrazit(polozka2)"
+                  >K</span>
+                  <span
+                    v-else
+                    class="black--text d3"
+                    style="font-weight:bold;height:20px;zoom:100%;"
+                  >&nbsp;</span>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <i
+                    v-if="polozka2.vzor==0"
+                    class="el-icon-delete black--text d3"
+                    style="font-weight:bold;height:25px;zoom:100%;"
+                    @click="deleteItem('nab',polozka2)"
+                  ></i>
+                  <i
+                    v-else
+                    class="el-icon-minus black--text d3"
+                    style="font-weight:bold;height:25px;zoom:100%;"
+                  ></i>
+                  &nbsp;&nbsp;&nbsp;
+                  <button @click="copyRadek(polozka2.idefix)">
+                    <i
+                      class="el-icon-plus black--text d3"
+                      style="font-weight:bold;height:25px;zoom:100%;"
+                    ></i>
+                  </button>
+                </div>
+              </td>
+              <td
+                v-if="false"
+                class="rborder leva pl-2 pr-2"
+                style="border-bottom:none"
+                :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+                <input
+                  v-else
+                  type="text"
+                  v-model="polozka2.nazev"
+                  @change="ZmenPolozku('nab',polozka2)"
+                  style="height:100%; border-bottom:dotted 0px;"
+                  :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
+                  @focus="c1.aktivni_polozka_nab=polozka2.idefix"
+                />
+              </td>
+              <td
+                class="rborder pr-0 pt-1 pl-2 pr-1"
+                style="border-bottom:none"
+                :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor >-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+
+                <div
+                  v-else-if="c1.cis_prace.length>=0 && f.isEmpty(polozka2.obsah)"
+                  :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'"
+                  class="leva pl-0"
+                >
+                  <span style="float: left;width:100%">
+                    <table border="0" style="border: solid 0px black;width:100%">
+                      <tr>
+                        <td style="width:90%">
+                          <el-select
+                            v-model="polozka2.idefix_prace"
+                            filterable
+                            no-match-text
+                            no-data-text
+                            default-first-option
+                            size="mini"
+                            class="pb-0 pl-0 pa-0 ma-0"
+                            :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
+                            popper-class="silver lighten-5"
+                            placeholder="Prace"
+                            @change="(polozka2.idefix_prace>0 && (polozka2.nazev=='' ||polozka2.nazev.match(/^Pr.zdn.*$/) ) )?polozka2.nazev=(c1.cis_prace.filter(el => {
+                  return el.idefix_prace==polozka2.idefix_prace
+
+                }))[0].text_na_fakturu:''
+                ;;ZmenPolozku('nab',polozka2)"
+                            :disabled="c1.polozka_nab.zamek"
+                          >
+                            <!-- x.filter(c1.cis_prace, function(o){ return true || filterPrace(polozka2,o) }) -->
+                            <el-option
+                              v-for="item01 in c1.cis_prace.filter(el=>{ return    true || el.pocet_dod > 0 || el.idefix_prace*1==polozka2.idefix_prace*1   })"
+                              :key="item01.idefix_prace"
+                              :label="item01.prace"
+                              :value="item01.idefix_prace"
+                              style="font-size:13px"
+                            >
+                              <span style="float: left">{{item01.prace}}</span>
+                              <span
+                                style="float: right; color: #8492a6; font-size: 13px"
+                              >{{item01.pocet_dod}}</span>
+                            </el-option>
+                          </el-select>
+                        </td>
+                        <td style="width:10%;text-align:right">
+                          <span
+                            style="float: right; color: #8492a6; font-size: 13px"
+                            @click="polozka2.vse=(polozka2.vse==0?1:0)"
+                          >
+                            <i
+                              v-if="polozka2.vse==0"
+                              class="el-icon-plus black--text d3"
+                              style="font-weight:bold;height:15px;zoom:100%;"
+                            ></i>
+                          </span>
+                          <span
+                            style="float: right; color: #8492a6; font-size: 13px"
+                            @click="polozka2.vse=(polozka2.vse==0?1:0)"
+                          >
+                            <i
+                              v-if="polozka2.vse==1"
+                              class="el-icon-plus orange--text d3"
+                              style="font-weight:bold;height:15px;zoom:100%;"
+                            ></i>
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <div v-if="polozka2.vzor==-999"></div>
+                    <div
+                      v-else
+                      class="pt-1 pb-1"
+                      style="height:39px;width:100%; border-bottom: solid silver 0px;"
+                    >
+                      <!-- <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Text:</div> -->
+                      <div style="float:right;width:100%;" class="elevation-0 pt-1">
+                        <!-- @change="false?ZmenPolozku('nab',polozka2):true" -->
+                        <input
+                          type="text"
+                          v-model="polozka2.nazev"
+                          @change="ZmenPolozku('nab',polozka2)"
+                          @focus="c1.aktivni_polozka_nab=polozka2.idefix"
+                          style="height:25px; border:dotted 1px silver;font-size:13px"
+                          placeholder="Text na fakturu"
+                          :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
+                          class="elevation-0"
+                        />
+                      </div>
+                    </div>
+                  </span>
+                </div>
+                <div
+                  v-else
+                  :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'"
+                  class="leva pl-1"
+                >
+                  <span>
+                    {{ (c1.cis_prace.filter(el=>{
+                    return el.idefix_prace*1==c1.idefix_vlastnikPrace*1
+                    }) )[0]['prace']}}
+                    <div v-if="polozka2.vzor==-999"></div>
+                    <div
+                      v-else
+                      class="pt-1 pb-1"
+                      style="height:39px;width:100%; border-bottom: solid silver 0px;"
+                    >
+                      <!-- <div style="float:left;width:30%;height:39px;" class="pt-2 pl-3 ma-0 leva"> Text:</div> -->
+                      <div style="float:right;width:100%;" class="elevation-0 pt-1">
+                        <input
+                          type="text"
+                          v-model="polozka2.nazev"
+                          @change="false?ZmenPolozku('nab',polozka2):true"
+                          @focus="c1.aktivni_polozka_nab=polozka2.idefix"
+                          style="height:25px; border:dotted 1px silver;font-size:13px"
+                          placeholder="Text na fakturu"
+                          :style="polozka2.nazev.match(/^Pr.zdn.*$/)?'color:#ccceee':''"
+                          class="elevation-0"
+                        />
+                      </div>
+                    </div>
+                  </span>
+                </div>
+              </td>
+
+              <td
+                class="rborder pr-0 pt-1 pl-2 pr-1"
+                style="border-bottom:none"
+                :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+                <div v-else>
+                  <el-select
+                    v-model="polozka2.idefix_dod"
+                    v-if="c1.cis_dod.length>=0 && f.isEmpty(polozka2.obsah)"
+                    filterable
+                    no-match-text="Nenalezeno"
+                    no-data-text="Cekam na data"
+                    default-first-option
+                    size="mini"
+                    class="pb-0 pl-0 pa-0 ma-0"
+                    :style="'position:relative;top:1px;left:1em;width:100%;height:100%'"
+                    popper-class="silver lighten-5"
+                    placeholder="Dodavatel"
+                    @focus="c1.nab_item_active=polozka2"
+                    @change="polozka2.vse==1&& polozka2.idefix_dod>0?Sparuj(polozka2):false; polozka2.vse=0
+              ;ZmenPolozku('nab',polozka2)"
+                    :disabled="c1.polozka_nab.zamek"
+                  >
+                    <!--
+               remote
+              :remote-method="CisDodAll"
+                    :c1.loading="c1.loading"-->
+                    <!-- x.filter(c1.cis_dod, function(o){ return filterDod(polozka2, o) }) -->
+                    <el-option
+                      v-if="polozka2.vse==0"
+                      v-for="item02 in x.filter(c1.cis_dod, function(o){ return filterDod(polozka2, o) })"
+                      :key="item02.idefix_firma"
+                      :label="item02.firma"
+                      :value="item02.idefix_firma"
+                      style="font-size:13px"
+                    >
+                      <span style="float: left">{{item02.firma}}</span>
+                      <span
+                        style="float: right; color: #8492a6; font-size: 13px"
+                      >{{ item02.pocet_praci}}</span>
+                    </el-option>
+                    <el-option
+                      v-if="polozka2.vse==1"
+                      v-for="item02 in c1.cis_dod_all"
+                      :key="item02.idefix_firma"
+                      :label="item02.firma"
+                      :value="item02.idefix_firma"
+                      style="font-size:13px"
+                    >
+                      <span style="float: left">{{item02.firma}}</span>
+                      <span
+                        style="float: right; color: #8492a6; font-size: 13px"
+                      >{{item02.pocet_praci}}</span>
+                    </el-option>
+                  </el-select>
+                  <div
+                    v-else
+                    :style="'position:relative;top:1px;left:0em;width:100%;height:100%;border-bottom: dotted 1px silver'"
+                    class="leva pl-3"
+                  >
+                    {{ (c1.cis_dod_vlastnik.filter(el=>{
+                    return el.idefix_firma*1==c1.idefix_vlastnik*1
+                    }) )[0]['firma']}}
+                  </div>
+                </div>
+                <div v-if="polozka2.vzor==-999"></div>
+                <div
+                  v-else-if="polozka2.idefix_dod!=c1.idefix_vlastnik"
+                  class="pt-1 pb-1"
+                  style="height:39px;width:100%; border-bottom: solid silver 0px;"
+                >
+                  <div
+                    style="float:left;width:30%;height:39px;"
+                    class="pt-2 pl-3 ma-0 leva"
+                  >Faktura:</div>
+                  <div style="float:right;width:70%;" class="elevation-0 pt-1">
+                    <input
+                      type="text"
+                      :disabled="polozka2.nazev.match(/^Pr.zdn.*$/)"
+                      v-model="polozka2.faktura"
+                      @keyup="($event.keyCode==13 || $event.keyCode==9 )?ZmenPolozku('nab',polozka2):false"
+                      style="height:22px; border:dotted 1px silver;"
+                      class="stred"
+                    />
+                  </div>
+                </div>
+                <div
+                  v-else
+                  class="pt-1 pb-1 pl-0"
+                  style="height:39px;width:100%; border-bottom: solid silver 0px;"
+                >
+                  <div
+                    style="float:left;width:100%;height:39px;"
+                    class="pt-2 pl-2 ma-0 leva grey--text lighten-5"
+                  >&nbsp;</div>
+                </div>
+              </td>
+              <td
+                class="rborder pr-2"
+                :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+                <input
+                  v-else
+                  type="number"
+                  v-bind:readonly="false && !f.isEmpty(polozka2.obsah)"
+                  v-model="polozka2.kcks"
+                  @change="polozka2.naklad=polozka2.kcks * polozka2.ks;ZmenPolozku('nab',polozka2,0)"
+                  style="height:100%; border-bottom:dotted 1px;font-size:120%"
+                  class="prava"
+                  @focus="polozka2.vse=0"
+                />
+              </td>
+              <td
+                class="rborder pr-2"
+                :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+                <input
+                  v-else
+                  type="number"
+                  v-model="polozka2.ks"
+                  @change="polozka2.naklad=polozka2.kcks * polozka2.ks"
+                  style="height:100%; border-bottom:dotted 1px;;font-size:120%"
+                  class="prava"
+                />
+                <!-- {{polozka2.ks}} -->
+              </td>
+              <td
+                class="rborder pr-2"
+                :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+
+                <input
+                  v-else
+                  type="number"
+                  v-model="polozka2.naklad"
+                  :readonly="false"
+                  style="height:100%; border-bottom:dotted 1px;font-size:120%"
+                  class="prava"
+                  @change="
+          polozka2.kcks=(polozka2.ks>0?polozka2.naklad / polozka2.ks:polozka2.kcks).toFixed(2);
+          ZmenPolozku('nab',polozka2,0)"
+                />
+              </td>
+              <td
+                class="rborder pr-2"
+                :class="{'green lighten-5 elevation-2': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+                <span v-else>
+                  <!-- {{polozka2.prodej - polozka2.naklad}} -->
+                  <input
+                    type="number"
+                    :readonly="true"
+                    :value="(polozka2.prodej - polozka2.naklad)"
+                    style="height:100%; border-bottom:dotted 1px;font-size:120%"
+                    class="prava"
+                  />
+                </span>
+              </td>
+              <!--<td class="rborder pr-2">{{polozka2.marze}}</td>!-->
+              <td
+                class="rborder pr-2"
+                :class="{'green lighten-5 elevation-0 ramspodni': polozka2.idefix==c1.aktivni_polozka_nab && polozka2.vzor>-999 , 'black1': polozka2.vzor==-999}"
+              >
+                <div v-if="polozka2.vzor==-999"></div>
+                <input
+                  v-else
+                  type="number"
+                  v-model="polozka2.prodej"
+                  style="height:100%; border-bottom:dotted 1px;;font-size:120%"
+                  class="prava"
+                  @change="ZmenPolozku('nab',polozka2,0)"
+                  @focus="c1.aktivni_polozka_nab=polozka2.idefix"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div
@@ -327,7 +867,19 @@
           <!-- POD {{c1.IDEFIXACTIVE}} / {{aBefore2.idefix }} -->
         </div>
         <div style="z-indeX:999999;background:black">
+          <!--
+    <hr>
 
+
+    <work-but  :ID="'DX_'+10" style="position:relative;left:4px" ></work-but>
+    <hr>
+    HUHU
+
+    <work-but  :ID="'EE_'+9" style="position:relative;left:4px" ></work-but>
+    <hr>
+    <work-but  :ID="'FF_'+8" style="position:relative;left:4px" ></work-but>
+    <hr>
+          //-->
         </div>
       </div>
       <!--MAPA Menu//-->
@@ -347,7 +899,6 @@
       <CalcOdkazy :ID="ID"></CalcOdkazy>
       </div>
     </my-layout>
-
 
     <transition name="list1122">
       <dia-frame
@@ -411,8 +962,7 @@ import CalcOdkazy from './CalcOdkazy'
 
 //NOve 202002 - pokus o prevod a sdileni hlavnich promennych do samostatneho modulu  pro moduly Kalkulaci
 //import Central from './CalcCentral.vue'; // Prehledova dole
-//import Central from './CalcCentral.js'; // Prehledova dole
-import c1 from './CalcCentral.js'; // Prehledova dole
+import Central from './CalcCentral.js'; // Prehledova dole
 import fceSeznam from './CalcFceSeznam.js'; // Funkce seznam
 import fceSave from './CalcFceSave.js'; // Funkce seznam
 import fceNova from './CalcFceNova.js'; // Funkce seznam
@@ -422,20 +972,16 @@ import fceNova from './CalcFceNova.js'; // Funkce seznam
 
 import CalcVueZ13Buttons from './CalcVueZ13Buttons.vue'; // Funkce seznam
 import CalcVueFirmySeekBAr from './CalcVueFirmySeekBAr.vue'; // Funkce seznam
-import CalcVueFirmySeekBArN from './CalcVueFirmySeekBArN.vue'; // Funkce seznam
 import fceSwitch13Z from './CalcFceSwitch13Z.js'; // Funkce seznam
 import fceSwitch13N from './CalcFceSwitch13N.js'; // Funkce seznam
 import CalcVueZakazky  from './CalcVueZakazky.vue'; // Seznam zakazek
 import CalcVueNabidky  from './CalcVueNabidky.vue'; // Seznam zakazek
 
 import CalcVueZakazkyPolozky  from './CalcVueZakazkyPolozky.vue'; // Polozky zakazek 2Z
-import CalcVueNabidkyPolozky  from './CalcVueNabidkyPolozky.vue'; // Polozky zakazek 2Z
 
 
 
 import fceFillForm from './CalcFceFillForm.js'; // Funkce seznam
-import fceCiselniky from './CalcFceCiselniky.js'; // Funkce pro polozky
-import fceVL2  from './VLFce.js'; // Funkce pro polozky
 
 
 
@@ -444,8 +990,7 @@ import fceVL2  from './VLFce.js'; // Funkce pro polozky
 
 export default {
   components: {
-    //'c1': Central,
-    'c1': c1,
+    'c1': Central,
     'prehled': Prehled,
     'menu-left': MenuLeft,
     'my-layout': MyLayout,
@@ -461,28 +1006,20 @@ export default {
      'CalcOdkazy': CalcOdkazy,
      'CalcVueZ13Buttons': CalcVueZ13Buttons,
      'CalcVueFirmySeekBAr': CalcVueFirmySeekBAr,
-     'CalcVueFirmySeekBArN': CalcVueFirmySeekBArN,
      'CalcVueZakazky':CalcVueZakazky,
      'CalcVueNabidky':CalcVueNabidky,
      'CalcVueZakazkyPolozky':CalcVueZakazkyPolozky,  //Polozky 2Z
-     'CalcVueNabidkyPolozky':CalcVueNabidkyPolozky,  //Polozky 2Z
-
-
 
     // 'menu-hlavni': MenuHlavni,
   },
   data() {
     return {
-      //c1: Central,
-      c1: c1,
+      c1: Central,
       fceSeznam: fceSeznam,
       fceSave: fceSave,
       fceNova: fceNova,
       fceSwitch13Z: fceSwitch13Z,
-      fceSwitch13N: fceSwitch13N,
       fceFillForm: fceFillForm ,
-      fceCiselniky: fceCiselniky,
-      fceVL: fceVL,
 
 
       $: $,
@@ -495,10 +1032,6 @@ export default {
       aKalkAfter: [],  //Prevedeno lec neodstarnuji zatim
 
       ID: 0,
-      aktivni_zak: 0,
-      cTable: '',
-
-
 
 
 
@@ -587,11 +1120,9 @@ export default {
       //f.Alert2(self.c1.ITEM1)
     },
     aktivni_zak: async function() {
-      //c1.vllist = await this.IDEFIXS_VL(this.c1.aktivni_zak);
-      c1.vllist = await fceVL2.IDEFIXS_VL(this.c1.aktivni_zak);
+      this.c1.vllist = await this.IDEFIXS_VL(this.c1.aktivni_zak);
       f.log("ZMENA ZAK", this.c1.aktivni_zak, this.c1.vllist);
     },
-
     /*
     obrazovka_zak: async function() {
       this.c1.vllist = await this.IDEFIXS_VL(this.c1.aktivni_zak);
@@ -605,21 +1136,8 @@ export default {
     //self.c1.cTable = 'calc_my_' + self.idefix
     setInterval(function () {
       self.c1.idRend = self.c1.idRend+1
-
       //console.log(self.c1.idRend)
      },20000) ;
-
-     setInterval(function(){
-       if (self.aktivni_zak !=self.c1.aktivni_zak) {
-         self.aktivni_zak =self.c1.aktivni_zak
-         console.log('Zmena zak' , self.aktivni_zak)
-       }
-       if (self.cTable !=self.c1.cTable) {
-         self.cTable =self.c1.cTable
-         console.log('Zmena cTab' , self.cTable)
-       }
-
-     },500)
     eventBus.$off("MenuHlavni");
     eventBus.$off("MenuLeft");
     eventBus.$off("SAVETEMPLATE");
@@ -664,9 +1182,6 @@ export default {
       //self.c1.IDEFIX_VL= server.IDEFIX_VL
       //self.dialogVL=true
       //let route = this.$router.resolve({ name: 'vl' , params: { id: self.c1.IDEFIX_VL } })
-      alert('a')
-      alert(self.c1.vllist)
-      alert('b')
       let route = this.$router.resolve({
         name: "vl",
         params: { id: self.c1.vllist }
@@ -1151,14 +1666,14 @@ export default {
      });
 */
 
-//Po startu se nacte c1.seznam zakazek
+    //Po startu se nacte c1.seznam zakazek
 
-    await fceCiselniky.Vlastnik();
-    await fceCiselniky.VlastnikPrace();
+    await self.Vlastnik();
+    await self.VlastnikPrace();
     await fceSeznam.Seznam("zak");
-    await fceCiselniky.CisPraceDod();
-    await fceCiselniky.CisDod(0);
-    await fceCiselniky.CisDodAll(0);
+    await self.CisPraceDod();
+    await self.CisDod(0);
+    await self.CisDodAll(0);
     var aAkt = [];
     if (self.c1.seznam_zak.length > 0) {
       if (self.c1.aktivni_zak > 0) {
@@ -1375,7 +1890,7 @@ export default {
       let nRet = 0;
 
       if (self.c1.MAINMENULAST == "kalkulace") {
-        f.mAlert(
+        self.mAlert(
           "V rezimu nabidek nelze zadavat praci na vyrobu, je nutne vytvorit zakazku"
         );
         return;
@@ -1452,7 +1967,19 @@ export default {
       });
       //f.Alert2(f.Jstr(res), q)
     },
-
+    async ZalozitZobrazit(polozka2) {
+      const self = this;
+      //to3N(polozka2,2)
+      //ZmenPolozku('zak',polozka2)
+      if (polozka2.nazev.match(/^Pr.zdn.*$/)) {
+        polozka2.nazev = "Nova";
+        self.ZmenPolozku(
+          self.c1.MAINMENULAST == "zakazky" ? "zak" : "nab",
+          polozka2
+        );
+      }
+      self.mAlert("Polozka musi byt pred pristupen do kalkulace ulozena");
+    },
     async seekzaknab(key, value) {
       const self = this;
       const server = { key: key, value: value };
@@ -1536,14 +2063,377 @@ export default {
         self.c1.aKalkBefore = neco;
       }
     },
+    async copyRadek(ifx) {
+      const self = this;
+
+      var randTab = "tmp_" + Math.ceil(Math.random() * 91000879);
+      var ceho = "";
+      var ifx_aktivni;
+      if (self.c1.MAINMENULAST == "zakazky") {
+        ceho = "zak";
+        ifx_aktivni = self.c1.aktivni_zak;
+      } else if (self.c1.MAINMENULAST == "kalkulace") {
+        ceho = "nab";
+        ifx_aktivni = self.c1.aktivni_nab;
+      }
+
+      var qC = `create table ${randTab} without oids as select * from ${ceho}_t_items where idefix=${ifx}`;
+      await Q.post(self.idefix, qC);
+
+      var qU = `update ${randTab} set idefix_${ceho} = ${ifx_aktivni}, time_insert=now()
+     ,time_update=now(),user_insert_idefix=${self.idefix}
+     ,user_update_idefix=${self.idefix},idefix= nextval('list2_seq'::regclass),id=nextval('zak_t_items_id_seq'::regclass),status=0`;
+      await Q.post(self.idefix, qU);
+      var qSpoj = `insert into ${ceho}_t_items select * from ${randTab}`;
+      await Q.post(self.idefix, qSpoj);
+      var qOprav = `update ${ceho}_t_items set idefix_src=idefix where idefix_src is null or idefix_src!=idefix`;
+      await Q.post(self.idefix, qOprav);
+      // f.Alert(self.c1.cTable)
+
+      if (self.c1.MAINMENULAST == "zakazky") {
+        f.log("DROP CALC Z", self.idefix);
+        await Q.create_tmp_zak(self.idefix, sef.c1.cTable, ifx_aktivni);
+
+        //await Q.post(self.idefix,`select drop_tmp(${self.idefix});`)
+
+        //await Q.post(self.idefix,`drop table if exists ${self.c1.cTable}`)
+        //await Q.post(self.idefix,`create table  ${self.c1.cTable} without oids as select * from ${ceho}_t_items where idefix_zak=${ifx_aktivni}`)
+        //await Q.post(self.idefix,`create sequence ${self.c1.cTable}_seq`)
+
+        //await Q.post(self.idefix,`alter table  ${self.c1.cTable}  alter column id set default nextval('${self.c1.cTable}_seq'::regclass ) `)
+        //await Q.post(self.idefix,`alter table  ${self.c1.cTable}  alter column idefix set default  nextval('list2_seq'::regclass) `)
+        //nextval('calc_my_9_zak_seq'::regclass)
+        // nextval('list2_seq'::regclass)
+
+        self.c1.polozky_zak = (
+          await Q.all(
+            self.idefix,
+            `select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${ifx_aktivni} order by idefix`
+          )
+        ).data.data;
+        fceNova.addPol("zak", polozka.idefix);
+        fceNova.polozky_soucet("zak");
+      } else if (self.c1.MAINMENULAST == "kalkulace") {
+        await Q.post(self.idefix, `drop table if exists ${self.c1.cTable}`);
+        await Q.post(
+          self.idefix,
+          `create table  ${self.c1.cTable} without oids as select * from ${ceho}_t_items where idefix_zak=${ifx_aktivni}`
+        );
+        await Q.post(
+          self.idefix,
+          `alter table  ${self.c1.cTable}  alter column id set default nextval('${self.c1.cTable}_seq'::regclass ) `
+        );
+        await Q.post(
+          self.idefix,
+          `alter table  ${self.c1.cTable}  alter column idefix set default  nextval('list2_seq'::regclass) `
+        );
+
+        self.c1.polozky_nab = (
+          await Q.all(
+            self.idefix,
+            `select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${ifx_aktivni} order by idefix`
+          )
+        ).data.data;
+        fceNova.addPol("nab", polozka.idefix);
+        fceNova.polozky_soucet("nab");
+      }
+
+      //   f.Alert2(qC)
+      //     return
+      //f.Alert(ifx+' 2387 ', randTab)
+    },
+    async Sparuj(polo) {
+      const self = this;
+
+      if (polo.idefix_prace > 0 && polo.idefix_dod > 0) {
+        var qOvar = `select * from list_firmaprace  where idefix_firma=${polo.idefix_dod} and idefix_prace = ${polo.idefix_prace} `;
+        var afound = (await Q.all(self.idefix, qOvar)).data.data;
+        if (afound.length == 0) {
+          this.$confirm("Novy vztah prace  - dodavatel ", "Vlozit ?", {
+            distinguishCancelAndClose: true,
+            confirmButtonText: "Ano?",
+            cancelButtonText: "Ne"
+          }).then(() => {
+            var qInsert = `insert into list_firmaprace (idefix_firma , idefix_prace ,        time_insert        , time_update         , user_insert_idefix , user_update_idefix )
+        values (
+          ${polo.idefix_dod} , ${polo.idefix_prace}, now(),now(), ${self.idefix}, ${self.idefix}
+        )
+       `;
+            Q.post(self.idefix, qInsert).then(() => {
+              self.CisDod(0);
+              self.CisDodAll(0);
+              self.CisPraceDod();
+              f.Alert("Vlozeno");
+            });
+          });
+        }
+        self.mAlert(f.Jstr(afound));
+      } else {
+      }
+
+      return true;
+    },
+    filterPrace(polozka, radekDod) {
+      const self = this;
+      var lRet = false;
+
+      if (polozka.idefix_dod == 0) {
+        lRet = true;
+      }
+      if (polozka.idefix_dod > 0) {
+        console.log(radekDod.prace_seznam);
+        radekDod.dod_seznam.forEach(el2 => {
+          if (el2 == polozka.idefix_dod) {
+            lRet = true;
+            return;
+          }
+        });
+      }
+      return lRet;
+    },
+    filterDod(polozka, radekDod) {
+      const self = this;
+      var lRet = false;
+
+      if (polozka.idefix_prace == 0) {
+        lRet = true;
+      }
+      // console.log('Radek',radekDod)
+      if (polozka.idefix_prace > 0) {
+        // console.log(radekDod.prace_seznam)
+        radekDod.prace_seznam.forEach(el2 => {
+          if (el2 == polozka.idefix_prace) {
+            lRet = true;
+            return;
+          }
+        });
+      }
+      return lRet;
+    },
+    async deleteItem(ceho = "zak", polozka) {
+      const self = this;
+      this.$confirm("Vymazat zaznam ", polozka.nazev, {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "Ano?",
+        cancelButtonText: "Ne"
+      }).then(() => {
+        self.deleteItemRun(ceho, polozka);
+      });
+    },
+    async deleteItemRun(ceho = "zak", polozka) {
+      const self = this;
+      var idefix_ceho = ceho == "zak" ? polozka.idefix_zak : polozka.idefix_nab;
+      var b = await Q.post(
+        self.idefix,
+        `delete from ${ceho}_t_items where idefix = ${polozka.idefix} and vzor=0`
+      );
+      //f.Alert2(`delete from ${ceho}_t_items where idefix = ${polozka.idefix} and vzor=0`)
+      if (ceho == "zak") {
+        self.c1.polozky_zak = (
+          await Q.all(
+            self.idefix,
+            `select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${idefix_ceho} order by idefix`
+          )
+        ).data.data;
+
+        fceNova.polozky_soucet("zak");
+
+        self.c1.klikyzak++;
+      }
+      if (ceho == "nab") {
+        self.c1.polozky_nab = (
+          await Q.all(
+            self.idefix,
+            `select *,0 as vse from ${ceho}_t_items where idefix_${ceho}= ${idefix_ceho} order by idefix`
+          )
+        ).data.data;
+
+        fceNova.polozky_soucet("nab");
+        self.c1.klikynab++;
+      }
+
+      await fceNova.addPol(ceho, idefix_ceho);
+      //await f.sleep(1000)
+    },
+
+    async delzak(polozka) {
+      const self = this;
+      if (polozka.nazev == "[[STORNO]]") {
+        this.$notify({
+          title: self.c1.MAINMENULAST,
+          message: `Jiz bylo stornovano`,
+          type: "error",
+          offset: 100,
+          duration: 5000
+        });
+        return;
+      }
+      if (!f.Confirm(`Storno pro  ${polozka.cislozakazky} ?`)) {
+        return;
+      }
+
+      var q0 = `update zak_t_items set prodej = 0 where idefix_zak = ${polozka.idefix} ;`;
+      var q = `${q0} ; update zak_t_list set nazev = '[[STORNO]]' where idefix = ${polozka.idefix}`;
+      var b = await Q.post(self.idefix, q);
+
+      await fceSeznam.Seznam("zak");
+      setTimeout(function() {
+        self.$refs.w1.form.nazev = "[[STORNO]]";
+      }, 500);
+
+      this.$notify({
+        title: self.c1.MAINMENULAST,
+        message: `Zakazka ${polozka.cislozakazky} byla stornovana`,
+        type: "error",
+        offset: 100,
+        duration: 5000
+      });
+
+      //f.Alert2(f.Jstr(polozka))
+    },
+    async delnab(polozka) {
+      const self = this;
+      if (polozka.nazev == "[[STORNO]]") {
+        this.$notify({
+          title: self.c1.MAINMENULAST,
+          message: `Jiz bylo stornovano`,
+          type: "error",
+          offset: 100,
+          duration: 5000
+        });
+        return;
+      }
+      if (!f.Confirm(`Storno pro  ${polozka.cislonabidky} ?`)) {
+        return;
+      }
+      //     alert('delzak')
+      var q0 = `update nab_t_items set prodej = 0 where idefix_nab = ${polozka.idefix} ;`;
+      var q = `${q0} ; update nab_t_list set nazev = '[[STORNO]]' where idefix = ${polozka.idefix}`;
+
+      var b = await Q.post(self.idefix, q);
+      fceSeznam.Seznam("nab");
+      setTimeout(function() {
+        self.$refs.w1.form.nazev = "[[STORNO]]";
+      }, 500);
+
+      this.$notify({
+        title: self.c1.MAINMENULAST,
+        message: `Zakazka ${polozka.cislonabidky} byla stornovana`,
+        type: "error",
+        offset: 100,
+        duration: 5000
+      });
+
+      //f.Alert2(q, f.Jstr(polozka))
+    },
 
 
 
 
 
+    async to1ZXXXX() {
+      const self = this;
+      //f.Alert(self.c1.status_zak)
+      if (
+        self.$refs.w1.form.cislo > 0 &&
+        self.c1.obrazovka_zak == 3 &&
+        self.c1.status_zak == 2
+      ) {
+        await fceSave.Ulozit()
+          .then(() => {
+            //     alert('bobry')
+          })
+          .catch(e => {
+            f.Alert2("Chyba 1", e);
+            self.c1.obrazovka_zak = 1;
+          });
+        //         await self.to2N(self.c1.polozka_nab)
+        //       await f.sleep(3000)
+      }
+      if (
+        self.c1.order_zak != self.c1.order_zak_default &&
+        self.c1.query_zak_last > ""
+      ) {
+        self.c1.query_zak_last = `select * from (${self.c1.query_zak_last}) a order by kategorie, ${self.c1.order_zak_default} ${self.c1.desc_zak_default}`;
+        var q = `select * from (${self.c1.query_zak_last}) a order by kategorie, ${self.c1.order_zak_default} ${self.c1.desc_zak_default}`;
+
+        self.c1.order_zak = self.c1.order_zak_default;
+        self.c1.desc_zak = self.c1.desc_zak_default;
+        q = q.replace("  ", "");
+        q = q.replace("  ", "");
+        q = q.replace("  ", "");
+        q = q.replace("cislozakazky desc", "right(cislozakazky,5) desc");
+
+        self.c1.seznam_zak = (await Q.all(self.idefix, q)).data.data;
+      }
+
+      if (self.c1.MAINMENULAST == "zakazky" && self.c1.status_zak == 1) {
+        this.$confirm(
+          "Zrusit zakladni nove zakazky ? " + self.c1.aktivni_zak,
+          "",
+          {
+            distinguishCancelAndClose: true,
+            confirmButtonText: "Ano?",
+            cancelButtonText: "Ne"
+          }
+        ).then(() => {
+          self.c1.obrazovka_zak = 1;
+
+          eventBus.$emit("SavedZN", {
+            id: self.c1.MAINMENULAST,
+            // cislo: c.cislo,
+            // exp: c.exp,
+            // prod: self.idefix,
+            // prod_txt : c.produkce,
+            // zadani:c.zadani,
+            status_zak: 0,
+            status_nab: self.c1.status_nab
+          });
+
+          if (self.c1.aktivni_zak > 0) {
+            //document.getElementById('trn_'+self.c1.aktivni_zak)
+            var bck_aktivni = self.c1.aktivni_zak;
+            self.c1.query_zak_last = `select * from (${self.c1.query_zak_last}) a order by kategorie, ${self.c1.order_zak_default} ${self.c1.desc_zak_default}`;
+            var q = `select * from (${self.c1.query_zak_last}) a order by kategorie, ${self.c1.order_zak_default} ${self.c1.desc_zak_default}`;
+
+            //self.c1.query_zak_last,
+            //f.Alert2("1",self.c1.order_zak,q)
+            self.c1.order_zak = self.c1.order_zak_default;
+            self.c1.desc_zak = self.c1.desc_zak_default;
+            q = q.replace("  ", "");
+            q = q.replace("  ", "");
+            q = q.replace("  ", "");
+            q = q.replace("cislozakazky desc", "right(cislozakazky,5) desc");
+            //self.c1.seznam_zak = (await Q.all(self.idefix,q)).data.data
+            Q.all(self.idefix, q).then(res => {
+              if (!f.isEmpty(res.data.data)) {
+                self.c1.seznam_zak = res.data.data;
+                self.c1.aktivni_zak = self.c1.seznam_zak[0].idefix;
+                fceFillForm.FillFormWait(self.c1.seznam_zak[0]);
+              }
+            });
+
+            /*
+            setTimeout(function(){
+              f.Alert("huhu 2",self.c1.aktivni_zak )
+              self.seekzaknab('zak', self.c1.aktivni_zak);
+
+              return
+              if ( document.getElementById('trz_'+self.c1.aktivni_zak) ){
+                  document.getElementById('trz_'+self.c1.aktivni_zak).click()
 
 
+                 //f.Alert('trn_'+self.c1.aktivni_zak, document.getElementById('trz_'+self.c1.aktivni_zak)  )
+              }
 
+            },1000)
+          */
+          }
+        });
+      } else {
+        self.c1.obrazovka_zak = 1;
+      }
+    },
     async to1N() {
       const self = this;
 
@@ -1597,16 +2487,354 @@ export default {
 
 
 
+    async CisPrace(query = "") {
+      const self = this;
+      var qPrace = SQL.getPraceAll(0, query);
 
-  mAlert(txt, dur = 5000) {
-    this.$notify({
-      title: self.c1.MAINMENULAST,
-      message: `${txt}`,
-      type: "error",
-      offset: 100,
-      duration: 5000
-    });
-  },
+      f.log("GETPRACEALL::: ", qPrace);
+
+      self.c1.loading = true;
+      try {
+        self.c1.cis_prace = (await Q.all(self.idefix, qPrace)).data.data;
+        self.c1.cis_prace_vlastnik = self.c1.cis_prace.filter(el => {
+          return (
+            _.findIndex(el.dod_seznam, function(o) {
+              return o * 1 == self.c1.idefix_vlastnik * 1;
+            }) > -1
+          );
+          // return true
+        });
+        //f.Alert(f.Jstr(self.c1.cis_prace_vlastnik), self.c1.idefix_vlastnik )
+        self.c1.loading = false;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async CisDod(idefix_prace = 0) {
+      const self = this;
+      console.log("start");
+      var qDod = SQL.getDod(idefix_prace);
+      f.log("CISDOD ");
+      //console.log("end", qDod);
+      self.c1.loading = true;
+      //await self.Vlastnik()
+      try {
+        self.c1.cis_dod = (await Q.all(self.idefix, qDod)).data.data;
+        self.c1.cis_dod_vlastnik = self.c1.cis_dod.filter(el => {
+          return el.idefix_firma == self.c1.idefix_vlastnik;
+        });
+
+        // f.Alert(f.Jstr(self.c1.cis_dod_vlastnik), self.c1.idefix_vlastnik)
+        self.c1.loading = false;
+      } catch (e) {
+        console.log(e, qDod);
+      }
+    },
+    async CisDodAll(idefix_prace = 0) {
+      const self = this;
+      console.log(
+        "Hyr: ",
+        idefix_prace,
+        self.c1.MAINMENULAST,
+        " ",
+        f.Jstr(self.c1.zak_item_active)
+      );
+      //console.log("start");
+      //return
+
+      var qDod = SQL.getDodAll(idefix_prace);
+
+      //console.log("end", qDod);
+      self.c1.loading = true;
+      //await self.Vlastnik()
+      try {
+        self.c1.cis_dod_all = (await Q.all(self.idefix, qDod)).data.data;
+        self.c1.cis_dod_vlastnik = self.c1.cis_dod_all.filter(el => {
+          return el.idefix_firma == self.c1.idefix_vlastnik;
+        });
+
+        // f.Alert(f.Jstr(self.c1.cis_dod_vlastnik), self.c1.idefix_vlastnik)
+        self.c1.loading = false;
+      } catch (e) {
+        console.log(e, qDod);
+      }
+    },
+    async Vlastnik() {
+      const self = this;
+      var qVlastnik = `select idefix from list_dodavatel where vlastnik = 1 order by time_update  desc limit 10 ;`;
+      var aRet = [];
+
+      try {
+        aRet = (await Q.all(self.idefix, qVlastnik)).data.data;
+        if (aRet.length == 0) {
+          f.Alert("Vlastnik neni definovan");
+        } else if (aRet.length == 1) {
+          self.c1.idefix_vlastnik = aRet[0].idefix;
+        } else if (aRet.length > 1) {
+          self.c1.idefix_vlastnik = aRet[0].idefix;
+          f.Alert(
+            "Je definovano vice vlastniku aplikace, bude urcen ten kde je nejnovejsi zmena"
+          );
+        }
+        //f.Alert(self.c1.idefix_vlastnik)
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async VlastnikPrace() {
+      const self = this;
+      var qVlastnik = `select * from list_firmaprace where vlastnik = 1 limit 2`;
+      var aRet = [];
+
+      try {
+        aRet = (await Q.all(self.idefix, qVlastnik)).data.data;
+        if (aRet.length == 0) {
+          f.Alert("Vlastnik neni definovan");
+        } else if (aRet.length == 1) {
+          self.c1.idefix_vlastnikPrace = aRet[0].idefix_prace;
+        } else if (aRet.length > 1) {
+          self.c1.idefix_vlastnikPrace = aRet[0].idefix_prace;
+          f.Alert(
+            "Je definovano vice vlastniku aplikace, bude urcen ten kde je nejnovejsi zmena"
+          );
+        }
+        //f.Alert(self.c1.idefix_vlastnik)
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async CisPraceDod() {
+      const self = this;
+      await self.CisDod();
+      await self.CisPrace();
+    },
+    async ZmenPolozku(ceho = "zak", polozka, ev = 1) {
+      const self = this;
+      var lRet = false;
+      if (self.c1.timeout) {
+        clearTimeout(self.c1.timeout);
+        //this.$notify( { title: self.c1.MAINMENULAST,  message: `Cancel timout ${self.c1.timeout}` , type: 'error', offset: 100, duration: 500 })
+        self.c1.timeout = false;
+      }
+
+      self.c1.timeout = setTimeout(function() {
+        self.ZmenPolozku0(ceho, polozka, ev);
+      }, 100);
+    },
+    async ZmenPolozku0(ceho = "zak", polozka, ev = 1) {
+      const self = this;
+      var q = "";
+      var idefix_ceho = ceho == "zak" ? polozka.idefix_zak : polozka.idefix_nab;
+      var isInsert = false;
+
+      if (polozka.vzor == 0) {
+        q = `update  ${ceho}_t_items a set
+          idefix_prace = ${polozka.idefix_prace} ,
+          idefix_dod =   ${polozka.idefix_dod},
+          user_update_idefix =   ${self.idefix},
+          time_update = now(),
+          nazev      =   trim('${polozka.nazev}'),
+          ks        =   ${polozka.ks},
+          kcks        =   ${polozka.kcks},
+          naklad    =   ${polozka.naklad},
+          prodej    =   ${polozka.prodej}
+          where idefix = ${polozka.idefix}`;
+      }
+
+      // marze              | 0.00
+
+      //nextval('list2_seq'::regclass)
+
+      if (polozka.vzor >= 1 && !polozka.nazev.match(/^Pr.zdn.*$/)) {
+        //
+        if (!f.isEmpty(polozka.obsah)) {
+          polozka.obsah = f.Jstr(polozka.obsah);
+          //f.Alert(polozka.obsah)
+        }
+
+        var qCols = `(
+       nazev
+      ,obsah
+      ,kcks
+      ,ks
+      ,naklad
+      ,marze
+      ,prodej
+      ,marze_pomer
+      ,poradi
+      ,idefix_tmp
+      ,idefix_${ceho}
+      ,idefix_src
+      ,id_src
+      ,active
+      ,time_insert
+      ,time_update
+      ,user_insert_idefix
+      ,user_update_idefix
+      ,idefix_dod
+      ,idefix_prace
+      ,d_fak
+      ,faktura
+      ,vzor
+      ,expedice_datum
+      ,expedice_cas
+      ,datum
+
+       ) `;
+
+        var qVals = `(
+       '${polozka.nazev}'
+      ,'${polozka.obsah}'
+      ,'${polozka.kcks}'
+      ,'${polozka.ks}'
+      ,'${polozka.naklad}'
+      ,'${polozka.marze}'
+      ,'${polozka.prodej}'
+      ,'${polozka.marze_pomer}'
+      ,'${polozka.poradi}'
+      ,'${polozka.idefix_tmp}'
+      ,'${idefix_ceho}'
+      ,'${polozka.idefix_src}'
+      ,'${polozka.id_src}'
+      ,'${polozka.active}'
+      ,now()
+      ,now()
+      ,'${self.idefix}'
+      ,'${self.idefix}'
+      ,'${polozka.idefix_dod}'
+      ,'${polozka.idefix_prace}'
+      ,'${polozka.d_fak}'
+      ,'${polozka.faktura}'
+      ,0
+      ,now()::date
+      ,now()::time
+      ,now()
+
+      ) `;
+        qVals = qVals.replace(/'null'/g, "null");
+
+        var q = `insert into ${ceho}_t_items ${qCols} values ${qVals}`;
+        ev = 1;
+        isInsert = true;
+      } else if (polozka.vzor >= 1 && polozka.nazev.match(/^Pr.zdn.*$/)) {
+        f.Alert("Nedelam nic");
+        return;
+      }
+      if (polozka.vzor == -999) {
+        f.Alert("Nedelam nic -999");
+        return;
+      }
+
+      // f.Alert2("VKLAD", q)
+
+      var qoprava = `update ${ceho}_t_items set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from ${ceho}_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`;
+
+      try {
+        /*
+      var qoprava=`update zak_t_item set idefix=nextval('list2_seq'::regclass) where id in (
+    select id from (select count(*) over(partition by idefix) as rn ,
+     row_number() over(partition by idefix order by id) as radek
+    , id, idefix from zak_t_items ) a where rn >1 and radek > 1 order by id
+    )
+    ;`
+*/
+
+        var b = await Q.post(self.idefix, q);
+
+        //ev =1
+        //self.mAlert(q,10000)
+        this.$notify({
+          title: self.c1.MAINMENULAST,
+          message: `Polozka ulozena  ${polozka.vzor}  ${polozka.idefix}`,
+          type: "success",
+          offset: 100,
+          duration: 1000
+        });
+        polozka.vzor = 0;
+      } catch (e) {
+        this.$notify({
+          title: self.c1.MAINMENULAST,
+          message: `Doslo k chybe pri ulozeni `,
+          type: "error",
+          offset: 100,
+          duration: 5000
+        });
+
+        f.Alert2("ERROR polozky ", q, f.Jstr(polozka));
+      }
+      try {
+        var boprava = await Q.post(self.idefix, qoprava);
+      } catch (e) {
+        this.$notify({
+          title: self.c1.MAINMENULAST,
+          message: `Doslo k chybe 2 pri ulozeni `,
+          type: "error",
+          offset: 100,
+          duration: 5000
+        });
+
+        f.Alert2("ERROR polozky ", qoprava, f.Jstr(polozka));
+      }
+
+      // await self.DocasneReseni()
+      if (ceho == "zak") {
+        if (ev == 1) {
+          self.c1.polozky_zak = (
+            await Q.all(
+              self.idefix,
+              `select *,0 as vse,idefix_vl(idefix) as idefix_vl from zak_t_items where idefix_zak= ${polozka.idefix_zak} order by idefix`
+            )
+          ).data.data;
+          if (self.c1.polozky_zak.length > 0) {
+            self.c1.aktivni_polozka_zak =
+              self.c1.polozky_zak[self.c1.polozky_zak.length - 1].idefix;
+          }
+
+          //f.Alert("Insert")
+        }
+
+        fceNova.polozky_soucet("zak");
+
+        //f.Alert(ev)
+        if (ev == 1) {
+          fceNova.addPol("zak", polozka.idefix_zak);
+        }
+      } else if (ceho == "nab") {
+        if (ev == 1) {
+          self.c1.polozky_nab = (
+            await Q.all(
+              self.idefix,
+              `select *,0 as vse,idefix_vl(idefix) as idefix_vl from nab_t_items where idefix_nab= ${polozka.idefix_nab} order by idefix`
+            )
+          ).data.data;
+          if (self.c1.polozky_nab.length > 0) {
+            self.c1.aktivni_polozka_nab =
+              self.c1.polozky_nab[self.c1.polozky_nab.length - 1].idefix;
+          }
+        }
+        await fceNova.polozky_soucet("nab");
+
+        if (ev == 1) {
+          fceNova.addPol("nab", polozka.idefix_nab);
+        }
+      }
+    },
+    mAlert(txt, dur = 5000) {
+      this.$notify({
+        title: self.c1.MAINMENULAST,
+        message: `${txt}`,
+        type: "error",
+        offset: 100,
+        duration: 5000
+      });
+    },
+
 
     async DocasneReseni() {
       const self = this;

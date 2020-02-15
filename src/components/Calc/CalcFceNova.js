@@ -5,6 +5,7 @@ import Q from '../../services/query';
 // import query from '../../services/query'
 import c1 from './CalcCentral.js';
 import queryKalk from '../../services/fcesqlKalkulace';
+import _ from 'lodash'
 
 //import w1 from './CalcWorkButtonMenu.vue'; // Prehledova dole
 
@@ -373,13 +374,34 @@ export default {
     const self = this;
     var addPol = [];
     var addEmpty = {};
+    var qVzor1 = `
+    select *,0 as vse from ${ceho}_t_items where vzor>=1  and obsah is null
+    order by idefix_dod desc limit 1
+    `
+
+    var qVzor2 = `
+    select *,0 as vse from ${ceho}_t_items where vzor>=1  and obsah is not null
+    order by idefix_dod desc limit 1
+    `
+
+    var qVzor = `select * from (${qVzor1}) a union select * from (${qVzor2}) b `
+
 
     addPol = (
       await Q.all(
         self.idefix,
-        `select *,0 as vse from ${ceho}_t_items where vzor>=1 order by idefix_dod desc limit 2`
+        qVzor
       )
     ).data.data;
+
+    var l1=self.c1.polozky_zak.length
+    var l2=0
+
+    // await f.Alert2(
+    //   qVzor,
+    // f.Jstr(addPol.length),
+    // l1,  l2
+    // )
     //Pridatprazdnou radku
 
     addPol.forEach(el => {
@@ -439,6 +461,23 @@ export default {
         }
       }
     });
+    if (ceho =='zak') {
+      self.c1.polozky_zak= _.sortBy(self.c1.polozky_zak,['vzor','idefix'])
+    } else {
+      self.c1.polozky_nab= _.sortBy(self.c1.polozky_nab,['vzor','idefix'])
+    }
+
+    var addfix=''
+    self.c1.polozky_zak.forEach(el=>{
+      addfix+=' '+el.idefix+' '+el.vzor
+    })
+
+    // await f.Alert2(addfix)
+     //self.c1.polozky_zak=[]
+    //   qVzor,
+    // f.Jstr(addPol.length),
+    // l1,  l2
+    // )
   },
 
   async polozky_soucet(ceho = "zak") {

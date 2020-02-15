@@ -71,7 +71,7 @@ export default {
           self.c1.idefix_vlastnik,
           polozka.obsah.length
         );
-        this.$notify({
+        f.notify({
           title: self.c1.MAINMENULAST,
           message: `Pro cizi dodavatele nejsou  kalkulacek dispozici`,
           type: "error",
@@ -132,7 +132,7 @@ export default {
             self.c1.idefix_vlastnik,
             polozka.obsah.length
           );
-          this.$notify({
+          f.notify({
             title: self.c1.MAINMENULAST,
             message: `Pro cizi dodavatele nejsou  kalkulacek dispozici`,
             type: "error",
@@ -284,7 +284,7 @@ export default {
       //self.$refs.w1.form.osoba   = polozka.idefix_firma
       //f.Alert(polozka.idefix, f.Jstr(polozka))
     } else {
-      this.$notify({
+      f.notify({
         title: self.c1.MAINMENULAST,
         message: `Chyba pri nacteni polozek`,
         type: "error",
