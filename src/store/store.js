@@ -326,6 +326,7 @@ export default new Vuex.Store({
     },
     saveKalkCela(state,kalkulace){
       // console.log('SAVE ' ,kalkulace.id)
+
       return new Promise((resolve)=>{
         state.Kalkulace = []
         state.Kalkulace= kalkulace.data

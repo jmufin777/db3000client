@@ -136,7 +136,7 @@
                             @keydown="MenuFormatShow=true;seznam('seek'+ID+'_list_'+0,1,$event)"
                             :disabled="ITEM1.status==1"
                           />
-                          <!-- FORMATY {{ID}} {{f1.getBottom('seek'+ID)}} {{f1.getWidth('seek'+ID)}} {{f1.getLeft('seek'+ID)}} -->
+                          <!-- FORMATY {{ID}} {{f.getBottom('seek'+ID)}} {{f.getWidth('seek'+ID)}} {{f.getLeft('seek'+ID)}} -->
                           <!-- </div> -->
                         </v-card-text>
                       </v-card>
@@ -412,7 +412,7 @@
 
     <div
       style="position:absolute;z-index:90010;overflow:scroll;max-height:14em"
-      :style="'top:'+ f1.getBottom('seek'+ID,40)+'px;width:'+f1.getWidth('seek'+ID,80)+'px;left:'+f1.getLeft('seek'+ID, 88)+'px'"
+      :style="'top:'+ f.getBottom('seek'+ID,40)+'px;width:'+f.getWidth('seek'+ID,80)+'px;left:'+f.getLeft('seek'+ID, 88)+'px'"
       v-if="MenuFormatShow"
       class="elevation-2 blue lighten-4 pl-0 pr-0"
     >
@@ -487,6 +487,7 @@ import upload0 from "../../services/upload0";
 import url from "@/services/url";
 import obrazek from "../../services/ObrazekService";
 import { resolve } from "url";
+import c1 from './CalcCentral.js';
 
 export default {
   props: {
@@ -555,8 +556,9 @@ export default {
       clickX: 0,
       clickY: 0,
       clickYN: false,
-      f1: f,
+      f: f,
       l: _,
+      c1: c1,
       timeout: 0, //tOpusteni:0,
       lastFocus: "",
 
@@ -635,16 +637,19 @@ export default {
 
   async mounted() {
     const self = this;
+    //f.logreset()
+
 
     self.k_id();
     self.initVar = self.k_id();
     self.ID = Math.round(Math.random() * 1983458) + self.k_id();
     //var neco=JSON.stringify(self.Kalkulace[self.k_id()])
-    var neco = JSON.stringify(self.$store.state.Kalkulace[self.k_id()]);
+    var neco  = JSON.stringify(self.$store.state.Kalkulace[self.k_id()]);
     self.Kalk = JSON.parse(neco);
     //f.Alert(self.$store.state.Kalkulace.length)
 
-    for (var ii = 0; ii < self.$store.state.Kalkulace.length; ii++) {
+    //for (var ii = 0; ii < self.$store.state.Kalkulace.length; ii++) {
+    for (var ii = self.initVar; ii <=self.initVar; ii++) {
       if (f.isEmpty(self.$store.state.Kalkulace[ii].data.Priloha1Txt)) {
         //console.log('Prazdna aaaa AAAAAAAA', self.$store.state.Kalkulace[ii].data.Priloha1Txt)
         self.$store.dispatch("editKalk", {
@@ -655,17 +660,19 @@ export default {
         self.$store.dispatch("editKalk", {
           kalkulaceid: ii,
           key: "Priloha1Idefix",
-          value: 13629510
+          //value: 13629510
+          value: 0
         });
       }
     }
 
     // alert(self.k_id())
 
-    console.log("MenuStroj TOP");
-    self.MenuStroj();
-    console.log("MenuStroj EOF");
+
+    self.MenuStroj();  //Zde jen vyber, natezeno v created CalcIndex stejnou funkcni z c1
+
     self.readVuexData();
+
     setInterval(function() {
       self.hideAll();
     }, 500);
@@ -708,7 +715,7 @@ export default {
       var ifx = self.form.Priloha1Idefix;
 
       if (n == 1) {
-        z = await self.otazka("Vymazat prilohu  ?", self.form.Priloha1Txt);
+        z = await f.Confirm2("Vymazat prilohu  ?", self.form.Priloha1Txt);
         if (z) {
           self.form.Priloha1Txt = "";
           self.form.Priloha1Idefix = 0;
@@ -727,23 +734,7 @@ export default {
         }
       }
     },
-    async otazka(txt1 = "", txt2 = "") {
-      const self = this;
-      return new Promise((resolve, rej) => {
-        self
-          .$confirm(txt1, txt2, {
-            distinguishCancelAndClose: true,
-            confirmButtonText: "Ano?",
-            cancelButtonText: "Ne"
-          })
-          .then(() => {
-            resolve(true);
-          })
-          .catch(e => {
-            resolve(false);
-          });
-      });
-    },
+
     async setPriloha(evt, poradi = -1) {
       const self = this;
       var idK = self.k_id();
@@ -1188,34 +1179,39 @@ export default {
         if (self.Kalkulace[self.k_id()].type == 1) {
           //self.$store.dispatch('setStrojeV')
           //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10411)).data.enum_strojmod_full
-          q = self.qStroje("V");
-          self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
+          //q = self.qStroje("V");
+          self.StrojeMenu = c1.StrojeMenuV
+          //self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
           //   self.initVar = "V : " +q + JSON.stringify(self.StrojeMenu[0])
           //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeV))
         } else if (self.Kalkulace[self.k_id()].type == 2) {
           //self.$store.dispatch('setStrojeA')
-          q = self.qStroje("A");
-          self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
+          //q = self.qStroje("A");
+          //self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
+          self.StrojeMenu = c1.StrojeMenuA
           //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10410)).data.enum_strojmod_full
           self.initVar = "A";
           //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeA))
         } else if (self.Kalkulace[self.k_id()].type == 3) {
           //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10412)).data.enum_strojmod_full
-          q = self.qStroje("Jine");
-          self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
+          //q = self.qStroje("Jine");
+          //self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
+          self.StrojeMenu=c1.StrojeMenuJine
           //self.$store.dispatch('setStrojeJine')
           //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeJine))
         } else if (self.Kalkulace[self.k_id()].type == 4) {
           //self.$store.dispatch('setStrojeExterni')
           //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10411)).data.enum_strojmod_full
-          q = self.qStroje("V");
-          self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
+          self.StrojeMenu=c1.StrojeMenuV4
+          //q = self.qStroje("V");
+          //self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
           //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeExterni))
         } else if (self.Kalkulace[self.k_id()].type == 5) {
           //self.$store.dispatch('setStrojeExterni')
           //self.StrojeMenu=(await ListStroj.one(this.user,-1, 10411)).data.enum_strojmod_full
-          q = self.qStroje("V");
-          self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
+          //q = self.qStroje("V");
+          self.StrojeMenu=c1.StrojeMenuV5
+          //self.StrojeMenu = (await Q.all(self.idefix, q)).data.data;
           //self.StrojeMenu = JSON.parse(JSON.stringify(self.$store.state.KalkulaceStrojeExterni))
         }
         // f.Alert('Nactu - stvorim', JSON.stringify(self.StrojeMenu))

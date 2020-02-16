@@ -294,6 +294,59 @@ export default {
     }
   },
 
+  async to1N() {
+    const self = this;
+    await eventBus.$emit('w1set',{})
+    //f.Alert(c1.tmp.cislo)
+    //return
+    if (
+      c1.tmp.cislo > 0 &&
+      self.c1.obrazovka_nab == 3 &&
+      self.c1.status_nab == 2
+    ) {
+      await fceSave.Ulozit()
+        .then(() => {
+          //     alert('bobry')
+        })
+        .catch(e => {
+          f.Alert2("hyba", e);
+          self.c1.obrazovka_nab = 1;
+        });
+      //         await self.to2N(self.c1.polozka_nab)
+      //       await f.sleep(3000)
+    }
+
+    if (self.c1.MAINMENULAST == "kalkulace" && self.c1.status_nab == 1) {
+      f.Confirm2("Zrusit zakladni nove kalkulace ? ", "", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "Ano?",
+        cancelButtonText: "Ne"
+      }).then(() => {
+        self.c1.obrazovka_nab = 1;
+        eventBus.$emit("SavedZN", {
+          id: self.c1.MAINMENULAST,
+          // cislo: c.cislo,
+          // exp: c.exp,
+          // prod: self.idefix,
+          // prod_txt : c.produkce,
+          // zadani:c.zadani,
+          status_zak: self.c1.status_zak,
+          status_nab: 0
+        });
+
+        if (self.c1.aktivni_nab > 0) {
+          setTimeout(function() {
+            if (document.getElementById("trn_" + self.c1.aktivni_nab)) {
+              document.getElementById("trn_" + self.c1.aktivni_nab).click();
+            }
+          }, 1000);
+        }
+      });
+    } else {
+      self.c1.obrazovka_nab = 1;
+    }
+  },
+
   async updateDefault() {
     const self = this;
     if (self.c1.idefix_vlastnik > 0 && self.c1.idefix_vlastnikPrace > 0) {

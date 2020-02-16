@@ -66,10 +66,21 @@ export default {
   , id, idefix from ${ceho}_t_items ) a where rn >1 and radek > 1 order by id
   )
   ;`;
-    b = await Q.post(self.idefix, qoprava2);
+
+  //Kolekce
+  var kolekce = {
+    q2:  qoprava2,
+    q :  qoprava
+  };
+  f.log("KOLEKCE 1:", f.Jstr(kolekce));
+  var aKolekce = await Q.Q2(self.idefix, kolekce);
+
+  //f.Alert2(f.Jstr(aKolekce))
+   //  b = await Q.post(self.idefix, qoprava2);
     //f.Alert2(qoprava)
 
-    var b = await Q.post(self.idefix, qoprava);
+    //var b = await Q.post(self.idefix, qoprava);
+
     if (self.c1.obrazovka_nab == 3 && self.c1.MAINMENULAST == "kalkulace") {
       await self.setVL(self.c1.IDEFIXACTIVE, 1);
     }
@@ -506,11 +517,12 @@ export default {
     const self = this;
     var idefixActive = self.c1.IDEFIXACTIVE;
     var neco = $("#Zmenad").get(0).value;
+
     f.log("1", "setVL", idefix, idefixActive);
     document.getElementById("obalKalkulace").style.opacity = 0.5;
 
     if (self.c1.StopStav) {
-      self.mAlert("Cekam", 2000);
+      f.mAlert("Cekam", 2000);
       f.log("2", "setVL");
 
       setTimeout(function() {
@@ -520,6 +532,7 @@ export default {
       return;
     }
     self.c1.StopStav = true;
+
 
     if (idefixActive == 0 && self.c1.bKalkulace.length > 0 && idefix > 0) {
       alert("0. Je  treba ulozit neulozenou");
@@ -538,14 +551,16 @@ export default {
 
         self.c1.Pocet++;
       } catch (e) {
-        f.Alert("Vklad selhal");
+        f.Alert("Vklad selhal 11 ");
       }
       //        alert('Bylo  treba ulozit neulozenou')
       //      return
     }
     var necoSave = 0;
     f.log("9", "setVL");
+
     necoSave = await self.SaveAll(idefix);
+
     if (jenUloz == 1) {
       f.log("10", "setVL");
       await self.setZabalit();
@@ -688,7 +703,7 @@ export default {
         // f.Alert('Vkladam prvni')
         self.c1.Pocet++;
       } catch (e) {
-        f.Alert("Vklad selhal", e);
+        f.Alert("Vklad selhal 22", e);
       }
     }
     $("#Zmenad").get(0).value = 0;
@@ -747,7 +762,8 @@ export default {
           SaveKalkulkace
         )
         .then(res => {
-          this.$message({
+          //this.$message({
+          f.notify({
             message: "Vlozeno",
             type: "error",
             center: true,
@@ -824,24 +840,30 @@ export default {
 
     self.c1.bKalkulace = qTest.data.data.a2parse[0].obsah;
     f.log("12C PARSE END", "setActive");
+    var neco=qTest.data.data.a3;
+    f.log("12BCC", "setActive");
+    self.c1.idRend++;
+    self.c1.TestRend++;
     self.c1.aKalkBefore = qTest.data.data.a3;
     f.log("12B", "setActive");
 
     self.c1.IDEFIXACTIVE = idefix;
     f.log("14", "setActive");
     await f.dispatch("saveKalkCela", { data: self.c1.bKalkulace });
+
     f.log("5", "SaveKalk ok");
     await self.setIdefixActive();
     f.log("6", "Active OK");
+    //return
 
     if (self.c1.IDEFIXACTIVE > 0) {
       //AAAAAAA
       self.c1.IDEFIXACTIVELAST = self.c1.IDEFIXACTIVE;
     }
-    setTimeout(function() {
-      self.c1.idRend++;
-      self.c1.TestRend++;
-    }, 100);
+    //return
+    //setTimeout(function() {
+
+    //}, 10000);
   },
   async setZabalit() {
     const self = this;
@@ -914,8 +936,10 @@ export default {
 
   async setIdefixActive() {
     const self = this;
+    //return;
     self.c1.aKalkBefore.forEach(el => {
       if (el.active == true) {
+
         self.c1.IDEFIXACTIVE = el.idefix;
         self.c1.NAZEVACTIVE = el.nazev;
         if (self.c1.MAINMENULAST == "zakazky") {
@@ -944,6 +968,23 @@ export default {
         return;
       }
     });
+  },
+
+  async setRender() {
+    const self = this;
+    f.log("7 getTemplatesUser");
+    self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable);
+
+    try {
+      await self.setIdefixActive();
+    } catch (e) {
+      f.Alert("Chyba ACTIVE", e);
+      console.log("Chyba ACTIVE");
+    }
+    await f.sleep(500);
+    //setTimeout(function(){
+    self.c1.idRend++;
+    return self.c1.aKalkBefore.length;
   },
 
   //Presunout

@@ -316,7 +316,6 @@
               </td>
             </tr>
           </table>
-          <!-- <input :disabled="form.status==1"  type="text" :value="f1.getCislo(form.naklad)" style="text-align:right;width:100%;height:26px;border:none;color:#ffffff !important" class="honza_text honza_color pr-1"> -->
         </td>
         <td
           style="text-align:left;border-top:none;border-bottom:none;border-right: solid 2px white;width:20em;height:28px"
@@ -526,11 +525,10 @@
     </div>
     <div>
       neco {{IDEFIX}} {{ cTable }} : {{dataDB}}
-      <!-- {{showTemplates }} /{{ID2}} / {{ f1.getBottom('seek'+ID2,0) }} :: {{ ZobrazMenu }} : {{ form }} isOpen:  {{ isOpen}} -->
     </div>
     <div
       style="position:absolute;overflow:scroll;max-height:14em;z-index:999999999"
-      :style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;leftx:'+f1.getLeft('seek'+ID2, 0)+'px'"
+      :style="'top:'+ f.getBottom('seek'+ID2,0)+'px;width:'+f.getWidth('seek'+ID2,50)+'px;leftx:'+f.getLeft('seek'+ID2, 0)+'px'"
       :id="'seek'+ID2+'_list2'"
       v-if=" showTemplates && ZobrazMenu  "
       class="elevation-12 honza_color_seznam"
@@ -540,7 +538,7 @@
         <tr v-if="false">
           <td
             colspan="20"
-          >POZ : {{'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;left:'+f1.getLeft('seek'+ID2, 0)+'px'}}</td>
+          >POZ : {{'top:'+ f.getBottom('seek'+ID2,0)+'px;width:'+f.getWidth('seek'+ID2,50)+'px;left:'+f.getLeft('seek'+ID2, 0)+'px'}}</td>
         </tr>
         <tr
           v-for="(m1b, i1b) in
@@ -619,7 +617,7 @@
     </div>
     <!-- <div
         style="position:absolute;overflow:scroll;max-height:14em;z-index:999999999"
-        :style="'top:'+ f1.getBottom('seek'+ID2,0)+'px;width:'+f1.getWidth('seek'+ID2,50)+'px;'"
+        :style="'top:'+ f.getBottom('seek'+ID2,0)+'px;width:'+f.getWidth('seek'+ID2,50)+'px;'"
         :id="'seekTest'+ID2+'_list2'"
         class="elevation-12 honza_color_seznam"
       >
@@ -728,7 +726,7 @@ export default {
       ID0: this.ID,
       IDEFIXTEMPLATE: 0,
 
-      f1: f,
+      f: f,
       $: $,
       fceVL: fceVL,
       showTemplates: true,
@@ -1164,15 +1162,7 @@ export default {
       });
     },
 
-    mAlert(txt, dur = 5000) {
-      this.$notify({
-        title: self.MAINMENULAST,
-        message: `${txt}`,
-        type: "error",
-        offset: 100,
-        duration: 5000
-      });
-    },
+
 
     async sendAllVL(ifx = 0, sendStatus = true) {
       const self = this;
@@ -1184,7 +1174,7 @@ export default {
       let res2 = [];
 
       if (self.MAINMENULAST == "kalkulace") {
-        self.mAlert(
+        f.mAlert(
           "V rezimu nabidek nelze zadavat praci na vyrobu, je nutne vytvorit zakazku"
         );
         return;
@@ -1346,7 +1336,7 @@ export default {
 
     async setVL() {
       const self = this;
-      f.log('ZAB 671 START ---------------')
+      f.log('ZAB 671 START EMIT---------------')
       if (self.IDEFIX == 0) {
         //f.Alert('Nelze rozbalit - neni v databazi')
         await eventBus.$emit("MenuHlavni", {
@@ -1354,10 +1344,12 @@ export default {
           idefix: self.IDEFIX,
           akce: "vlozit"
         });
+        f.log('ZAB 671 END EMIT 1 ----------------')
         return;
       }
+
       await eventBus.$emit("MenuHlavni", { key: 671, idefix: self.IDEFIX });
-      f.log('ZAB 671 END ----------------')
+      f.log('ZAB 671 END EMIT 2 ----------------')
       //f.Alert('setVL- rozbleni zabaleni', self.IDEFIX)
     },
 
@@ -1580,7 +1572,7 @@ export default {
 
         return def.promise();
       }
-      //f1.Alert2('Ulozeni', IDEFIX );
+      //f.Alert2('Ulozeni', IDEFIX );
     },
     async dlg() {
       $("#box" + self.ID).dialog({

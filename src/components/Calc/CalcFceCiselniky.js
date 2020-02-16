@@ -389,7 +389,7 @@ export default {
       var b = await Q.post(self.idefix, q);
 
       //ev =1
-      //self.mAlert(q,10000)
+      //f.mAlert(q,10000)
       f.notify({
         title: self.c1.MAINMENULAST,
         message: `Polozka ulozena  ${polozka.vzor}  ${polozka.idefix}`,

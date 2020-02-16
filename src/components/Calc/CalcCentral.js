@@ -165,12 +165,15 @@ export default {
       Left: 0,
       odkaz: "",
       IDEFIX_VL: 0,
-
       zobrazit: true,
 
   // Prevod 5 EOF
-
-
+  //Vymena pro work-left
+  StrojeMenuV:[],
+  StrojeMenuA:[],
+  StrojeMenuJine:[],
+  StrojeMenuV4:[],
+  StrojeMenuV5:[],
 
   getState(){
     this.computed.mystate.forEach(el=>{
@@ -182,27 +185,20 @@ export default {
       } else{
         this[el] = f.getStore(el)
       }
-
     })
     this['JARDA']=0
 
     f.Alert2('getState ', this['JARDA'])
     return 1;
   },
-
-
   init () {
-
     this.getState()
     f.Alert2(b , f.getStore('idefix'), this.jarda, this.idefix)
     this.methods.ahoj()
     eventBus.$on('JS',()=>{
       //alert('JS EVENT')
       this.getState()
-
-
     })
-
     return b
   },
 
@@ -216,15 +212,67 @@ data () {
 //Funkce zbytek
 //Cast Soucty zakazky,prepinani 1 -3 Z
 
-
 //funkce zbytek
-created(){
-  this.jarda='AAAAA'
-  alert('JS created')
-},
-mounted() {
-  alert('JS mount')
-},
+
+async MenuStroj() {
+      const self = this;
+      var nTmp;
+      var q1 = "";
+      var q2 = "";
+      var q3 = "";
+      var q4 = "";
+      var q5 = "";
+
+      // self.$store.state.Kalkulace[self.k_id()].data.Menu2.forEach(el => {
+      //    f.Alert('Nactu - stvorim')
+      // self.idefixVidet == 0 ||
+
+
+          q1 = self.qStroje("V");
+          self.StrojeMenuV = (await Q.all(self.idefix, q1)).data.data;
+
+          q2 = self.qStroje("A");
+          self.StrojeMenuA = (await Q.all(self.idefix, q2)).data.data;
+
+
+          q3 = self.qStroje("Jine");
+          self.StrojeMenuJine = (await Q.all(self.idefix, q3)).data.data;
+
+          q4 = self.qStroje("V");
+          self.StrojeMenuV4 = (await Q.all(self.idefix, q4)).data.data;
+
+          q5 = self.qStroje("V");
+          self.StrojeMenuV5 = (await Q.all(self.idefix, q5)).data.data;
+
+
+  //Musi byt vmodulu leftpo vyberu vhodneho seznamu
+      // self.StrojeMenu.forEach(el => {
+      //   nTmp = _.findIndex(self.aStroj, function(o) {
+      //     return o.idefix == el.idefix;
+      //   });
+      //   if (nTmp < 0) {
+      //     self.aStroj.push({
+      //       idefix: el.idefix,
+      //       stroj: el.stroj,
+      //       idefix_mod: el.idefix_mod,
+      //       nazev: el.nazev
+      //     });
+      //   }
+      //   // console.log(self.aStroj)
+      // });
+    },
+
+    qStroje(cType = "V") {
+      if (cType == "A" || cType == "V") {
+        return `select a.idefix ,b.idefix as idefix_mod,a.nazev as stroj,b.nazev,b.nazev_text, b.mod_priorita from list_stroj a join list_strojmod b on a.idefix=b.idefix_stroj
+       where a.idefix in (select a.idefix  from list_stroj a join list2_strojskup b on a.idefix_strojskup = b.idefix  where b.typ_kalkulace ~ '${cType}' and tisk )
+      order by case when b.mod_priorita then 1 else 2 end`;
+      } else if (cType == "Jine") {
+        return `select a.idefix ,b.idefix as idefix_mod,a.nazev as stroj,b.nazev,b.nazev_text, b.mod_priorita from list_stroj a join list_strojmod b on a.idefix=b.idefix_stroj
+       where a.idefix in (select a.idefix  from list_stroj a join list2_strojskup b on a.idefix_strojskup = b.idefix  where a.nazev_text like 'DTP' ) `;
+      }
+    },
+
 methods: {
   ahoj(){
 

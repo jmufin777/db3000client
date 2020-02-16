@@ -363,7 +363,6 @@
         v-if="getType()!='Externi' && getType()!='DTP' && !getType().match(/Mat/)  && !getType().match(/Laminace/)  && !getType().match(/Kasir/)"
       >
         <v-card-text style="width:100%;" class="pa-0">
-          <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
           <textarea-autosize
             type="text"
             v-model="form.txtStroj"
@@ -440,8 +439,7 @@
       >
         <!-- Puvodni externi //-->
         <v-card-text style="width:100%;" class="pa-0">
-          <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
-          <!-- @change.native="form.txtDod=''" -->
+
           <textarea-autosize
             type="text"
             v-model="form.txtPrace"
@@ -459,7 +457,6 @@
           ></textarea-autosize>
         </v-card-text>
         <v-card-text style="width:100%;" class="pa-0">
-          <!-- :style="'height:'+(17*f1.entrcount(form.txtStroj))+'px'" -->
           <textarea-autosize
             type="text"
             v-model="form.txtDod"
@@ -798,7 +795,7 @@ export default {
       isDeleted: false,
       TestRend: 0,
       timeout: false,
-      f1: f,
+      f: f,
       formx: 0,
       //soubory
       MenuLeft: [],
@@ -1127,7 +1124,6 @@ export default {
     async zmenaType(cSloup = "") {
       const self = this;
       if (cSloup == self.getType()) {
-        // self.f1.Alert("Prdlacky")
         return;
       }
       self.isDeleted = true;
@@ -1203,7 +1199,6 @@ export default {
         setTimeout(function() {
           //self.nactiDb(true)
           self.isDeleted = false;
-          //self.f1.Alert(self.TestRend)
           self.ID = Math.round(Math.random() * 198345813 * Math.random());
           self.TestRend = self.TestRend + 1;
           self.filtrDataStro = [];
@@ -1587,8 +1582,6 @@ export default {
       // self.nactiDb(true)
       if (self.getType() == "Baleni") {
         self.nactiDb(true);
-
-        //self.f1.Alert("Baleni", self.SQL.getStroj(self.getType()))
       }
 
       if (kdezejsem.match(/stroj$/)) {

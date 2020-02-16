@@ -34,7 +34,7 @@
         <v-card class="pa-0 ma-0">
           <v-card-text class="px-1 mx-1 elevation-2" style="background:#f5f5f5">
             DB 3000&nbsp;&nbsp;&nbsp;&nbsp;
-            <button @click="f1.logreset()">LogReset</button>
+            <button @click="f.logreset()">LogReset</button>
           </v-card-text>
         </v-card>
       </v-toolbar-title>
@@ -514,7 +514,7 @@ export default {
       demo: false,
       demo2: false,
       winpar: true,
-      f1: f,
+      f: f,
 
       // Zobrazeni - checkboc
 

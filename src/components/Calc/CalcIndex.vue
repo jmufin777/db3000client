@@ -34,8 +34,6 @@
         id="obalKalkulace"
         class="stred"
       >
-
-
         <div  class="leva blue lighten-5" :style="f.pof( c1.Sirka,98)" style="position:relative;">
           <CalcVueFirmySeekBAr></CalcVueFirmySeekBAr>
         </div>
@@ -50,29 +48,21 @@
         id="obalKalkulace"
         class="stred"
       >
-
       <CalcVueZakazkyPolozky></CalcVueZakazkyPolozky>
-
       </div>
-
       <div
         v-if="c1.obrazovka_nab==1 && c1.MAINMENULAST=='kalkulace'"
         slot="kalkulace"
         style="position:fixed;width:100%;top:24em;overflow:scroll;height:70%"
         id="obalKalkulace"
       >
-        <!-- Seznam N {{c1.MAINMENULAST}}
-        Seznam Z {{c1.MAINMENULAST}}-->
-
         <div v-if="false" style="position:fixed; top:30em;right:8%;opacity:0.5;z-index:99999999;">
           <span style="color:red; font-size:10em;">1N</span>
         </div>
-
         <div class="leva cyan lighten-5" :style="f.pof( c1.Sirka,98)" style="position:relative;">
           <CalcVueFirmySeekBArN></CalcVueFirmySeekBArN>
         </div>
        <CalcVueNabidky :ID="ID"></CalcVueNabidky>
-
       </div>
       <div
         v-if="c1.obrazovka_nab==2 && c1.MAINMENULAST=='kalkulace'"
@@ -82,12 +72,7 @@
         class="stred"
       >
         <CalcVueNabidkyPolozky></CalcVueNabidkyPolozky>
-
-        <!-- {{c1.polozky_zak}} -->
-
-
       </div>
-
       <div
         v-if=" ((c1.obrazovka_nab==3 && c1.MAINMENULAST=='kalkulace')  || (c1.obrazovka_zak==3 && c1.MAINMENULAST=='zakazky'))"
         slot="kalkulace"
@@ -98,7 +83,7 @@
           <button
             class="px-4 tlacitkoMenu elevation-2 hoVer"
             v-if="c1.MAINMENULAST=='kalkulace'"
-            @click="to1N()"
+            @click="fceSwitch13N.to1N()"
           >Kniha 1N</button>
           <button
             class="px-4 tlacitkoMenu elevation-2 hoVer"
@@ -260,7 +245,7 @@
                 :typid="1"
                 :kalkulaceid="iKalk.kalkulaceid"
                 :sloupecid="iSloupec.id"
-                v-if="c1.zobrazit==true || true"
+                v-if=" (c1.zobrazit==true || true)"
                 :key="c1.TestRend"
                 :ITEM1="c1.ITEM1"
                 style="z-index:889977"
@@ -620,6 +605,7 @@ export default {
        }
 
      },500)
+    c1.MenuStroj()  //PLni v c1 promenne s odpovidajicimi skupinami stroju pro work-left moduly
     eventBus.$off("MenuHlavni");
     eventBus.$off("MenuLeft");
     eventBus.$off("SAVETEMPLATE");
@@ -691,7 +677,7 @@ export default {
       //f.Alert('Answer Index 1:' , self.c1.ID2ASK , ' / Active : ', self.c1.IDEFIXACTIVE )
     });
     eventBus.$on('saveKalkCela', server=> {
-      f.log('saveKalkCela')
+      f.log('saveKalkCela','prekresluji' )
       // self.c1.bKalkulace=[]
       // self.c1.bKalkulace = JSON.parse(JSON.stringify(self.$store.state.Kalkulace));
       self.c1.TestRend++;
@@ -897,20 +883,27 @@ export default {
         if (server.key == 670) {
           //Aplikuj novy template
 
-          f.Alert2("670", server.idefix);
+          f.Alert2("670 START", server.idefix);
 
-          fceSave.saveVL(server.idefix);
+          fceSave.saveVL(server.idefix)
+          .then(()=>{
+            f.Alert2("670 END", server.idefix);
+
+          })
+          ;
           //self.RozdelKalkulaci(server)
         }
         if (server.key == 671) {
           //Zabaloit polozku
-
           try {
-            fceSave.setVL(server.idefix); //Automaticky pozna zda jde o zabaleni ci rozbaleni podle stavu active
+            f.log('671 START','fceSave.setVL(server.idefix)')
+            fceSave.setVL(server.idefix) //Automaticky pozna zda jde o zabaleni ci rozbaleni podle stavu active
+            .then(()=>{
+                f.log('671 EOF','fceSave.setVL(server.idefix)')
+            })
           } catch (e) {
             f.Alert2("HAVARIE");
           }
-
           //self.RozdelKalkulaci(server)
         }
         if (server.key == 672) {
@@ -1137,7 +1130,7 @@ export default {
 
       //this.setSelectionRange(0, 9999);
 
-      //self.mAlert('Vlezl jsem sem',1000)
+
       //});
     }, 1000);
     var xd = new Date();
@@ -1544,69 +1537,12 @@ export default {
 
 
 
-    async to1N() {
-      const self = this;
-
-      if (
-        self.$refs.w1.form.cislo > 0 &&
-        self.c1.obrazovka_nab == 3 &&
-        self.c1.status_nab == 2
-      ) {
-        await fceSave.Ulozit()
-          .then(() => {
-            //     alert('bobry')
-          })
-          .catch(e => {
-            f.Alert2("hyba", e);
-            self.c1.obrazovka_nab = 1;
-          });
-        //         await self.to2N(self.c1.polozka_nab)
-        //       await f.sleep(3000)
-      }
-
-      if (self.c1.MAINMENULAST == "kalkulace" && self.c1.status_nab == 1) {
-        this.$confirm("Zrusit zakladni nove kalkulace ? ", "", {
-          distinguishCancelAndClose: true,
-          confirmButtonText: "Ano?",
-          cancelButtonText: "Ne"
-        }).then(() => {
-          self.c1.obrazovka_nab = 1;
-          eventBus.$emit("SavedZN", {
-            id: self.c1.MAINMENULAST,
-            // cislo: c.cislo,
-            // exp: c.exp,
-            // prod: self.idefix,
-            // prod_txt : c.produkce,
-            // zadani:c.zadani,
-            status_zak: self.c1.status_zak,
-            status_nab: 0
-          });
-
-          if (self.c1.aktivni_nab > 0) {
-            setTimeout(function() {
-              if (document.getElementById("trn_" + self.c1.aktivni_nab)) {
-                document.getElementById("trn_" + self.c1.aktivni_nab).click();
-              }
-            }, 1000);
-          }
-        });
-      } else {
-        self.c1.obrazovka_nab = 1;
-      }
-    },
 
 
 
 
-  mAlert(txt, dur = 5000) {
-    this.$notify({
-      title: self.c1.MAINMENULAST,
-      message: `${txt}`,
-      type: "error",
-      offset: 100,
-      duration: 5000
-    });
-  },
+
+
 
     async DocasneReseni() {
       const self = this;
@@ -1712,22 +1648,7 @@ export default {
       // },500)
       //f.Alert(server.id2, $("#seek"+server.id2).val())
     },
-    async setRender() {
-      const self = this;
-      f.log("7 getTemplatesUser");
-      self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable);
 
-      try {
-        await fceSave.setIdefixActive();
-      } catch (e) {
-        f.Alert("Chyba ACTIVE");
-        console.log("Chyba ACTIVE");
-      }
-      await f.sleep(500);
-      //setTimeout(function(){
-      self.c1.idRend++;
-      return self.c1.aKalkBefore.length;
-    },
     async delVL(idefix) {
       const self = this;
       try {
