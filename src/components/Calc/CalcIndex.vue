@@ -1666,11 +1666,11 @@ export default {
           }
         }
         //      alert('Vymazano 2')
-        await self.setRender();
+        await fceSave.setRender();
         //    alert('Vyazano')
         return;
       } catch (e) {
-        f.Alert("Dell Er");
+        f.Alert("Dell Er", e);
         return;
       }
     },
@@ -1727,7 +1727,7 @@ export default {
         await fceSave.setRozbalit(idefixActive);
         await fceSave.setZabalit();
         await self.addKalk(1);
-        await self.setRender();
+        await fceSave.setRender();
         await f.sleep(500);
         objFiluta = f.getElByIdefix("seek", 0);
         if (objFiluta) {
