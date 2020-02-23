@@ -59,7 +59,7 @@ export default {
             self.CisDod(0);
             self.CisDodAll(0);
             self.CisPraceDod();
-            f.Alert("Vlozeno");
+            f.Alert2("Vlozen novy vztah ");
           });
         });
       }

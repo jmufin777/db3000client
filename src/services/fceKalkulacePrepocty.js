@@ -162,6 +162,7 @@ export default {
 
     return defer.promise();
   },
+
   ///Prace
 
   computed: {

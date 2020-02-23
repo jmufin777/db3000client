@@ -19,7 +19,6 @@
           >
             <v-icon size="medium">fa-lock</v-icon>
           </button>
-
           <button
             v-else-if="form.status==2"
             style=";border-right: solid 1px white;border-left: solid 1px white;height:90%"
@@ -1373,6 +1372,7 @@ export default {
         `Pocet kusu pro kalkulaci ${self.pocetVolani}`,
         cItem.ks
       );
+
       //  .then((neco)=>{
       //  //  alert(neco)
       //  })
@@ -1384,6 +1384,7 @@ export default {
       //f.Info('seek'+self.ID2)
 
       //return
+      //alert(cItem.idefix);
       self.IDEFIXTEMPLATE = cItem.idefix;
       self.form.idefix = cItem.idefix;
 
@@ -1404,14 +1405,37 @@ export default {
 
       try {
         var nK = await queryKalk.getTemplate(self.form.idefix);
+
         //,
         //await (f.Alert2('Ahoj //',JSON.stringify(nK[0].obsah.length) ," // ") )
         //alert('tEd ')
 
         // var obsah = await(self.KalkulacePrepocetKusy(nK[0].obsah,neco))
         var obsah = await prepocty.KalkulacePrepocetKusy(nK[0].obsah, neco);
+        obsah.forEach(neco => {
+          neco.data['Priloha1Txt']=''
+          neco.data['Priloha1Idefix']=0
+          neco.data['Priloha2Txt']=''
+          neco.data['Priloha2Idefix']=0
+          neco.data['Priloha3Txt']=''
+          neco.data['Priloha3Idefix']=0
+          neco.data['Priloha4Txt']=''
+          neco.data['Priloha4Idefix']=0
+          neco.data['Priloha5Txt']=''
+          neco.data['Priloha5Idefix']=0
+
+
+        });
+
+        //alert('Priloha5Idefix' + obsah[0].data.Priloha5Idefix)
+
+
 
         self.form.naklad = await prepocty.getNaklad(obsah);
+        setTimeout(function(){
+          self.form.nazev = cItem.nazev+'Jarda';
+        },3000)
+
 
         if (!f.isEmpty(self.form.expedice_cas)) {
           self.form.expedice_cas = self.form.expedice_cas.substr(0, 5);

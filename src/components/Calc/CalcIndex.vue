@@ -841,10 +841,18 @@ export default {
           self.$store.dispatch("cleanKalk");
           self.$store.dispatch("saveKalkCela", { data: server.Kalkulace });
           self.c1.bKalkulace = server.Kalkulace;
+
           // self.KalkulaceThis = -1
           this.$store.dispatch("setKalk", -1);
-
+          fceSave.Ulozit()
+            .then(()=>{
+              //alert(c1.IDEFIXACTIVE)
+              //fceSave.setRozbalit(c1.IDEFIXACTIVE)
+            })
+            return;
           self.c1.KalkulaceLast = -1;
+
+          //alert(677)
 
           setTimeout(function() {
             self.c1.TestRend = self.c1.TestRend + 1;
@@ -1674,25 +1682,20 @@ export default {
         return;
       }
     },
-
     async copyVL(idefix) {
       const self = this;
-
       await queryKalk.CopyUser(idefix, self.c1.cTable);
 
       self.c1.aKalkBefore = []; // 1.JARDA
       f.log("8 getTemplatesUser");
       self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable);
       await fceSave.setZabalit();
-
       return;
-
       setTimeout(function() {
         self.c1.idRend++;
         self.c1.TestRend++;
       }, 500);
     },
-
 
     async addVL() {
       const self = this;
@@ -1738,7 +1741,7 @@ export default {
       }
 
       if (idefixActive == 0 && self.c1.bKalkulace.length > 0) {
-        // f.Alert('Nova sada = kdyz uz je jedna otevrena')
+         f.Alert('Nova sada = kdyz uz je jedna otevrena')
         var neco11 = new Promise((resolve, reject) => {
           var dataRadka = f.dataRadka(0);
           resolve(dataRadka);
@@ -1880,7 +1883,6 @@ export default {
         } catch (e) {
           alert("Error 1");
           eventBus.$emit("enable");
-
           console.log(JSON.stringify(e.response.data.error));
           alert(JSON.stringify(e.response.data.error));
           //console.log( e)

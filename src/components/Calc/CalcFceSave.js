@@ -764,7 +764,7 @@ export default {
         .then(res => {
           //this.$message({
           f.notify({
-            message: "Vlozeno",
+            message: "Vlozeno 2",
             type: "error",
             center: true,
             duration: 5000
