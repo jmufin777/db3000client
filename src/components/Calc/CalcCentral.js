@@ -29,6 +29,9 @@ export default {
 
      tmp:{},
      bKalkulace: [],
+     bKalkulaceOld: [],
+     RadkaOld: [],
+
      //Prevod 1 TOP
      aktivni_zak: 0,
      aktivni_nab: 0,

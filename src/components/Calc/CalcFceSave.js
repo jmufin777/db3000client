@@ -516,6 +516,18 @@ export default {
   async setVL(idefix, jenUloz = 0) {
     const self = this;
     var idefixActive = self.c1.IDEFIXACTIVE;
+    //await f.Alert2(f.Jstr(self.c1.bKalkulace) == f.Jstr(c1.bKalkulaceOld)
+    //, f.Jstr(c1.bKalkulaceOld)
+      //)
+      var stavZmenyK = f.Jstr(self.c1.bKalkulace) == f.Jstr(c1.bKalkulaceOld)
+    if (!stavZmenyK) {
+      //f.Alert2('Kalkulace zmenena byla')
+      if (await f.Confirm2('Kalkulace zmenena byla','Ulozit zmeny ?')){
+
+      }
+    }
+
+
     var neco = $("#Zmenad").get(0).value;
 
     f.log("1", "setVL", idefix, idefixActive);
@@ -860,6 +872,8 @@ export default {
       //AAAAAAA
       self.c1.IDEFIXACTIVELAST = self.c1.IDEFIXACTIVE;
     }
+    f.Alert2('Ukladam Stav Nyni')
+    c1.bKalkulaceOld = f.Jparse(c1.bKalkulace)
     //return
     //setTimeout(function() {
 
@@ -868,6 +882,7 @@ export default {
   async setZabalit() {
     const self = this;
     f.log("ZAB 0:");
+
     self.c1.bKalkulace = [];
     f.dispatch("cleanKalk");
     if (self.c1.IDEFIXACTIVE > 0) {
