@@ -519,14 +519,14 @@ export default {
     //await f.Alert2(f.Jstr(self.c1.bKalkulace) == f.Jstr(c1.bKalkulaceOld)
     //, f.Jstr(c1.bKalkulaceOld)
       //)
-      var stavZmenyK = f.Jstr(self.c1.bKalkulace) == f.Jstr(c1.bKalkulaceOld)
-    if (!stavZmenyK) {
+    var stavZmenyK = f.Jstr(self.c1.bKalkulace) == f.Jstr(c1.bKalkulaceOld)
+    if (!stavZmenyK && self.c1.bKalkulace.length>0 ) {
       //f.Alert2('Kalkulace zmenena byla')
-      if (await f.Confirm2('Kalkulace zmenena byla','Ulozit zmeny ?')){
-
+      if (await f.Confirm2('Kalkulace zmenena byla','Ulozit zmeny ?'
+      + f.Jstr(self.c1.bKalkulace).length +' : '+ f.Jstr(self.c1.bKalkulaceOld).length
+      )){
       }
     }
-
 
     var neco = $("#Zmenad").get(0).value;
 
@@ -872,7 +872,7 @@ export default {
       //AAAAAAA
       self.c1.IDEFIXACTIVELAST = self.c1.IDEFIXACTIVE;
     }
-    f.Alert2('Ukladam Stav Nyni')
+    f.Alert2('Ukladam Stav Nyni :',self.c1.IDEFIXACTIVE, self.c1.IDEFIXACTIVELAST )
     c1.bKalkulaceOld = f.Jparse(c1.bKalkulace)
     //return
     //setTimeout(function() {
