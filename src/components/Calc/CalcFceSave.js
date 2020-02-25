@@ -521,6 +521,9 @@ export default {
       //)
     var stavZmenyK = f.Jstr(self.c1.bKalkulace) == f.Jstr(c1.bKalkulaceOld)
     if (!stavZmenyK && self.c1.bKalkulace.length>0 ) {
+      var dataRadka = f.dataRadka(0);
+      await f.Alert2("Radek ", f.Jstr(dataRadka))
+
       //f.Alert2('Kalkulace zmenena byla')
       if (await f.Confirm2('Kalkulace zmenena byla','Ulozit zmeny ?'
       + f.Jstr(self.c1.bKalkulace).length +' : '+ f.Jstr(self.c1.bKalkulaceOld).length
@@ -550,6 +553,7 @@ export default {
       alert("0. Je  treba ulozit neulozenou");
       f.log("4", "setVL");
       var dataRadka = f.dataRadka(0);
+      //c1.RadkaOld = f.dataRadka(0);
 
       try {
         f.log("EMIT 10 ", "SAVEZAZNAM");
@@ -874,6 +878,9 @@ export default {
     }
     f.Alert2('Ukladam Stav Nyni :',self.c1.IDEFIXACTIVE, self.c1.IDEFIXACTIVELAST )
     c1.bKalkulaceOld = f.Jparse(c1.bKalkulace)
+
+    f.Alert2('Ukladam Stav Nyni :',self.c1.IDEFIXACTIVE, self.c1.IDEFIXACTIVELAST,f.Jstr(c1.RadkaOld ))
+
     //return
     //setTimeout(function() {
 

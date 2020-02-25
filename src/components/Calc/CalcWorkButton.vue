@@ -790,6 +790,13 @@ export default {
     eventBus.$off("AskID2");
     // remove any data you do not want to keep alive
   },
+
+  watch: {  //nepozna :-(, smazat asi)
+    form:function(){
+      alert('form')
+    }
+  },
+
   async created() {
     //  eventBus.$on('MenuLeft', (server) => {
     //     self.Left=server.key
@@ -872,7 +879,7 @@ export default {
       })
 */
 
-    self.setDataDBtoForm();
+    self.setDataDBtoForm();  //Zahada
     setInterval(function() {
       if (self.ksLast == self.form.ks) return;
 
@@ -881,6 +888,7 @@ export default {
         self.form.ks = parseInt(self.form.ks);
         self.form.kcks = (self.form.naklad / self.form.ks).toFixed(2);
         self.ksLast = self.form.ks;
+        alert('SAVEVL')
         self.saveVL(0);
       }
     }, 200);

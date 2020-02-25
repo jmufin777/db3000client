@@ -31,6 +31,7 @@ export default {
      bKalkulace: [],
      bKalkulaceOld: [],
      RadkaOld: [],
+     formOld:{},
 
      //Prevod 1 TOP
      aktivni_zak: 0,
