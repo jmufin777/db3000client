@@ -5,7 +5,7 @@ import SQL from '../../services/fcesql';
 import c1 from './CalcCentral.js';
 import queryKalk from '../../services/fcesqlKalkulace';
 
-//import w1 from './CalcWorkButtonMenu.vue'; // Prehledova dole
+
 
 //import { Notification } from 'element-ui';
 import { eventBus } from '@/main.js';

@@ -196,6 +196,9 @@
                 :CISLO="c1.MAINMENULAST=='zakazky'?c1.aktivni_zak_short:c1.aktivni_nab_short"
                 :ROK="c1.MAINMENULAST=='zakazky'?c1.aktivni_zak_rok:c1.aktivni_nab_rok"
               >
+              <span slot="akce">
+                JARDA {{'AWC_'+iK+''+c1.idRend}}
+              </span>
                 <button
                   slot="akce"
                   type="button"
@@ -588,11 +591,11 @@ export default {
   async created() {
     const self = this;
     //self.c1.cTable = 'calc_my_' + self.idefix
-    setInterval(function () {
-      self.c1.idRend = self.c1.idRend+1
+    // setInterval(function () {
+    //   self.c1.idRend = self.c1.idRend+1
 
-      //console.log(self.c1.idRend)
-     },20000) ;
+    //   //console.log(self.c1.idRend)
+    //  },2000) ;
 
      setInterval(function(){
        if (self.aktivni_zak !=self.c1.aktivni_zak) {

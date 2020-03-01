@@ -6,7 +6,6 @@ import Q from '../../services/query';
 import c1 from './CalcCentral.js';
 import queryKalk from '../../services/fcesqlKalkulace';
 
-//import w1 from './CalcWorkButtonMenu.vue'; // Prehledova dole
 
 //import { Notification } from 'element-ui';
 import { eventBus } from '@/main.js';
@@ -515,31 +514,49 @@ export default {
 
   async setVL(idefix, jenUloz = 0) {
     const self = this;
+    var dataRadka = {}
     var idefixActive = self.c1.IDEFIXACTIVE;
     //await f.Alert2(f.Jstr(self.c1.bKalkulace) == f.Jstr(c1.bKalkulaceOld)
     //, f.Jstr(c1.bKalkulaceOld)
       //)
     var stavZmenyK = f.Jstr(self.c1.bKalkulace) == f.Jstr(c1.bKalkulaceOld)
+    if (self.c1.bKalkulace.length>0  && stavZmenyK) {
+      f.log('Jen zabalit', idefixActive, f.Jstr(f.dataRadka(idefixActive)))
+      await self.setZabalit();
+      return
+    }
+
     if (!stavZmenyK && self.c1.bKalkulace.length>0 ) {
-      var dataRadka = f.dataRadka(0);
-      await f.Alert2("Radek ", f.Jstr(dataRadka))
+      dataRadka = f.dataRadka(idefixActive);
+      //await f.Alert2("Radek ", f.Jstr(dataRadka))
 
       //f.Alert2('Kalkulace zmenena byla')
       if (await f.Confirm2('Kalkulace zmenena byla','Ulozit zmeny ?'
       + f.Jstr(self.c1.bKalkulace).length +' : '+ f.Jstr(self.c1.bKalkulaceOld).length
       )){
+        await self.saveZaznam({ idefix: idefixActive, data: dataRadka }, 2)
+        await self.setZabalit();
+        return
+
       }
     }
 
-    var neco = $("#Zmenad").get(0).value;
+    if (idefixActive == 0 && idefix > 0) {
+      f.log("15", "Opraven 1setVL");
+      await self.setRozbalit(idefix);
+      self.c1.StopStav = false;
+      document.getElementById("obalKalkulace").style.opacity = 1;
+      f.log("15 EOF", "Opraven 1setVL");
+      return;
+    }
+    //Je potreba doresit zmenu radky v nerozbaleny kalulaci
+    //Odcud dolu to maznaneni potreba
 
     f.log("1", "setVL", idefix, idefixActive);
     document.getElementById("obalKalkulace").style.opacity = 0.5;
-
     if (self.c1.StopStav) {
       f.mAlert("Cekam", 2000);
       f.log("2", "setVL");
-
       setTimeout(function() {
         //self.c1.StopStav=false
         f.log("3", "setVL");
@@ -552,7 +569,7 @@ export default {
     if (idefixActive == 0 && self.c1.bKalkulace.length > 0 && idefix > 0) {
       alert("0. Je  treba ulozit neulozenou");
       f.log("4", "setVL");
-      var dataRadka = f.dataRadka(0);
+      dataRadka = f.dataRadka(0);
       //c1.RadkaOld = f.dataRadka(0);
 
       try {
@@ -595,15 +612,7 @@ export default {
       return;
     }
 
-    if (idefixActive == 0 && idefix > 0) {
-      f.log("15", "setVL");
-      await self.setRozbalit(idefix);
-      f.log("16", "setVL");
-      self.c1.StopStav = false;
-      document.getElementById("obalKalkulace").style.opacity = 1;
-      f.log("17", "setVL");
-      return;
-    }
+
     if (idefixActive > 0 && idefix == idefixActive) {
       f.log("18", "setVL");
       await self.setRozbalit(idefix);
@@ -680,7 +689,7 @@ export default {
           self.c1.bKalkulace.length > 0 &&
           self.c1.IDEFIXACTIVE == el.idefix
         ) {
-          f.log("EMIT 7 ", "SAVEZAZNAM");
+          f.log("EMIT 7 ", "SAVEZAZNAM R" , f.Jstr(dataRadka));
           await self
             .saveZaznam({ idefix: el.idefix, data: dataRadka }, 2)
             .then(res => {
@@ -822,6 +831,7 @@ export default {
 
     setTimeout(function() {
       self.c1.idRend++;
+      self.c1.idRend++;
       self.c1.TestRend++;
     }, 500);
   },
@@ -859,6 +869,7 @@ export default {
     var neco=qTest.data.data.a3;
     f.log("12BCC", "setActive");
     self.c1.idRend++;
+    //self.c1.idRend+=79999888777;
     self.c1.TestRend++;
     self.c1.aKalkBefore = qTest.data.data.a3;
     f.log("12B", "setActive");
@@ -876,10 +887,19 @@ export default {
       //AAAAAAA
       self.c1.IDEFIXACTIVELAST = self.c1.IDEFIXACTIVE;
     }
-    f.Alert2('Ukladam Stav Nyni :',self.c1.IDEFIXACTIVE, self.c1.IDEFIXACTIVELAST )
+
+    // await f.Alert2('Ukladam Stav Nyni :',self.c1.IDEFIXACTIVE+' : '+ self.c1.IDEFIXACTIVELAST+'//'+f.Jstr(c1.RadkaOld )
+    // , '{'+c1.bKalkulace.length + '}/ OLD: {'+c1.bKalkulaceOld.length +'}'
+    // +(f.Jstr(c1.bKalkulace)==f.Jstr(c1.bKalkulaceOld))
+    // )
+
+    f.log('Ukladam Stav Nyni :',self.c1.IDEFIXACTIVE+' : '+ self.c1.IDEFIXACTIVELAST+'//'+f.Jstr(c1.RadkaOld )
+    , '{'+c1.bKalkulace.length + '}/ OLD: {'+c1.bKalkulaceOld.length +'}'
+    +(f.Jstr(c1.bKalkulace)==f.Jstr(c1.bKalkulaceOld))
+    )
     c1.bKalkulaceOld = f.Jparse(c1.bKalkulace)
 
-    f.Alert2('Ukladam Stav Nyni :',self.c1.IDEFIXACTIVE, self.c1.IDEFIXACTIVELAST,f.Jstr(c1.RadkaOld ))
+
 
     //return
     //setTimeout(function() {
@@ -891,6 +911,7 @@ export default {
     f.log("ZAB 0:");
 
     self.c1.bKalkulace = [];
+    c1.bKalkulaceOld = f.Jparse(c1.bKalkulace)
     f.dispatch("cleanKalk");
     if (self.c1.IDEFIXACTIVE > 0) {
       //AAAAAAA
@@ -928,7 +949,7 @@ export default {
     f.log("KOLEKCE 2: Return test", self.c1.TestRend, self.c1.IDEFIXACTIVELAST);
 
     self.c1.idRend++;
-    self.c1.TestRend++;
+
 
     //return;
 

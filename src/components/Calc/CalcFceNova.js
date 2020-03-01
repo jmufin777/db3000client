@@ -7,7 +7,6 @@ import c1 from './CalcCentral.js';
 import queryKalk from '../../services/fcesqlKalkulace';
 import _ from 'lodash'
 
-//import w1 from './CalcWorkButtonMenu.vue'; // Prehledova dole
 
 //import { Notification } from 'element-ui';
 import prepocty from '../../services/fceKalkulacePrepocty';

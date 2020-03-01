@@ -868,7 +868,7 @@ export default {
     //f.Alert('Created', self.isOpen)
     /*
       eventBus.$off('DATARADKARECZADOST')  //Nacitani rolovaciho menu - seznam templatu
-      eventBus.$on('DATARADKARECZADOST',(server)=>{
+      eventBus.$on('DATARADKARECZADOST',(serv  er)=>{
         if (self.isOpen){
           f.Alert('Poslu')
           eventBus.$emit('DATARADKASENDDATA',
@@ -879,6 +879,7 @@ export default {
       })
 */
 
+   //f.Alert('MOUNT WORKBUT')
     self.setDataDBtoForm();  //Zahada
     setInterval(function() {
       if (self.ksLast == self.form.ks) return;
@@ -887,8 +888,9 @@ export default {
         //self.form.ks=Math.round(self.form.ks)
         self.form.ks = parseInt(self.form.ks);
         self.form.kcks = (self.form.naklad / self.form.ks).toFixed(2);
+     //   f.Alert('SAVEVL',self.ksLast,self.form.ks  )
         self.ksLast = self.form.ks;
-        alert('SAVEVL')
+        //f.Alert('SAVEVL',self.ksLast,self.form.ks  )
         self.saveVL(0);
       }
     }, 200);
