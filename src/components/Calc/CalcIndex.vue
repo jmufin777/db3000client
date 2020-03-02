@@ -197,7 +197,9 @@
                 :ROK="c1.MAINMENULAST=='zakazky'?c1.aktivni_zak_rok:c1.aktivni_nab_rok"
               >
               <span slot="akce">
+                <span style='display:none'>
                 JARDA {{'AWC_'+iK+''+c1.idRend}}
+                </span>
               </span>
                 <button
                   slot="akce"

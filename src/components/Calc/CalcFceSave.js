@@ -523,23 +523,85 @@ export default {
     if (self.c1.bKalkulace.length>0  && stavZmenyK) {
       f.log('Jen zabalit', idefixActive, f.Jstr(f.dataRadka(idefixActive)))
       await self.setZabalit();
-      return
+      //return
     }
 
-    if (!stavZmenyK && self.c1.bKalkulace.length>0 ) {
+    if (!stavZmenyK && self.c1.bKalkulace.length>0 && idefixActive>0) {
       dataRadka = f.dataRadka(idefixActive);
       //await f.Alert2("Radek ", f.Jstr(dataRadka))
 
       //f.Alert2('Kalkulace zmenena byla')
       if (await f.Confirm2('Kalkulace zmenena byla','Ulozit zmeny ?'
       + f.Jstr(self.c1.bKalkulace).length +' : '+ f.Jstr(self.c1.bKalkulaceOld).length
+      +' '+ idefixActive
       )){
-        await self.saveZaznam({ idefix: idefixActive, data: dataRadka }, 2)
-        await self.setZabalit();
+
+
+        if (idefixActive==0){
+
+          await self.saveZaznam({ idefix: idefixActive, data: dataRadka }, 3)
+          await self.IdefixMax()  //Prideli c1.IdefixMax
+          self.c1.IDEFIXACTIVE = self.c1.IdefixMax
+
+          await self.setZabalit();
+    //      await f.Alert2(2,idefixActive,f.Jstr(f.dataRadka(0)))
+          await self.setRozbalit(self.c1.IdefixMax);
+          //await f.Alert2(3,idefixActive,f.Jstr(f.dataRadka()))
+        } else {
+          await self.saveZaznam({ idefix: idefixActive, data: dataRadka }, 2)
+          await self.setZabalit();
+
+
+        }
         return
 
       }
     }
+
+    if (!stavZmenyK && self.c1.bKalkulace.length>0 && idefixActive==0) { //Vlozeni nova sada apod  - uklada bez otazky
+      dataRadka = f.dataRadka(idefixActive);
+      //await f.Alert2("Radek ", f.Jstr(dataRadka))
+
+      //f.Alert2('Kalkulace zmenena byla')
+
+
+
+        if (idefixActive==0){
+
+          await self.saveZaznam({ idefix: idefixActive, data: dataRadka }, 3)
+          await self.IdefixMax()  //Prideli c1.IdefixMax
+          self.c1.IDEFIXACTIVE = self.c1.IdefixMax
+
+          await self.setZabalit();
+    //      await f.Alert2(2,idefixActive,f.Jstr(f.dataRadka(0)))
+          await self.setRozbalit(self.c1.IdefixMax);
+          //await f.Alert2(3,idefixActive,f.Jstr(f.dataRadka()))
+        } else {
+          await self.saveZaznam({ idefix: idefixActive, data: dataRadka }, 2)
+          await self.setZabalit();
+
+
+        }
+        return
+
+
+    }
+
+    if (idefixActive > 0 && idefix != idefixActive && idefix > 0) { //Prepnuti
+      f.log("22", "setVL");
+      //alert('C Prebalit')
+      //await self.setZabalit();
+      f.log("23", "setVL");
+      await self.setRozbalit(idefix);
+
+      f.log("24", "setVL");
+      self.c1.StopStav = false;
+
+      document.getElementById("obalKalkulace").style.opacity = 1;
+      f.log("25", "setVL");
+      return;
+    }
+
 
     if (idefixActive == 0 && idefix > 0) {
       f.log("15", "Opraven 1setVL");
@@ -624,20 +686,6 @@ export default {
       f.log("21", "setVL");
       return;
       //await self.setRozbalit(idefix)
-    }
-    if (idefixActive > 0 && idefix != idefixActive && idefix > 0) {
-      f.log("22", "setVL");
-      //alert('C Prebalit')
-      await self.setZabalit();
-      f.log("23", "setVL");
-      await self.setRozbalit(idefix);
-
-      f.log("24", "setVL");
-      self.c1.StopStav = false;
-
-      document.getElementById("obalKalkulace").style.opacity = 1;
-      f.log("25", "setVL");
-      return;
     }
 
     return;
@@ -740,9 +788,14 @@ export default {
   async saveZaznam(server, kod) {
     const self = this;
     var SaveKalkulkace = false;
+    var fname='saveZaznam'
+    //f.notify('aAAA')
+    f.mLog('KOD: '+ kod,10000,fname)
+
 
     f.log(" SAVE ZAZNAM");
     if (kod == 1) {
+
       SaveKalkulkace = false; //Ulozeni radky zavrene kalkulace
       //f.Alert('kod 1 - prepis bez Kalk')
       //saveZaznam(server,SaveKalkulace,1)
@@ -812,28 +865,29 @@ export default {
       );
     }
     return;
-    $("#Zmenad").get(0).value = 0;
-    //var nK=            await(queryKalk.getTemplateUser(idefix,self.c1.cTable))
-    f.log("9 getTemplatesUser");
-    self.c1.aKalkBefore = await queryKalk.getTemplatesUser(self.c1.cTable);
-    await self.setIdefixActive();
-    // alert(self.c1.IDEFIXACTIVE)
 
-    //self.c1.bKalkulace=[]
-    //self.c1.bKalkulace =  f.Jparse(nK[0].obsah)
-    //self.c1.bKalkulace = JSON.parse(JSON.stringify( self.$store.state.Kalkulace ))
-    //await  f.dispatch('saveKalkCela', {data: self.c1.bKalkulace })
 
-    if (self.c1.IDEFIXACTIVE > 0) {
-      //AAAAAAA
-      self.c1.IDEFIXACTIVELAST = self.c1.IDEFIXACTIVE;
-    }
+
 
     setTimeout(function() {
       self.c1.idRend++;
       self.c1.idRend++;
       self.c1.TestRend++;
     }, 500);
+  },
+
+  async IdefixMax(){
+    const self = this
+    var qAct = `select max(idefix) as idefix from ${self.c1.cTable}`
+    var IdefixMax=0
+
+    var qMax = await Q.Q2(self.idefix, {
+      a1: qAct,
+    });
+    self.c1.IdefixMax = qMax.data.data.a1[0].idefix;
+    //await f.Alert2("Max", IdefixMax, f.Jstr(qMax.data.data.a1 ), qAct )
+    return IdefixMax
+
   },
   ///Methods EOF
   //Presunout

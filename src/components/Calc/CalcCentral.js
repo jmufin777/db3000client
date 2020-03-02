@@ -162,6 +162,7 @@ export default {
       aKalkBefore: [],
       aKalkAfter: [],
       lastIdK: -1,
+      IdefixMax:0,
 
       Hlavni: 0,
       nahledTimeOut: false,

@@ -522,8 +522,10 @@
         <v-icon size="medium" class="honza_color2" style="cursor:pointer">rotate_right</v-icon>
       </button>
     </div>
-    <div>
+    <div >&nbsp;
+      <div style='display:none'>
       neco {{IDEFIX}} {{ cTable }} : {{dataDB}}
+      </div>
     </div>
     <div
       style="position:absolute;overflow:scroll;max-height:14em;z-index:999999999"

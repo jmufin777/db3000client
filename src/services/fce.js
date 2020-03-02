@@ -79,7 +79,17 @@ export default {
       message: `${txt}`,
       type: "error",
       offset: 100,
-      duration: 5000
+      duration:dur
+    });
+  },
+
+  mLog(txt, dur = 10000,title='Oznameni') {
+    this.notify({
+      title: title,
+      message: `${txt}`,
+      type: "error",
+      offset: 100,
+      duration: dur
     });
   },
 

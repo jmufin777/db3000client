@@ -559,18 +559,18 @@ export default {
         //Zabalena radka, kalkulaci neprepisuji
         f.log("2b.", "VkladUser");
         var q = `update ${cTable} set
-    nazev              = trim('${data.nazev}'),
-    kcks               = '${data.kcks}',
-    ks                 = '${data.ks}',
-    naklad             = '${data.naklad}',
-    marze              = '${data.marze}',
-    prodej             = '${data.prodej}',
-    marze_pomer        = '${data.marze_pomer}',
-    expedice_datum     = '${data.expedice_datum}',
-    expedice_cas       = '${data.expedice_cas}',
-    user_update_idefix = '${idefix}',
-    time_update = now()
-    where idefix = ${idefixactive}
+                 nazev              = trim('${data.nazev}'),
+                 kcks               = '${data.kcks}',
+                 ks                 = '${data.ks}',
+                 naklad             = '${data.naklad}',
+                 marze              = '${data.marze}',
+                 prodej             = '${data.prodej}',
+                 marze_pomer        = '${data.marze_pomer}',
+                 expedice_datum     = '${data.expedice_datum}',
+                 expedice_cas       = '${data.expedice_cas}',
+                 user_update_idefix = '${idefix}',
+                 time_update = now()
+                 where idefix = ${idefixactive}
     `;
       }
       //f.Alert("IPDATE")
