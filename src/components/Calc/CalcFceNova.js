@@ -195,8 +195,14 @@ export default {
           `;
         qU1 += `;update ${cT2} set idefix = nextval('list2_seq'::regclass ),id=nextval('zak_t_items_id_seq'::regclass)
           , user_insert_idefix=${self.idefix}, user_update_idefix=${self.idefix},time_insert=now(),time_update=now()
+          ,vl=''
+          ,vl_znacka=''
+          ,vl_id=0
 
-          ,idefix_zak=(select max(idefix) from ${cT1})`;
+          ,idefix_zak=(select max(idefix) from ${cT1})
+
+
+          `;
 
         qU1 += `;update ${cT2} set idefix_src=idefix,  status=0`;
 

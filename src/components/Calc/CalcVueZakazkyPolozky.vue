@@ -40,6 +40,9 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td colspan="100"></td>
+            </tr>
             <tr
               v-for="(polozka2,idx2) in c1.polozky_zak"
               :key="idx2"
@@ -50,8 +53,10 @@
       }"
               :style="polozka2.vzor>-999?'cursor:pointer; height:30px; border-bottom:solid 1px #cccccc;':''"
             >
+            <!-- <td colspan="100" rowspan="2">
+              Status: {{polozka2.idefix}}/{{polozka2.status}}/{{polozka2.vl_znacka}}
+            </td> -->
               <td
-
                 :key="'zak'+c1.klikyzak+''+idx2"
                 class="pl-1"
                 style="border-bottom:none"
@@ -65,16 +70,21 @@
                 >
                   <!-- @mouseenter="odkaz=polozka2.idefix_vl;nahledView()"
                   @mouseleave="nahledCancel()"-->
-                  {{polozka2.idefix}}
+                  <!-- {{polozka2.idefix}} -->
                   <span
                     v-if="polozka2.idefix_vl>0"
                     @click="vl_view(polozka2.idefix_vl);c1.nahled=false"
                   >
                     <span
-                      v-if="polozka2.status==1 || polozka2.status>2"
+                     v-if="polozka2.status==1 || polozka2.status>2"
                       class="red--text"
+                      title="Odeslano"
                     >{{polozka2.vl_znacka}}&nbsp;&nbsp;</span>
-                    <span v-else class="green--text">{{polozka2.vl_znacka}}&nbsp;&nbsp;</span>
+                    <span v-else class="green--text"
+                    title="Vracen"
+                    >
+                      {{polozka2.vl_znacka}}
+                      &nbsp;&nbsp;</span>
                   </span>
 
                   <span
@@ -493,6 +503,12 @@ export default {
 
   },
   methods: {
+    vl_view(_idefix_vl) {
+      eventBus.$emit("IDEFIX_VL", { IDEFIX_VL: _idefix_vl });
+    },
+    vl_viewlist(_idefix_vl) {
+      eventBus.$emit("IDEFIX_VLIST", { IDEFIX_VL: _idefix_vl });
+    },
 
   }
 

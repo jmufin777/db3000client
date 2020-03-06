@@ -457,8 +457,6 @@ export default {
      'CalcVueZakazkyPolozky':CalcVueZakazkyPolozky,  //Polozky 2Z
      'CalcVueNabidkyPolozky':CalcVueNabidkyPolozky,  //Polozky 2Z
 
-
-
     // 'menu-hlavni': MenuHlavni,
   },
   data() {
@@ -1941,7 +1939,6 @@ export default {
         });
       }
       //return ;
-
       try {
         tmpData = await self.strojmod(KalkType); //MOdy pro V nebo A
 
@@ -2068,19 +2065,21 @@ export default {
       var idK = this.k_id();
       //this.k_id()
       //alert("IDK :" + idK+ ' json :' + JSON.stringify(server))
-
       idK = server.key;
-
       //  return
       //--self.setKalk(idK)
       //self.$store.dispatch('addColMat', {kalkulaceid: self.KalkulaceThis, type: 'Mat'})
       //self.$store.dispatch('addColMat',  {kalkulaceid: idK, type: 'Mat1'})
+      //f.Alert2(self.c1.bKalkulace[idK].sloupecid.length)
       if (
         !f.isEmpty(self.c1.bKalkulace[idK].sloupecid)
-        //&& self.c1.bKalkulace[idK].sloupecid.length > 0
-      )
+        && self.c1.bKalkulace[idK].sloupecid.length > 0
+      ){
         f.log("ADDCOLMAT", self.c1.bKalkulace[idK]);
-      return;
+        //f.Alert2('AAAAA')
+        return;
+      }
+
 
       self.$store.dispatch("addColMat2", {
         kalkulaceid: idK,

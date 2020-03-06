@@ -71,7 +71,7 @@ export default {
     }
 
     if (self.c1.MAINMENULAST == "zakazky" && self.c1.status_zak == 1) {
-      this.$confirm(
+      f.Confirm2(
         "Zrusit zakladni nove zakazky ? " + self.c1.aktivni_zak,
         "",
         {
@@ -190,7 +190,7 @@ export default {
       return;
     }
     if (self.c1.MAINMENULAST == "zakazky" && self.c1.status_zak == 1) {
-      this.$confirm("Zrusit zakladni nove zakazky ? ??", "", {
+      f.Confirm2("Zrusit zakladni nove zakazky ? ??", "", {
         distinguishCancelAndClose: true,
         confirmButtonText: "Ano?",
         cancelButtonText: "Ne"

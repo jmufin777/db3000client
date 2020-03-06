@@ -525,7 +525,7 @@ export default {
       await self.setZabalit();
       //return
     }
-
+    // await f.Alert2(!stavZmenyK ,self.c1.bKalkulace.length>0 , idefixActive>0)
     if (!stavZmenyK && self.c1.bKalkulace.length>0 && idefixActive>0) {
       dataRadka = f.dataRadka(idefixActive);
       //await f.Alert2("Radek ", f.Jstr(dataRadka))
